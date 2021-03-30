@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.resource.resourceTypes;
 
 /**
- * class that represent the resource SHIELD
+ * used to represent the SHIELD depot
  */
 public class Shield  implements Resource {
 

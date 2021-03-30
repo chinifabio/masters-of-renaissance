@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.resource.resourceTypes;
 
 /**
- * class that represent the resource SERVANT
+ * used to represent the SERVANT depot
  */
 public class Servant  implements Resource {
 

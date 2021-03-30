@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.resource.resourceTypes;
 
 /**
- * class that represent the resource COIN
+ * used to represent the COIN depot
  */
 public class Coin implements Resource {
     /**

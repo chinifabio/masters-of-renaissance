@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.resource.resourceTypes;
 
 /**
- * class that represent the resource STONE
+ * used to represent the STONE depot
  */
 public class Stone  implements Resource {
 

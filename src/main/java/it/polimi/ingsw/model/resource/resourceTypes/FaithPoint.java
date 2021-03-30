@@ -1,13 +1,13 @@
 package it.polimi.ingsw.model.resource.resourceTypes;
 
 /**
- * class that represent the resource FAITHPOINT
+ * used to represent the FAITHPOINT depot
  */
 public class FaithPoint  implements Resource {
 
     /**
      * faith points can't be stored
-     * @return
+     * @return false
      */
     @Override
     public boolean isStorable() {

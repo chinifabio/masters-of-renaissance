@@ -1,13 +1,13 @@
 package it.polimi.ingsw.model.resource.resourceTypes;
 
 /**
- * used to represent the empity depot
+ * used to represent the EMPTY depot
  */
 public class Empty implements Resource {
 
     /**
      * empty can be stored in depots
-     * @return
+     * @return true
      */
     @Override
     public boolean isStorable() {

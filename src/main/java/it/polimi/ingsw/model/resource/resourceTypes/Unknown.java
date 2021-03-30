@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.resource.resourceTypes;
 
 /**
- * used to represent the unknown resource
+ * used to represent the UNKNOWN resource
  */
 public class Unknown implements Resource {
 
