@@ -1,15 +1,33 @@
 package it.polimi.ingsw.model.resource.resourceTypes;
 
-import it.polimi.ingsw.model.resource.Resource;
+/**
+ * used to represent the empity depot
+ */
+public class Empty implements Resource {
 
-public class Empty  implements Resource {
+    /**
+     * empty can be stored in depots
+     * @return
+     */
     @Override
-    public boolean isStrorable() {
-        return false;
+    public boolean isStorable() {
+        return true;
     }
 
+    /**
+     * do nothing
+     */
     @Override
     public void onObtain() {
-        // need to throw exception
+
+    }
+
+    /**
+     * return the EMPTY type
+     * @return ResourceType.EMPTY
+     */
+    @Override
+    public ResourceType type() {
+        return ResourceType.EMPTY;
     }
 }

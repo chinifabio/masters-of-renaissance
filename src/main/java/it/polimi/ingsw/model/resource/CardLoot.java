@@ -2,27 +2,61 @@ package it.polimi.ingsw.model.resource;
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
+import it.polimi.ingsw.model.exceptions.LootTypeException;
+import it.polimi.ingsw.model.resource.resourceTypes.ResourceType;
+
+/**
+ * this is used to contain a devCard required to activate a leaderCard
+ */
 
 public class CardLoot extends Loot{
+    /**
+     * level of devCard
+     */
     private LevelDevCard level;
+    /**
+     * color of devCard
+     */
     private ColorDevCard color;
 
-    public CardLoot(LevelDevCard level, ColorDevCard color, int i) {
+    /**
+     * excepton thrown in case someone calls getType() method
+     */
+    private Exception LootTypeException;
+
+    /**
+     * costructor that need the level, color
+     * @param level of the card
+     * @param color of the card
+     */
+    public CardLoot(LevelDevCard level, ColorDevCard color) {
         this.level = level;
         this.color = color;
-        this.amount = i;
+        this.amount = 1;
     }
 
+    /**
+     * if this method is invoked there is en error
+     * @throws LootTypeException
+     */
     @Override
-    public Resource getType() {
-        return null; // need to throw exception
+    public ResourceType getType() throws LootTypeException {
+        throw new LootTypeException("exception: CardLoot.getType();");
     }
 
+    /**
+     * return the level of the devCard
+     * @return level of the card
+     */
     @Override
     public LevelDevCard getLevel() {
         return level;
     }
 
+    /**
+     * return the color of the devCard
+     * @return color of the card
+     */
     @Override
     public ColorDevCard getColor() {
         return color;

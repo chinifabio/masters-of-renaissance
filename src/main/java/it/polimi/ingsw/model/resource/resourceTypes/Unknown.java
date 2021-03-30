@@ -1,14 +1,35 @@
 package it.polimi.ingsw.model.resource.resourceTypes;
 
-import it.polimi.ingsw.model.resource.Resource;
+/**
+ * used to represent the unknown resource
+ */
+public class Unknown implements Resource {
 
-public class Unknown implements Resource {@Override
-public boolean isStrorable() {
-    return false;
-}
+    /**
+     * unknown can't be stored in depots
+     * @return false
+     */
+    @Override
+    public boolean isStorable() {
+        return false;
+    }
 
+    /**
+     * do nothing
+     */
     @Override
     public void onObtain() {
-        // throw exception
+
     }
+
+    /**
+     * return the UNKNOWN type
+     * @return ResourceType.UNKNOWN
+     */
+    @Override
+    public ResourceType type() {
+        return ResourceType.UNKNOWN;
+    }
+
+
 }
