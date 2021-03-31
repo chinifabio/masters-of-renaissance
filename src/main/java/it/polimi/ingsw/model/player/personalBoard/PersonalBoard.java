@@ -3,8 +3,8 @@ package it.polimi.ingsw.model.player.personalBoard;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
-import it.polimi.ingsw.model.match.MarketMarble;
-import it.polimi.ingsw.model.resource.ResourceLoot;
+import it.polimi.ingsw.model.match.MarkerMarble.MarbleColor;
+import it.polimi.ingsw.model.requisite.ResourceRequisite;
 
 import java.util.List;
 import java.util.Map;
@@ -23,12 +23,12 @@ public class PersonalBoard {
     /**
      * This attribute is the list of the available Discount applied when the player buys DevCard
      */
-    private List<ResourceLoot> availableDiscount;
+    private List<ResourceRequisite> availableDiscount;
 
     /**
      * This attribute is the list of the available resources in the Warehouse
      */
-    private List<ResourceLoot> availableResources;
+    private List<ResourceRequisite> availableResources;
 
     /**
      * This attribute is the Deck of the LeaderCards owned by the Player
@@ -43,7 +43,7 @@ public class PersonalBoard {
     /**
      * This attribute contains the function that maps MarketMarble to their respective Resources
      */
-    private Function<MarketMarble, ResourceLoot> marbleConversion;
+    private Function<MarbleColor, ResourceRequisite> marbleConversion;
 
     /**
      * This method is the constructor of the class
@@ -84,7 +84,7 @@ public class PersonalBoard {
      * This method convert the MarketMarble into their respective Resources
      * @param func is the function that do the conversion
      */
-    public void MarbleConversion(Function<MarketMarble, ResourceLoot> func){}
+    public void MarbleConversion(Function<MarbleColor, ResourceRequisite> func){}
 
     /**
      * This method add a new Production into the list of availableProductions

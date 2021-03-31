@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
-import it.polimi.ingsw.model.resource.ResourceLoot;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +18,7 @@ public class Player implements PlayerModifier{
     /**
      * This attribute is the list of all the Discounts that has the player, that he can use when use the MarketTray
      */
-    private List<Optional<ResourceLoot>> marketDiscount;
+    private List<Optional<Resource>> marketDiscount;
 
     /**
      * This method is the class constructor
@@ -124,7 +124,7 @@ public class Player implements PlayerModifier{
      * This method insert the Resources obtained from the Market to the Depots
      */
     @Override
-    public void obtainResource() {
+    public void obtainResource(Resource resource) {
 
     }
 
@@ -164,8 +164,8 @@ public class Player implements PlayerModifier{
      * This method converts the Marbles from the Market to Resources
      */
     @Override
-    public void marbleConversion() {
-
+    public ResourceType WhiteMarbleConversion() {
+        return null;
     }
 
     /**

@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.model.requisite.ResourceRequisite;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
+
 /**
  * This interface includes all the methods that can be called to modify the Player status and attributes
  */
@@ -53,7 +57,7 @@ public interface PlayerModifier {
     /**
      * This method insert the Resources obtained from the Market to the Depots
      */
-    void obtainResource();
+    void obtainResource(Resource resource);
 
     /**
      * This method allows the player to move Resources between Depots
@@ -78,7 +82,7 @@ public interface PlayerModifier {
     /**
      * This method converts the Marbles from the Market to Resources
      */
-    void marbleConversion();
+    ResourceType WhiteMarbleConversion();
 
     /**
      * This method allows the player to select which Resources to get when he activates two LeaderCards with the same

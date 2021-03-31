@@ -1,15 +1,15 @@
-package it.polimi.ingsw.model.resource;
+package it.polimi.ingsw.model.requisite;
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.LootTypeException;
-import it.polimi.ingsw.model.resource.resourceTypes.ResourceType;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 /**
  * this is used to contain a devCard required to activate a leaderCard
  */
 
-public class CardLoot extends Loot{
+public class CardRequisite implements Requisite {
     /**
      * level of devCard
      */
@@ -29,15 +29,14 @@ public class CardLoot extends Loot{
      * @param level of the card
      * @param color of the card
      */
-    public CardLoot(LevelDevCard level, ColorDevCard color) {
+    public CardRequisite(LevelDevCard level, ColorDevCard color) {
         this.level = level;
         this.color = color;
-        this.amount = 1;
     }
 
     /**
      * if this method is invoked there is en error
-     * @throws LootTypeException
+     * @throws LootTypeException wrong method called
      */
     @Override
     public ResourceType getType() throws LootTypeException {
@@ -60,5 +59,15 @@ public class CardLoot extends Loot{
     @Override
     public ColorDevCard getColor() {
         return color;
+    }
+
+    /**
+     * return the amount of card is always 1, in case of same card required there is multiple istance of Requisite
+     *
+     * @return number of loot
+     */
+    @Override
+    public int getAmount() {
+        return 1;
     }
 }

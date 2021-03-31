@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard;
 
-import it.polimi.ingsw.model.resource.ResourceLoot;
+import it.polimi.ingsw.model.requisite.ResourceRequisite;
 
 import java.util.List;
 
@@ -15,11 +15,11 @@ public class Production {
     /**
      * This attribute is the list of the Resources required to activate the Production
      */
-    private List<ResourceLoot> required;
+    private List<ResourceRequisite> required;
     /**
      * This attribute is the list of the Resources obtained after the Production
      */
-    private List<ResourceLoot> output;
+    private List<ResourceRequisite> output;
 
     /**
      * This method is the constructor of the class
@@ -28,9 +28,9 @@ public class Production {
     /**
      * This method returns the List of Resources requests
      */
-    public List<ResourceLoot> getRequired;
+    public List<ResourceRequisite> getRequired;
     /**
      * This method returns the List of Resources obtained after the Production
      */
-    public List<ResourceLoot> getOutput;
+    public List<ResourceRequisite> getOutput;
 }

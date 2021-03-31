@@ -4,17 +4,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
-import it.polimi.ingsw.model.exceptions.LootTypeException;
-import it.polimi.ingsw.model.resource.CardLoot;
-import it.polimi.ingsw.model.resource.Loot;
-import it.polimi.ingsw.model.resource.ResourceLoot;
-import it.polimi.ingsw.model.resource.resourceTypes.ResourceType;
+import it.polimi.ingsw.model.requisite.CardRequisite;
+import it.polimi.ingsw.model.requisite.Requisite;
+import it.polimi.ingsw.model.requisite.ResourceRequisite;
+import it.polimi.ingsw.model.resource.Coin;
+import it.polimi.ingsw.model.resource.Resource;
 import org.junit.jupiter.api.Test;
 
 /**
  * test collector for loot and resources tests
  */
-public class LootTest {
+public class RequisiteTest {
 
     /**
      * testing ResourceLoot class returning the right amount given
@@ -22,9 +22,9 @@ public class LootTest {
     @Test
     public void resLootAmount(){
         int amount = 3;
-        ResourceType res = ResourceType.COIN;
+        Resource res = new Coin(amount);
 
-        Loot test = new ResourceLoot(res, amount);
+        Requisite test = new ResourceRequisite(res);
         boolean result = false;
 
         if (test.getAmount() == amount) result = true;
@@ -38,9 +38,9 @@ public class LootTest {
     @Test
     public void resLootColor() {
         int amount = 3;
-        ResourceType res = ResourceType.COIN;
+        Resource res = new Coin(amount);
 
-        Loot test = new ResourceLoot(res, amount);
+        Requisite test = new ResourceRequisite(res);
         boolean result = false;
 
         try {
@@ -58,9 +58,9 @@ public class LootTest {
     @Test
     public void resLootLevel() {
         int amount = 3;
-        ResourceType res = ResourceType.COIN;
+        Resource res = new Coin(amount);
 
-        Loot test = new ResourceLoot(res, amount);
+        Requisite test = new ResourceRequisite(res);
         boolean result = false;
 
         try {
@@ -78,14 +78,14 @@ public class LootTest {
     @Test
     public void resLootType() {
         int amount = 3;
-        ResourceType res = ResourceType.COIN;
+        Resource res = new Coin(amount);
 
-        Loot test = new ResourceLoot(res, amount);
+        Requisite test = new ResourceRequisite(res);
         boolean result = false;
 
         try {
-            if(test.getType() == res) result = true;
-        } catch (LootTypeException e) {
+            if(test.getType() == res.type()) result = true;
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -100,7 +100,7 @@ public class LootTest {
         LevelDevCard lev = LevelDevCard.LEVEL1;
         ColorDevCard col = ColorDevCard.BLUE;
 
-        Loot test = new CardLoot(lev, col);
+        Requisite test = new CardRequisite(lev, col);
         boolean result = false;
 
         if (test.getAmount() == 1) result = true;
@@ -116,7 +116,7 @@ public class LootTest {
         LevelDevCard lev = LevelDevCard.LEVEL1;
         ColorDevCard col = ColorDevCard.BLUE;
 
-        Loot test = new CardLoot(lev, col);
+        Requisite test = new CardRequisite(lev, col);
         boolean result = false;
 
         try {
@@ -136,7 +136,7 @@ public class LootTest {
         LevelDevCard lev = LevelDevCard.LEVEL1;
         ColorDevCard col = ColorDevCard.BLUE;
 
-        Loot test = new CardLoot(lev, col);
+        Requisite test = new CardRequisite(lev, col);
         boolean result = false;
 
         try {
@@ -156,7 +156,7 @@ public class LootTest {
         LevelDevCard lev = LevelDevCard.LEVEL1;
         ColorDevCard col = ColorDevCard.BLUE;
 
-        Loot test = new CardLoot(lev, col);
+        Requisite test = new CardRequisite(lev, col);
         boolean result = false;
 
         try {

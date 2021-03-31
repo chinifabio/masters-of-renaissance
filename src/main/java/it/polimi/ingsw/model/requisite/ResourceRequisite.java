@@ -1,42 +1,40 @@
-package it.polimi.ingsw.model.resource;
+package it.polimi.ingsw.model.requisite;
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.LootTypeException;
-import it.polimi.ingsw.model.resource.resourceTypes.ResourceType;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 /**
  * this is used to contain a Resource required to activate a LeaderCard or to buy a devCard
  */
-public class ResourceLoot extends Loot {
+public class ResourceRequisite implements Requisite {
     /**
      * resource type for the activation/buy
      */
-    private ResourceType resource;
+    private Resource resource;
 
     /**
-     * costructor need the resource type and
-     * @param resource
-     * @param i
+     * constructor need the resource type and
+     * @param resource set the resource to handle
      */
-    public ResourceLoot(ResourceType resource, int i) {
+    public ResourceRequisite(Resource resource) {
         this.resource = resource;
-        this.amount = i;
     }
 
     /**
      *  return the resource type required by the card
-     * @return
+     * @return the type of the resource
      */
     @Override
     public ResourceType getType() {
-        return resource;
+        return resource.type();
     }
 
     /**
      * if this method is invoked there is en error
-     * @return
-     * @throws LootTypeException
+     * @throws LootTypeException wrong method called
      */
     @Override
     public LevelDevCard getLevel() throws LootTypeException {
@@ -45,11 +43,20 @@ public class ResourceLoot extends Loot {
 
     /**
      * if this method is invoked there is en error
-     * @return
-     * @throws LootTypeException
+     * @throws LootTypeException wrong method called
      */
     @Override
     public ColorDevCard getColor() throws LootTypeException {
         throw new LootTypeException("exception: ResourceLoot.getColot();");
+    }
+
+    /**
+     * return the amount of loot contained
+     *
+     * @return number of loot
+     */
+    @Override
+    public int getAmount() {
+        return resource.amount();
     }
 }

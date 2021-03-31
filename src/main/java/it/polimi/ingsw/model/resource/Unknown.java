@@ -1,9 +1,19 @@
-package it.polimi.ingsw.model.resource.resourceTypes;
+package it.polimi.ingsw.model.resource;
 
 /**
  * used to represent the UNKNOWN resource
  */
 public class Unknown implements Resource {
+    /**
+     * unknown is always zero
+     *
+     * @return amount of the resource is always 0
+     */
+    @Override
+    public int amount() {
+        return 0;
+    }
+
 
     /**
      * unknown can't be stored in depots
