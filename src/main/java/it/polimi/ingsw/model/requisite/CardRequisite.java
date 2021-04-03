@@ -20,7 +20,7 @@ public class CardRequisite implements Requisite {
     private ColorDevCard color;
 
     /**
-     * excepton thrown in case someone calls getType() method
+     * exception thrown in case someone calls getType() method
      */
     private Exception LootTypeException;
 
