@@ -9,16 +9,16 @@ import java.util.List;
 import java.lang.Math;
 
 /**
- * This class contains every method to manage a deck of cards.
+ * This class contains every method to manage a deck of cards. Generics are useful to use methods inside the Card sublcasses.
  * @param <T>
  */
-public class Deck<T extends Card> {
+public class Deck<T extends Card>{
 
     /**
-     * This constructor creates a deck with a list of Card inside.
+     * This constructor creates a deck with a list of Cards inside.
      * @param cards to insert.
      */
-    public Deck(List<Card> cards) {
+    public Deck(List<T> cards) {
         this.cards = cards;
         this.updateNumberOfCards();
     }
@@ -27,13 +27,13 @@ public class Deck<T extends Card> {
      * This constructor creates a deck with a Card inside.
      * @param card to insert.
      */
-    public Deck(Card card) {
+    public Deck(T card) {
         this.cards.add(card);
         this.updateNumberOfCards();
     }
 
     /**
-     * This constructor creates a deck without any card inside.
+     * This constructor creates a deck without any Card inside.
      */
     public Deck() {
         numberOfCards = 0;
@@ -47,12 +47,12 @@ public class Deck<T extends Card> {
     /**
      * This attribute is a list of Card, the deck.
      */
-    private List<Card> cards = new ArrayList<Card>();
+    private List<T> cards = new ArrayList<>();
 
     /**
      * This attribute is a list of Card, the discarded ones. Used on single player matches, to shuffle every SoloActionToken.
      */
-    private List<Card> discardedCards = new ArrayList<Card>();
+    private List<T> discardedCards = new ArrayList<>();
 
     /**
      * This method shuffles the deck. DevCards, LeaderCards and SoloActionToken's deck are shuffled at the start of the game.
@@ -62,7 +62,7 @@ public class Deck<T extends Card> {
         this.cards.addAll(this.discardedCards);
         this.discardedCards.clear();
         this.updateNumberOfCards();
-        List<Card> tempCards = new ArrayList<Card>();
+        List<T> tempCards = new ArrayList<>();
         for(int i=this.numberOfCards;i>0;i--){
             tempCards.add(this.cards.remove((int)(Math.random()*this.numberOfCards)));
             this.updateNumberOfCards();
@@ -75,11 +75,11 @@ public class Deck<T extends Card> {
      * @return the first card of the list.
      * @throws EmptyDeckException if the list is empty.
      */
-    public Card draw() throws EmptyDeckException{
+    public T draw() throws EmptyDeckException{
         if(this.cards.isEmpty()){
             throw new EmptyDeckException("exception: draw from empty deck");
         }
-        Card tempCard;
+        T tempCard;
         tempCard = this.cards.remove(0);
         this.updateNumberOfCards();
         return tempCard;
@@ -101,7 +101,7 @@ public class Deck<T extends Card> {
      * This method inserts a list of Card into the deck.
      * @param cards to insert.
      */
-    public void insertCard(List<Card> cards){
+    public void insertCard(List<T> cards){
         this.cards.addAll(cards);
         this.updateNumberOfCards();
     }
@@ -110,7 +110,7 @@ public class Deck<T extends Card> {
      * This method inserts a card into the deck.
      * @param card to insert.
      */
-    public void insertCard(Card card){
+    public void insertCard(T card){
         this.cards.add(card);
         this.updateNumberOfCards();
     }
@@ -119,8 +119,8 @@ public class Deck<T extends Card> {
      * This method return the first card (position 0) of the deck.
      * @return the top card of the deck.
      */
-    public Card peekFirstCard(){
-        return this.cards.get(0);
+    public T peekFirstCard(){
+            return this.cards.get(0);
     }
 
     /**
@@ -129,9 +129,9 @@ public class Deck<T extends Card> {
      * @return the card which cardID matches the parameter.
      * @throws MissingCardException when the card you are searching for is not inside the deck.
      */
-    public Card peekCard(String cardID) throws MissingCardException{
+    public T peekCard(String cardID) throws MissingCardException{
         for(int i=this.numberOfCards;i>0;i--) {
-            if (this.cards.get(i).getCardID() == cardID) return this.cards.get(i);
+            if (this.cards.get(i-1).getCardID().equals(cardID)) return this.cards.get(i-1);
         }
         throw new MissingCardException("exception: missing card to peek");
     }
@@ -149,5 +149,14 @@ public class Deck<T extends Card> {
      */
     public int getNumberOfCards(){
         return this.numberOfCards;
+    }
+
+    @Override
+    public String toString() {
+        return "Deck{" +
+                "numberOfCards=" + numberOfCards +
+                ", cards=" + cards +
+                ", discardedCards=" + discardedCards +
+                '}';
     }
 }

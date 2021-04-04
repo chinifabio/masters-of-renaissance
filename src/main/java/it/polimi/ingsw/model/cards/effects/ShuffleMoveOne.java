@@ -1,18 +1,15 @@
 package it.polimi.ingsw.model.cards.effects;
 
-public class ShuffleMoveOne implements Effect {
-    /**
-     *
-     */
-    void ShuffleMoveOne(){
+import it.polimi.ingsw.model.player.Player;
 
-    }
+public class ShuffleMoveOne implements Effect {
 
     /**
      *
      */
     @Override
-    public void use() {
-
+    public void use(Player p) {
+        p.moveLorenzo();
+        // mischiare soloactiontoken
     }
 }

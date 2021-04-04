@@ -1,18 +1,14 @@
 package it.polimi.ingsw.model.cards.effects;
 
-public class AddDepot implements Effect{
-    /**
-     *
-     */
-    public AddDepot() {
+import it.polimi.ingsw.model.player.Player;
 
-    }
+public class AddDepot implements Effect{
 
     /**
      *
      */
     @Override
-    public void use() {
-
+    public void use(Player p) {
+        p.addDepot();
     }
 }

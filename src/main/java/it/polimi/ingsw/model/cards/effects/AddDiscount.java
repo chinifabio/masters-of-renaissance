@@ -1,18 +1,14 @@
 package it.polimi.ingsw.model.cards.effects;
 
-public class AddDiscount implements Effect{
-    /**
-     *
-     */
-    public AddDiscount() {
+import it.polimi.ingsw.model.player.Player;
 
-    }
+public class AddDiscount implements Effect{
 
     /**
      *
      */
     @Override
-    public void use() {
-
+    public void use(Player p) {
+        p.addDiscount();
     }
 }

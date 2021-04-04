@@ -1,11 +1,12 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.cards.effects.Effect;
 import it.polimi.ingsw.model.requisite.Requisite;
 import java.util.List;
 
 public class DevCard extends Card{
-    public DevCard(String cardID, int victoryPoint, LevelDevCard level, ColorDevCard color, List<Requisite> cost) {
-        super(cardID);
+    public DevCard(String cardID, Effect effect, int victoryPoint, LevelDevCard level, ColorDevCard color, List<Requisite> cost) {
+        super(cardID, effect);
         this.victoryPoint = victoryPoint;
         this.level = level;
         this.color = color;
@@ -67,8 +68,15 @@ public class DevCard extends Card{
     /**
      * This method implements the required method from the abstract Card class. It permits to activate the effect AddProduction of the DevCard.
      */
-    @Override
-    public void useEffect() {
 
+    @Override
+    public String toString() {
+        return "DevCard{" +
+                "VP=" + victoryPoint +
+                ", lev=" + level +
+                ", color=" + color +
+                ", cost=" + cost +
+                '}';
     }
+
 }

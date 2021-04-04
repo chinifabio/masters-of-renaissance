@@ -1,18 +1,14 @@
 package it.polimi.ingsw.model.cards.effects;
 
-public class WhiteMarble implements Effect{
-    /**
-     *
-     */
-    public WhiteMarble() {
+import it.polimi.ingsw.model.player.Player;
 
-    }
+public class WhiteMarble implements Effect{
 
     /**
      *
      */
     @Override
-    public void use() {
+    public void use(Player p) {
 
     }
 }

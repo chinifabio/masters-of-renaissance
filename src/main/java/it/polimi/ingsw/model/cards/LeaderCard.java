@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.cards;
 
 import java.util.List;
+
+import it.polimi.ingsw.model.cards.effects.Effect;
 import it.polimi.ingsw.model.requisite.Requisite;
 
 /**
@@ -13,8 +15,8 @@ public class LeaderCard extends Card{
      * @param victoryPoint of the card.
      * @param requirements of the card.
      */
-    public LeaderCard(int victoryPoint, List<Requisite> requirements, String cardID) {
-        super(cardID);
+    public LeaderCard(int victoryPoint, Effect effect, List<Requisite> requirements, String cardID) {
+        super(cardID, effect);
         this.victoryPoint = victoryPoint;
         this.requirements = requirements;
         this.activated = false;
@@ -66,11 +68,4 @@ public class LeaderCard extends Card{
         return activated;
     }
 
-    /**
-     * This method implements the required method from the abstract Card class. It permits to activate one of the effects of the LeaderCard: AddProduction, AddDiscount, AddDepot, WhiteMarble.
-     */
-    @Override
-    public void useEffect(){
-
-    }
 }
