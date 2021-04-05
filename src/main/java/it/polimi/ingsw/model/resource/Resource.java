@@ -1,8 +1,9 @@
-package it.polimi.ingsw.model.resource.builder;
+package it.polimi.ingsw.model.resource;
 
+import it.polimi.ingsw.model.exceptions.NegativeResourceException;
 import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
 import it.polimi.ingsw.model.player.PlayerModifier;
-import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.strategy.LaunchExceptionBehavior;
 import it.polimi.ingsw.model.resource.strategy.ObtainStrategy;
 
 /**
@@ -12,15 +13,15 @@ public class Resource{
     /**
      * the type of the resource
      */
-    ResourceType type;
+    private ResourceType type;
     /**
      * the strategy for differentiate behaviours when the player obtain the resource
      */
-    ObtainStrategy os;
+    private ObtainStrategy os;
     /**
      * the amount of the resource
      */
-    int amount;
+    private int amount;
 
     /**
      * constructor for a default amount = 1
@@ -38,7 +39,7 @@ public class Resource{
      * @param type the type of the resource
      * @param os strategy
      */
-    protected Resource(ResourceType type, ObtainStrategy os, int amount) {
+    protected Resource(ResourceType type, ObtainStrategy os, int amount){
         this.type = type;
         this.os = os;
         this.amount = amount;
@@ -53,11 +54,23 @@ public class Resource{
     }
 
     /**
-     * return the amoutn of the resource
+     * return the amount of the resource
      * @return amount of the resource
      */
     public int amount() {
         return amount;
+    }
+
+    /**
+     * merge a passed resource to this one only if they are the same type
+     * @param toMerge resource to merge with this one
+     * @return true if the operation worked fine, otherwise return false
+     */
+    public boolean merge(Resource toMerge) {
+        if(equals(toMerge)) {
+            this.amount += toMerge.amount;
+            return true;
+        } else return false;
     }
 
     /**
@@ -67,5 +80,25 @@ public class Resource{
      */
     public void onObtain(PlayerModifier player) throws UnobtainableResourceException {
         os.obtain(player);
+    }
+
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     * @param obj the reference object with which to compare.
+     * @return {@code true} if this object is the same as the obj
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Resource) return (((Resource) obj).type() == this.type);
+        else return false;
+    }
+
+    /**
+     * Returns a string representation of the object.
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return "resource: type -> "+type.toString()+" amount -> " + amount;
     }
 }

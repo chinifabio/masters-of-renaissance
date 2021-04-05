@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.model.resource.builder.Resource;
+import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.List;
 import java.util.Optional;

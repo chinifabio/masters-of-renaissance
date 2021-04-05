@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 
 import it.polimi.ingsw.model.exceptions.NoMoreMovesException;
-import it.polimi.ingsw.model.resource.builder.Resource;
+import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.*;
 

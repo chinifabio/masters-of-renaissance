@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse;
 
 
-import it.polimi.ingsw.model.resource.builder.Resource;
+import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.List;
 import java.util.function.BiPredicate;

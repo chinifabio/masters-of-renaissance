@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.model.resource.builder.Resource;
-
-import java.util.List;
+import it.polimi.ingsw.model.resource.Resource;
 
 /**
  * This interface includes all the methods that can be called to modify the Player status and attributes

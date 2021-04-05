@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 
 import it.polimi.ingsw.model.player.PlayerModifier;
-import it.polimi.ingsw.model.resource.builder.Resource;
-import it.polimi.ingsw.model.resource.builder.ResourceDirector;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 
 /**
  * represent the yellow marble that can be obtained using the marketTray
@@ -25,7 +25,7 @@ public class Yellow extends Marble {
      */
     @Override
     public void toPlayer(PlayerModifier player) {
-        Resource res = ResourceDirector.buildCoin();
+        Resource res = ResourceBuilder.buildCoin();
         player.obtainResource(res);
     }
 
