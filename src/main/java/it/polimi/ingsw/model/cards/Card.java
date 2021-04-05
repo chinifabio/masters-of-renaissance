@@ -9,13 +9,14 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * This abstract class generalize the concept of Card, everyone has a cardID and an effect.
+ * This abstract class generalize the concept of Card, every Card has a cardID and an effect.
  */
 public abstract class Card{
 
     /**
-     * This is the constructor of the class.
-     * @param cardID
+     * This is the constructor of the class. It needs a cardID and an effect.
+     * @param cardID of the Card.
+     * @param effect of the Card.
      */
     public Card(String cardID, Effect effect) {
         this.cardID = cardID;
@@ -28,7 +29,7 @@ public abstract class Card{
     private String cardID;
 
     /**
-     * This attribute is the effect of the card.
+     * This attribute is the effect of the card. The effect is highly tied with the card type.
      */
     private Effect effect;
 
@@ -46,4 +47,14 @@ public abstract class Card{
     public void useEffect(Player p){
         effect.use(p);
     };
+
+
+    /**
+     * This method overloads the one on the Object class. It permits to check if two cards are the same card, comparing their cardIDs.
+     * @param c to confront with the first.
+     * @return true if cardID are equals, false if not.
+     */
+    public boolean equals(Card c) {
+        return this.cardID.equals(c.cardID);
+    }
 }

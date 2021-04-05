@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.cards;
 
 
+import it.polimi.ingsw.model.exceptions.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.MissingCardException;
 
@@ -14,14 +15,19 @@ import java.lang.Math;
  */
 public class Deck<T extends Card>{
 
-    /**
-     * This constructor creates a deck with a list of Cards inside.
-     * @param cards to insert.
-     */
-    public Deck(List<T> cards) {
-        this.cards = cards;
-        this.updateNumberOfCards();
-    }
+ //   /**
+ //    * This constructor creates a deck with a list of Cards inside.
+ //    * @param cards to insert.
+ //    */
+ //   public Deck(List<T> cards) throws AlreadyInDeckException{
+ //       int x = (int) cards.stream().count();
+ //       int y = (int) cards.stream().distinct().count();
+ //       if(x==y){
+ //           throw new AlreadyInDeckException("exception: two or more cards with the same ID");
+ //       }
+ //       this.cards = cards;
+ //       this.updateNumberOfCards();
+ //   }
 
     /**
      * This constructor creates a deck with a Card inside.
@@ -68,10 +74,11 @@ public class Deck<T extends Card>{
             this.updateNumberOfCards();
         }
         this.cards = tempCards;
+        this.updateNumberOfCards();
     }
 
     /**
-     * This method takes the first card from the List of Card and returns Card.
+     * This method takes the first card from the List of Card and returns a Card.
      * @return the first card of the list.
      * @throws EmptyDeckException if the list is empty.
      */
@@ -87,7 +94,7 @@ public class Deck<T extends Card>{
 
     /**
      * This method takes the first card from the List of Card and add this card to the list of discardedCards.
-     * @throws EmptyDeckException if the list is empty.
+     * @throws EmptyDeckException if the deck is empty.
      */
     public void discard() throws EmptyDeckException {
         if(this.cards.isEmpty()){
@@ -97,20 +104,33 @@ public class Deck<T extends Card>{
         this.updateNumberOfCards();
     }
 
-    /**
-     * This method inserts a list of Card into the deck.
-     * @param cards to insert.
-     */
-    public void insertCard(List<T> cards){
-        this.cards.addAll(cards);
-        this.updateNumberOfCards();
-    }
+ //   /**
+ //    * This method inserts a list of Card into the deck.
+ //    * @param cards to insert.
+ //    */
+ //   public void insertCard(List<T> cards) throws AlreadyInDeckException {
+ //       List<T> tempCards = this.cards;
+ //       tempCards.addAll(cards);
+ //       int x = (int) tempCards.stream().count();
+ //       int y = (int) tempCards.stream().distinct().count();
+ //       if(x==y){
+ //           throw new AlreadyInDeckException("exception: two or more cards with the same ID");
+ //       }
+ //       this.cards = tempCards;
+ //       this.updateNumberOfCards();
+ //   }
 
     /**
      * This method inserts a card into the deck.
      * @param card to insert.
+     * @throws AlreadyInDeckException if the deck already contains this card.
      */
-    public void insertCard(T card){
+    public void insertCard(T card) throws AlreadyInDeckException{
+        for(int i=0;i<this.numberOfCards;i++){
+            if(card.equals(this.cards.get(i))){
+                throw new AlreadyInDeckException("exception: two cards with the same ID");
+            }
+        }
         this.cards.add(card);
         this.updateNumberOfCards();
     }
@@ -137,7 +157,7 @@ public class Deck<T extends Card>{
     }
 
     /**
-     * This method update the number of Cards of the deck. It's only called from other methods.
+     * This method update the number of Cards of the deck. It's called only from other methods.
      */
     private void updateNumberOfCards(){
         this.numberOfCards = this.cards.size();
@@ -159,4 +179,5 @@ public class Deck<T extends Card>{
                 ", discardedCards=" + discardedCards +
                 '}';
     }
+
 }

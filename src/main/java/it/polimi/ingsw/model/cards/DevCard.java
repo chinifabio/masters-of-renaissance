@@ -2,10 +2,21 @@ package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.model.cards.effects.Effect;
 import it.polimi.ingsw.model.requisite.Requisite;
+import it.polimi.ingsw.model.resource.Resource;
+
 import java.util.List;
 
 public class DevCard extends Card{
-    public DevCard(String cardID, Effect effect, int victoryPoint, LevelDevCard level, ColorDevCard color, List<Requisite> cost) {
+
+    /**
+     * This is the constructor of the class.
+     * @param cardID requested from the upper class.
+     * @param effect requested from the upper class.
+     * @param victoryPoint that the card will give at the end of the game.
+     * @param level of the card.
+     * @param color of the card.
+     */
+    public DevCard(String cardID, Effect effect, int victoryPoint, LevelDevCard level, ColorDevCard color, List<Requisite> cost){
         super(cardID, effect);
         this.victoryPoint = victoryPoint;
         this.level = level;
@@ -29,12 +40,12 @@ public class DevCard extends Card{
     private ColorDevCard color;
 
     /**
-     * This attribute is the list of Loot that the DevCard requires to be bought.
+     * This attribute is the list of Requisite that the DevCard requires to be bought.
      */
     private List<Requisite> cost;
 
     /**
-     * This method is used to get the value of victoryPoint.
+     * This method is used to get the value of victoryPoint of the Card.
      * @return the victoryPoint of the DevCard.
      */
     public int getVictoryPoint() {
@@ -42,7 +53,7 @@ public class DevCard extends Card{
     }
 
     /**
-     * This method returns the value of the level attribute.
+     * This method is used to get the value of level of the Card.
      * @return the level of the DevCard.
      */
     public LevelDevCard getLevel() {
@@ -50,7 +61,7 @@ public class DevCard extends Card{
     }
 
     /**
-     * This method returns the value of the color attribute.
+     * This method is used to get the color of the Card.
      * @return the color of the DevCard.
      */
     public ColorDevCard getColor() {
@@ -65,9 +76,17 @@ public class DevCard extends Card{
         return cost;
     }
 
-    /**
-     * This method implements the required method from the abstract Card class. It permits to activate the effect AddProduction of the DevCard.
-     */
+ //   /**
+ //   * This attribute is the list of Resource that the DevCard will produce when activated during the production phase.
+ //   */
+ //   private List<Resource> result;
+ //   /**
+ //    * This method is used to get the List of Resource that the DevCard produces.
+ //    * @return the result of the production.
+ //    */
+ //   public List<Resource> getResult() {
+ //       return result;
+ //   }
 
     @Override
     public String toString() {
@@ -75,7 +94,6 @@ public class DevCard extends Card{
                 "VP=" + victoryPoint +
                 ", lev=" + level +
                 ", color=" + color +
-                ", cost=" + cost +
                 '}';
     }
 

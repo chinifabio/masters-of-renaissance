@@ -1,20 +1,15 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.cards.effects.Effect;
+
 public class SoloActionToken extends Card{
 
     /**
      * This is the constructor of the class, it needs the cardID because the class extends Card, which requires a cardID.
      * @param cardID for the upper class.
      */
-    public SoloActionToken(String cardID) {
-        super(cardID);
+    public SoloActionToken(String cardID, Effect effect) {
+        super(cardID,effect);
     }
 
-    /**
-     * This method implements the required method from the abstract Card class. It permits to activate different effects: MoveTwo, ShuffleMoveOne, DestroyCards
-     */
-    @Override
-    public void useEffect() {
-
-    }
 }

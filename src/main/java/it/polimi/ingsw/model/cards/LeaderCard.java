@@ -15,7 +15,7 @@ public class LeaderCard extends Card{
      * @param victoryPoint of the card.
      * @param requirements of the card.
      */
-    public LeaderCard(int victoryPoint, Effect effect, List<Requisite> requirements, String cardID) {
+    public LeaderCard(String cardID, Effect effect,int victoryPoint,List<Requisite> requirements ) {
         super(cardID, effect);
         this.victoryPoint = victoryPoint;
         this.requirements = requirements;
