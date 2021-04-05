@@ -9,14 +9,12 @@
   <version>1.0-SNAPSHOT</version>
 
   <name>AM28</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <url>https://github.com/chinifabio/ingswAM2021-Chini-Colabene-Curreri</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <junit-jupiter.version>5.5.0</junit-jupiter.version>
   </properties>
 
   <dependencies>
@@ -24,7 +22,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>RELEASE</version>
+      <version>5.8.0-M1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
