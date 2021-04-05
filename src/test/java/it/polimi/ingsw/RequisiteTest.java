@@ -7,8 +7,8 @@ import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.requisite.CardRequisite;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
-import it.polimi.ingsw.model.resource.Coin;
-import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.builder.Resource;
+import it.polimi.ingsw.model.resource.builder.ResourceDirector;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -22,7 +22,7 @@ public class RequisiteTest {
     @Test
     public void resLootAmount(){
         int amount = 3;
-        Resource res = new Coin(amount);
+        Resource res = ResourceDirector.buildCoin(amount);
 
         Requisite test = new ResourceRequisite(res);
         boolean result = false;
@@ -38,7 +38,7 @@ public class RequisiteTest {
     @Test
     public void resLootColor() {
         int amount = 3;
-        Resource res = new Coin(amount);
+        Resource res = ResourceDirector.buildCoin(amount);
 
         Requisite test = new ResourceRequisite(res);
         boolean result = false;
@@ -58,7 +58,7 @@ public class RequisiteTest {
     @Test
     public void resLootLevel() {
         int amount = 3;
-        Resource res = new Coin(amount);
+        Resource res = ResourceDirector.buildCoin(amount);
 
         Requisite test = new ResourceRequisite(res);
         boolean result = false;
@@ -78,7 +78,7 @@ public class RequisiteTest {
     @Test
     public void resLootType() {
         int amount = 3;
-        Resource res = new Coin(amount);
+        Resource res = ResourceDirector.buildCoin(amount);
 
         Requisite test = new ResourceRequisite(res);
         boolean result = false;

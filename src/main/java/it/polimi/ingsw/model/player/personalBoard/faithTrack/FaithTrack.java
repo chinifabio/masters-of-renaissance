@@ -1,7 +1,8 @@
 package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 
-import it.polimi.ingsw.model.resource.FaithPoint;
 import it.polimi.ingsw.model.exceptions.NoMoreMovesException;
+import it.polimi.ingsw.model.resource.builder.Resource;
+
 import java.util.*;
 
 /**
@@ -97,7 +98,7 @@ public class FaithTrack {
      * This method move the FaithMarker of the player in the FaithTrack
      * @param points is the value of how far the player's marker must go
      */
-    public void movePlayer(FaithPoint points) throws NoMoreMovesException{
+    public void movePlayer(Resource points) throws NoMoreMovesException{
         if (this.playerPosition >= track.size()-1 && points.amount() > 0) {
             throw new NoMoreMovesException("exception: The Player is in the last cell, he can't move");
         }

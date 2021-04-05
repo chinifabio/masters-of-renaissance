@@ -3,7 +3,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.exceptions.NoMoreMovesException;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.*;
-import it.polimi.ingsw.model.resource.*;
+import it.polimi.ingsw.model.resource.builder.Resource;
+import it.polimi.ingsw.model.resource.builder.ResourceDirector;
 import org.junit.jupiter.api.Test;
 
 public class FaithTrackTest {
@@ -16,7 +17,7 @@ public class FaithTrackTest {
     public void infoFaithTrack() throws NoMoreMovesException{
 
         FaithTrack track = new FaithTrack();
-        FaithPoint point = new FaithPoint(1);
+        Resource point = ResourceDirector.buildFaithPoint();
 
         assertEquals(0, track.victoryPointCell());
         assertEquals(VaticanSpace.NONE, track.vaticanSpaceCell());
@@ -35,13 +36,12 @@ public class FaithTrackTest {
         assertEquals(VaticanSpace.FIRST, track.vaticanSpaceCell());
         assertEquals(0, track.victoryPointCell());
 
-        FaithPoint mid = new FaithPoint(7);
+        Resource mid = ResourceDirector.buildFaithPoint(7);
         track.movePlayer(mid);
         assertEquals(VaticanSpace.SECOND, track.vaticanSpaceCell());
         assertEquals(9, track.victoryPointCell());
 
-
-        FaithPoint last = new FaithPoint(9);
+        Resource last = ResourceDirector.buildFaithPoint(9);
         track.movePlayer(last);
         assertEquals(VaticanSpace.THIRD, track.vaticanSpaceCell());
         assertEquals(20, track.victoryPointCell());
@@ -55,10 +55,10 @@ public class FaithTrackTest {
     @Test
     public void checkPlayerPosition() throws NoMoreMovesException {
 
-        FaithPoint first = new FaithPoint(1);
-        FaithPoint second = new FaithPoint(2);
-        FaithPoint third = new FaithPoint(3);
-        FaithPoint last = new FaithPoint(18);
+        Resource first = ResourceDirector.buildFaithPoint(1);
+        Resource second = ResourceDirector.buildFaithPoint(2);
+        Resource third = ResourceDirector.buildFaithPoint(3);
+        Resource last = ResourceDirector.buildFaithPoint(18);
 
         FaithTrack faithTrack = new FaithTrack();
 
@@ -108,7 +108,7 @@ public class FaithTrackTest {
     public void flipPopeTiles() throws NoMoreMovesException {
 
         FaithTrack faithTrack = new FaithTrack();
-        FaithPoint third = new FaithPoint(3);
+        Resource third = ResourceDirector.buildFaithPoint(3);
 
         faithTrack.getTile(1);
         assertFalse(faithTrack.getTile(2));
@@ -144,8 +144,8 @@ public class FaithTrackTest {
     public void callExceptionPlayerMove() throws NoMoreMovesException{
 
         FaithTrack track = new FaithTrack();
-        FaithPoint first = new FaithPoint(1);
-        FaithPoint last = new FaithPoint(18);
+        Resource first = ResourceDirector.buildFaithPoint(1);
+        Resource last = ResourceDirector.buildFaithPoint(18);
 
         assertEquals(0,track.getPlayerPosition());
         track.movePlayer(first);

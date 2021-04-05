@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.match.MarkerMarble;
+package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 
 /**
  * Color for the marbles in game

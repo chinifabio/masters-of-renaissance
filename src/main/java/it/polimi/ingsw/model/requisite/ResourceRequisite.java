@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.requisite;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.LootTypeException;
-import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.builder.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 /**
