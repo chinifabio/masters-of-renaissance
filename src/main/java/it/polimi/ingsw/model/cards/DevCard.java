@@ -76,18 +76,6 @@ public class DevCard extends Card{
         return cost;
     }
 
- //   /**
- //   * This attribute is the list of Resource that the DevCard will produce when activated during the production phase.
- //   */
- //   private List<Resource> result;
- //   /**
- //    * This method is used to get the List of Resource that the DevCard produces.
- //    * @return the result of the production.
- //    */
- //   public List<Resource> getResult() {
- //       return result;
- //   }
-
     @Override
     public String toString() {
         return "DevCard{" +
