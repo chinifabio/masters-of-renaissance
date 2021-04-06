@@ -30,6 +30,9 @@ public class ResourceTest {
 
         Resource unknown = ResourceBuilder.buildUnknown();
         assertTrue(unknown.type() == ResourceType.UNKNOWN && unknown.amount() == 1);
+
+        Resource empty = ResourceBuilder.buildEmpty();
+        assertTrue(empty.type() == ResourceType.EMPTY && unknown.amount() == 0);
     }
 
     @Test
@@ -51,8 +54,6 @@ public class ResourceTest {
         Resource faithpoint = ResourceBuilder.buildFaithPoint(amount);
         assertTrue(faithpoint.type() == ResourceType.FAITHPOINT && faithpoint.amount() == amount);
 
-        Resource unknown = ResourceBuilder.buildUnknown(amount);
-        assertTrue(unknown.type() == ResourceType.UNKNOWN && unknown.amount() == amount);
     }
 
     @Test

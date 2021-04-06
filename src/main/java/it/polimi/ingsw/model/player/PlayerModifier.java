@@ -63,7 +63,7 @@ public interface PlayerModifier {
     void moveResourceDepot();
 
     /**
-     * This method flips the PopeTile when the Player is (or passed) a PopeSpace
+     * This method flips the PopeTile when the Player is in a Vatican Space or passed the relative PopeSpace
      */
     void flipPopeTile();
 

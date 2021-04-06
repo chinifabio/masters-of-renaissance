@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.polimi.ingsw.model.exceptions.NegativePointsException;
 import it.polimi.ingsw.model.exceptions.NoMoreMovesException;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.*;
 import it.polimi.ingsw.model.resource.Resource;
@@ -12,9 +13,10 @@ public class FaithTrackTest {
     /**
      * Testing if the FaithTrack is correctly created using the player position to take cells info
      * @throws NoMoreMovesException if the Player or Lorenzo moves when they are in the last cell
+     * @throws NegativePointsException if the Player or Lorenzo receives negative points
      */
     @Test
-    public void infoFaithTrack() throws NoMoreMovesException{
+    public void infoFaithTrack() throws NoMoreMovesException, NegativePointsException {
 
         FaithTrack track = new FaithTrack();
         Resource point = ResourceBuilder.buildFaithPoint();
@@ -51,9 +53,10 @@ public class FaithTrackTest {
     /**
      * Testing if the PlayerPosition is correctly updated
      * @throws NoMoreMovesException if the Player or Lorenzo moves when they are in the last cell
+     * @throws NegativePointsException if the Player or Lorenzo receives negative points
      */
     @Test
-    public void checkPlayerPosition() throws NoMoreMovesException {
+    public void checkPlayerPosition() throws NoMoreMovesException, NegativePointsException {
 
         Resource first = ResourceBuilder.buildFaithPoint(1);
         Resource second = ResourceBuilder.buildFaithPoint(2);
@@ -80,9 +83,10 @@ public class FaithTrackTest {
     /**
      * Testing if the LorenzoPosition is correctly updated
      * @throws NoMoreMovesException if the Player or Lorenzo moves when they are in the last cell
+     * @throws NegativePointsException if the Player or Lorenzo receives negative points
      */
     @Test
-    public void checkLorenzoPosition() throws NoMoreMovesException {
+    public void checkLorenzoPosition() throws NoMoreMovesException, NegativePointsException {
 
         FaithTrack faithTrack = new FaithTrack();
 
@@ -103,9 +107,10 @@ public class FaithTrackTest {
     /**
      * Testing if the Tiles of the VaticanSpace are correctly flipped when the player moves
      * @throws NoMoreMovesException if the Player or Lorenzo moves when they are in the last cell
+     * @throws NegativePointsException if the Player or Lorenzo receives negative points
      */
     @Test
-    public void flipPopeTiles() throws NoMoreMovesException {
+    public void flipPopeTiles() throws NoMoreMovesException, NegativePointsException {
 
         FaithTrack faithTrack = new FaithTrack();
         Resource third = ResourceBuilder.buildFaithPoint(3);
@@ -139,11 +144,13 @@ public class FaithTrackTest {
     /**
      * Testing if the model calls an exception when the player try to pass the last cell of the FaithTrack
      * @throws NoMoreMovesException if the Player or Lorenzo moves when they are in the last cell
+     * @throws NegativePointsException if the Player or Lorenzo receives negative points
      */
     @Test
-    public void callExceptionPlayerMove() throws NoMoreMovesException{
+    public void callExceptionsPlayer() throws NoMoreMovesException, NegativePointsException{
 
         FaithTrack track = new FaithTrack();
+        Resource negative = ResourceBuilder.buildFaithPoint(-3);
         Resource first = ResourceBuilder.buildFaithPoint(1);
         Resource last = ResourceBuilder.buildFaithPoint(18);
 
@@ -152,11 +159,20 @@ public class FaithTrackTest {
         track.movePlayer(last);
         track.movePlayer(last);
         assertEquals(24, track.getPlayerPosition());
+        boolean move = false;
         boolean result = false;
 
         try {
             track.movePlayer(first);
         } catch (NoMoreMovesException e) {
+            move = true;
+            System.out.println(e.getMsg());
+        }
+        assertTrue(move);
+
+        try {
+            track.movePlayer(negative);
+        } catch (NegativePointsException e) {
             result = true;
             System.out.println(e.getMsg());
         }
@@ -166,24 +182,34 @@ public class FaithTrackTest {
     /**
      * Testing if the model calls an exception when Lorenzo try to pass the last cell of the FaithTrack
      * @throws NoMoreMovesException if the Player or Lorenzo moves when they are in the last cell
+     * @throws NegativePointsException if the Player or Lorenzo receives negative points
      */
     @Test
-    public void callExceptionLorenzoMove() throws NoMoreMovesException{
+    public void callExceptionsLorenzo() throws NoMoreMovesException, NegativePointsException{
 
         FaithTrack track = new FaithTrack();
 
         assertEquals(0,track.getLorenzoPosition());
         track.moveLorenzo(28);
         assertEquals(24, track.getLorenzoPosition());
-        boolean result = false;
+        boolean move = false;
+        boolean negative = false;
 
         try {
             track.moveLorenzo(1);
         } catch (NoMoreMovesException e) {
-            result = true;
+            move = true;
             System.out.println(e.getMsg());
         }
-        assertTrue(result);
+        assertTrue(move);
+
+        try {
+            track.moveLorenzo(-2);
+        } catch (NegativePointsException e) {
+            negative = true;
+            System.out.println(e.getMsg());
+        }
+        assertTrue(negative);
     }
 
 }

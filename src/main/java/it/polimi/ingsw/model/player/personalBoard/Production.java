@@ -15,22 +15,31 @@ public class Production {
     /**
      * This attribute is the list of the Resources required to activate the Production
      */
-    private List<ResourceRequisite> required;
+    private final List<ResourceRequisite> required;
     /**
      * This attribute is the list of the Resources obtained after the Production
      */
-    private List<ResourceRequisite> output;
+    private final List<ResourceRequisite> output;
 
     /**
      * This method is the constructor of the class
      */
-    public Production production;
+    public Production() {
+        //Da aggiornare con i parametri
+        this.required = null;
+        this.output = null;
+    }
+
     /**
      * This method returns the List of Resources requests
      */
-    public List<ResourceRequisite> getRequired;
+    public List<ResourceRequisite> getRequired(){
+        return required;
+    }
     /**
      * This method returns the List of Resources obtained after the Production
      */
-    public List<ResourceRequisite> getOutput;
+    public List<ResourceRequisite> getOutput(){
+        return output;
+    }
 }

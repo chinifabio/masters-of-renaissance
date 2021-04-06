@@ -104,11 +104,11 @@ public class ResourceBuilder {
     }
 
     /**
-     * build a unknown resource whit custom amount
-     * @param amount amount of the resource
+     * build a empty resource whit amount = 0
      * @return the resource created
      */
-    public static Resource buildUnknown(int amount) {
-        return new Resource(ResourceType.UNKNOWN, new LaunchExceptionBehavior(), amount);
+    public static Resource buildEmpty() {
+        return new Resource(ResourceType.EMPTY, new DoNothingBehavior(), 0);
     }
+
 }

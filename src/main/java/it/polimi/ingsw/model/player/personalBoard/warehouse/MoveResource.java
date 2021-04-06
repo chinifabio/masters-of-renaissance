@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.player.personalBoard.warehouse;
 
 
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 
 /**
  * This class represents the movement of resources between depots
