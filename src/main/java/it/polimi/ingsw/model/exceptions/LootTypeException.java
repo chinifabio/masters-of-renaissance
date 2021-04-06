@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.exceptions;
 
 /**
- * exception thrown when wrong methon is invoked in a subclass of Loot
+ * exception thrown when wrong method is invoked in a subclass of Loot
  */
 public class LootTypeException extends Exception {
     /**

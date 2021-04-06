@@ -31,11 +31,13 @@ public class DeckTest {
     void cardIDCheck(){
         String ID = "105", ID1 = "120",ID2 = "145";
         Production p = new Production();
-        List<Requisite> req = new ArrayList<>();
-        req.add(new ResourceRequisite(new Coin(1)));
+        List<Requisite> requisite = new ArrayList<>();
+        Resource coin = ResourceBuilder.buildCoin(2);
+        ResourceRequisite rr = new ResourceRequisite(coin);
+        requisite.add(rr);
 
-        DevCard c1 = new DevCard(ID, new AddProduction(p), 3, LevelDevCard.LEVEL3, ColorDevCard.BLUE,req);
-        LeaderCard c2 = new LeaderCard(ID1, new AddProduction(p),6,req);
+        DevCard c1 = new DevCard(ID, new AddProduction(p), 3, LevelDevCard.LEVEL3, ColorDevCard.BLUE,requisite);
+        LeaderCard c2 = new LeaderCard(ID1, new AddProduction(p),6,requisite);
         SoloActionToken token = new SoloActionToken(ID2, new AddProduction(p));
 
         assertEquals(ID,c1.getCardID());
@@ -51,7 +53,9 @@ public class DeckTest {
         int n = 7;
         Production p = new Production();
         List<Requisite> req = new ArrayList<>();
-        req.add(new ResourceRequisite(new Coin(1)));
+        Resource coin = ResourceBuilder.buildCoin(2);
+        ResourceRequisite rr = new ResourceRequisite(coin);
+        req.add(rr);
 
         DevCard c1 = new DevCard("000", new AddProduction(p), n, LevelDevCard.LEVEL3, ColorDevCard.BLUE,req);
 
@@ -66,7 +70,9 @@ public class DeckTest {
         LevelDevCard lev = LevelDevCard.LEVEL2;
         ColorDevCard col = ColorDevCard.BLUE;
         List<Requisite> req = new ArrayList<>();
-        req.add(new ResourceRequisite(new Coin(1)));
+        Resource coin = ResourceBuilder.buildCoin(2);
+        ResourceRequisite rr = new ResourceRequisite(coin);
+        req.add(rr);
 
         Production p = new Production();
 
@@ -84,7 +90,9 @@ public class DeckTest {
         int n = 12;
         Production p = new Production();
         List<Requisite> req = new ArrayList<>();
-        req.add(new ResourceRequisite(new Servant(3)));
+        Resource coin = ResourceBuilder.buildCoin(2);
+        ResourceRequisite rr = new ResourceRequisite(coin);
+        req.add(rr);
 
         LeaderCard c = new LeaderCard("010", new AddProduction(p), n, req);
 
@@ -98,7 +106,9 @@ public class DeckTest {
     void activatedLeaderCard(){
         Production p = new Production();
         List<Requisite> req = new ArrayList<>();
-        req.add(new ResourceRequisite(new Servant(3)));
+        Resource coin = ResourceBuilder.buildCoin(2);
+        ResourceRequisite rr = new ResourceRequisite(coin);
+        req.add(rr);
 
         LeaderCard c = new LeaderCard("010", new AddProduction(p), 6, req);
 
@@ -117,7 +127,9 @@ public class DeckTest {
         Deck<DevCard> d = new Deck<>();
         Production p = new Production();
         List<Requisite> req = new ArrayList<>();
-        req.add(new ResourceRequisite(new Coin(1)));
+        Resource coin = ResourceBuilder.buildCoin(2);
+        ResourceRequisite rr = new ResourceRequisite(coin);
+        req.add(rr);
 
         assertEquals(0,d.getNumberOfCards());
 
@@ -146,7 +158,9 @@ public class DeckTest {
         int n=2;
         Production p = new Production();
         List<Requisite> req = new ArrayList<>();
-        req.add(new ResourceRequisite(new Coin(1)));
+        Resource coin = ResourceBuilder.buildCoin(2);
+        ResourceRequisite rr = new ResourceRequisite(coin);
+        req.add(rr);
 
         Card c1 = new DevCard("000", new AddProduction(p),10, LevelDevCard.LEVEL1, ColorDevCard.GREEN,req);
         Card c2 = new DevCard("001", new AddProduction(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
@@ -175,7 +189,9 @@ public class DeckTest {
         int n=3;
         Production p = new Production();
         List<Requisite> req = new ArrayList<>();
-        req.add(new ResourceRequisite(new Coin(1)));
+        Resource coin = ResourceBuilder.buildCoin(2);
+        ResourceRequisite rr = new ResourceRequisite(coin);
+        req.add(rr);
 
         DevCard c1 = new DevCard("000", new AddProduction(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
         DevCard c2 = new DevCard("000",  new AddProduction(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
@@ -206,7 +222,9 @@ public class DeckTest {
     void drawFromDeck(){
         Production p = new Production();
         List<Requisite> req = new ArrayList<>();
-        req.add(new ResourceRequisite(new Coin(1)));
+        Resource coin = ResourceBuilder.buildCoin(2);
+        ResourceRequisite rr = new ResourceRequisite(coin);
+        req.add(rr);
 
         DevCard c1 = new DevCard("000", new AddProduction(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
         DevCard c2 = new DevCard("001",  new AddProduction(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
@@ -250,7 +268,9 @@ public class DeckTest {
     void discardCards(){
         Production p = new Production();
         List<Requisite> req = new ArrayList<>();
-        req.add(new ResourceRequisite(new Coin(1)));
+        Resource coin = ResourceBuilder.buildCoin(2);
+        ResourceRequisite rr = new ResourceRequisite(coin);
+        req.add(rr);
 
         DevCard c1 = new DevCard("100", new AddProduction(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
         DevCard c2 = new DevCard("001",  new AddProduction(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
@@ -292,7 +312,9 @@ public class DeckTest {
     void peekCardFromDeck(){
         Production p = new Production();
         List<Requisite> req = new ArrayList<>();
-        req.add(new ResourceRequisite(new Coin(1)));
+        Resource coin = ResourceBuilder.buildCoin(2);
+        ResourceRequisite rr = new ResourceRequisite(coin);
+        req.add(rr);
         String ID = "100", ID1 = "010",ID2 = "001";
 
         DevCard c1 = new DevCard(ID, new AddProduction(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
@@ -332,7 +354,9 @@ public class DeckTest {
     void shuffleDeck(){
         Production p = new Production();
         List<Requisite> req = new ArrayList<>();
-        req.add(new ResourceRequisite(new Servant(3)));
+        Resource coin = ResourceBuilder.buildCoin(2);
+        ResourceRequisite rr = new ResourceRequisite(coin);
+        req.add(rr);
 
         LeaderCard c1 = new LeaderCard("111", new AddProduction(p), 1, req);
         LeaderCard c2 = new LeaderCard("222", new AddProduction(p), 2, req);

@@ -1,13 +1,13 @@
-package it.polimi.ingsw.model.match.MarkerMarble;
+package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 
 import it.polimi.ingsw.model.player.PlayerModifier;
-import it.polimi.ingsw.model.resource.FaithPoint;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 
 /**
  * represent the red marble that can be obtained using the marketTray
  */
-public class Red implements Marble{
+public class Red extends Marble{
     /**
      * return the color of the marble
      *
@@ -25,7 +25,26 @@ public class Red implements Marble{
      */
     @Override
     public void toPlayer(PlayerModifier player) {
-        Resource res = new FaithPoint(1);
+        Resource res = ResourceBuilder.buildFaithPoint();
         player.obtainResource(res);
+    }
+
+    /**
+     * copy the marble in a new instance
+     *
+     * @return new instance equals this
+     */
+    @Override
+    public Marble copy() {
+        return new Red();
+    }
+
+    /**
+     * Returns a string representation of the object
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return "RED";
     }
 }

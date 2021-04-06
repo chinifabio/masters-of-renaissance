@@ -25,7 +25,7 @@ public class CardRequisite implements Requisite {
     private Exception LootTypeException;
 
     /**
-     * costructor that need the level, color
+     * constructor that need the level, color
      * @param level of the card
      * @param color of the card
      */
@@ -62,7 +62,7 @@ public class CardRequisite implements Requisite {
     }
 
     /**
-     * return the amount of card is always 1, in case of same card required there is multiple istance of Requisite
+     * return the amount of card is always 1, in case of same card required there is multiple instance of Requisite
      *
      * @return number of loot
      */

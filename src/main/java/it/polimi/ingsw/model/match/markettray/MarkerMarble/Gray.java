@@ -1,13 +1,13 @@
-package it.polimi.ingsw.model.match.MarkerMarble;
+package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 
 import it.polimi.ingsw.model.player.PlayerModifier;
 import it.polimi.ingsw.model.resource.Resource;
-import it.polimi.ingsw.model.resource.Stone;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 
 /**
  * represent the gray marble that can be obtained using the marketTray
  */
-public class Gray implements Marble{
+public class Gray extends Marble{
     /**
      * return the color of the marble
      *
@@ -25,7 +25,26 @@ public class Gray implements Marble{
      */
     @Override
     public void toPlayer(PlayerModifier player) {
-        Resource res = new Stone(1);
+        Resource res = ResourceBuilder.buildStone();
         player.obtainResource(res);
+    }
+
+    /**
+     * copy the marble in a new instance
+     *
+     * @return new instance equals this
+     */
+    @Override
+    public Marble copy() {
+        return new Gray();
+    }
+
+    /**
+     * Returns a string representation of the object
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return "GRAY";
     }
 }

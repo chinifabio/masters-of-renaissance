@@ -2,116 +2,71 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.resource.*;
+import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
+import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerModifier;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 import org.junit.jupiter.api.Test;
 
 public class ResourceTest {
-    /**
-     * test the Coin class, passing an amount and test if its implementation is correct
-     */
     @Test
-    public void coin(){
-        int amount = 2;
+    public void createAndCheckType() {
+        Resource coin = ResourceBuilder.buildCoin();
+        assertTrue(coin.type() == ResourceType.COIN && coin.amount() == 1);
 
-        Resource res = new Coin(amount);
-        boolean result = false;
+        Resource stone = ResourceBuilder.buildStone();
+        assertTrue(stone.type() == ResourceType.STONE && stone.amount() == 1);
 
-        if(res.isStorable() && res.amount() == amount && res.type() == ResourceType.COIN) result = true;
+        Resource shield = ResourceBuilder.buildShield();
+        assertTrue(shield.type() == ResourceType.SHIELD && shield.amount() == 1);
 
-        assertTrue(result);
+        Resource servant = ResourceBuilder.buildServant();
+        assertTrue(servant.type() == ResourceType.SERVANT && servant.amount() == 1);
+
+        Resource faithpoint = ResourceBuilder.buildFaithPoint();
+        assertTrue(faithpoint.type() == ResourceType.FAITHPOINT && faithpoint.amount() == 1);
+
+        Resource unknown = ResourceBuilder.buildUnknown();
+        assertTrue(unknown.type() == ResourceType.UNKNOWN && unknown.amount() == 1);
     }
 
-
-    /**
-     * test the Empty class, passing an amount and test if its implementation is correct
-     */
     @Test
-    public void empty(){
-        int amount = 2;
+    public void checkAmount() {
+        int amount = 3;
 
-        Resource res = new Empty(amount);
-        boolean result = false;
+        Resource coin = ResourceBuilder.buildCoin(amount);
+        assertTrue(coin.type() == ResourceType.COIN && coin.amount() == amount);
 
-        if(res.isStorable() && res.amount() == amount && res.type() == ResourceType.EMPTY) result = true;
+        Resource stone = ResourceBuilder.buildStone(amount);
+        assertTrue(stone.type() == ResourceType.STONE && stone.amount() == amount);
 
-        assertTrue(result);
+        Resource shield = ResourceBuilder.buildShield(amount);
+        assertTrue(shield.type() == ResourceType.SHIELD && shield.amount() == amount);
+
+        Resource servant = ResourceBuilder.buildServant(amount);
+        assertTrue(servant.type() == ResourceType.SERVANT && servant.amount() == amount);
+
+        Resource faithpoint = ResourceBuilder.buildFaithPoint(amount);
+        assertTrue(faithpoint.type() == ResourceType.FAITHPOINT && faithpoint.amount() == amount);
+
+        Resource unknown = ResourceBuilder.buildUnknown(amount);
+        assertTrue(unknown.type() == ResourceType.UNKNOWN && unknown.amount() == amount);
     }
 
-
-    /**
-     * test the Faith Point class, passing an amount and test if its implementation is correct
-     */
     @Test
-    public void faithpoint(){
-        int amount = 2;
-
-        Resource res = new FaithPoint(amount);
+    public void nonObtainable() {
+        Resource unknown = ResourceBuilder.buildUnknown();
+        PlayerModifier player = new Player("dummy");
         boolean result = false;
 
-        if(!res.isStorable() && res.amount() == amount && res.type() == ResourceType.FAITHPOINT) result = true;
-
-        assertTrue(result);
-    }
-
-
-    /**
-     * test the Servant class, passing an amount and test if its implementation is correct
-     */
-    @Test
-    public void servant(){
-        int amount = 2;
-
-        Resource res = new Servant(amount);
-        boolean result = false;
-
-        if(res.isStorable() && res.amount() == amount && res.type() == ResourceType.SERVANT) result = true;
-
-        assertTrue(result);
-    }
-
-
-    /**
-     * test the Shield class, passing an amount and test if its implementation is correct
-     */
-    @Test
-    public void shield(){
-        int amount = 2;
-
-        Resource res = new Shield(amount);
-        boolean result = false;
-
-        if(res.isStorable() && res.amount() == amount && res.type() == ResourceType.SHIELD) result = true;
-
-        assertTrue(result);
-    }
-
-
-    /**
-     * test the Stone class, passing an amount and test if its implementation is correct
-     */
-    @Test
-    public void stone(){
-        int amount = 2;
-
-        Resource res = new Stone(amount);
-        boolean result = false;
-
-        if(res.isStorable() && res.amount() == amount && res.type() == ResourceType.STONE) result = true;
-
-        assertTrue(result);
-    }
-
-
-    /**
-     * test the Unknown class, passing an amount and test if its implementation is correct
-     */
-    @Test
-    public void unknown(){
-        Resource res = new Unknown();
-        boolean result = false;
-
-        if(!res.isStorable() && res.amount() == 0 && res.type() == ResourceType.UNKNOWN) result = true;
-
+        try {
+            unknown.onObtain(player);
+        } catch (UnobtainableResourceException e) {
+            e.printStackTrace();
+            result = true;
+        }
         assertTrue(result);
     }
 }

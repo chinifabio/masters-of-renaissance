@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.player.personalBoard;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
-import it.polimi.ingsw.model.match.MarkerMarble.MarbleColor;
+import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
 
 import java.util.List;

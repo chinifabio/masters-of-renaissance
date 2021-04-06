@@ -12,7 +12,7 @@ public class AppTest
      * Rigorous test
      */
     @Test
-    public void testLootException(){
+    public void test(){
         assertTrue(true);
     }
 }

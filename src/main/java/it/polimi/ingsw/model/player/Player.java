@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.resource.Resource;
-import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.List;
 import java.util.Optional;
@@ -146,9 +145,10 @@ public class Player implements PlayerModifier{
 
     /**
      * This method moves the FaithMarker of the player when he gets FaithPoint
+     * @param amount how many faith points the player obtains
      */
     @Override
-    public void moveFaithMarker() {
+    public void moveFaithMarker(int amount) {
 
     }
 
@@ -164,7 +164,7 @@ public class Player implements PlayerModifier{
      * This method converts the Marbles from the Market to Resources
      */
     @Override
-    public ResourceType WhiteMarbleConversion() {
+    public Resource WhiteMarbleConversion() {
         return null;
     }
 

@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
-import it.polimi.ingsw.model.resource.ResourceType;
 
 /**
  * This interface includes all the methods that can be called to modify the Player status and attributes
@@ -71,8 +69,9 @@ public interface PlayerModifier {
 
     /**
      * This method moves the FaithMarker of the player when he gets FaithPoint
+     * @param amount how many faith point the player obtains
      */
-    void moveFaithMarker();
+    void moveFaithMarker(int amount);
 
     /**
      * This method moves the Lorenzo's marker
@@ -82,12 +81,11 @@ public interface PlayerModifier {
     /**
      * This method converts the Marbles from the Market to Resources
      */
-    ResourceType WhiteMarbleConversion();
+    Resource WhiteMarbleConversion();
 
     /**
      * This method allows the player to select which Resources to get when he activates two LeaderCards with the same
      * SpecialAbility that converts white marbles in resources
      */
     void selectWhiteConversion();
-
 }

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.cards;
 
-
 import it.polimi.ingsw.model.exceptions.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.MissingCardException;
@@ -14,20 +13,6 @@ import java.lang.Math;
  * @param <T>
  */
 public class Deck<T extends Card>{
-
- //   /**
- //    * This constructor creates a deck with a list of Cards inside.
- //    * @param cards to insert.
- //    */
- //   public Deck(List<T> cards) throws AlreadyInDeckException{
- //       int x = (int) cards.stream().count();
- //       int y = (int) cards.stream().distinct().count();
- //       if(x==y){
- //           throw new AlreadyInDeckException("exception: two or more cards with the same ID");
- //       }
- //       this.cards = cards;
- //       this.updateNumberOfCards();
- //   }
 
     /**
      * This constructor creates a deck with a Card inside.
@@ -104,22 +89,6 @@ public class Deck<T extends Card>{
         this.updateNumberOfCards();
     }
 
- //   /**
- //    * This method inserts a list of Card into the deck.
- //    * @param cards to insert.
- //    */
- //   public void insertCard(List<T> cards) throws AlreadyInDeckException {
- //       List<T> tempCards = this.cards;
- //       tempCards.addAll(cards);
- //       int x = (int) tempCards.stream().count();
- //       int y = (int) tempCards.stream().distinct().count();
- //       if(x==y){
- //           throw new AlreadyInDeckException("exception: two or more cards with the same ID");
- //       }
- //       this.cards = tempCards;
- //       this.updateNumberOfCards();
- //   }
-
     /**
      * This method inserts a card into the deck.
      * @param card to insert.
@@ -179,5 +148,4 @@ public class Deck<T extends Card>{
                 ", discardedCards=" + discardedCards +
                 '}';
     }
-
 }

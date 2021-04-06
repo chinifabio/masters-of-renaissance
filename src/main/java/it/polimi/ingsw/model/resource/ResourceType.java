@@ -1,9 +1,8 @@
 package it.polimi.ingsw.model.resource;
 
 /**
- * contains the possible resources type
- *
+ * types for the resources
  */
 public enum ResourceType {
-    COIN, STONE, SHIELD, SERVANT, FAITHPOINT, EMPTY, UNKNOWN
+    COIN, STONE, SHIELD, SERVANT, FAITHPOINT, UNKNOWN
 }
