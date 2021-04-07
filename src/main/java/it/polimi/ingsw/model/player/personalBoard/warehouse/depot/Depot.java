@@ -1,6 +1,9 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.depot;
 
+import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.resource.Resource;
+
+import java.util.List;
 import java.util.function.BiPredicate;
 
 public interface Depot {
@@ -20,10 +23,12 @@ public interface Depot {
      * This method removes the resources from the Depot
      * @param output is the resource that will be withdrawn
      */
-    Resource withdraw(Resource output);
+    boolean withdraw(Resource output) throws NegativeResourcesDepotException;
 
     /**
      * This method returns the resources that are into the depot
      */
     Resource viewResources();
+
+    List<Resource> viewAllResources();
 }

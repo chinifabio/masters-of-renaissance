@@ -32,7 +32,7 @@ public class ResourceTest {
         assertTrue(unknown.type() == ResourceType.UNKNOWN && unknown.amount() == 1);
 
         Resource empty = ResourceBuilder.buildEmpty();
-        assertTrue(empty.type() == ResourceType.EMPTY && unknown.amount() == 0);
+        assertTrue(empty.type() == ResourceType.EMPTY && empty.amount() == 0);
     }
 
     @Test

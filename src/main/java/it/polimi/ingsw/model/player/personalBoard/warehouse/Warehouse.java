@@ -1,8 +1,11 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse;
 
+import it.polimi.ingsw.model.exceptions.ExtraDepotsException;
+import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.player.personalBoard.Production;
 import it.polimi.ingsw.model.player.personalBoard.ProductionID;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.*;
+import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.EnumMap;
@@ -25,6 +28,7 @@ public class Warehouse {
      */
     private List<Predicate<MoveResource>> constraint;
 
+    private Exception ExtraDepotsException;
     /**
      * This method is the constructor of the class
      */
@@ -35,13 +39,26 @@ public class Warehouse {
         depots.put(DepotSlot.MIDDLE, DepotBuilder.buildMiddleDepot());
         depots.put(DepotSlot.TOP, DepotBuilder.buildTopDepot());
         depots.put(DepotSlot.STRONGBOX, DepotBuilder.buildStrongBoxDepot());
+        depots.put(DepotSlot.BUFFER, DepotBuilder.buildStrongBoxDepot());
+        depots.put(DepotSlot.SPECIAL1, null);
+        depots.put(DepotSlot.SPECIAL2, null);
     }
 
     /**
-     * This method add extra Depot into the Warehouse after the special ability of LeaderCard is activated
+     * This method add extra depots into the Warehouse when the SpecialAbility of LeaderCards are activated
+     * @param resource is for the creation of extra depot that the LeaderCard adds
+     * @throws ExtraDepotsException when the LeaderCard adds more than two extra depots
      */
-    public void addDepot(Depot depot) {
+    public void addDepot(Resource resource) throws ExtraDepotsException {
+        for(Map.Entry<DepotSlot,Depot> entry : depots.entrySet()){
+            if (entry.getValue() == null){
+                entry.setValue(DepotBuilder.buildSpecialDepot(resource));
+                return;
+            }
+        }
+        throw new ExtraDepotsException("exception: All the extra depots have already been built");
     }
+
 
     /**
      * This method moves resources between depots
@@ -63,9 +80,9 @@ public class Warehouse {
 
     /**
      * this method allows the player to select the productions that will be activated
-     * @param productionID is the selected production
+     * @param production is the selected production
      */
-    public void selectProduction(ProductionID productionID){
+    public void selectProduction(Production production){
         //Dalla produzione passata prendo i requisite
         //Prendo dai vari depot i requisiti
         //Se ho tutto faccio production.select()
@@ -84,5 +101,9 @@ public class Warehouse {
 
     public Resource viewResourcesInDepot(DepotSlot slot){
         return depots.get(slot).viewResources();
+    }
+
+    public List<Resource> viewResourcesInStrongbox(DepotSlot slot){
+        return depots.get(slot).viewAllResources();
     }
 }

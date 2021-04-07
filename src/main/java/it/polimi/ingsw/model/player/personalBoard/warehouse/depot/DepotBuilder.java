@@ -27,7 +27,7 @@ public class DepotBuilder {
     }
 
     public static Depot buildSpecialDepot(Resource res){
-        Depot temp = new SpecialDepot();
+        Depot temp = new SpecialDepot(res);
         temp.addConstraint((x,y) -> y.type() == ResourceType.EMPTY || x.type() == y.type());
         temp.addConstraint((x,y) -> x.type() == res.type());
         temp.addConstraint((x,y) -> (x.amount() + y.amount())<= 2);

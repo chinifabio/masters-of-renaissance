@@ -64,7 +64,7 @@ public class MarketTrayTest {
                 }
                 beforePush.set(shiftCol+(row-1)*col, temp);
 
-                assertTrue(equalsList(beforePush, tray.showMarketTray()));
+                assertArrayEquals(beforePush.toArray(), tray.showMarketTray().toArray());
                 assertEquals(slide,tray.showSlideMarble());
             }
         }

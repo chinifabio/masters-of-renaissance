@@ -25,7 +25,6 @@ public class Player implements PlayerModifier{
      */
     public Player(String nickname){
         this.nickname = nickname;
-
     }
 
     /**

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.depot;
 
 
+import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -23,7 +24,7 @@ public class NormalDepot implements Depot {
     /**
      * This attribute is a constraint that verifies that the resources within the depot are of the same type
      */
-    private List<BiPredicate<Resource, Resource>> constraints;
+    private final List<BiPredicate<Resource, Resource>> constraints;
 
     /**
      * This method is the constructor of the class
@@ -33,6 +34,7 @@ public class NormalDepot implements Depot {
         this.constraints = new ArrayList<>();
 
     }
+    private Exception NegativeResourcesDepotException;
 
     /**
      * This method accept a lambda function predicate with two parameters: first one is always referred to the input resource,
@@ -66,8 +68,19 @@ public class NormalDepot implements Depot {
      * This method removes the resources from the Depot
      * @param output is the resource that will be withdrawn
      */
-    public Resource withdraw(Resource output) {
-        return null;
+    public boolean withdraw(Resource output) throws NegativeResourcesDepotException {
+        if (!(this.resources.equalsType(output)) && (this.resources.type() != ResourceType.EMPTY)){
+            return false;
+        }
+        if (this.resources.amount() - output.amount() > 0){
+            this.resources.reduce(output);
+            return true;
+        } else if (this.resources.amount() - output.amount() == 0){
+            this.resources = ResourceBuilder.buildEmpty();
+            return true;
+        } else {
+            throw new NegativeResourcesDepotException("exception: This Depot does not have enough resources to withdraw ");
+        }
     }
 
     /**
@@ -77,4 +90,8 @@ public class NormalDepot implements Depot {
         return resources;
     }
 
+    @Override
+    public List<Resource> viewAllResources() {
+        return null;
+    }
 }

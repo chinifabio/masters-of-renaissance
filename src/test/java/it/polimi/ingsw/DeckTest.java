@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.exceptions.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.MissingCardException;
 import it.polimi.ingsw.model.player.personalBoard.Production;
+import it.polimi.ingsw.model.player.personalBoard.ProductionID;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.*;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * test collector for cards and decks.
@@ -30,11 +32,13 @@ public class DeckTest {
     @Test
     void cardIDCheck(){
         String ID = "105", ID1 = "120",ID2 = "145";
-        Production p = new Production();
+        List<ResourceRequisite> sample = new ArrayList<>();
+        Production p = new Production(ProductionID.BASIC,sample,sample);
         List<Requisite> requisite = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         requisite.add(rr);
+
 
         DevCard c1 = new DevCard(ID, new AddProduction(p), 3, LevelDevCard.LEVEL3, ColorDevCard.BLUE,requisite);
         LeaderCard c2 = new LeaderCard(ID1, new AddProduction(p),6,requisite);
@@ -51,7 +55,8 @@ public class DeckTest {
     @Test
     void victoryPointDevCard(){
         int n = 7;
-        Production p = new Production();
+        List<ResourceRequisite> sample = new ArrayList<>();
+        Production p = new Production(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -74,7 +79,8 @@ public class DeckTest {
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        Production p = new Production();
+        List<ResourceRequisite> sample = new ArrayList<>();
+        Production p = new Production(ProductionID.BASIC,sample,sample);
 
         DevCard c1 = new DevCard("000", new AddProduction(p), 2, lev, col,req);
 
@@ -88,7 +94,8 @@ public class DeckTest {
     @Test
     void victoryPointLeaderCard(){
         int n = 12;
-        Production p = new Production();
+        List<ResourceRequisite> sample = new ArrayList<>();
+        Production p = new Production(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -104,7 +111,8 @@ public class DeckTest {
      */
     @Test
     void activatedLeaderCard(){
-        Production p = new Production();
+        List<ResourceRequisite> sample = new ArrayList<>();
+        Production p = new Production(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -125,7 +133,8 @@ public class DeckTest {
     @Test
     void insertCard() {
         Deck<DevCard> d = new Deck<>();
-        Production p = new Production();
+        List<ResourceRequisite> sample = new ArrayList<>();
+        Production p = new Production(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -156,7 +165,8 @@ public class DeckTest {
     @Test
     void addListOfCards(){
         int n=2;
-        Production p = new Production();
+        List<ResourceRequisite> sample = new ArrayList<>();
+        Production p = new Production(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -187,7 +197,8 @@ public class DeckTest {
     @Test
     void addOneInsertCard() {
         int n=3;
-        Production p = new Production();
+        List<ResourceRequisite> sample = new ArrayList<>();
+        Production p = new Production(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -220,7 +231,8 @@ public class DeckTest {
      */
     @Test
     void drawFromDeck(){
-        Production p = new Production();
+        List<ResourceRequisite> sample = new ArrayList<>();
+        Production p = new Production(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -266,7 +278,8 @@ public class DeckTest {
      */
     @Test
     void discardCards(){
-        Production p = new Production();
+        List<ResourceRequisite> sample = new ArrayList<>();
+        Production p = new Production(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -310,7 +323,8 @@ public class DeckTest {
      */
     @Test
     void peekCardFromDeck(){
-        Production p = new Production();
+        List<ResourceRequisite> sample = new ArrayList<>();
+        Production p = new Production(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -352,7 +366,8 @@ public class DeckTest {
      */
     @Test
     void shuffleDeck(){
-        Production p = new Production();
+        List<ResourceRequisite> sample = new ArrayList<>();
+        Production p = new Production(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);

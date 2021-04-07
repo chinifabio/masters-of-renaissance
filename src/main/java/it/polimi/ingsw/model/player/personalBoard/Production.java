@@ -21,13 +21,15 @@ public class Production {
      */
     private final List<ResourceRequisite> output;
 
+    private boolean selected;
+
     /**
      * This method is the constructor of the class
      */
-    public Production() {
-        //Da aggiornare con i parametri
-        this.required = null;
-        this.output = null;
+    public Production(ProductionID productionID, List<ResourceRequisite> required, List<ResourceRequisite> output) {
+        this.productionID = productionID;
+        this.required = required;
+        this.output = output;
     }
 
     /**
@@ -41,5 +43,9 @@ public class Production {
      */
     public List<ResourceRequisite> getOutput(){
         return output;
+    }
+
+    public boolean Select(){
+        return selected = true;
     }
 }
