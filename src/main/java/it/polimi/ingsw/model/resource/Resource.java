@@ -1,9 +1,7 @@
 package it.polimi.ingsw.model.resource;
 
-import it.polimi.ingsw.model.exceptions.NegativeResourceException;
 import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
 import it.polimi.ingsw.model.player.PlayerModifier;
-import it.polimi.ingsw.model.resource.strategy.LaunchExceptionBehavior;
 import it.polimi.ingsw.model.resource.strategy.ObtainStrategy;
 
 /**
@@ -11,13 +9,17 @@ import it.polimi.ingsw.model.resource.strategy.ObtainStrategy;
  */
 public class Resource{
     /**
+     * flag to check before store a resource
+     */
+    private final boolean storable;
+    /**
      * the type of the resource
      */
-    private ResourceType type;
+    private final ResourceType type;
     /**
      * the strategy for differentiate behaviours when the player obtain the resource
      */
-    private ObtainStrategy os;
+    private final ObtainStrategy os;
     /**
      * the amount of the resource
      */
@@ -28,10 +30,11 @@ public class Resource{
      * @param type the type of the resource
      * @param os strategy
      */
-    protected Resource(ResourceType type, ObtainStrategy os) {
-        this.type = type;
+    protected Resource(boolean storable, ResourceType type, ObtainStrategy os) {
         this.os = os;
         this.amount = 1;
+        this.storable = storable;
+        this.type = type;
     }
 
     /**
@@ -39,10 +42,11 @@ public class Resource{
      * @param type the type of the resource
      * @param os strategy
      */
-    protected Resource(ResourceType type, ObtainStrategy os, int amount){
+    protected Resource(boolean storable, ResourceType type, ObtainStrategy os, int amount){
         this.type = type;
         this.os = os;
         this.amount = amount;
+        this.storable = storable;
     }
 
     /**
@@ -67,8 +71,20 @@ public class Resource{
      * @return true if the operation worked fine, otherwise return false
      */
     public boolean merge(Resource toMerge) {
-        if(equals(toMerge)) {
+        if(equalsType(toMerge)) {
             this.amount += toMerge.amount;
+            return true;
+        } else return false;
+    }
+
+    /**
+     * reduces the amount of this resource with the amount of the passed resource only if they are of the same type
+     * @param toReduce is the Resource that will be removed
+     * @return true if the operation worked fine, otherwise return false
+     */
+    public boolean reduce(Resource toReduce){
+        if(equalsType(toReduce)) {
+            this.amount -= toReduce.amount;
             return true;
         } else return false;
     }
@@ -89,8 +105,35 @@ public class Resource{
      */
     @Override
     public boolean equals(Object obj) {
+        if (obj instanceof Resource) return (((Resource) obj).type() == this.type && ((Resource) obj).amount() == this.amount);
+        else return false;
+    }
+
+    /**
+     * Indicates whether some other object is "equal type to" this one.
+     * @param obj the reference object with which to compare.
+     * @return {@code true} if this object is the same as the obj
+     */
+    public boolean equalsType(Object obj) {
         if (obj instanceof Resource) return (((Resource) obj).type() == this.type);
         else return false;
+    }
+
+    /**
+     * create and return a new resource built with the same attributes of this class, except for the amount passed as parameter
+     * @param amount amount of the new resource
+     * @return the new resource
+     */
+    public Resource buildNewOne(int amount) {
+        return new Resource(storable, type, os, amount);
+    }
+
+    /**
+     * create and return a new resource built with the same attributes of this class
+     * @return the new resource
+     */
+    public Resource buildNewOne() {
+        return new Resource(storable, type, os, amount);
     }
 
     /**
@@ -100,5 +143,13 @@ public class Resource{
     @Override
     public String toString() {
         return "resource: type -> "+type.toString()+" amount -> " + amount;
+    }
+
+    /**
+     * return the value of storable flag
+     * @return true if storable
+     */
+    public boolean isStorable() {
+        return storable;
     }
 }

@@ -1,9 +1,11 @@
 package it.polimi.ingsw.model.resource;
 
-import it.polimi.ingsw.model.exceptions.NegativeResourceException;
 import it.polimi.ingsw.model.resource.strategy.DoNothingBehavior;
 import it.polimi.ingsw.model.resource.strategy.GiveFaithPointBehavior;
 import it.polimi.ingsw.model.resource.strategy.LaunchExceptionBehavior;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * class that contains all the builders for all the resource types
@@ -15,7 +17,7 @@ public class ResourceBuilder {
      * @return the resource created
      */
     public static Resource buildCoin() {
-        return new Resource(ResourceType.COIN, new DoNothingBehavior());
+        return new Resource(true, ResourceType.COIN, new DoNothingBehavior());
     }
 
     /**
@@ -24,7 +26,7 @@ public class ResourceBuilder {
      * @return the resource created
      */
     public static Resource buildCoin(int amount) {
-        return new Resource(ResourceType.COIN, new DoNothingBehavior(), amount);
+        return new Resource(true, ResourceType.COIN, new DoNothingBehavior(), amount);
     }
 
     /**
@@ -32,7 +34,7 @@ public class ResourceBuilder {
      * @return the resource created
      */
     public static Resource buildServant() {
-        return new Resource(ResourceType.SERVANT, new DoNothingBehavior());
+        return new Resource(true, ResourceType.SERVANT, new DoNothingBehavior());
     }
 
     /**
@@ -41,7 +43,7 @@ public class ResourceBuilder {
      * @return the resource created
      */
     public static Resource buildServant(int amount) {
-        return new Resource(ResourceType.SERVANT, new DoNothingBehavior(), amount);
+        return new Resource(true, ResourceType.SERVANT, new DoNothingBehavior(), amount);
     }
 
     /**
@@ -49,7 +51,7 @@ public class ResourceBuilder {
      * @return the resource created
      */
     public static Resource buildShield() {
-        return new Resource(ResourceType.SHIELD, new DoNothingBehavior());
+        return new Resource(true, ResourceType.SHIELD, new DoNothingBehavior());
     }
 
     /**
@@ -58,7 +60,7 @@ public class ResourceBuilder {
      * @return the resource created
      */
     public static Resource buildShield(int amount) {
-        return new Resource(ResourceType.SHIELD, new DoNothingBehavior(), amount);
+        return new Resource(true, ResourceType.SHIELD, new DoNothingBehavior(), amount);
     }
 
     /**
@@ -66,7 +68,7 @@ public class ResourceBuilder {
      * @return the resource created
      */
     public static Resource buildStone() {
-        return new Resource(ResourceType.STONE, new DoNothingBehavior());
+        return new Resource(true, ResourceType.STONE, new DoNothingBehavior());
     }
 
     /**
@@ -75,7 +77,7 @@ public class ResourceBuilder {
      * @return the resource created
      */
     public static Resource buildStone(int amount) {
-        return new Resource(ResourceType.STONE, new DoNothingBehavior(), amount);
+        return new Resource(true, ResourceType.STONE, new DoNothingBehavior(), amount);
     }
 
     /**
@@ -83,7 +85,7 @@ public class ResourceBuilder {
      * @return the resource created
      */
     public static Resource buildFaithPoint() {
-        return new Resource(ResourceType.FAITHPOINT, new GiveFaithPointBehavior(1));
+        return new Resource(false, ResourceType.FAITHPOINT, new GiveFaithPointBehavior(1));
     }
 
     /**
@@ -92,23 +94,48 @@ public class ResourceBuilder {
      * @return the resource created
      */
     public static Resource buildFaithPoint(int amount) {
-        return new Resource(ResourceType.FAITHPOINT, new GiveFaithPointBehavior(amount), amount);
+        return new Resource(false, ResourceType.FAITHPOINT, new GiveFaithPointBehavior(amount), amount);
     }
 
     /**
-     * build a unknown resource whit amount = 1
+     * build an unknown resource whit amount = 1
      * @return the resource created
      */
     public static Resource buildUnknown() {
-        return new Resource(ResourceType.UNKNOWN, new LaunchExceptionBehavior());
+        return new Resource(false, ResourceType.UNKNOWN, new LaunchExceptionBehavior(), 1);
     }
 
     /**
-     * build a empty resource whit amount = 0
+     * build an empty resource whit amount = 0
      * @return the resource created
      */
     public static Resource buildEmpty() {
-        return new Resource(ResourceType.EMPTY, new DoNothingBehavior(), 0);
+        return new Resource(false, ResourceType.EMPTY, new DoNothingBehavior(), 0);
     }
 
+    /**
+     * build a new resource starting from a passed resource type
+     * @param type type of the new resource
+     * @return the new resource
+     */
+    public static Resource buildFromType(ResourceType type, int amount){
+        // create each type of resource
+        List<Resource> allTypes = new ArrayList<>();
+        //TODO guardare se con jackson io posso fare questa cosa in automatico
+        allTypes.add(buildStone());
+        allTypes.add(buildServant());
+        allTypes.add(buildShield());
+        allTypes.add(buildCoin());
+        allTypes.add(buildEmpty());
+        allTypes.add(buildUnknown());
+        allTypes.add(buildFaithPoint());
+
+
+        Resource newOne = allTypes.stream().reduce(buildEmpty(), (r, res) -> {
+            if(res.type() == type) return res.buildNewOne(amount);
+            else return r;
+        });
+
+        return newOne;
+    }
 }
