@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.cards.effects;
 
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerModifier;
 
 /**
  * This class is a part of the strategy pattern, it implements the interface Effect.
@@ -12,7 +13,7 @@ public class MoveTwo implements Effect{
      * @param p the only player in the game.
      */
     @Override
-    public void use(Player p) {
-        p.moveLorenzo(); // aggiungere movimento 2
+    public void use(PlayerModifier p) {
+        p.moveLorenzo(2); // aggiungere movimento 2
     }
 }

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.cards.effects;
 
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerModifier;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 /**
@@ -10,7 +12,7 @@ public class AddDiscount implements Effect{
 
     /**
      * This is the constructor of the class. It needs the ResourceType that will be discounted.
-     * @param t that will be discounted.
+     * @param t type that will be discounted.
      */
     public AddDiscount(ResourceType t) {
         this.t = t;
@@ -23,10 +25,10 @@ public class AddDiscount implements Effect{
 
     /**
      * This method is activated by a LeaderCard, it adds a discount to a specific resource when buying a DevCard.
-     * @param p
+     * @param p the player
      */
     @Override
-    public void use(Player p) {
-        p.addDiscount();
+    public void use(PlayerModifier p) {
+        p.addDiscount(ResourceBuilder.buildFromType(this.t, 1));
     }
 }

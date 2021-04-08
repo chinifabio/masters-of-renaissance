@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.exceptions;
 
-public class NoMoreMovesException extends Exception {
+public class IllegalMovesException extends Exception {
     /**
      * msg to identify the error
      */
@@ -10,7 +10,7 @@ public class NoMoreMovesException extends Exception {
      * costructor that save the message to handle
      * @param msg string
      */
-    public NoMoreMovesException(String msg) {
+    public IllegalMovesException(String msg) {
         this.msg = msg;
     }
 

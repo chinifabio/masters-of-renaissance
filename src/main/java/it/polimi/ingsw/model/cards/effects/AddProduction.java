@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.cards.effects;
 
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerModifier;
 import it.polimi.ingsw.model.player.personalBoard.Production;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class AddProduction implements Effect{
      * @param p the player that is getting a new production.
      */
     @Override
-    public void use(Player p) {
-        p.addProduction();
+    public void use(PlayerModifier p) {
+        p.addProduction(this.prod);
     }
 }

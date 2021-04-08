@@ -4,7 +4,9 @@ import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
+import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.List;
 import java.util.Map;
@@ -72,13 +74,13 @@ public class PersonalBoard {
      * This method activate the SpecialAbility of the LeaderCard
      * @param card is the LeaderCard
      */
-    public void activateLeaderCard(LeaderCard card){}
+    public void activateLeaderCard(String card){}
 
     /**
      * This method remove the LeaderCard from Player's PersonalBoard
      * @param card is the card to be removed
      */
-    public void discardLeaderCard(LeaderCard card){}
+    public void discardLeaderCard(String card){}
 
     /**
      * This method convert the MarketMarble into their respective Resources
@@ -103,4 +105,21 @@ public class PersonalBoard {
      */
     public void activateProductions(){}
 
+    /**
+     * This method permits to move resource from a depot to another one
+     * @param from source depot of the resource
+     * @param to destination of the resource
+     * @param loot the resource to move
+     */
+    public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource loot) {
+        //TODO implementation
+    }
+
+    /**
+     * tells to the faith track to move amount times the player marker
+     * @param amount the amount to move
+     */
+    public void moveFaithMarker(int amount) {
+        //TODO implementation
+    }
 }
