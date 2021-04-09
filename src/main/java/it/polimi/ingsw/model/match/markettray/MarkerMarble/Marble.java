@@ -65,4 +65,14 @@ public class Marble {
             return (this.color == ((Marble) obj).color);
         } else return false;
     }
+
+    /**
+     * Returns a string representation of the object
+     *
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return this.color.toString();
+    }
 }

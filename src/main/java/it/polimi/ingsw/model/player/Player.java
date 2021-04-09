@@ -72,6 +72,7 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
         this.personalBoard = new PersonalBoard();
         this.playerState = new NotHisTurnState(this);
         this.marbleConversions = new LinkedList<>();
+        this.marbleConversions.add(ResourceType.UNKNOWN);
         this.marketDiscount = new ArrayList<>();
     }
 
@@ -177,8 +178,9 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
         try {
             resource.onObtain(this);
         } catch (UnobtainableResourceException e) {
-            e.printStackTrace();
+            System.out.println("gino");
         }
+        if(resource.isStorable()) this.personalBoard.obtainResource(resource);
             // TODO improve this mechanism
     }
 

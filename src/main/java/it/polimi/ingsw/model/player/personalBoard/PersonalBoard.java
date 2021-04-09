@@ -194,4 +194,12 @@ public class PersonalBoard {
     public void flipPopeTile(PopeTile popeTile) {
         // TODO implementazione
     }
+
+    /**
+     * store the resource in the buffer depot, then it will be the player to move
+     * from buffer depot to a legal one
+     * @param resource the resource obtained
+     */
+    public void obtainResource(Resource resource) {
+    }
 }
