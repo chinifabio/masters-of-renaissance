@@ -1,6 +1,9 @@
 package it.polimi.ingsw.model.cards.effects;
 
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerModifier;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 /**
@@ -26,7 +29,7 @@ public class AddDepot implements Effect{
      * @param p the player that is getting a new depot.
      */
     @Override
-    public void use(Player p) {
-        p.addDepot();
+    public void use(PlayerModifier p) {
+        p.addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildFromType(res, 1)));
     }
 }

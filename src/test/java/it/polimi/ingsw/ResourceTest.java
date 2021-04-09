@@ -53,7 +53,6 @@ public class ResourceTest {
 
         Resource faithpoint = ResourceBuilder.buildFaithPoint(amount);
         assertTrue(faithpoint.type() == ResourceType.FAITHPOINT && faithpoint.amount() == amount);
-
     }
 
     @Test
@@ -65,9 +64,13 @@ public class ResourceTest {
         try {
             unknown.onObtain(player);
         } catch (UnobtainableResourceException e) {
-            e.printStackTrace();
             result = true;
         }
         assertTrue(result);
+    }
+
+    @Test
+    public void buitdfromtrype() {
+        assertEquals(ResourceBuilder.buildCoin(3), ResourceBuilder.buildFromType(ResourceType.COIN, 3));
     }
 }

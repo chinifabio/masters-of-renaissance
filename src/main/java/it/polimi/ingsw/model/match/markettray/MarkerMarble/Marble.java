@@ -1,28 +1,55 @@
 package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 
-import it.polimi.ingsw.model.player.PlayerModifier;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 /**
  * interface that contains the method to handle marbles obtained from the marketTray
  */
-public abstract class Marble {
+public class Marble {
     /**
-     * return the color of the marble
-     * @return marble color
+     * the color of the marble
      */
-    public abstract MarbleColor type();
+    private MarbleColor color;
+    /**
+     * the resource associated to the color
+     */
+    private ResourceType toResource;
 
     /**
-     * recive the player and request its marble convert function to convert itself into resourceLoot and give it to the player
-     * @param player current player in the turn
+     * the constructor take the color and the resource mapped
+     * @param color color of the marble
+     * @param toResource resourceType to build the resource when someone request it
      */
-    public abstract void toPlayer(PlayerModifier player);
+    protected Marble(MarbleColor color, ResourceType toResource) {
+        this.color = color;
+        this.toResource = toResource;
+    }
+
+    /**
+     * return the color of the marble
+     * @return color of the marble
+     */
+    public MarbleColor type() {
+        return this.color;
+    }
+
+    /**
+     * return the resource associated to the color
+     * @return the mapped resource
+     */
+    public Resource toResource() {
+        return ResourceBuilder.buildFromType(toResource, 1);
+    }
 
     /**
      * copy the marble in a new instance
      * @return new instance equals this
      */
-    public abstract Marble copy();
+    public Marble copy(){
+        return new Marble(color, toResource);
+    }
 
     /**
      * two marble are equals if they are the same type
@@ -32,7 +59,7 @@ public abstract class Marble {
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof Marble) {
-            return (this.type() == ((Marble) obj).type());
+            return (this.color == ((Marble) obj).color);
         } else return false;
     }
 }

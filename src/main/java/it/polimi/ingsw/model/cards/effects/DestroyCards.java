@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.cards.effects;
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerModifier;
 
 /**
  * This class is a part of the strategy pattern, it implements the interface Effect.
@@ -23,10 +24,10 @@ public class DestroyCards implements Effect {
 
     /**
      * This method is used only during single player matches: it discard two cards of the same color, starting from level 1 to 3, from the devSetup.
-     * @param p
+     * @param p the player
      */
     @Override
-    public void use(Player p) {
+    public void use(PlayerModifier p) {
          //deve scartare due carte di un colore
     }
 }

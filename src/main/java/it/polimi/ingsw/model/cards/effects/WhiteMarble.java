@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.cards.effects;
 
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerModifier;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 /**
@@ -26,7 +27,7 @@ public class WhiteMarble implements Effect{
      * @param p the player that is getting the conversion bonus.
      */
     @Override
-    public void use(Player p) {
-        p.selectWhiteConversion(); // manca da aggiungere il conv
+    public void use(PlayerModifier p) {
+        p.addMarbleConversion(conv); // manca da aggiungere il conv
     }
 }

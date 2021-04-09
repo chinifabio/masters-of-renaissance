@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 
-import it.polimi.ingsw.model.exceptions.NoMoreMovesException;
+import it.polimi.ingsw.model.exceptions.IllegalMovesException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.exceptions.NegativePointsException;
 
@@ -99,14 +99,14 @@ public class FaithTrack {
      * This method move the FaithMarker of the player in the FaithTrack
      * @param points is the value of how far the player's marker must go
      */
-    public void movePlayer(Resource points) throws NoMoreMovesException,NegativePointsException{
+    public void movePlayer(Resource points) throws IllegalMovesException,NegativePointsException{
 
         if (points.amount() < 0){
             throw new NegativePointsException("exception: the Faith Points are negative, the Player can't go backward");
         }
 
         if (this.playerPosition >= track.size()-1 && points.amount() > 0) {
-            throw new NoMoreMovesException("exception: The Player is in the last cell, he can't move");
+            throw new IllegalMovesException("exception: The Player is in the last cell, he can't move");
         }
         this.playerPosition = playerPosition + points.amount();
         if (this.playerPosition >= track.size()-1) {
@@ -120,14 +120,14 @@ public class FaithTrack {
      * This method move the marker of Lorenzo in the FaithTrack
      * @param amount is the value of how far the Lorenzo's marker must go
      */
-    public void moveLorenzo(int amount) throws NoMoreMovesException,NegativePointsException{
+    public void moveLorenzo(int amount) throws IllegalMovesException,NegativePointsException{
 
         if (amount < 0){
             throw new NegativePointsException("exception: Lorenzo can't go backward");
         }
 
         if (this.lorenzoPosition >= track.size()-1 && amount > 0) {
-            throw new NoMoreMovesException("exception: Lorenzo is in the last cell, he can't move");
+            throw new IllegalMovesException("exception: Lorenzo is in the last cell, he can't move");
         }
         this.lorenzoPosition = lorenzoPosition + amount;
         if (this.lorenzoPosition >= track.size()-1) {

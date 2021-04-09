@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
+import it.polimi.ingsw.model.exceptions.moves.MainActionDoneException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.match.markettray.MarketTray;
@@ -53,7 +54,7 @@ public class MarketTrayTest {
 
             try {
                 tray.pushCol(shiftCol, player);
-            } catch (OutOfBoundMarketTrayException e) {
+            } catch (OutOfBoundMarketTrayException | MainActionDoneException e) {
                 e.printStackTrace();
             } finally {
                 Marble temp = slide;
@@ -92,7 +93,7 @@ public class MarketTrayTest {
 
             try{
                 tray.pushRow(shiftRow, player);
-            } catch (OutOfBoundMarketTrayException e) {
+            } catch (OutOfBoundMarketTrayException | MainActionDoneException e) {
                 e.printStackTrace();
             } finally {
                 Marble temp = slide;
@@ -133,12 +134,12 @@ public class MarketTrayTest {
         int j = map.get(tray.showSlideMarble().type());
         map.put(tray.showSlideMarble().type(), ++j);
 
-        assertEquals(map.get(MarbleColor.WHITE), 4);
-        assertEquals(map.get(MarbleColor.BLUE), 2);
-        assertEquals(map.get(MarbleColor.GRAY), 2);
-        assertEquals(map.get(MarbleColor.YELLOW), 2);
-        assertEquals(map.get(MarbleColor.PURPLE), 2);
-        assertEquals(map.get(MarbleColor.RED), 1);
+        assertEquals(4, map.get(MarbleColor.WHITE));
+        assertEquals(2, map.get(MarbleColor.BLUE));
+        assertEquals(2, map.get(MarbleColor.GRAY));
+        assertEquals(2, map.get(MarbleColor.YELLOW));
+        assertEquals(2, map.get(MarbleColor.PURPLE));
+        assertEquals(1, map.get(MarbleColor.RED));
 
     }
 }

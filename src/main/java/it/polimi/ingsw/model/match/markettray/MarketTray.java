@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.match.markettray;
 
 import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
+import it.polimi.ingsw.model.exceptions.moves.MainActionDoneException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.*;
 import it.polimi.ingsw.model.player.PlayerModifier;
 
@@ -53,19 +54,19 @@ public class MarketTray {
         row = 3; col = 4;
 
         List<Marble> temp = new ArrayList<>();
-        temp.add(new White());
-        temp.add(new White());
-        temp.add(new White());
-        temp.add(new White());
-        temp.add(new Blue());
-        temp.add(new Blue());
-        temp.add(new Gray());
-        temp.add(new Gray());
-        temp.add(new Yellow());
-        temp.add(new Yellow());
-        temp.add(new Purple());
-        temp.add(new Purple());
-        temp.add(new Red());
+        temp.add(MarbleBuilder.buildWhite());
+        temp.add(MarbleBuilder.buildWhite());
+        temp.add(MarbleBuilder.buildWhite());
+        temp.add(MarbleBuilder.buildWhite());
+        temp.add(MarbleBuilder.buildBlue());
+        temp.add(MarbleBuilder.buildBlue());
+        temp.add(MarbleBuilder.buildGray());
+        temp.add(MarbleBuilder.buildGray());
+        temp.add(MarbleBuilder.buildYellow());
+        temp.add(MarbleBuilder.buildYellow());
+        temp.add(MarbleBuilder.buildPurple());
+        temp.add(MarbleBuilder.buildPurple());
+        temp.add(MarbleBuilder.buildRed());
 
         marbles = new Marble[row][col];
 
@@ -85,10 +86,10 @@ public class MarketTray {
      * @param player player that uses the tray
      * @throws OutOfBoundMarketTrayException launched when shiftCol is out of bound
      */
-    public void pushCol(int shiftCol, PlayerModifier player) throws OutOfBoundMarketTrayException {
+    public void pushCol(int shiftCol, PlayerModifier player) throws OutOfBoundMarketTrayException, MainActionDoneException {
         if (boundCheck.test(this.col, shiftCol)) throw new OutOfBoundMarketTrayException();
 
-        for (int i = 0; i < row; i++) marbles[i][shiftCol].toPlayer(player);
+        for (int i = 0; i < row; i++) player.obtainResource(marbles[i][shiftCol]);
 
         Marble temp = marbles[0][shiftCol];
         for (int i = 0; i < (row - 1); i++) {
@@ -106,10 +107,10 @@ public class MarketTray {
      * @param player player that uses the tray
      * @throws OutOfBoundMarketTrayException launched when shiftRow is out of bound
      */
-    public void pushRow(int shiftRow, PlayerModifier player) throws OutOfBoundMarketTrayException {
+    public void pushRow(int shiftRow, PlayerModifier player) throws OutOfBoundMarketTrayException, MainActionDoneException {
         if (boundCheck.test(this.row, shiftRow)) throw new OutOfBoundMarketTrayException();
 
-        for (int i = 0; i < col; i++) marbles[shiftRow][i].toPlayer(player);
+        for (int i = 0; i < col; i++) player.obtainResource(marbles[shiftRow][i]);
 
         Marble temp = marbles[shiftRow][0];
         if (col - 1 >= 0) System.arraycopy(marbles[shiftRow], 1, marbles[shiftRow], 0, col - 1);
