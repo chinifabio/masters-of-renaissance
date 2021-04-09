@@ -37,7 +37,6 @@ public class Strongbox implements Depot {
     /**
      * This method accept a lambda function predicate with two parameters: first one is always referred to the input resource,
      * second one is the resource already contained in the depot
-     *
      * @param constraint is the constraint that the depot checks before adding resources
      */
     @Override
@@ -46,9 +45,9 @@ public class Strongbox implements Depot {
     }
 
     /**
-     * This method inserts the resources into the Depot
-     *
+     * This method inserts the resources inside the Strongbox, it merges the resources with the ones inside the Strongbox
      * @param input is the resource that will be inserted
+     * @return true if the resources are correctly inserted
      */
     @Override
     public boolean insert(Resource input) {
@@ -61,40 +60,45 @@ public class Strongbox implements Depot {
     }
 
     /**
-     * This method removes the resources from the Depot
-     *
-     * @param output is the resource that will be withdrawn
+     * This method removes the resources inside the Strongbox, it search the resources of the same type of the resources
+     * to be withdraw and then checks if the Strongbox have enough resources to remove, otherwise it throws an exception
+     * @param output is the resources that will be withdrawn
+     * @return true if the resources are correctly withdrawn
+     * @throws NegativeResourcesDepotException if the Strongbox doens't have enough resources to remove
      */
     @Override
     public boolean withdraw(Resource output) throws NegativeResourcesDepotException{
         if (resources.size() != 0){
-            int i = 0;
-            while (i < resources.size()){
-                if (resources.get(i).type() == output.type()) {
-                    if (this.resources.get(i).amount() - output.amount() > 0){
-                        this.resources.get(i).reduce(output);
+            for (Resource resource : resources) {
+                if (resource.type() == output.type()) {
+                    if (resource.amount() - output.amount() > 0) {
+                        resource.reduce(output);
                         return true;
-                    } else if (this.resources.get(i).amount() - output.amount() == 0){
-                        this.resources.get(i).reduce(this.resources.get(i));
+                    } else if (resource.amount() - output.amount() == 0) {
+                        resource.reduce(resource);
                         return true;
                     } else {
                         throw new NegativeResourcesDepotException("exception: The Strongbox does not have enough resources to withdraw");
                     }
                 }
-                i++;
             }
 
         } return false;
     }
 
     /**
-     * This method returns the resources that are into the depot
+     * This methods return null because the Strongbox doesn't have only one type of resources
+     * @return null
      */
     @Override
     public Resource viewResources() {
         return null;
     }
 
+    /**
+     * This method returns a list of all the resources inside the Strongbox
+     * @return a list of all the resources inside the Strongbox
+     */
     public List<Resource> viewAllResources() {
         return resources;
     }

@@ -2,6 +2,8 @@ package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.exceptions.ExtraDepotsException;
+import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
+import it.polimi.ingsw.model.exceptions.WrongDepotException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
@@ -144,7 +146,51 @@ public class WarehouseTest {
             exc = true;
         }
         assertTrue(exc);
+    }
+    @Test
+    public void moveResourcesInDepots() throws NegativeResourcesDepotException, WrongDepotException {
+        Warehouse warehouse = new Warehouse();
+        warehouse.insertInDepot(DepotSlot.BOTTOM,ResourceBuilder.buildStone(3));
+        warehouse.insertInDepot(DepotSlot.MIDDLE, ResourceBuilder.buildShield(2));
+        warehouse.insertInDepot(DepotSlot.TOP,ResourceBuilder.buildCoin());
+        warehouse.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildServant(2));
+        boolean exc = false;
 
+        warehouse.removeFromDepot(DepotSlot.BOTTOM, ResourceBuilder.buildStone(3));
+        warehouse.moveBetweenDepot(DepotSlot.MIDDLE, DepotSlot.BOTTOM);
+
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.BOTTOM),ResourceBuilder.buildShield(2));
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.MIDDLE),ResourceBuilder.buildEmpty());
+
+        warehouse.moveBetweenDepot(DepotSlot.TOP,DepotSlot.MIDDLE);
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.MIDDLE),ResourceBuilder.buildCoin());
+
+        //This doesn't do anything
+        warehouse.moveBetweenDepot(DepotSlot.BOTTOM,DepotSlot.TOP);
+        warehouse.moveBetweenDepot(DepotSlot.BOTTOM,DepotSlot.MIDDLE);
+
+        warehouse.removeFromDepot(DepotSlot.BOTTOM,ResourceBuilder.buildShield());
+        warehouse.moveBetweenDepot(DepotSlot.BOTTOM, DepotSlot.TOP);
+
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.BOTTOM),ResourceBuilder.buildEmpty());
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.MIDDLE),ResourceBuilder.buildCoin());
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.TOP),ResourceBuilder.buildShield());
+
+        try{
+            warehouse.moveBetweenDepot(DepotSlot.STRONGBOX,DepotSlot.BOTTOM);
+        } catch (WrongDepotException e){
+            exc = true;
+        }
+        assertTrue(exc);
+
+        exc = false;
+
+        try{
+            warehouse.moveBetweenDepot(DepotSlot.BOTTOM,DepotSlot.MIDDLE);
+        } catch (WrongDepotException e){
+            exc = true;
+        }
+        assertTrue(exc);
 
     }
 }

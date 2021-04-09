@@ -1,11 +1,10 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse;
 
 import it.polimi.ingsw.model.exceptions.ExtraDepotsException;
-import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
+import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
+import it.polimi.ingsw.model.exceptions.WrongDepotException;
 import it.polimi.ingsw.model.player.personalBoard.Production;
-import it.polimi.ingsw.model.player.personalBoard.ProductionID;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.*;
-import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.EnumMap;
@@ -19,16 +18,15 @@ import java.util.function.Predicate;
 public class Warehouse {
 
     /**
-     * This attribute associates the corresponding Depot with the DepotSlot
+     * This attribute associates the Depot with its DepotSlot
      */
-    private Map<DepotSlot, Depot> depots;
+    private final Map<DepotSlot, Depot> depots;
 
     /**
      * This attribute is a list of constraints that the Depots must respect
      */
     private List<Predicate<MoveResource>> constraint;
 
-    private Exception ExtraDepotsException;
     /**
      * This method is the constructor of the class
      */
@@ -47,7 +45,7 @@ public class Warehouse {
     /**
      * This method add extra depots into the Warehouse when the SpecialAbility of LeaderCards are activated
      * @param resource is for the creation of extra depot that the LeaderCard adds
-     * @throws ExtraDepotsException when the LeaderCard adds more than two extra depots
+     * @throws ExtraDepotsException when the LeaderCard adds more than the number of extra depots that the warehouse can creates
      */
     public void addDepot(Resource resource) throws ExtraDepotsException {
         for(Map.Entry<DepotSlot,Depot> entry : depots.entrySet()){
@@ -64,10 +62,19 @@ public class Warehouse {
      * This method moves resources between depots
      * @param from is the depot from which the resources are taken
      * @param dest is the depot where the resources will be deposited
-     * @param howMany is the amount of resources that will be moved
      */
-    public void moveBetweenDepot(DepotSlot from, DepotSlot dest, int howMany){
+    public boolean moveBetweenDepot(DepotSlot from, DepotSlot dest) throws NegativeResourcesDepotException, WrongDepotException {
+        if (dest == DepotSlot.STRONGBOX || from == DepotSlot.STRONGBOX || depots.get(from).viewResources().amount() == 0){
+            throw new WrongDepotException("exception: You can't take resources from this Depot");
+        }
 
+        if (depots.get(dest).viewResources().amount() == 0) {
+            if(depots.get(dest).insert(depots.get(from).viewResources())){
+                depots.get(from).withdraw(depots.get(from).viewResources());
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -95,14 +102,41 @@ public class Warehouse {
         //Per ogni produzione selezionata prendo le risorse di output e le metto nello strongbox
     }
 
+    /**
+     * This method inserts resources into the Depot
+     * @param type is the type of Depot
+     * @param resource is the resource to insert into the Depot
+     * @return true if the resources are correctly inserted
+     */
     public boolean insertInDepot(DepotSlot type, Resource resource){
         return depots.get(type).insert(resource);
     }
 
+    /**
+     * This method remove resources from the Depot
+     * @param type is the type of Depot
+     * @param resource is the resource to insert into the Depot
+     * @return true if the resources are correctly removed
+     * @throws NegativeResourcesDepotException if the Depot doesn't have enough resources
+     */
+    public boolean removeFromDepot(DepotSlot type, Resource resource) throws NegativeResourcesDepotException {
+        return depots.get(type).withdraw(resource);
+    }
+
+    /**
+     * This methods returns the resources inside the Depot of the warehouse
+     * @param slot is the Depot from which the Resources are taken
+     * @return the resources inside the Depot
+     */
     public Resource viewResourcesInDepot(DepotSlot slot){
         return depots.get(slot).viewResources();
     }
 
+    /**
+     * This methods returns a list of resources inside the Strongbox
+     * @param slot is the Strongbox from which the Resources are taken
+     * @return the list of all the Resources inside the Strongbox
+     */
     public List<Resource> viewResourcesInStrongbox(DepotSlot slot){
         return depots.get(slot).viewAllResources();
     }

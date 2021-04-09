@@ -22,13 +22,20 @@ public interface Depot {
     /**
      * This method removes the resources from the Depot
      * @param output is the resource that will be withdrawn
+     * @return true if the Resources are correctly withdrawn
+     * @throws NegativeResourcesDepotException if the depot doesn't have enough resources to be withdrawn
      */
     boolean withdraw(Resource output) throws NegativeResourcesDepotException;
 
     /**
      * This method returns the resources that are into the depot
+     * @return Resources inside the Depot
      */
     Resource viewResources();
 
+    /**
+     * This method returns a list of all the resources inside the Depot if it can stores more types of Resources
+     * @return a list of all the resources inside the Depot
+     */
     List<Resource> viewAllResources();
 }

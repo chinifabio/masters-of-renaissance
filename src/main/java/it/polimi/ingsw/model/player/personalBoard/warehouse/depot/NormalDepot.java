@@ -16,6 +16,7 @@ import java.util.function.BiPredicate;
  * This class is the Depot into the warehouse where the resources will be stored
  */
 public class NormalDepot implements Depot {
+
     /**
      * This attribute is the type and the number of resources into the depot
      */
@@ -34,7 +35,6 @@ public class NormalDepot implements Depot {
         this.constraints = new ArrayList<>();
 
     }
-    private Exception NegativeResourcesDepotException;
 
     /**
      * This method accept a lambda function predicate with two parameters: first one is always referred to the input resource,
@@ -44,8 +44,10 @@ public class NormalDepot implements Depot {
     public void addConstraint(BiPredicate<Resource,Resource> constraint){
         constraints.add(constraint);
     }
+
     /**
-     * This method inserts the resources into the Depot
+     * This method inserts the resources into the Depot, first of all verifies that the constraints are respected, then
+     * merges the resources that already are inside the depot with the input or inserts the new resources if the Depot is empty
      * @param input is the resource that will be inserted
      */
     public boolean insert(Resource input) {
@@ -65,8 +67,11 @@ public class NormalDepot implements Depot {
     }
 
     /**
-     * This method removes the resources from the Depot
+     * This method removes the resources inside the Depot, first of all verifies that the Depot isn't empty, then removes
+     * the resources from the Depot or throws an exception if the Depot doesn't contain enough resources to withdraw
      * @param output is the resource that will be withdrawn
+     * @return true if the resources are correctly withdrawn
+     * @throws NegativeResourcesDepotException if the Depot doesn't contain enough resources
      */
     public boolean withdraw(Resource output) throws NegativeResourcesDepotException {
         if (!(this.resources.equalsType(output)) && (this.resources.type() != ResourceType.EMPTY)){
@@ -85,11 +90,16 @@ public class NormalDepot implements Depot {
 
     /**
      * This method returns the resources that are into the depot
+     * @return Resources inside the Depot
      */
     public Resource viewResources() {
         return resources;
     }
 
+    /**
+     * This method returns null because this Depot only contains one type of resources
+     * @return null
+     */
     @Override
     public List<Resource> viewAllResources() {
         return null;

@@ -24,6 +24,7 @@ public class SpecialDepot implements Depot {
 
     /**
      * This method is the constructor of the class
+     * @param resource is the type of resources that the Depot can contains
      */
     public SpecialDepot(Resource resource) {
         this.resources = ResourceBuilder.buildFromType(resource.type(),0);
@@ -33,7 +34,6 @@ public class SpecialDepot implements Depot {
     /**
      * This method accept a lambda function predicate with two parameters: first one is always referred to the input resource,
      * second one is the resource already contained in the depot
-     *
      * @param constraint is the constraint that the depot checks before adding resources
      */
     @Override
@@ -42,8 +42,8 @@ public class SpecialDepot implements Depot {
     }
 
     /**
-     * This method inserts the resources into the Depot
-     *
+     * This method inserts the resources into the Depot, first of all verifies that the constraints are respected, then
+     * merges the resources that already are inside the depot with the input or inserts the new resources if the Depot is empty
      * @param input is the resource that will be inserted
      */
     @Override
@@ -61,9 +61,11 @@ public class SpecialDepot implements Depot {
     }
 
     /**
-     * This method removes the resources from the Depot
-     *
+     * This method removes the resources inside the Depot, first of all verifies that the Depot isn't empty, then removes
+     * the resources from the Depot or throws an exception if the Depot doesn't contain enough resources to withdraw
      * @param output is the resource that will be withdrawn
+     * @return true if the resources are correctly withdrawn
+     * @throws NegativeResourcesDepotException if the Depot doesn't contain enough resources
      */
     @Override
     public boolean withdraw(Resource output) throws NegativeResourcesDepotException {
@@ -83,12 +85,17 @@ public class SpecialDepot implements Depot {
 
     /**
      * This method returns the resources that are into the depot
+     * @return Resources inside the Depot
      */
     @Override
     public Resource viewResources() {
         return resources;
     }
 
+    /**
+     * This method returns null because this Depot only contains one type of resources
+     * @return null
+     */
     @Override
     public List<Resource> viewAllResources() {
         return null;

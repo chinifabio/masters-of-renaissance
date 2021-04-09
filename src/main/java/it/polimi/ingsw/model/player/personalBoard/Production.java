@@ -11,7 +11,7 @@ public class Production {
     /**
      * This attribute is the identifier of the Production
      */
-    private ProductionID productionID;
+    private final ProductionID productionID;
     /**
      * This attribute is the list of the Resources required to activate the Production
      */
