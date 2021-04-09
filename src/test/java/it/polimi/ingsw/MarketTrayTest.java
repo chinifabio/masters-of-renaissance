@@ -8,7 +8,7 @@ import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.match.markettray.MarketTray;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerModifier;
+import it.polimi.ingsw.model.player.PlayerReactEffect;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumMap;
@@ -43,7 +43,7 @@ public class MarketTrayTest {
         int col = 4;
 
         MarketTray tray = new MarketTray();
-        PlayerModifier player = new Player("dummy");
+        PlayerReactEffect player = new Player("dummy");
 
         List<Marble> beforePush;
         Marble slide;
@@ -82,7 +82,7 @@ public class MarketTrayTest {
         int col = 4;
 
         MarketTray tray = new MarketTray();
-        PlayerModifier player = new Player("dummy");
+        PlayerReactEffect player = new Player("dummy");
 
         List<Marble> beforePush;
         Marble slide;

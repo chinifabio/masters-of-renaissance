@@ -16,4 +16,10 @@ public abstract class State implements StateChanger{
     protected State(Context context) {
         this.context = context;
     }
+
+    /**
+     * can the player do staff?
+     * @return true yes, false no
+     */
+    public abstract boolean doStaff();
 }

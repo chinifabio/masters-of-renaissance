@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.resource.strategy;
 
-import it.polimi.ingsw.model.player.PlayerModifier;
+import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 /**
  * strategy for obtaining faithpoint from resources
@@ -24,7 +24,7 @@ public class GiveFaithPointBehavior implements ObtainStrategy{
      * @param player player
      */
     @Override
-    public void obtain(PlayerModifier player) {
+    public void obtain(PlayerReactEffect player) {
         player.moveFaithMarker(amount);
     }
 }

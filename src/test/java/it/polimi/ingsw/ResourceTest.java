@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerModifier;
+import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -58,7 +58,7 @@ public class ResourceTest {
     @Test
     public void nonObtainable() {
         Resource unknown = ResourceBuilder.buildUnknown();
-        PlayerModifier player = new Player("dummy");
+        PlayerReactEffect player = new Player("dummy");
         boolean result = false;
 
         try {

@@ -1,10 +1,7 @@
 package it.polimi.ingsw.model.cards.effects;
 
-import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerModifier;
+import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.player.personalBoard.Production;
-
-import java.util.List;
 
 /**
  * This class is a part of the strategy pattern, it implements the interface Effect.
@@ -30,7 +27,7 @@ public class AddProduction implements Effect{
      * @param p the player that is getting a new production.
      */
     @Override
-    public void use(PlayerModifier p) {
+    public void use(PlayerReactEffect p) {
         p.addProduction(this.prod);
     }
 }

@@ -14,7 +14,7 @@ public interface StateChanger {
     /**
      * player has done a leader action
      */
-    void mainActionDone() throws IllegalMovesException;
+    void doMainAction() throws IllegalMovesException;
 
     /**
      * player end his turn

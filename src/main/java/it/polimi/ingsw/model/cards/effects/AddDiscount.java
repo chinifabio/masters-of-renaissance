@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.cards.effects;
 
-import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerModifier;
+import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 
@@ -28,7 +27,7 @@ public class AddDiscount implements Effect{
      * @param p the player
      */
     @Override
-    public void use(PlayerModifier p) {
+    public void use(PlayerReactEffect p) {
         p.addDiscount(ResourceBuilder.buildFromType(this.t, 1));
     }
 }

@@ -23,7 +23,7 @@ public class NoActionDoneState extends State {
      * player has done a leader action
      */
     @Override
-    public void mainActionDone() {
+    public void doMainAction() {
         context.setState(new MainActionDoneState(context));
     }
 
@@ -33,5 +33,15 @@ public class NoActionDoneState extends State {
     @Override
     public void endTurn() {
         context.setState(new NotHisTurnState(context));
+    }
+
+    /**
+     * can the player do staff?
+     *
+     * @return true yes, false no
+     */
+    @Override
+    public boolean doStaff() {
+        return true;
     }
 }

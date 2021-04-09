@@ -39,8 +39,11 @@ public class Marble {
      * return the resource associated to the color
      * @return the mapped resource
      */
-    public Resource toResource() {
-        return ResourceBuilder.buildFromType(toResource, 1);
+    public Resource toResource(ResourceType whiteCase) {
+        return this.color == MarbleColor.WHITE ?
+                ResourceBuilder.buildFromType(whiteCase, 1):
+                ResourceBuilder.buildFromType(toResource, 1);
+
     }
 
     /**

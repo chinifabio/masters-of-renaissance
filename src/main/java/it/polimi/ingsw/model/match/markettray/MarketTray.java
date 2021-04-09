@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.match.markettray;
 import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.moves.MainActionDoneException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.*;
-import it.polimi.ingsw.model.player.PlayerModifier;
+import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +86,7 @@ public class MarketTray {
      * @param player player that uses the tray
      * @throws OutOfBoundMarketTrayException launched when shiftCol is out of bound
      */
-    public void pushCol(int shiftCol, PlayerModifier player) throws OutOfBoundMarketTrayException, MainActionDoneException {
+    public void pushCol(int shiftCol, PlayerReactEffect player) throws OutOfBoundMarketTrayException, MainActionDoneException {
         if (boundCheck.test(this.col, shiftCol)) throw new OutOfBoundMarketTrayException();
 
         for (int i = 0; i < row; i++) player.obtainResource(marbles[i][shiftCol]);
@@ -107,7 +107,7 @@ public class MarketTray {
      * @param player player that uses the tray
      * @throws OutOfBoundMarketTrayException launched when shiftRow is out of bound
      */
-    public void pushRow(int shiftRow, PlayerModifier player) throws OutOfBoundMarketTrayException, MainActionDoneException {
+    public void pushRow(int shiftRow, PlayerReactEffect player) throws OutOfBoundMarketTrayException, MainActionDoneException {
         if (boundCheck.test(this.row, shiftRow)) throw new OutOfBoundMarketTrayException();
 
         for (int i = 0; i < col; i++) player.obtainResource(marbles[shiftRow][i]);

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.resource.strategy;
 
 import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
-import it.polimi.ingsw.model.player.PlayerModifier;
+import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 /**
  * strategy for obtaining resource
@@ -12,5 +12,5 @@ public interface ObtainStrategy {
      * @param player the player who obtain the resource
      * @throws UnobtainableResourceException launched if the resource is not obtainable
      */
-    void obtain(PlayerModifier player) throws UnobtainableResourceException;
+    void obtain(PlayerReactEffect player) throws UnobtainableResourceException;
 }

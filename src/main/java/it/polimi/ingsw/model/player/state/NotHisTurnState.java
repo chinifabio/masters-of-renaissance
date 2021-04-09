@@ -23,7 +23,7 @@ public class NotHisTurnState extends State {
      * player has done a leader action
      */
     @Override
-    public void mainActionDone() throws IllegalMovesException {
+    public void doMainAction() throws IllegalMovesException {
         throw new IllegalMovesException("main action not in the player turn");
     }
 
@@ -33,5 +33,15 @@ public class NotHisTurnState extends State {
     @Override
     public void endTurn() throws IllegalMovesException {
         throw new IllegalMovesException("end turn not in the player turn");
+    }
+
+    /**
+     * can the player do staff?
+     *
+     * @return true yes, false no
+     */
+    @Override
+    public boolean doStaff() {
+        return false;
     }
 }

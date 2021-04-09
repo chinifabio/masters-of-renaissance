@@ -1,8 +1,7 @@
 package it.polimi.ingsw.model.cards.effects;
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
-import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerModifier;
+import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 /**
  * This class is a part of the strategy pattern, it implements the interface Effect.
@@ -27,7 +26,7 @@ public class DestroyCards implements Effect {
      * @param p the player
      */
     @Override
-    public void use(PlayerModifier p) {
+    public void use(PlayerReactEffect p) {
          //deve scartare due carte di un colore
     }
 }

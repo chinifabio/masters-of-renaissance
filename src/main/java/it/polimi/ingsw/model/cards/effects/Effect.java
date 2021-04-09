@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model.cards.effects;
 
-import it.polimi.ingsw.model.player.PlayerModifier;
+import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 public interface Effect {
 
     /**
      *
      */
-    void use(PlayerModifier p);
+    void use(PlayerReactEffect p);
 }

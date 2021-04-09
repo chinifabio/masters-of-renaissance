@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.resource.strategy;
 
-import it.polimi.ingsw.model.player.PlayerModifier;
+import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 /**
  * strategy for ObtainStategy that do nothing when player obtaint the resource
@@ -11,7 +11,7 @@ public class DoNothingBehavior implements ObtainStrategy{
      * @param player player that has obtained the resource
      */
     @Override
-    public void obtain(PlayerModifier player) {
+    public void obtain(PlayerReactEffect player) {
 
     }
 }

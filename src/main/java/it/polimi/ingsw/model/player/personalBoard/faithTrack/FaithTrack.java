@@ -155,6 +155,7 @@ public class FaithTrack {
      *
      * This method flips the PopeTile if the player is in a VaticanSpace and someone activated the PopeSpace
      */
+    //TODO guardare meglio
     public void flipPopeTile(){
         //Aggiungere il controllo rispetto alle posizioni degli altri giocatori
         if (track.get(this.playerPosition).getVaticanSpace() != VaticanSpace.NONE) {

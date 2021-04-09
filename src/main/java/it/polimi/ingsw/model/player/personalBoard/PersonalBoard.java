@@ -4,6 +4,8 @@ import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
+import it.polimi.ingsw.model.player.personalBoard.faithTrack.PopeTile;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
@@ -121,5 +123,75 @@ public class PersonalBoard {
      */
     public void moveFaithMarker(int amount) {
         //TODO implementation
+    }
+
+    /**
+     * create a new depot in the warehouse
+     * @param depot the new depot
+     */
+    public void addDepot(Depot depot) {
+        // TODO implementazione
+    }
+
+    /**
+     * Move the Lorenzo marker amount times
+     * @param amount moves of lorenzo
+     */
+    public void moveLorenzo(int amount) {
+        // TODO implementazione
+    }
+
+    /**
+     * return all the available production
+     * @return list of produciton
+     */
+    public List<Production> possibleProduction() {
+        // TODO implementazione
+        return null;
+    }
+
+    /**
+     * return all the leader card of the player packed in a deck
+     * @return deck of leader card
+     */
+    public Deck<LeaderCard> viewLeaderCard() {
+        // TODO implementazione
+        return null;
+    }
+
+    /**
+     * return all the resources that the player has. It doesn't matter the depot in which they are stored
+     * @return list of resources
+     */
+    public List<Resource> viewResources() {
+        // TODO implementazione
+        return null;
+    }
+
+    /**
+     * return a map of the top develop card placed in the player board decks
+     * @return a map of devCardSlot - DevCard
+     */
+    public Map<DevCardSlot, DevCard> viewDevCards() {
+        //TODO implementazione
+        return null;
+    }
+
+    /**
+     * return the faith marker position of the player
+     *
+     * @return faith marker position of the player
+     */
+    public int FaithMarkerPosition() {
+        // TODO implementazione
+        return 0;
+    }
+
+    /**
+     * check if it need to be flipped the pope tile passed as parameter
+     * @param popeTile the pope tile to check
+     */
+    public void flipPopeTile(PopeTile popeTile) {
+        // TODO implementazione
     }
 }

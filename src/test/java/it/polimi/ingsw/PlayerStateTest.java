@@ -17,7 +17,7 @@ public class PlayerStateTest {
 
         // not his turn
         try {
-            player.mainActionDone();
+            player.doMainAction();
         } catch (IllegalMovesException e) {
             System.out.println(e.getMsg());
             exception = true;
@@ -68,7 +68,7 @@ public class PlayerStateTest {
         assertTrue(player.getPlayerState() instanceof NoActionDoneState);
         exception = false;
         try {
-            player.mainActionDone();
+            player.doMainAction();
         } catch (IllegalMovesException e) {
             System.out.println(e.getMsg());
             exception = true;

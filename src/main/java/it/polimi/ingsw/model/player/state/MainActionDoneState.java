@@ -23,7 +23,7 @@ public class MainActionDoneState extends State {
      * player has done a leader action
      */
     @Override
-    public void mainActionDone() throws IllegalMovesException {
+    public void doMainAction() throws IllegalMovesException {
         throw new IllegalMovesException("no more action can be done");
     }
 
@@ -33,5 +33,15 @@ public class MainActionDoneState extends State {
     @Override
     public void endTurn() {
         context.setState(new NotHisTurnState(context));
+    }
+
+    /**
+     * can the player do staff?
+     *
+     * @return true yes, false no
+     */
+    @Override
+    public boolean doStaff() {
+        return true;
     }
 }
