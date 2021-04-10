@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.exceptions.NegativePointsException;
+import it.polimi.ingsw.model.exceptions.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.IllegalMovesException;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.*;
 import it.polimi.ingsw.model.resource.Resource;
@@ -13,10 +13,10 @@ public class FaithTrackTest {
     /**
      * Testing if the FaithTrack is correctly created using the player position to take cells info
      * @throws IllegalMovesException if the Player or Lorenzo moves when they are in the last cell
-     * @throws NegativePointsException if the Player or Lorenzo receives negative points
+     * @throws WrongPointsException if the Player or Lorenzo receives negative points
      */
     @Test
-    public void infoFaithTrack() throws IllegalMovesException, NegativePointsException {
+    public void infoFaithTrack() throws IllegalMovesException, WrongPointsException {
 
         FaithTrack track = new FaithTrack();
         Resource point = ResourceBuilder.buildFaithPoint();
@@ -53,10 +53,10 @@ public class FaithTrackTest {
     /**
      * Testing if the PlayerPosition is correctly updated
      * @throws IllegalMovesException if the Player or Lorenzo moves when they are in the last cell
-     * @throws NegativePointsException if the Player or Lorenzo receives negative points
+     * @throws WrongPointsException if the Player or Lorenzo receives negative points
      */
     @Test
-    public void checkPlayerPosition() throws IllegalMovesException, NegativePointsException {
+    public void checkPlayerPosition() throws IllegalMovesException, WrongPointsException {
 
         Resource first = ResourceBuilder.buildFaithPoint(1);
         Resource second = ResourceBuilder.buildFaithPoint(2);
@@ -83,10 +83,10 @@ public class FaithTrackTest {
     /**
      * Testing if the LorenzoPosition is correctly updated
      * @throws IllegalMovesException if the Player or Lorenzo moves when they are in the last cell
-     * @throws NegativePointsException if the Player or Lorenzo receives negative points
+     * @throws WrongPointsException if the Player or Lorenzo receives negative points
      */
     @Test
-    public void checkLorenzoPosition() throws IllegalMovesException, NegativePointsException {
+    public void checkLorenzoPosition() throws IllegalMovesException, WrongPointsException {
 
         FaithTrack faithTrack = new FaithTrack();
 
@@ -107,10 +107,10 @@ public class FaithTrackTest {
     /**
      * Testing if the Tiles of the VaticanSpace are correctly flipped when the player moves
      * @throws IllegalMovesException if the Player or Lorenzo moves when they are in the last cell
-     * @throws NegativePointsException if the Player or Lorenzo receives negative points
+     * @throws WrongPointsException if the Player or Lorenzo receives negative points
      */
     @Test
-    public void flipPopeTiles() throws IllegalMovesException, NegativePointsException {
+    public void flipPopeTiles() throws IllegalMovesException, WrongPointsException {
 
         FaithTrack faithTrack = new FaithTrack();
         Resource third = ResourceBuilder.buildFaithPoint(3);
@@ -144,15 +144,16 @@ public class FaithTrackTest {
     /**
      * Testing if the model calls an exception when the player try to pass the last cell of the FaithTrack
      * @throws IllegalMovesException if the Player or Lorenzo moves when they are in the last cell
-     * @throws NegativePointsException if the Player or Lorenzo receives negative points
+     * @throws WrongPointsException if the Player or Lorenzo receives negative points
      */
     @Test
-    public void callExceptionsPlayer() throws IllegalMovesException, NegativePointsException{
+    public void callExceptionsPlayer() throws IllegalMovesException, WrongPointsException {
 
         FaithTrack track = new FaithTrack();
         Resource negative = ResourceBuilder.buildFaithPoint(-3);
         Resource first = ResourceBuilder.buildFaithPoint(1);
         Resource last = ResourceBuilder.buildFaithPoint(18);
+        Resource error = ResourceBuilder.buildServant(3);
 
         assertEquals(0,track.getPlayerPosition());
         track.movePlayer(first);
@@ -161,6 +162,7 @@ public class FaithTrackTest {
         assertEquals(24, track.getPlayerPosition());
         boolean move = false;
         boolean result = false;
+        boolean otherRes = false;
 
         try {
             track.movePlayer(first);
@@ -172,20 +174,27 @@ public class FaithTrackTest {
 
         try {
             track.movePlayer(negative);
-        } catch (NegativePointsException e) {
+        } catch (WrongPointsException e) {
             result = true;
             System.out.println(e.getMsg());
         }
         assertTrue(result);
+
+        try{
+            track.movePlayer(error);
+        } catch (WrongPointsException e){
+            otherRes = true;
+        }
+        assertTrue(otherRes);
     }
 
     /**
      * Testing if the model calls an exception when Lorenzo try to pass the last cell of the FaithTrack
      * @throws IllegalMovesException if the Player or Lorenzo moves when they are in the last cell
-     * @throws NegativePointsException if the Player or Lorenzo receives negative points
+     * @throws WrongPointsException if the Player or Lorenzo receives negative points
      */
     @Test
-    public void callExceptionsLorenzo() throws IllegalMovesException, NegativePointsException{
+    public void callExceptionsLorenzo() throws IllegalMovesException, WrongPointsException {
 
         FaithTrack track = new FaithTrack();
 
@@ -205,7 +214,7 @@ public class FaithTrackTest {
 
         try {
             track.moveLorenzo(-2);
-        } catch (NegativePointsException e) {
+        } catch (WrongPointsException e) {
             negative = true;
             System.out.println(e.getMsg());
         }

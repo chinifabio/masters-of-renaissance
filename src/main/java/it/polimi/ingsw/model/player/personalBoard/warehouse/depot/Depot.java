@@ -38,4 +38,10 @@ public interface Depot {
      * @return a list of all the resources inside the Depot
      */
     List<Resource> viewAllResources();
+
+    /**
+     * This method checks if this Depot must have a check on the type of the Resources on this Depot
+     * @return true if the Depot has a check on the type of the Resources inside
+     */
+    boolean checkTypeDepot();
 }

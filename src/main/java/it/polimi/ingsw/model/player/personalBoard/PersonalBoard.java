@@ -3,13 +3,19 @@ package it.polimi.ingsw.model.player.personalBoard;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
+import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
+import it.polimi.ingsw.model.exceptions.WrongDepotException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.PopeTile;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
+import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -50,9 +56,31 @@ public class PersonalBoard {
     private Function<MarbleColor, ResourceRequisite> marbleConversion;
 
     /**
+     * This attribute is the Warehouse contained into the PersonalBoard
+     */
+    private Warehouse warehouse;
+
+    /**
+     * This attribute is the FaithTrack of the PersonalBoard
+     */
+    private FaithTrack faithTrack;
+
+    /**
      * This method is the constructor of the class
      */
-    public PersonalBoard personalBoard;
+    public PersonalBoard() {
+        this.availableProductions = new ArrayList<>();
+        this.availableDiscount = new ArrayList<>();
+        this.availableResources = new ArrayList<>();
+        this.leaderDeck = new Deck<>();
+        this.devDeck = new EnumMap<>(DevCardSlot.class);
+        devDeck.put(DevCardSlot.LEFT,new Deck<>());
+        devDeck.put(DevCardSlot.CENTER,new Deck<>());
+        devDeck.put(DevCardSlot.RIGHT,new Deck<>());
+        //TODO Da guardare meglio
+        this.marbleConversion = marbleColor -> null;
+        this.warehouse = new Warehouse();
+    }
 
     /**
      * This method add a Discount into the list of availableDiscount
@@ -94,7 +122,8 @@ public class PersonalBoard {
      * This method add a new Production into the list of availableProductions
      * @param prod is the Production to add
      */
-    public void addProduction(Production prod){}
+    public void addProduction(Production prod){
+    }
 
     /**
      * This method select the production that the Player wants to activate
@@ -108,13 +137,16 @@ public class PersonalBoard {
     public void activateProductions(){}
 
     /**
-     * This method permits to move resource from a depot to another one
-     * @param from source depot of the resource
-     * @param to destination of the resource
-     * @param loot the resource to move
+     * This method moves resources from a Depot to another one
+     * @param from is the Depot where the resources are taken from
+     * @param to is the Depot where the resources will be stored
+     * @param resource is the resource to move
+     * @return true if the resources are correctly moved
+     * @throws NegativeResourcesDepotException if the Depot "from" hasn't enough resources to move
+     * @throws WrongDepotException if the Depot "from" is empty or doesn't have the same type of resources of "resource"
      */
-    public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource loot) {
-        //TODO implementation
+    public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource resource) throws WrongDepotException, NegativeResourcesDepotException {
+        warehouse.moveBetweenDepot(from,to, resource);
     }
 
     /**

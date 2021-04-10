@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.exceptions;
 
-public class NegativePointsException extends Exception{
+public class WrongPointsException extends Exception{
     /**
      * msg to identify the error
      */
@@ -10,7 +10,7 @@ public class NegativePointsException extends Exception{
      * costructor that save the message to handle
      * @param msg string
      */
-    public NegativePointsException(String msg) {
+    public WrongPointsException(String msg) {
         this.msg = msg;
     }
 

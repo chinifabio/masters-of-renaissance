@@ -1,9 +1,7 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.cards.*;
-import it.polimi.ingsw.model.exceptions.IllegalMovesException;
-import it.polimi.ingsw.model.exceptions.NoRequisiteException;
-import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -337,7 +335,7 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
      * @param loot the resource to move
      */
     @Override
-    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
+    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws WrongDepotException, NegativeResourcesDepotException {
         this.personalBoard.moveResourceDepot(from, to, loot);
     }
 

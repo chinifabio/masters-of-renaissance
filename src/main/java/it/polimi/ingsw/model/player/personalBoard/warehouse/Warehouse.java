@@ -3,13 +3,18 @@ package it.polimi.ingsw.model.player.personalBoard.warehouse;
 import it.polimi.ingsw.model.exceptions.ExtraDepotsException;
 import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.WrongDepotException;
+import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.player.personalBoard.Production;
+import it.polimi.ingsw.model.player.personalBoard.ProductionID;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.*;
 import it.polimi.ingsw.model.resource.Resource;
 
+
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
 /**
@@ -36,22 +41,47 @@ public class Warehouse {
         depots.put(DepotSlot.BOTTOM, DepotBuilder.buildBottomDepot());
         depots.put(DepotSlot.MIDDLE, DepotBuilder.buildMiddleDepot());
         depots.put(DepotSlot.TOP, DepotBuilder.buildTopDepot());
-        depots.put(DepotSlot.STRONGBOX, DepotBuilder.buildStrongBoxDepot());
-        depots.put(DepotSlot.BUFFER, DepotBuilder.buildStrongBoxDepot());
         depots.put(DepotSlot.SPECIAL1, null);
         depots.put(DepotSlot.SPECIAL2, null);
+        depots.put(DepotSlot.STRONGBOX, DepotBuilder.buildStrongBoxDepot());
+        depots.put(DepotSlot.BUFFER, DepotBuilder.buildStrongBoxDepot());
+
+        this.constraint = new ArrayList<>();
+        this.addConstraint(x -> x.getFrom() != DepotSlot.STRONGBOX);
+        this.addConstraint(x-> x.getDest() != DepotSlot.STRONGBOX);
+        this.addConstraint(x -> x.getFrom() != DepotSlot.BUFFER);
+        this.addConstraint(x-> x.getDest() != DepotSlot.BUFFER);
+
+
+    }
+
+    public void addConstraint(Predicate<MoveResource> constraint){
+        this.constraint.add(constraint);
     }
 
     /**
      * This method add extra depots into the Warehouse when the SpecialAbility of LeaderCards are activated
      * @param resource is for the creation of extra depot that the LeaderCard adds
+     * @return true if the Depot is correctly made and there aren't other extraDepot with the same resources
      * @throws ExtraDepotsException when the LeaderCard adds more than the number of extra depots that the warehouse can creates
      */
-    public void addDepot(Resource resource) throws ExtraDepotsException {
-        for(Map.Entry<DepotSlot,Depot> entry : depots.entrySet()){
-            if (entry.getValue() == null){
+    public boolean addDepot(Resource resource) throws ExtraDepotsException {
+
+        for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()) {
+            //Find the first empty space to create extra Depot
+            if (entry.getValue() == null) {
+                for (Map.Entry<DepotSlot, Depot> newEntry : depots.entrySet()) {
+                    //Check if there is already another ExtraDepot with the same resources
+                    if (newEntry.getValue() != null) {
+                        if(newEntry.getKey() != DepotSlot.BUFFER && newEntry.getKey() != DepotSlot.STRONGBOX && !newEntry.getValue().checkTypeDepot()){
+                            if (newEntry.getValue().viewResources().equalsType(resource)){
+                                return false;
+                            }
+                        }
+                    }
+                }
                 entry.setValue(DepotBuilder.buildSpecialDepot(resource));
-                return;
+                return true;
             }
         }
         throw new ExtraDepotsException("exception: All the extra depots have already been built");
@@ -59,20 +89,33 @@ public class Warehouse {
 
 
     /**
-     * This method moves resources between depots
-     * @param from is the depot from which the resources are taken
-     * @param dest is the depot where the resources will be deposited
+     * This method moves resources from a Depot to another one
+     * @param from is the Depot where the resources are taken from
+     * @param dest is the Depot where the resources will be stored
+     * @param resource is the resource to move
+     * @return true if the resources are correctly moved
+     * @throws NegativeResourcesDepotException if the Depot "from" hasn't enough resources to move
+     * @throws WrongDepotException if the Depot "from" is empty or doesn't have the same type of resources of "resource"
      */
-    public boolean moveBetweenDepot(DepotSlot from, DepotSlot dest) throws NegativeResourcesDepotException, WrongDepotException {
-        if (dest == DepotSlot.STRONGBOX || from == DepotSlot.STRONGBOX || depots.get(from).viewResources().amount() == 0){
-            throw new WrongDepotException("exception: You can't take resources from this Depot");
-        }
-
-        if (depots.get(dest).viewResources().amount() == 0) {
-            if(depots.get(dest).insert(depots.get(from).viewResources())){
-                depots.get(from).withdraw(depots.get(from).viewResources());
+    public boolean moveBetweenDepot(DepotSlot from, DepotSlot dest, Resource resource) throws NegativeResourcesDepotException, WrongDepotException {
+        MoveResource moveResource = new MoveResource(from, dest);
+        AtomicBoolean testResult = new AtomicBoolean(true);
+        this.constraint.forEach(x -> {
+            if (!x.test(moveResource)) testResult.set(false);
+        });
+        if (testResult.get()) {
+            if (depots.get(from).viewResources().amount() == 0 || !depots.get(from).viewResources().equalsType(resource)) {
+                throw new WrongDepotException("exception: You can't take resources from this Depot");
             }
-            return true;
+
+            if (removeFromDepot(from, resource)) {
+                if (insertInDepot(dest, resource)) {
+                    return true;
+                } else {
+                    insertInDepot(from, resource);
+                    return false;
+                }
+            }
         }
         return false;
     }
@@ -81,8 +124,7 @@ public class Warehouse {
      * This method adds productions to the list of available productions that the player could select
      * @param production is the production to add in the list
      */
-    public void addProduction(Production production){
-
+    public void addProduction(ProductionID productionID, Production production, PersonalBoard personalBoard){
     }
 
     /**
@@ -108,7 +150,17 @@ public class Warehouse {
      * @param resource is the resource to insert into the Depot
      * @return true if the resources are correctly inserted
      */
-    public boolean insertInDepot(DepotSlot type, Resource resource){
+    public boolean insertInDepot(DepotSlot type, Resource resource) {
+        if (!depots.get(type).checkTypeDepot()) {
+            return depots.get(type).insert(resource);
+        }
+        for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()) {
+            if ((entry.getValue()) != null && (entry.getValue().checkTypeDepot())) {
+                if((entry.getKey() != type) && entry.getValue().viewResources().equalsType(resource)){
+                    return false;
+                }
+            }
+        }
         return depots.get(type).insert(resource);
     }
 

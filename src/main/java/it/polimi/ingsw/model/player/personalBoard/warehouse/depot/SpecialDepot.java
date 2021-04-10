@@ -100,4 +100,14 @@ public class SpecialDepot implements Depot {
     public List<Resource> viewAllResources() {
         return null;
     }
+
+    /**
+     * This method checks if this Depot must have a control on the type of the Resources on this Depot
+     *
+     * @return false
+     */
+    @Override
+    public boolean checkTypeDepot() {
+        return false;
+    }
 }
