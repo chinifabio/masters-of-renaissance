@@ -23,28 +23,28 @@ public class FaithTrackTest {
 
         assertEquals(0, track.victoryPointCell());
         assertEquals(VaticanSpace.NONE, track.vaticanSpaceCell());
-        track.movePlayer(point);
-        track.movePlayer(point);
-        track.movePlayer(point);
+        track.movePlayer(point.amount());
+        track.movePlayer(point.amount());
+        track.movePlayer(point.amount());
         assertEquals(VaticanSpace.NONE, track.vaticanSpaceCell());
         assertEquals(1, track.victoryPointCell());
-        track.movePlayer(point);
-        track.movePlayer(point);
-        track.movePlayer(point);
+        track.movePlayer(point.amount());
+        track.movePlayer(point.amount());
+        track.movePlayer(point.amount());
         assertEquals(VaticanSpace.FIRST, track.vaticanSpaceCell());
         assertEquals(2, track.victoryPointCell());
-        track.movePlayer(point);
-        track.movePlayer(point);
+        track.movePlayer(point.amount());
+        track.movePlayer(point.amount());
         assertEquals(VaticanSpace.FIRST, track.vaticanSpaceCell());
         assertEquals(0, track.victoryPointCell());
 
         Resource mid = ResourceBuilder.buildFaithPoint(7);
-        track.movePlayer(mid);
+        track.movePlayer(mid.amount());
         assertEquals(VaticanSpace.SECOND, track.vaticanSpaceCell());
         assertEquals(9, track.victoryPointCell());
 
         Resource last = ResourceBuilder.buildFaithPoint(9);
-        track.movePlayer(last);
+        track.movePlayer(last.amount());
         assertEquals(VaticanSpace.THIRD, track.vaticanSpaceCell());
         assertEquals(20, track.victoryPointCell());
 
@@ -66,17 +66,17 @@ public class FaithTrackTest {
         FaithTrack faithTrack = new FaithTrack();
 
         assertEquals(0,faithTrack.getPlayerPosition());
-        faithTrack.movePlayer(first);
+        faithTrack.movePlayer(first.amount());
         assertEquals(1,faithTrack.getPlayerPosition());
-        faithTrack.movePlayer(first);
+        faithTrack.movePlayer(first.amount());
         assertEquals(2,faithTrack.getPlayerPosition());
-        faithTrack.movePlayer(second);
+        faithTrack.movePlayer(second.amount());
         assertEquals(4,faithTrack.getPlayerPosition());
-        faithTrack.movePlayer(first);
+        faithTrack.movePlayer(first.amount());
         assertEquals(5,faithTrack.getPlayerPosition());
-        faithTrack.movePlayer(third);
+        faithTrack.movePlayer(third.amount());
         assertEquals(8,faithTrack.getPlayerPosition());
-        faithTrack.movePlayer(last); //Player should be in the cell 26 but the Track is composed with 24 positions
+        faithTrack.movePlayer(last.amount()); //Player should be in the cell 26 but the Track is composed with 24 positions
         assertEquals(24,faithTrack.getPlayerPosition());
     }
 
@@ -119,22 +119,22 @@ public class FaithTrackTest {
         assertFalse(faithTrack.getTile(2));
         assertFalse(faithTrack.getTile(3));
         assertFalse(faithTrack.getTile(1));
-        faithTrack.movePlayer(third);
-        faithTrack.movePlayer(third);
+        faithTrack.movePlayer(third.amount());
+        faithTrack.movePlayer(third.amount());
         assertTrue(faithTrack.getTile(1));
         assertFalse(faithTrack.getTile(2));
         assertFalse(faithTrack.getTile(3));
-        faithTrack.movePlayer(third);
+        faithTrack.movePlayer(third.amount());
         assertTrue(faithTrack.getTile(1));
         assertFalse(faithTrack.getTile(2));
         assertFalse(faithTrack.getTile(3));
-        faithTrack.movePlayer(third);
+        faithTrack.movePlayer(third.amount());
         assertTrue(faithTrack.getTile(1));
         assertTrue(faithTrack.getTile(2));
         assertFalse(faithTrack.getTile(3));
-        faithTrack.movePlayer(third);
-        faithTrack.movePlayer(third);
-        faithTrack.movePlayer(third);
+        faithTrack.movePlayer(third.amount());
+        faithTrack.movePlayer(third.amount());
+        faithTrack.movePlayer(third.amount());
         assertTrue(faithTrack.getTile(1));
         assertTrue(faithTrack.getTile(2));
         assertTrue(faithTrack.getTile(3));
@@ -156,16 +156,16 @@ public class FaithTrackTest {
         Resource error = ResourceBuilder.buildServant(3);
 
         assertEquals(0,track.getPlayerPosition());
-        track.movePlayer(first);
-        track.movePlayer(last);
-        track.movePlayer(last);
+        track.movePlayer(first.amount());
+        track.movePlayer(last.amount());
+        track.movePlayer(last.amount());
         assertEquals(24, track.getPlayerPosition());
         boolean move = false;
         boolean result = false;
         boolean otherRes = false;
 
         try {
-            track.movePlayer(first);
+            track.movePlayer(first.amount());
         } catch (IllegalMovesException e) {
             move = true;
             System.out.println(e.getMsg());
@@ -173,7 +173,7 @@ public class FaithTrackTest {
         assertTrue(move);
 
         try {
-            track.movePlayer(negative);
+            track.movePlayer(negative.amount());
         } catch (WrongPointsException e) {
             result = true;
             System.out.println(e.getMsg());
@@ -181,8 +181,8 @@ public class FaithTrackTest {
         assertTrue(result);
 
         try{
-            track.movePlayer(error);
-        } catch (WrongPointsException e){
+            track.movePlayer(error.amount());
+        } catch (IllegalMovesException e){
             otherRes = true;
         }
         assertTrue(otherRes);

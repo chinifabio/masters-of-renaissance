@@ -4,26 +4,14 @@ package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 /**
  * This class represents special cells that activates the Vatican Report
  */
-public class PopeSpace implements Cell {
-
-    /**
-     * This attribute represents the points that the Player will get when this cell is passed;
-     */
-    private int victoryPoint;
+public class PopeSpace extends Cell {
 
 
     /**
-     *This attribute is the VaticanSpace in which the cell is located
+     * * This method is the constructor of the class
      */
-    private VaticanSpace vaticanSpace;
-
-    /**
-     * This method is the constructor of the class
-     * @param vaticanSpace is the VaticanSpace in which the cell is located
-     */
-    public PopeSpace(int victoryPoint, VaticanSpace vaticanSpace) {
-        this.vaticanSpace = vaticanSpace;
-        this.victoryPoint = victoryPoint;
+    public PopeSpace() {
+        super();
     }
 
     /**

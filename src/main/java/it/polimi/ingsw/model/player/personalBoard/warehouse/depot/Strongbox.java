@@ -71,11 +71,8 @@ public class Strongbox implements Depot {
         if (resources.size() != 0){
             for (Resource resource : resources) {
                 if (resource.type() == output.type()) {
-                    if (resource.amount() - output.amount() > 0) {
+                    if (resource.amount() - output.amount() >= 0) {
                         resource.reduce(output);
-                        return true;
-                    } else if (resource.amount() - output.amount() == 0) {
-                        resource.reduce(resource);
                         return true;
                     } else {
                         throw new NegativeResourcesDepotException("exception: The Strongbox does not have enough resources to withdraw");

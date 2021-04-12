@@ -7,10 +7,13 @@ import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.WrongDepotException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.PopeTile;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.Bucket;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
 
@@ -28,7 +31,7 @@ public class PersonalBoard {
     /**
      * This attribute is the list of the available productions that the Player could activates
      */
-    private List<Production> availableProductions;
+    private Map<ProductionID, Production> availableProductions;
 
     /**
      * This attribute is the list of the available Discount applied when the player buys DevCard
@@ -65,11 +68,12 @@ public class PersonalBoard {
      */
     private FaithTrack faithTrack;
 
+
     /**
      * This method is the constructor of the class
      */
     public PersonalBoard() {
-        this.availableProductions = new ArrayList<>();
+        this.availableProductions = new EnumMap<>(ProductionID.class);
         this.availableDiscount = new ArrayList<>();
         this.availableResources = new ArrayList<>();
         this.leaderDeck = new Deck<>();
@@ -80,6 +84,7 @@ public class PersonalBoard {
         //TODO Da guardare meglio
         this.marbleConversion = marbleColor -> null;
         this.warehouse = new Warehouse();
+        this.faithTrack = new FaithTrack();
     }
 
     /**
@@ -129,12 +134,14 @@ public class PersonalBoard {
      * This method select the production that the Player wants to activate
      * @param productionID is the identifier of the Production that will be activated
      */
-    public void selectProduction(ProductionID productionID){}
+    public void selectProduction(ProductionID productionID){
+    }
 
     /**
      * This method activate the productions selected by the Player
      */
-    public void activateProductions(){}
+    public void activateProductions(){
+    }
 
     /**
      * This method moves resources from a Depot to another one
@@ -147,6 +154,11 @@ public class PersonalBoard {
      */
     public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource resource) throws WrongDepotException, NegativeResourcesDepotException {
         warehouse.moveBetweenDepot(from,to, resource);
+    }
+
+
+    //Implementare MoveBetweenBucket per spostare le risorse dai Depot alla Produzione (moveInProduction)
+    public void moveBetweenBucket(Bucket from, Bucket to, Resource resource) throws WrongDepotException {
     }
 
     /**

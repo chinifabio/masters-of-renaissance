@@ -1,0 +1,127 @@
+[
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "NONE"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "NONE"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "NONE"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 1,
+    "vaticanSpace": "NONE"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "NONE"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "FIRST"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 2,
+    "vaticanSpace": "FIRST"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "FIRST"
+  },
+  {
+    "type": "PopeSpace",
+    "victoryPoint": 0,
+    "vaticanSpace": "FIRST"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 4,
+    "vaticanSpace": "NONE"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "NONE"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "NONE"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 6,
+    "vaticanSpace": "SECOND"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "SECOND"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "SECOND"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 9,
+    "vaticanSpace": "SECOND"
+  },
+  {
+    "type": "PopeSpace",
+    "victoryPoint": 0,
+    "vaticanSpace": "SECOND"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "NONE"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 12,
+    "vaticanSpace": "NONE"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "THIRD"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "THIRD"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 16,
+    "vaticanSpace": "THIRD"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "THIRD"
+  },
+  {
+    "type": "Normal",
+    "victoryPoint": 0,
+    "vaticanSpace": "THIRD"
+  },
+  {
+    "type": "PopeSpace",
+    "victoryPoint": 20,
+    "vaticanSpace": "THIRD"
+  }
+]

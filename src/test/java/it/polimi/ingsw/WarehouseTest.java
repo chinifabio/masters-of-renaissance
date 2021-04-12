@@ -150,6 +150,8 @@ public class WarehouseTest {
         }
         assertTrue(exc);
     }
+
+
     @Test
     public void moveResourcesInDepots() throws NegativeResourcesDepotException, WrongDepotException, ExtraDepotsException {
         Warehouse warehouse = new Warehouse();

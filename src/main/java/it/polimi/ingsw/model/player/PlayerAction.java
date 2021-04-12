@@ -6,8 +6,8 @@ import it.polimi.ingsw.model.exceptions.WrongDepotException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
-import it.polimi.ingsw.model.player.personalBoard.Production;
-import it.polimi.ingsw.model.player.personalBoard.ProductionID;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
 

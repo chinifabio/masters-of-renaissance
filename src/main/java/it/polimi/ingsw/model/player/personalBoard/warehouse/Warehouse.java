@@ -3,17 +3,12 @@ package it.polimi.ingsw.model.player.personalBoard.warehouse;
 import it.polimi.ingsw.model.exceptions.ExtraDepotsException;
 import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.WrongDepotException;
-import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
-import it.polimi.ingsw.model.player.personalBoard.Production;
-import it.polimi.ingsw.model.player.personalBoard.ProductionID;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.*;
 import it.polimi.ingsw.model.resource.Resource;
 
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 
@@ -46,11 +41,13 @@ public class Warehouse {
         depots.put(DepotSlot.STRONGBOX, DepotBuilder.buildStrongBoxDepot());
         depots.put(DepotSlot.BUFFER, DepotBuilder.buildStrongBoxDepot());
 
+
         this.constraint = new ArrayList<>();
         this.addConstraint(x -> x.getFrom() != DepotSlot.STRONGBOX);
         this.addConstraint(x-> x.getDest() != DepotSlot.STRONGBOX);
         this.addConstraint(x -> x.getFrom() != DepotSlot.BUFFER);
         this.addConstraint(x-> x.getDest() != DepotSlot.BUFFER);
+
 
 
     }
@@ -98,7 +95,7 @@ public class Warehouse {
      * @throws WrongDepotException if the Depot "from" is empty or doesn't have the same type of resources of "resource"
      */
     public boolean moveBetweenDepot(DepotSlot from, DepotSlot dest, Resource resource) throws NegativeResourcesDepotException, WrongDepotException {
-        MoveResource moveResource = new MoveResource(from, dest);
+        MoveResource moveResource = new MoveResource(from, dest, resource);
         AtomicBoolean testResult = new AtomicBoolean(true);
         this.constraint.forEach(x -> {
             if (!x.test(moveResource)) testResult.set(false);
@@ -120,11 +117,10 @@ public class Warehouse {
         return false;
     }
 
-    /**
-     * This method adds productions to the list of available productions that the player could select
-     * @param production is the production to add in the list
-     */
-    public void addProduction(ProductionID productionID, Production production, PersonalBoard personalBoard){
+    public boolean moveInProduction(Resource resource){
+
+        return false;
+        //TODO DA IMPLEMENTARE
     }
 
     /**
@@ -132,6 +128,7 @@ public class Warehouse {
      * @param production is the selected production
      */
     public void selectProduction(Production production){
+
         //Dalla produzione passata prendo i requisite
         //Prendo dai vari depot i requisiti
         //Se ho tutto faccio production.select()
@@ -180,7 +177,7 @@ public class Warehouse {
      * @param slot is the Depot from which the Resources are taken
      * @return the resources inside the Depot
      */
-    public Resource viewResourcesInDepot(DepotSlot slot){
+    public Resource viewResourcesInDepot(DepotSlot slot) throws NullPointerException{
         return depots.get(slot).viewResources();
     }
 

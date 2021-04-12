@@ -1,10 +1,14 @@
 package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 
-import it.polimi.ingsw.model.exceptions.IllegalMovesException;
-import it.polimi.ingsw.model.resource.Resource;
-import it.polimi.ingsw.model.exceptions.WrongPointsException;
-import it.polimi.ingsw.model.resource.ResourceBuilder;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.model.exceptions.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.WrongPointsException;
+
+
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -17,11 +21,6 @@ public class FaithTrack {
      * This attribute is the representation of the track, composed by several cells
      */
     private List<Cell> track;
-
-    /**
-     * This attribute is the path of the file containing information to create the track
-     */
-    final private String path = "src/resources/TrackDetails.txt";
 
     /**
      * This attribute is the position of the Player in the track
@@ -39,40 +38,22 @@ public class FaithTrack {
      */
     private Map<VaticanSpace, PopeTile> popeTiles;
 
-    private Exception NoMoreMovesException;
 
     /**
      * This method is the constructor of the class, it reads from a file the details of the track and creates a list of cells,
      * also it initialize the Player and Lorenzo position to 0.
      */
     public FaithTrack() {
-        this.track = new ArrayList<>();
-        //Track to use for the testing
-        track.add(new Normal(0, VaticanSpace.NONE));
-        track.add(new Normal(0, VaticanSpace.NONE));
-        track.add(new Normal(0, VaticanSpace.NONE));
-        track.add(new Normal(1, VaticanSpace.NONE));
-        track.add(new Normal(0, VaticanSpace.NONE));
-        track.add(new Normal(0, VaticanSpace.FIRST));
-        track.add(new Normal(2, VaticanSpace.FIRST));
-        track.add(new Normal(0, VaticanSpace.FIRST));
-        track.add(new PopeSpace(0, VaticanSpace.FIRST));
-        track.add(new Normal(4, VaticanSpace.NONE));
-        track.add(new Normal(0, VaticanSpace.NONE));
-        track.add(new Normal(0, VaticanSpace.NONE));
-        track.add(new Normal(6, VaticanSpace.SECOND));
-        track.add(new Normal(0, VaticanSpace.SECOND));
-        track.add(new Normal(0, VaticanSpace.SECOND));
-        track.add(new Normal(9, VaticanSpace.SECOND));
-        track.add(new PopeSpace(0, VaticanSpace.SECOND));
-        track.add(new Normal(0, VaticanSpace.NONE));
-        track.add(new Normal(12, VaticanSpace.NONE));
-        track.add(new Normal(0, VaticanSpace.THIRD));
-        track.add(new Normal(0, VaticanSpace.THIRD));
-        track.add(new Normal(16, VaticanSpace.THIRD));
-        track.add(new Normal(0, VaticanSpace.THIRD));
-        track.add(new Normal(0, VaticanSpace.THIRD));
-        track.add(new PopeSpace(20, VaticanSpace.THIRD));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            this.track = objectMapper.readValue(
+                    new File("src/resources/FaithTrack.json"),
+                    new TypeReference<List<Cell>>(){});
+        }catch (IOException e){
+            System.out.println("The file to create the faith track wasn't found");
+        }
+
         this.playerPosition = 0;
         this.lorenzoPosition = 0;
 
@@ -100,16 +81,16 @@ public class FaithTrack {
      * This method move the FaithMarker of the player in the FaithTrack
      * @param points is the value of how far the player's marker must go
      */
-    public void movePlayer(Resource points) throws IllegalMovesException, WrongPointsException {
+    public void movePlayer(int points) throws IllegalMovesException, WrongPointsException {
 
-        if ((!points.equalsType(ResourceBuilder.buildFaithPoint())) || (points.amount() < 0)){
+        if (points< 0){
             throw new WrongPointsException("exception: the Player can't use this resources to move!");
         }
 
-        if (this.playerPosition >= track.size()-1 && points.amount() > 0) {
+        if (this.playerPosition >= track.size()-1 && points > 0) {
             throw new IllegalMovesException("exception: The Player is in the last cell, he can't move");
         }
-        this.playerPosition = playerPosition + points.amount();
+        this.playerPosition = playerPosition + points;
         if (this.playerPosition >= track.size()-1) {
             this.playerPosition = track.size()-1;
         }

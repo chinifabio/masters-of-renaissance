@@ -1,1 +1,54 @@
-{}
+[
+  {
+    "color": "WHITE",
+    "toResource": "UNKNOWN"
+  },
+  {
+    "color": "WHITE",
+    "toResource": "UNKNOWN"
+  },
+  {
+    "color": "WHITE",
+    "toResource": "UNKNOWN"
+  },
+  {
+    "color": "WHITE",
+    "toResource": "UNKNOWN"
+  },
+  {
+    "color": "BLUE",
+    "toResource": "SHIELD"
+  },
+  {
+    "color": "BLUE",
+    "toResource": "SHIELD"
+  },
+  {
+    "color": "GRAY",
+    "toResource": "STONE"
+  },
+  {
+    "color": "GRAY",
+    "toResource": "STONE"
+  },
+  {
+    "color": "YELLOW",
+    "toResource": "COIN"
+  },
+  {
+    "color": "YELLOW",
+    "toResource": "COIN"
+  },
+  {
+    "color": "PURPLE",
+    "toResource": "SERVANT"
+  },
+  {
+    "color": "PURPLE",
+    "toResource": "SERVANT"
+  },
+  {
+    "color": "RED",
+    "toResource": "FAITHPOINT"
+  }
+]

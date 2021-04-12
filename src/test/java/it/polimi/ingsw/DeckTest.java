@@ -1,15 +1,12 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.cards.*;
-import it.polimi.ingsw.model.cards.effects.AddDiscount;
 import it.polimi.ingsw.model.cards.effects.AddProduction;
-import it.polimi.ingsw.model.cards.effects.DestroyCards;
-import it.polimi.ingsw.model.cards.effects.ShuffleMoveOne;
 import it.polimi.ingsw.model.exceptions.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.MissingCardException;
-import it.polimi.ingsw.model.player.personalBoard.Production;
-import it.polimi.ingsw.model.player.personalBoard.ProductionID;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.*;

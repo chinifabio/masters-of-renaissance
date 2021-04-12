@@ -1,10 +1,16 @@
 package it.polimi.ingsw.model.match.markettray;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.moves.MainActionDoneException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.*;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -47,36 +53,48 @@ public class MarketTray {
      * then it shuffle the order of the marbles and inster them all in the tray
      */
     public MarketTray() {
-        // la creazione così è temporanea, in futuro sarà fatta sfruttando file json
-
         Random rand = new Random();
 
-        row = 3; col = 4;
+        //Reading the Dimensions of the MarketTray
+        DimensionReader dim;
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson dimension = gsonBuilder.create();
+        try {
+            BufferedReader brD = new BufferedReader(new FileReader("src/resources/MarketTrayDimension.json"));
+            dim = dimension.fromJson(brD, DimensionReader.class);
+        } catch (FileNotFoundException ex){
+            System.out.println("The JSON file to set the MarketTray dimensions was not found!");
+            dim = new DimensionReader(0,0);
+        }
 
-        List<Marble> temp = new ArrayList<>();
-        temp.add(MarbleBuilder.buildWhite());
-        temp.add(MarbleBuilder.buildWhite());
-        temp.add(MarbleBuilder.buildWhite());
-        temp.add(MarbleBuilder.buildWhite());
-        temp.add(MarbleBuilder.buildBlue());
-        temp.add(MarbleBuilder.buildBlue());
-        temp.add(MarbleBuilder.buildGray());
-        temp.add(MarbleBuilder.buildGray());
-        temp.add(MarbleBuilder.buildYellow());
-        temp.add(MarbleBuilder.buildYellow());
-        temp.add(MarbleBuilder.buildPurple());
-        temp.add(MarbleBuilder.buildPurple());
-        temp.add(MarbleBuilder.buildRed());
+
+        //Reading the Marbles
+        List<Marble> marbleBuilder = new ArrayList<>();
+        Gson gson = new Gson();
+        try{
+            BufferedReader br = new BufferedReader(new FileReader("src/resources/Marble.json"));
+            marbleBuilder = gson.fromJson(br, new TypeToken<List<Marble>>(){}.getType());
+        } catch (FileNotFoundException e){
+            System.out.println("The JSON file to create Marbles was not found!");
+        }
+
+
+        row = dim.row;
+        col = dim.col;
+
+        if (marbleBuilder.size() != (((row)*(col))+1)){
+            //TODO IMPLEMENTARE LA EXCEPTION
+        }
 
         marbles = new Marble[row][col];
 
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                marbles[i][j] = temp.remove(rand.nextInt(temp.size()));
+                marbles[i][j] = marbleBuilder.remove(rand.nextInt(marbleBuilder.size()));
             }
         }
 
-        slideMarble = temp.get(0);
+        slideMarble = marbleBuilder.get(0);
     }
 
     /**

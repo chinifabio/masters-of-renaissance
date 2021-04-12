@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.cards.effects;
 
 import it.polimi.ingsw.model.player.PlayerReactEffect;
-import it.polimi.ingsw.model.player.personalBoard.Production;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 
 /**
  * This class is a part of the strategy pattern, it implements the interface Effect.

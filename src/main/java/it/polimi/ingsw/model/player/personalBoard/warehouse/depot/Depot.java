@@ -1,12 +1,13 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.depot;
 
 import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.Bucket;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ResourceBucket;
 import it.polimi.ingsw.model.resource.Resource;
-
 import java.util.List;
 import java.util.function.BiPredicate;
 
-public interface Depot {
+public interface Depot extends ResourceBucket {
     /**
      * This method accept a lambda function predicate with two parameters: first one is always referred to the input resource,
      * second one is the resource already contained in the depot
@@ -44,4 +45,9 @@ public interface Depot {
      * @return true if the Depot has a check on the type of the Resources inside
      */
     boolean checkTypeDepot();
+
+    @Override
+    default Bucket bucketType() {
+        return Bucket.DEPOT;
+    }
 }

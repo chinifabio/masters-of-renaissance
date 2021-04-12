@@ -59,4 +59,9 @@ public class ResourceRequisite implements Requisite {
     public int getAmount() {
         return resource.amount();
     }
+
+    //Only for testing
+    public Resource getResource(){
+        return resource;
+    }
 }
