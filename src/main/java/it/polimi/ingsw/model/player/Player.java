@@ -15,7 +15,6 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.state.Context;
 import it.polimi.ingsw.model.player.state.NotHisTurnState;
 import it.polimi.ingsw.model.player.state.State;
-import it.polimi.ingsw.model.player.state.StateChanger;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;

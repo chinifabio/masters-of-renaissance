@@ -7,6 +7,8 @@ import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.WrongDepotException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.PopeTile;
+import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
+import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Bucket;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
@@ -148,7 +150,6 @@ public class PersonalBoard {
      * @param from is the Depot where the resources are taken from
      * @param to is the Depot where the resources will be stored
      * @param resource is the resource to move
-     * @return true if the resources are correctly moved
      * @throws NegativeResourcesDepotException if the Depot "from" hasn't enough resources to move
      * @throws WrongDepotException if the Depot "from" is empty or doesn't have the same type of resources of "resource"
      */
@@ -235,7 +236,7 @@ public class PersonalBoard {
      * check if it need to be flipped the pope tile passed as parameter
      * @param popeTile the pope tile to check
      */
-    public void flipPopeTile(PopeTile popeTile) {
+    public void flipPopeTile(VaticanSpace popeTile) {
         // TODO implementazione
     }
 
