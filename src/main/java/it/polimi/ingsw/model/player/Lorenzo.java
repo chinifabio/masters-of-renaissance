@@ -1,0 +1,223 @@
+package it.polimi.ingsw.model.player;
+
+import it.polimi.ingsw.model.cards.*;
+import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.match.PlayerToMatch;
+import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
+import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
+import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
+import it.polimi.ingsw.model.requisite.Requisite;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
+
+import java.util.List;
+
+public class Lorenzo extends Player{
+    /**
+     * This is the faith track of the player Lorenzo
+     */
+    private FaithTrack faithTrack;
+
+    /**
+     * The solo action token used at end turn of a single player match
+     */
+    private final Deck<SoloActionToken> soloToken;
+
+    public static final String lorenzoNickname = "Lorenzo il Magnifico";
+
+    /**
+     * This method create a Lorenzo instance, which is a modified Player
+     *
+     * @param matchReference the match reference
+     *
+     */
+    public Lorenzo(PlayerToMatch matchReference) {
+        super(Lorenzo.lorenzoNickname, matchReference);
+
+        this.soloToken = new Deck<>();
+        // TODO leggere e inizializzare token da json
+    }
+
+    /**
+     * This method adds a LeaderCard to the Players' PersonalBoard
+     *
+     * @param leaderCard the leader card to assign to the hand of the player
+     */
+    @Override
+    public void addLeader(LeaderCard leaderCard) {
+        //todo dire al model errore lorenzo
+    }
+
+    /**
+     * this method check if the player has requisite.
+     * If it return true then the warehouse has eliminate the requisites yet
+     * If it return false then the player has not the requisite;
+     *
+     * @param req the requisite
+     * @return boolean indicating the succeed of the method
+     */
+    @Override
+    public boolean hasRequisite(Requisite req) throws NoRequisiteException {
+        return false;
+    }
+
+    /**
+     * This method adds a DevCard to the player's personal board, using resources taken from the Warehouse
+     *
+     * @param newDevCard the dev card received that need to be stored in the personal board
+     */
+    @Override
+    public void receiveDevCard(DevCard newDevCard) {
+
+    }
+
+    /**
+     * This method flips the PopeTile when the Player is in a Vatican Space or passed the relative PopeSpace
+     *
+     * @param popeTile the tile to check if it need to be flipped
+     */
+    @Override
+    public void flipPopeTile(VaticanSpace popeTile) {
+
+    }
+
+    /**
+     * starts the turn of the player;
+     *
+     * @return true if success, false otherwise
+     */
+    @Override
+    public boolean startHisTurn() {
+        try {
+            System.out.println("turno di lorenzo, se non ci sono tocken da pescare lancia un eccezione");
+            this.soloToken.draw().useEffect(this);
+        } catch (EmptyDeckException e) {
+            System.out.println("eccezione lacianta :( manca da leggere e creare i solo token da json");
+            //TODO dire che qualcosa è andato storto
+            //return false;
+        }
+        this.endThisTurn(); // todo riguradare se farlo fare al client o lasciarlo automatico così
+        this.match.endMyTurn();
+        return true;
+    }
+
+    /**
+     * This method adds a Production to the list of available productions
+     *
+     * @param newProd the new production
+     */
+    @Override
+    public void addProduction(Production newProd) {
+        try {
+            throw new LorenzoMovesException();
+        } catch (LorenzoMovesException e) {
+            // todo dirlo al model
+        }
+    }
+
+    /**
+     * This method adds an extra Depot in the Warehouse
+     *
+     * @param depot new depot to be added to Warehouse depots
+     */
+    @Override
+    public void addDepot(Depot depot) {
+        try {
+            throw new LorenzoMovesException();
+        } catch (LorenzoMovesException e) {
+            // todo dirlo al model
+        }
+    }
+
+    /**
+     * This method gives a discount to the player when buying DevCards
+     *
+     * @param discount the new discount
+     */
+    @Override
+    public void addDiscount(Resource discount) {
+        try {
+            throw new LorenzoMovesException();
+        } catch (LorenzoMovesException e) {
+            // todo dirlo al model
+        }
+    }
+
+    /**
+     * This method allow adding a marble conversion to the player
+     *
+     * @param fromWhite the resource type to transform white marbles
+     */
+    @Override
+    public void addMarbleConversion(ResourceType fromWhite) {
+        try {
+            throw new LorenzoMovesException();
+        } catch (LorenzoMovesException e) {
+            // todo dirlo al model
+        }
+    }
+
+    /**
+     * This method insert the Resources obtained from the Market to the Depots
+     *
+     * @param resource the resource
+     */
+    @Override
+    public void obtainResource(Resource resource) {
+        try {
+            throw new LorenzoMovesException();
+        } catch (LorenzoMovesException e) {
+            // todo dirlo al model
+        }
+    }
+
+    /**
+     * This method insert the Resources obtained from the Market to the Depots
+     *
+     * @param marble the resource in form of marble
+     */
+    @Override
+    public void obtainResource(Marble marble) {
+        try {
+            throw new LorenzoMovesException();
+        } catch (LorenzoMovesException e) {
+            // todo dirlo al model
+        }
+    }
+
+    /**
+     * This method moves the FaithMarker of the player when he gets FaithPoint
+     *
+     * @param amount how many cells the marker moves
+     */
+    @Override
+    public void moveFaithMarker(int amount) {
+        try {
+            this.faithTrack.movePlayer(amount);
+        } catch (Exception e) {
+            System.out.println("faith track exception");
+            //todo dirlo al model
+        }
+    }
+
+    /**
+     * This method shuffle the solo action token
+     */
+    @Override
+    public void shuffleToken(){
+        this.soloToken.shuffle();
+    }
+
+    /**
+     * This method discard two card of the color passed in the dev setup
+     *
+     * @param color color of the dev card to discard
+     */
+    @Override
+    public void discardDevCard(ColorDevCard color) {
+        this.match.discardDevCard(color);
+    }
+}
