@@ -35,8 +35,8 @@ public interface PlayerAction {
      * SpecialAbility that converts white marbles in resources
      * @param resource resource to set as default as white marble conversion
      */
-
     void selectWhiteConversion(Resource resource);
+
     /**
      * return a view of the dev setup. It is shown only the first card of each decks
      * @return the list representation of the dev setup

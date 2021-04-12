@@ -13,7 +13,7 @@ public class ShuffleMoveOne implements Effect {
      */
     @Override
     public void use(PlayerReactEffect p) {
-        p.moveLorenzo(1);
+        p.moveFaithMarker(1);
         p.shuffleToken();
     }
 }

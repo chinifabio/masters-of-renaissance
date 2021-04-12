@@ -3,6 +3,9 @@ package it.polimi.ingsw.model.match;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
+import it.polimi.ingsw.model.exceptions.game.GameException;
+import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
+import it.polimi.ingsw.model.exceptions.game.moves.MainActionDoneException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
@@ -20,11 +23,6 @@ public interface PlayerToMatch {
     void vaticanReport(VaticanSpace toCheck);
 
     /**
-     * shuffle the solo action tocken deck
-     */
-    void shuffleToken();
-
-    /**
      * return a view of the MarketTray
      * @return list of marble in the market tray
      */
@@ -35,7 +33,7 @@ public interface PlayerToMatch {
      * @param index the index of the row or column of the tray
      * @param rc enum to identify if I am pushing row or col
      */
-    void useMarketTray(RowCol rc, int index);
+    void useMarketTray(RowCol rc, int index) throws MainActionDoneException, OutOfBoundMarketTrayException, GameException;
 
     /**
      * return a view of the dev setup. It is shown only the first card of each decks
@@ -50,4 +48,22 @@ public interface PlayerToMatch {
      * @return true if there where no issue, false instead
      */
     boolean buyDevCard(LevelDevCard row, ColorDevCard col);
+
+    /**
+     * Method called when player do action such that other players obtain faith point
+     * @param amount faith point given to other player
+     */
+    void othersPlayersObtainFaithPoint(int amount);
+
+    /**
+     * discard a develop card from the dev setup
+     * @param color the color of discarded cards in dev setup
+     */
+    void discardDevCard(ColorDevCard color);
+
+    /**
+     * Tells to the match the end of the player turn;
+     * @return
+     */
+    boolean endMyTurn();
 }

@@ -15,7 +15,7 @@ public class NoActionDoneState extends State {
      * player start the turn
      */
     @Override
-    public void startTurn() throws IllegalMovesException {
+    public void startTurnInput() throws IllegalMovesException {
         throw new IllegalMovesException("turn already started");
     }
 
@@ -23,7 +23,7 @@ public class NoActionDoneState extends State {
      * player has done a leader action
      */
     @Override
-    public void doMainAction() {
+    public void doMainActionInput() {
         context.setState(new MainActionDoneState(context));
     }
 
@@ -31,7 +31,7 @@ public class NoActionDoneState extends State {
      * player end his turn
      */
     @Override
-    public void endTurn() {
+    public void endTurnInput() {
         context.setState(new NotHisTurnState(context));
     }
 

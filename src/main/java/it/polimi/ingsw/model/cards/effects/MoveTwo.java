@@ -13,6 +13,6 @@ public class MoveTwo implements Effect{
      */
     @Override
     public void use(PlayerReactEffect p) {
-        p.moveLorenzo(2); // aggiungere movimento 2
+        p.moveFaithMarker(2); // aggiungere movimento 2
     }
 }

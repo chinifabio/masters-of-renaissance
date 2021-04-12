@@ -15,7 +15,7 @@ public class NotHisTurnState extends State {
      * player start the turn
      */
     @Override
-    public void startTurn() {
+    public void startTurnInput() {
         context.setState(new NoActionDoneState(context));
     }
 
@@ -23,7 +23,7 @@ public class NotHisTurnState extends State {
      * player has done a leader action
      */
     @Override
-    public void doMainAction() throws IllegalMovesException {
+    public void doMainActionInput() throws IllegalMovesException {
         throw new IllegalMovesException("main action not in the player turn");
     }
 
@@ -31,7 +31,7 @@ public class NotHisTurnState extends State {
      * player end his turn
      */
     @Override
-    public void endTurn() throws IllegalMovesException {
+    public void endTurnInput() throws IllegalMovesException {
         throw new IllegalMovesException("end turn not in the player turn");
     }
 

@@ -3,7 +3,7 @@ package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
-import it.polimi.ingsw.model.exceptions.moves.MainActionDoneException;
+import it.polimi.ingsw.model.exceptions.game.moves.MainActionDoneException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.match.markettray.MarketTray;
@@ -44,7 +44,7 @@ public class MarketTrayTest {
         int col = 4;
 
         MarketTray tray = new MarketTray();
-        PlayerReactEffect player = new Player("dummy");
+        PlayerReactEffect player = new Player("dummy", null);
 
         List<Marble> beforePush;
         Marble slide;
@@ -83,7 +83,7 @@ public class MarketTrayTest {
         int col = 4;
 
         MarketTray tray = new MarketTray();
-        PlayerReactEffect player = new Player("dummy");
+        PlayerReactEffect player = new Player("dummy", null);
 
         List<Marble> beforePush;
         Marble slide;

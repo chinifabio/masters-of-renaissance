@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.model.cards.ColorDevCard;
+import it.polimi.ingsw.model.exceptions.game.GameTypeException;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
@@ -51,13 +54,13 @@ public interface PlayerReactEffect {
     void moveFaithMarker(int amount);
 
     /**
-     * This method moves the Lorenzo's marker
-     * @param amount how many cells the marker moves
-     */
-    void moveLorenzo(int amount);
-
-    /**
      * This method shuffle the solo action token
      */
     void shuffleToken();
+
+    /**
+     * This method discard two card of the color passed in the dev setup
+     * @param color color of the dev card to discard
+     */
+    void discardDevCard(ColorDevCard color);
 }

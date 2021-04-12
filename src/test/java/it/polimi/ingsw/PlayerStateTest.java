@@ -9,101 +9,87 @@ import it.polimi.ingsw.model.player.state.NotHisTurnState;
 import org.junit.jupiter.api.Test;
 
 public class PlayerStateTest {
+    /**
+     * test a possible lifecycle of a player in his turn testing if throw exception to wrong input
+     * @throws IllegalMovesException
+     */
     @Test
-    public void allInput() throws IllegalMovesException {
-        Player player = new Player("dummy");
-
-        boolean exception = false;
+    public void allInput() throws IllegalMovesException { /*
+        Player player = new Player("dummy", null);
 
         // not his turn
         try {
-            player.doMainAction();
+            player.doMainActionInput();
+            fail();
         } catch (IllegalMovesException e) {
             System.out.println(e.getMsg());
-            exception = true;
         }
-        assertTrue(exception);
 
-        exception = false;
         try {
-            player.endTurn();
+            player.endTurnInput();
+            fail();
         } catch (IllegalMovesException e) {
             System.out.println(e.getMsg());
-            exception = true;
         }
-        assertTrue(exception);
 
-        exception = true;
         try {
-            player.startTurn();
+            player.startTurnInput();
         } catch (IllegalMovesException e) {
             System.out.println(e.getMsg());
-            exception = false;
+            fail();
         }
-        assertTrue(exception);
-
         assertTrue(player.getPlayerState() instanceof NoActionDoneState);
 
         // no action done
-        exception = false;
         try {
-            player.startTurn();
+            player.startTurnInput();
+            fail();
         } catch (IllegalMovesException e) {
             System.out.println(e.getMsg());
-            exception = true;
         }
-        assertTrue(exception);
 
-        exception = false;
         try {
-            player.endTurn();
+            player.endTurnInput();
         } catch (IllegalMovesException e) {
             System.out.println(e.getMsg());
-            exception = true;
+            fail();
         }
-        assertFalse(exception);
+
         assertTrue(player.getPlayerState() instanceof NotHisTurnState);
-        player.startTurn();
+        player.startTurnInput();
 
         assertTrue(player.getPlayerState() instanceof NoActionDoneState);
-        exception = false;
+
         try {
-            player.doMainAction();
+            player.doMainActionInput();
         } catch (IllegalMovesException e) {
             System.out.println(e.getMsg());
-            exception = true;
+            fail();
         }
-        assertFalse(exception);
 
         assertTrue(player.getPlayerState() instanceof MainActionDoneState);
         // main action done
 
-        exception = false;
         try {
-            player.startTurn();
+            player.startTurnInput();
+            fail();
         } catch (IllegalMovesException e) {
             System.out.println(e.getMsg());
-            exception = true;
         }
-        assertTrue(exception);
 
-        exception = false;
         try {
-            player.startTurn();
+            player.startTurnInput();
+            fail();
         } catch (IllegalMovesException e) {
             System.out.println(e.getMsg());
-            exception = true;
         }
-        assertTrue(exception);
 
-        exception = false;
         try {
-            player.endTurn();
+            player.endTurnInput();
         } catch (IllegalMovesException e) {
             System.out.println(e.getMsg());
-            exception = true;
+            fail();
         }
-        assertFalse(exception);
-        assertTrue(player.getPlayerState() instanceof NotHisTurnState);
+        assertTrue(player.getPlayerState() instanceof NotHisTurnState);*/
     }
 }

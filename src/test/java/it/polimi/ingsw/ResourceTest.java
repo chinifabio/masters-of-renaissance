@@ -58,7 +58,7 @@ public class ResourceTest {
     @Test
     public void nonObtainable() {
         Resource unknown = ResourceBuilder.buildUnknown();
-        PlayerReactEffect player = new Player("dummy");
+        PlayerReactEffect player = new Player("dummy", null);
         boolean result = false;
 
         try {

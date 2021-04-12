@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
-import it.polimi.ingsw.model.exceptions.moves.MainActionDoneException;
+import it.polimi.ingsw.model.exceptions.game.moves.MainActionDoneException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.*;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 
@@ -85,6 +85,10 @@ public class MarketTray {
         if (marbleBuilder.size() != (((row)*(col))+1)){
             //TODO IMPLEMENTARE LA EXCEPTION
         }
+
+        // TODO implementare un check che le biglie siano del giusto numero (guardando la dimensione del tray ROW*COL)
+
+        // TODO implementare un check che le biglie siano del giusto numero (guardando la dimensione del tray ROW*COL)
 
         marbles = new Marble[row][col];
 

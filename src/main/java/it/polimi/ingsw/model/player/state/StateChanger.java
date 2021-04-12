@@ -9,15 +9,15 @@ public interface StateChanger {
     /**
      * player start the turn
      */
-    void startTurn() throws IllegalMovesException;
+    void startTurnInput() throws IllegalMovesException;
 
     /**
      * player has done a leader action
      */
-    void doMainAction() throws IllegalMovesException;
+    void doMainActionInput() throws IllegalMovesException;
 
     /**
      * player end his turn
      */
-    void endTurn() throws IllegalMovesException;
+    void endTurnInput() throws IllegalMovesException;
 }

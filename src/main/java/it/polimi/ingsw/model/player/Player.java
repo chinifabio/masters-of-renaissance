@@ -2,6 +2,9 @@ package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.model.exceptions.game.GameException;
+import it.polimi.ingsw.model.exceptions.game.GameTypeException;
+import it.polimi.ingsw.model.exceptions.game.moves.MainActionDoneException;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -9,7 +12,7 @@ import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
-import it.polimi.ingsw.model.player.personalBoard.faithTrack.PopeTile;
+import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.state.Context;
@@ -24,7 +27,7 @@ import java.util.*;
 /**
  * This class identify the Player
  */
-public class Player implements Context, StateChanger, PlayerAction,PlayerReactEffect, MatchToPlayer {
+public class Player implements Context, PlayerAction, PlayerReactEffect, MatchToPlayer {
     /**
      * represent the player state and contains the implementation of the method of PlayerModifier
      */
@@ -53,7 +56,7 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
     /**
      * the match instance that player uses to talk with the match instance
      */
-    private PlayerToMatch match;
+    protected PlayerToMatch match;
 
     /**
      * destination where put a dev card obtained
@@ -61,16 +64,18 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
     private DevCardSlot slotDestination;
 
     /**
-     * This method is the class constructor
+     * This method create a player by nickname and saving the match reference
      * @param nickname that identify the player
+     * @param matchReference used to reference the match which i am playing
      */
-    public Player(String nickname){
+    public Player(String nickname, PlayerToMatch matchReference){
         this.nickname = nickname;
         this.personalBoard = new PersonalBoard();
         this.playerState = new NotHisTurnState(this);
         this.marbleConversions = new LinkedList<>();
         this.marbleConversions.add(ResourceType.UNKNOWN);
         this.marketDiscount = new ArrayList<>();
+        this.match = matchReference;
     }
 
     /**
@@ -79,6 +84,19 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
      */
     public String getNickname(){
         return nickname;
+    }
+
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     *
+     * @param obj the reference object with which to compare.
+     * @return {@code true} if this object is the same as the obj
+     * argument; {@code false} otherwise.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Player) return nickname.equals(((Player) obj).getNickname());
+        else return false;
     }
 
     // player state implementation
@@ -91,29 +109,6 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
     @Override
     public void setState(State newState) {
         this.playerState = newState;
-    }
-    /**
-     * player start the turn
-     */
-    @Override
-    public void startTurn() throws IllegalMovesException {
-        playerState.startTurn();
-    }
-
-    /**
-     * player has done a leader action
-     */
-    @Override
-    public void doMainAction() throws IllegalMovesException {
-        playerState.doMainAction();
-    }
-
-    /**
-     * player end his turn
-     */
-    @Override
-    public void endTurn() throws IllegalMovesException {
-        playerState.endTurn();
     }
 
     /**
@@ -175,7 +170,7 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
         try {
             resource.onObtain(this);
         } catch (UnobtainableResourceException e) {
-            System.out.println("gino");
+            // todo dire al model dell'errore
         }
         if(resource.isStorable()) this.personalBoard.obtainResource(resource);
             // TODO improve this mechanism
@@ -202,21 +197,21 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
     }
 
     /**
-     * This method moves the Lorenzo's marker
-     *
-     * @param amount how many cells the marker moves
-     */
-    @Override
-    public void moveLorenzo(int amount) {
-        this.personalBoard.moveLorenzo(amount);
-    }
-
-    /**
      * This method shuffle the solo action token
      */
     @Override
-    public void shuffleToken() {
-        this.match.shuffleToken();
+    public void shuffleToken(){
+        //todo dire che qualcosa non va
+    }
+
+    /**
+     * This method discard two card of the color passed in the dev setup
+     *
+     * @param color color of the dev card to discard
+     */
+    @Override
+    public void discardDevCard(ColorDevCard color) {
+        //todo dire che qualcosa non va
     }
 
     // player action implementations
@@ -241,11 +236,16 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
     @Override
     public boolean useMarketTray(RowCol rc, int index) {
         try{
-            playerState.doMainAction();
+            playerState.doMainActionInput();
         } catch (IllegalMovesException e) {
             return false;
         }
-        this.match.useMarketTray(rc, index);
+        // TODO aggiungere una reazione alle eccezioni
+        try {
+            this.match.useMarketTray(rc, index);
+        } catch (Exception e) {
+            System.out.println("market tray exception");;
+        }
         return true;
     }
 
@@ -281,7 +281,7 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
     @Override
     public boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
         try {
-            playerState.doMainAction();
+            playerState.doMainActionInput();
         } catch (IllegalMovesException e) {
             return false;
         }
@@ -308,7 +308,7 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
     @Override
     public boolean activateProductions() {
         try {
-            playerState.doMainAction();
+            playerState.doMainActionInput();
         } catch (IllegalMovesException e) {
             return false;
         }
@@ -399,20 +399,6 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
     }
 
     /**
-     * the player ends its turn
-     * @return true if success, false otherwise
-     */
-    @Override
-    public boolean endThisTurn() {
-        try {
-            playerState.endTurn();
-        } catch (IllegalMovesException e) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * this method tell if the player can so stuff
      *
      * @return true if it can, false otherwise
@@ -465,7 +451,7 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
      * @param popeTile the tile to check if it need to be flipped
      */
     @Override
-    public void flipPopeTile(PopeTile popeTile) {
+    public void flipPopeTile(VaticanSpace popeTile) {
         this.personalBoard.flipPopeTile(popeTile);
     }
 
@@ -477,10 +463,25 @@ public class Player implements Context, StateChanger, PlayerAction,PlayerReactEf
     @Override
     public boolean startHisTurn() {
         try {
-            playerState.startTurn();
+            playerState.startTurnInput();
         } catch (IllegalMovesException e) {
             return false;
         }
+        // TODO mandare indietro che io ho iniziato il turno
         return true;
+    }
+
+    /**
+     * the player ends its turn
+     * @return true if success, false otherwise
+     */
+    @Override
+    public boolean endThisTurn() {
+        try {
+            playerState.endTurnInput();
+        } catch (IllegalMovesException e) {
+            return false;
+        }
+        return match.endMyTurn();
     }
 }

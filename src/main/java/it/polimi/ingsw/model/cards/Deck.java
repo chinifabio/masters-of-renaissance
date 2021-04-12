@@ -13,6 +13,14 @@ import java.lang.Math;
  * @param <T>
  */
 public class Deck<T extends Card>{
+    /**
+     * This method create a deck of card starting from an array of given cards
+     * @param newCards array of all the cards to add to the deck
+     */
+    public Deck(List<T> newCards) {
+        this.cards.addAll(newCards);
+        this.updateNumberOfCards();
+    }
 
     /**
      * This constructor creates a deck with a Card inside.

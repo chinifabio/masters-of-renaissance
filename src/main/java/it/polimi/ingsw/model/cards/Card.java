@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.model.cards.effects.Effect;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 /**
  * This abstract class generalize the concept of Card, every Card has a cardID and an effect.
@@ -39,7 +40,7 @@ public abstract class Card{
     /**
      * This method is used by subclasses to implement their effect: AddDepot, AddDiscount, AddProduction, DestroyCards, MoveTwo, ShuffleMoveONe, WhiteMarble.
      */
-    public void useEffect(Player p){
+    public void useEffect(PlayerReactEffect p){
         effect.use(p);
     };
 

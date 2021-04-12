@@ -27,6 +27,6 @@ public class DestroyCards implements Effect {
      */
     @Override
     public void use(PlayerReactEffect p) {
-         //deve scartare due carte di un colore
+         p.discardDevCard(this.c);
     }
 }

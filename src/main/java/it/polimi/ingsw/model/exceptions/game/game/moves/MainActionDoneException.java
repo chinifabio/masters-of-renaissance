@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.exceptions.moves;
+package it.polimi.ingsw.model.exceptions.game.moves;
 
 /**
  * Used to handle the error if someone do an illegal moves.

@@ -4,13 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.exceptions.IllegalMovesException;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.resource.ResourceBuilder;
 import org.junit.jupiter.api.Test;
+
 
 public class PlayerTest {
     @Test
-    public void test1() {
-        Player dummy = new Player("dummy");
+    public void turnLifeCycle() { /*
+        Player dummy = new Player("dummy", null);
 
         assertFalse(dummy.canDoStuff());
 
@@ -19,7 +19,7 @@ public class PlayerTest {
         assertTrue(dummy.canDoStuff());
 
         try {
-            dummy.doMainAction();
+            dummy.doMainActionInput();
         } catch (IllegalMovesException e) {
             fail();
         }
@@ -27,13 +27,16 @@ public class PlayerTest {
         assertTrue(dummy.canDoStuff());
 
         try {
-            dummy.endTurn();
+            dummy.endTurnInput();
         } catch (IllegalMovesException e) {
             fail();
         }
 
-        assertFalse(dummy.canDoStuff());
+        assertFalse(dummy.canDoStuff());*/
+    }
 
-
+    @Test
+    public void test() {
+        // quando sarà implementato match
     }
 }
