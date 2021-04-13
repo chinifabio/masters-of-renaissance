@@ -5,6 +5,8 @@ import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.WrongDepotException;
+import it.polimi.ingsw.model.cards.LevelDevCard;
+import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
@@ -16,10 +18,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Productio
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -96,25 +95,79 @@ public class PersonalBoard {
      * @param slot is the slot where the DevCard is inserted
      * @param card is the DevCard bought by the Player
      */
-    public void addDevCard(DevCardSlot slot, DevCard card){}
+    public boolean addDevCard(DevCardSlot slot, DevCard card){
+        Deck<DevCard> temp = this.devDeck.remove(slot);
+        boolean result = false;
+        if(temp == null) temp = new Deck<>();
+
+        // queste due righe sono inutili se nel costruttore creo i devDeck, ancora da decidere cosa fare
+
+        try {
+            System.out.println(temp.peekFirstCard().getLevel().getLevelCard()+","+(card.getLevel().getLevelCard()-1));
+            if(temp.peekFirstCard().getLevel().getLevelCard() == (card.getLevel().getLevelCard()-1)) {
+                try {
+                    temp.insertCard(card);
+                    result=true;
+                } catch (AlreadyInDeckException e) {          // it should not be possible to enter this catch, the level is different -> can't have two cards with same ID
+                    System.out.println(e.getMsg());
+                }
+            }
+            else{
+            }
+        } catch (EmptyDeckException e1) {
+            if(card.getLevel() == LevelDevCard.LEVEL1){
+                try {
+                    temp.insertCard(card);
+                    result = true;
+                } catch (AlreadyInDeckException e2) {         // it should not be possible to enter this catch, empty deck -> can't have two cards with same ID
+                    System.out.println(e2.getMsg());
+                }
+            }
+        }
+        finally {
+            this.devDeck.put(slot,temp);
+            return result;
+        }
+    }
+
 
     /**
      * This method add the LeaderCard in the Player's PersonalBoard
      * @param card is the LeaderCard that the Player has chosen
      */
-    public void addLeaderCard(LeaderCard card){}
+    public void addLeaderCard(LeaderCard card){
+        try {
+            this.leaderDeck.insertCard(card);
+        } catch (AlreadyInDeckException e) {
+            System.out.println(e.getMsg());
+        }
+    }
 
     /**
      * This method activate the SpecialAbility of the LeaderCard
      * @param card is the LeaderCard
      */
-    public void activateLeaderCard(String card){}
+    public void activateLeaderCard(String card){    //TODO implementation - effect
+        try {
+            this.leaderDeck.peekCard(card).activate();
+        } catch (MissingCardException e) {
+            System.out.println(e.getMsg());
+        }
+    }
 
     /**
      * This method remove the LeaderCard from Player's PersonalBoard
      * @param card is the card to be removed
      */
-    public void discardLeaderCard(String card){}
+    public void discardLeaderCard(String card){
+        try {
+            this.leaderDeck.discard(card);
+        } catch (EmptyDeckException e) {
+            System.out.println(e.getMsg() + "il deck è vuoto");
+        } catch (MissingCardException e) {
+            System.out.println(e.getMsg() + "non c'è leader card con questo id");
+        }
+    }
 
     /**
      * This method convert the MarketMarble into their respective Resources
@@ -127,6 +180,7 @@ public class PersonalBoard {
      * @param prod is the Production to add
      */
     public void addProduction(Production prod){
+        //TODO implementation
     }
 
     /**
@@ -167,10 +221,14 @@ public class PersonalBoard {
 
     /**
      * create a new depot in the warehouse
-     * @param depot the new depot
+     * @param resource the new depot
      */
     public void addDepot(Depot depot) {
-        // TODO implementazione
+    //    try {
+    //        warehouse.addDepot(resource);
+    //    } catch (ExtraDepotsException e) {
+    //        System.out.println(e.getMsg());
+    //    }
     }
 
     /**
@@ -178,7 +236,13 @@ public class PersonalBoard {
      * @param amount moves of lorenzo
      */
     public void moveLorenzo(int amount) {
-        // TODO implementazione
+        try {
+            faithTrack.moveLorenzo(amount);
+        } catch (IllegalMovesException e) {
+            System.out.println(e.getMsg());
+        } catch (WrongPointsException e) {
+            System.out.println(e.getMsg());
+        }
     }
 
     /**
@@ -195,8 +259,8 @@ public class PersonalBoard {
      * @return deck of leader card
      */
     public Deck<LeaderCard> viewLeaderCard() {
-        // TODO implementazione
-        return null;
+        Deck<LeaderCard> temp = this.leaderDeck;
+        return temp;
     }
 
     /**
@@ -204,8 +268,19 @@ public class PersonalBoard {
      * @return list of resources
      */
     public List<Resource> viewResources() {
-        // TODO implementazione
-        return null;
+        List<Resource> temp;
+        temp = warehouse.viewResourcesInStrongbox(DepotSlot.STRONGBOX);
+        for(DepotSlot depotSlot : DepotSlot.values()) {
+            if(!(depotSlot == DepotSlot.STRONGBOX) && !(depotSlot == DepotSlot.BUFFER)) {
+                try {
+                    temp.add(warehouse.viewResourcesInDepot(depotSlot));
+                }
+                catch (NullPointerException e){
+                    System.out.println("Il depot " + depotSlot + " non esiste.");
+                }
+            }
+        }
+        return temp;
     }
 
     /**
@@ -213,8 +288,15 @@ public class PersonalBoard {
      * @return a map of devCardSlot - DevCard
      */
     public Map<DevCardSlot, DevCard> viewDevCards() {
-        //TODO implementazione
-        return null;
+        Map<DevCardSlot, DevCard> tempMap = new EnumMap<>(DevCardSlot.class);
+        for(DevCardSlot devCardSlot : DevCardSlot.values()){
+            try {
+                tempMap.put(devCardSlot,this.devDeck.get(devCardSlot).peekFirstCard());
+            } catch (EmptyDeckException e) {
+                System.out.println(e.getMsg() + "; no " + devCardSlot + " production.");
+            }
+        }
+        return tempMap;
     }
 
     /**
@@ -223,8 +305,7 @@ public class PersonalBoard {
      * @return faith marker position of the player
      */
     public int FaithMarkerPosition() {
-        // TODO implementazione
-        return 0;
+        return faithTrack.getPlayerPosition();
     }
 
     /**

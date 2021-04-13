@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
- * test collector for cards and decks.
+ * test collector for cards, decks and DevSetup.
  */
 public class DeckTest {
 
@@ -263,7 +263,7 @@ public class DeckTest {
         try {
             DevCard cTop = d2.draw();
             assertEquals(2,d2.getNumberOfCards());
-            assertEquals("000",cTop.getCardID());
+            assertEquals("002",cTop.getCardID());
         } catch (EmptyDeckException e) {
             System.out.println(e.getMsg());
             fail();
@@ -337,6 +337,7 @@ public class DeckTest {
         cards.add(c2);
         cards.add(c3);
         Deck<DevCard> d = new Deck<>();
+
         for(int i=0;i<3;i++) {
             try {
                 d.insertCard(cards.get(i));
@@ -345,6 +346,11 @@ public class DeckTest {
             }
         }
 
+        try {
+            assertEquals(ID2,d.peekFirstCard().getCardID());
+        } catch (EmptyDeckException e) {
+            System.out.println(e.getMsg());
+        }
         try {
             d.peekCard("000");
             fail();
@@ -424,4 +430,84 @@ public class DeckTest {
         d.shuffle();
         assertEquals(7,d.getNumberOfCards());
     }
+
+    /**
+     * This test creates two deck of devCards and checks if the method drawFromDecks works.
+     */
+    @Test
+    void DevSetup(){
+        List<Resource> sample = new ArrayList<>();
+        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
+        List<Requisite> req = new ArrayList<>();
+        Resource coin = ResourceBuilder.buildCoin(2);
+        ResourceRequisite rr = new ResourceRequisite(coin);
+        req.add(rr);
+
+        DevCard cg1 = new DevCard("111", new AddProductionEffect(p), 1, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
+        DevCard cg2 = new DevCard("222", new AddProductionEffect(p),2, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
+        DevCard cg3 = new DevCard("333", new AddProductionEffect(p),3, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
+
+        DevCard cy1 = new DevCard("110", new AddProductionEffect(p), 1, LevelDevCard.LEVEL1, ColorDevCard.YELLOW,req);
+        DevCard cy2 = new DevCard("220", new AddProductionEffect(p),2, LevelDevCard.LEVEL1, ColorDevCard.YELLOW,req);
+        DevCard cy3 = new DevCard("330", new AddProductionEffect(p),3, LevelDevCard.LEVEL1, ColorDevCard.YELLOW,req);
+
+        Deck<DevCard> greenDeck = new Deck<>();
+        Deck<DevCard> yellowDeck = new Deck<>();
+        List<DevCard> cards1 = new ArrayList<>();
+        List<DevCard> cards2 = new ArrayList<>();
+        cards1.add(cg1);
+        cards1.add(cg2);
+        cards1.add(cg3);
+        cards2.add(cy1);
+        cards2.add(cy2);
+        cards2.add(cy3);
+
+        for(int i=0;i<3;i++) {
+            try {
+                greenDeck.insertCard(cards1.get(i));
+            } catch (AlreadyInDeckException e) {
+                System.out.println(e.getMsg());
+            }
+        }
+        for(int i=0;i<3;i++) {
+            try {
+                yellowDeck.insertCard(cards2.get(i));
+            } catch (AlreadyInDeckException e) {
+                System.out.println(e.getMsg());
+            }
+        }
+        List<Deck<DevCard>> deckList = new ArrayList<>();
+
+        DevSetup vuota = new DevSetup(deckList);
+
+        try {
+            vuota.showDevDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("bho");
+        }
+
+        deckList.add(greenDeck);
+        deckList.add(yellowDeck);
+
+        DevSetup grid = new DevSetup(deckList);
+        System.out.println(grid.toString());
+        try {
+            System.out.println(grid.showDevDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN));
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("bho");
+        }
+
+        try {
+            System.out.println(grid.drawFromDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN).getCardID());
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("bho");
+        }
+        try {
+            System.out.println(grid.drawFromDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN).getCardID());
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("bho");
+        }
+        
+    }
+
 }

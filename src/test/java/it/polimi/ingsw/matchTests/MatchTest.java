@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.cards.SoloActionToken;
+import it.polimi.ingsw.model.exceptions.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.MissingCardException;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
@@ -148,7 +149,11 @@ public class MatchTest {
             System.out.println("The file to create the  wasn't found");
         }
         soloToken = new Deck<>(init);
-        System.out.println(soloToken.peekFirstCard());
+        try {
+            System.out.println(soloToken.peekFirstCard());
+        } catch (EmptyDeckException e) {
+            System.out.println(e.getMsg());
+        }
 
     }
 }

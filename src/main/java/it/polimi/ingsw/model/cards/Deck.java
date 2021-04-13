@@ -86,7 +86,7 @@ public class Deck<T extends Card>{
     }
 
     /**
-     * This method takes the first card from the List of Card and add this card to the list of discardedCards.
+     * This method takes the first card from the List of Card and adds it to the List of discardedCards.
      * @throws EmptyDeckException if the deck is empty.
      */
     public void discard() throws EmptyDeckException {
@@ -95,6 +95,23 @@ public class Deck<T extends Card>{
         }
         this.discardedCards.add(this.cards.remove(0));
         this.updateNumberOfCards();
+    }
+
+    /**
+     * This method takes a card (based on cardID) from the List of Card and adds it to the List of discardedCards.
+     * @param cardID the ID of the card to discard.
+     * @throws EmptyDeckException if the deck is empty.
+     * @throws MissingCardException if the card is not in the deck.
+     */
+    public void discard(String cardID) throws EmptyDeckException, MissingCardException{
+        if(this.cards.isEmpty()){
+            throw new EmptyDeckException("exception: discard from empty deck");
+        }
+        for(int i=0;i<this.numberOfCards;i++){
+            if(this.peekCard(cardID).equals(cards.get(i))){
+                this.discardedCards.add(this.cards.remove(i));
+            }
+        }
     }
 
     /**
@@ -108,7 +125,7 @@ public class Deck<T extends Card>{
                 throw new AlreadyInDeckException("exception: two cards with the same ID");
             }
         }
-        this.cards.add(card);
+        this.cards.add(0,card);
         this.updateNumberOfCards();
     }
 
@@ -116,8 +133,9 @@ public class Deck<T extends Card>{
      * This method return the first card (position 0) of the deck.
      * @return the top card of the deck.
      */
-    public T peekFirstCard(){
-            return this.cards.get(0);
+    public T peekFirstCard() throws EmptyDeckException{
+        if(this.cards.isEmpty()) throw new EmptyDeckException("exception: peeking from an empty deck");
+        return this.cards.get(0);
     }
 
     /**

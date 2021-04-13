@@ -132,6 +132,12 @@ public class MarketTrayTest {
             }
         });
 
+        for(MarbleColor marbleColor : MarbleColor.values()){
+            if(!map.containsKey(marbleColor)){
+                map.put(marbleColor,0);
+            }
+        }
+
         int j = map.get(tray.showSlideMarble().type());
         map.put(tray.showSlideMarble().type(), ++j);
 

@@ -1,5 +1,15 @@
 package it.polimi.ingsw.model.cards;
 
 public enum LevelDevCard {
-    LEVEL1, LEVEL2, LEVEL3
+    LEVEL1 (1), LEVEL2 (2), LEVEL3 (3);
+
+    private final int levelCard;
+
+    private LevelDevCard(int levelCard){
+        this.levelCard = levelCard;
+    }
+
+    public int getLevelCard() {
+        return this.levelCard;
+    }
 }

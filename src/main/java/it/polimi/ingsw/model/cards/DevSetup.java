@@ -1,23 +1,96 @@
 package it.polimi.ingsw.model.cards;
 
+import it.polimi.ingsw.model.exceptions.EmptyDeckException;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+/**
+ * This class contains a List of Deck of DevCards. It contains the 12 decks of DevCards divided by level and color.
+ */
 public class DevSetup {
 
-    public DevSetup(){
-
+    /**
+     * This is the constructor of the devSetup class.
+     * @param decks to insert.
+     */
+    public DevSetup(List<Deck<DevCard>> decks){
+        this.devDeckGrid = decks;
     }
-    private List<Deck> devDeckGrid;
-    public List<DevCard> showDevDecks(){
-        List<DevCard> tempCards = new ArrayList<DevCard>();
 
-        return tempCards;
+    /**
+     * This attribute is the list of decks.
+     */
+    private List<Deck<DevCard>> devDeckGrid;
+
+    /**
+     * This method returns the first card of a single deck of DevCards. It needs the level and the color of the Deck.
+     * @return the top card of the deck which color and level matches the one of the parameters.
+     */
+    public DevCard showDevDeck(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException {
+        Deck<DevCard> tempDeck = takeFirstCard(row, col);
+        try {
+            return tempDeck.peekFirstCard();
+        } catch (EmptyDeckException e) {
+            System.out.println(e.getMsg());
+            return null;
+        }
     }
-    /*public DevCard drawFromDeck(LevelDevCard row, ColorDevCard col){
-        DevCard temp = devDeckGrid
-                                .stream()
-                                .filter(c -> c.)
-        return temp;
-    }*/
+
+    /**
+     * This method removes and returns
+     * @param row is the level of the searched deck
+     * @param col is the color of the searched deck
+     * @return the top card of the deck which color and level matches the one of the parameters.
+     * @throws IndexOutOfBoundsException if you are trying to get a card from an empty deck with the chosen colors.
+     */
+    public DevCard drawFromDeck(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException{
+        Deck<DevCard> tempDeck = takeFirstCard(row, col);
+        try {
+            return tempDeck.draw();
+        } catch (EmptyDeckException e) {
+            System.out.println(e.getMsg());
+            return null;
+        }
+    }
+
+    /**
+     * This method returns a card from a deck selected with level and color.
+     * @param row is the level of the searched deck
+     * @param col is the color of the searched deck
+     * @return the top card of the deck which color and level matches the one of the parameters.
+     * @throws IndexOutOfBoundsException if you are trying to get a card from an empty deck with the chosen colors.
+     */
+    private Deck<DevCard> takeFirstCard(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException{
+        List<Deck<DevCard>> tempDeck = devDeckGrid
+                .stream()
+                .filter(c -> {
+                    try {
+                        return col.equals(c.peekFirstCard().getColor());
+                    } catch (EmptyDeckException e) {
+                        return false;
+                    }
+                })
+                .filter(c -> {
+                    try {
+                        return row.equals(c.peekFirstCard().getLevel());
+                    } catch (EmptyDeckException e) {
+                        System.out.println(e.getMsg());
+                        return false;
+                    }
+                })
+                .collect(Collectors.toList());
+
+            return tempDeck.get(0);
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String toString() {
+        return devDeckGrid.toString();
+    }
 }
