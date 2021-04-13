@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.exceptions;
 
+import static it.polimi.ingsw.TextColors.RESET;
+import static it.polimi.ingsw.TextColors.YELLOW;
+
 /**
  * exception thrown when someone tries to peek a card from a deck where the card is missing
  */
@@ -18,5 +21,5 @@ public class MissingCardException extends Exception{
      * return the message handled
      * @return string of the message
      */
-    public String getMsg(){return msg;}
+    public String getMsg(){return YELLOW + msg + RESET;}
 }

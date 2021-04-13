@@ -3,8 +3,7 @@ package it.polimi.ingsw.model.player;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.exceptions.NoRequisiteException;
-import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
-import it.polimi.ingsw.model.player.personalBoard.faithTrack.PopeTile;
+import it.polimi.ingsw.model.exceptions.gameexception.LorenzoMovesException;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.model.requisite.Requisite;
 

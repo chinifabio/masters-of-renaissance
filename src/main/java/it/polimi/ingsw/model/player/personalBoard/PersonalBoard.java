@@ -6,10 +6,7 @@ import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.WrongDepotException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
-import it.polimi.ingsw.model.player.personalBoard.faithTrack.PopeTile;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
-import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.Bucket;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
@@ -158,9 +155,7 @@ public class PersonalBoard {
     }
 
 
-    //Implementare MoveBetweenBucket per spostare le risorse dai Depot alla Produzione (moveInProduction)
-    public void moveBetweenBucket(Bucket from, Bucket to, Resource resource) throws WrongDepotException {
-    }
+
 
     /**
      * tells to the faith track to move amount times the player marker

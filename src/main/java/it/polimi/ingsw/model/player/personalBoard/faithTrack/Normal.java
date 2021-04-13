@@ -7,7 +7,7 @@ public class Normal extends Cell {
 
 
     /**
-     * This attribute is the constructor of the class
+     * This attribute is the constructor of the class, it is empty because it takes parameters from Json File
      */
     public Normal() {
         super();

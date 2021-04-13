@@ -3,8 +3,11 @@ package it.polimi.ingsw.model.player.personalBoard.warehouse;
 import it.polimi.ingsw.model.exceptions.ExtraDepotsException;
 import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.WrongDepotException;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.*;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionRecord;
 import it.polimi.ingsw.model.resource.Resource;
 
 
@@ -27,6 +30,11 @@ public class Warehouse {
      */
     private List<Predicate<MoveResource>> constraint;
 
+    /**
+     * This attribute is a list of all the movements done to activate the Productions, it wil be used to restore the Depot
+     * status if the Productions won't be activated
+     */
+    private List<ProductionRecord> movesCache;
     /**
      * This method is the constructor of the class
      */
@@ -117,27 +125,16 @@ public class Warehouse {
         return false;
     }
 
-    public boolean moveInProduction(Resource resource){
-
+    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource resource){
         return false;
         //TODO DA IMPLEMENTARE
-    }
-
-    /**
-     * this method allows the player to select the productions that will be activated
-     * @param production is the selected production
-     */
-    public void selectProduction(Production production){
-
-        //Dalla produzione passata prendo i requisite
-        //Prendo dai vari depot i requisiti
-        //Se ho tutto faccio production.select()
     }
 
     /**
      * This method activates the productions selected by the player
      */
     public void activateProductions(){
+        //TODO Da implementare
         //Per ogni produzione selezionata prendo le risorse di output e le metto nello strongbox
     }
 
@@ -188,5 +185,16 @@ public class Warehouse {
      */
     public List<Resource> viewResourcesInStrongbox(DepotSlot slot){
         return depots.get(slot).viewAllResources();
+    }
+
+    public boolean clearProduction(ProductionID production){
+        return false;
+    }
+    public boolean setNormalProduction(ProductionID productionID, NormalProduction normalProduction){
+        return false;
+    }
+
+    public boolean restoreProduction(){
+        return false;
     }
 }

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.exceptions;
 
+import static it.polimi.ingsw.TextColors.RESET;
+import static it.polimi.ingsw.TextColors.YELLOW;
+
 /**
  * exception thrown when wrong method is invoked in a subclass of Loot
  */
@@ -22,6 +25,6 @@ public class LootTypeException extends Exception {
      * @return string of the message
      */
     public String getMsg(){
-        return msg;
+        return YELLOW + msg + RESET;
     }
 }

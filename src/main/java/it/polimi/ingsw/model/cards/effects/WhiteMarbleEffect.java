@@ -6,13 +6,15 @@ import it.polimi.ingsw.model.resource.ResourceType;
 /**
  * This class is a part of the strategy pattern, it implements the interface Effect.
  */
-public class WhiteMarble implements Effect{
+public class WhiteMarbleEffect extends Effect{
+    public WhiteMarbleEffect() {
+    }
 
     /**
      * This is the constructor of the method. It needs a ResourceType which is the one that white marbles will be converted to during the Market phase.
      * @param conv that defines the resource the player will get from white marbles.
      */
-    public WhiteMarble(ResourceType conv) {
+    public WhiteMarbleEffect(ResourceType conv) {
         this.conv = conv;
     }
 

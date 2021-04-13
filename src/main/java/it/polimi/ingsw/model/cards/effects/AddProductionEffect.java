@@ -6,13 +6,15 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Productio
 /**
  * This class is a part of the strategy pattern, it implements the interface Effect.
  */
-public class AddProduction implements Effect{
+public class AddProductionEffect extends Effect{
+    public AddProductionEffect() {
+    }
 
     /**
      * This is the constructor of the class. It needs the Production that will added to the PersonalBoard.
      * @param prod that will be available to the player once activated.
      */
-    public AddProduction(Production prod) {
+    public AddProductionEffect(Production prod) {
         this.prod = prod;
     }
 

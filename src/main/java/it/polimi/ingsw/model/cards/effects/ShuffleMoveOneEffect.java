@@ -5,7 +5,9 @@ import it.polimi.ingsw.model.player.PlayerReactEffect;
 /**
  * This class is a part of the strategy pattern, it implements the interface Effect.
  */
-public class ShuffleMoveOne implements Effect {
+public class ShuffleMoveOneEffect extends Effect {
+    public ShuffleMoveOneEffect() {
+    }
 
     /**
      * This method is activated by a SoloActionToken, it shuffle every SoloActionToken used previously and gives a FaithPoint to Lorenzo.
@@ -13,7 +15,9 @@ public class ShuffleMoveOne implements Effect {
      */
     @Override
     public void use(PlayerReactEffect p) {
+        System.out.println("Move one space");
         p.moveFaithMarker(1);
+        System.out.println("Shuffling");
         p.shuffleToken();
     }
 }

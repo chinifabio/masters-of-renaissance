@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.exceptions;
 
+import static it.polimi.ingsw.TextColors.RESET;
+import static it.polimi.ingsw.TextColors.YELLOW;
+
 public class WrongDepotException extends Exception {
     /**
      * msg to identify the error
@@ -19,6 +22,6 @@ public class WrongDepotException extends Exception {
      * @return string of the message
      */
     public String getMsg(){
-        return msg;
+        return YELLOW + msg + RESET;
     }
 }

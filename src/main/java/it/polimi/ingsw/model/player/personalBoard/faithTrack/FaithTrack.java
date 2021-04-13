@@ -90,12 +90,19 @@ public class FaithTrack {
         if (this.playerPosition >= track.size()-1 && points > 0) {
             throw new IllegalMovesException("exception: The Player is in the last cell, he can't move");
         }
-        this.playerPosition = playerPosition + points;
-        if (this.playerPosition >= track.size()-1) {
-            this.playerPosition = track.size()-1;
+
+        for (int i = 0; i< points; i++){
+            if (this.playerPosition >= track.size()-1) {
+                i = points;
+                this.playerPosition = track.size()-1;
+            } else {
+                this.playerPosition++;
+                this.track.get(playerPosition).onPlayerCross();
+            }
         }
-        //Da rimuovere e aggiungere al metodo che viene chiamato quando qualcuno attiva una PopeSpace
-        flipPopeTile();
+
+        //TODO Da rimuovere e aggiungere al metodo che viene chiamato quando qualcuno attiva una PopeSpace
+        //flipPopeTile();
     }
 
     /**
@@ -138,15 +145,19 @@ public class FaithTrack {
      * @return true if the Tile is flipped
      */
     //TODO guardare meglio
-    public boolean flipPopeTile(){
+    public void flipPopeTile(VaticanSpace toCheck){
+
+        if (track.get(this.playerPosition).getVaticanSpace().ordinal() < toCheck.ordinal()){
+            popeTiles.get(toCheck).flipMe();//Deactivates the PopeTile -> Il popeTile non può più essere accettato
+        }
         //Aggiungere il controllo rispetto alle posizioni degli altri giocatori
-        if (track.get(this.playerPosition).getVaticanSpace() != VaticanSpace.NONE) {
+        /*if (track.get(this.playerPosition).getVaticanSpace() != VaticanSpace.NONE) {
             if (!popeTiles.get(track.get(this.playerPosition).getVaticanSpace()).getIsFlipped()) {
                 popeTiles.get(track.get(this.playerPosition).getVaticanSpace()).flipMe();
                 return true;
             }
         }
-        return false;
+        return false;*/
     }
 
     //Only for testing

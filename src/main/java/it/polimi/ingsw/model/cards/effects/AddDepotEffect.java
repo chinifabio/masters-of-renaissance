@@ -8,13 +8,15 @@ import it.polimi.ingsw.model.resource.ResourceType;
 /**
  * This class is a part of the strategy pattern, it implements the interface Effect.
  */
-public class AddDepot implements Effect{
+public class AddDepotEffect extends Effect{
+    public AddDepotEffect() {
+    }
 
     /**
      * This is the constructor of the class. It needs a ResourceType that will be used to determine what Resource can be stored in this depot.
      * @param res that defines what can be stored.
      */
-    public AddDepot(ResourceType res) {
+    public AddDepotEffect(ResourceType res) {
         this.res = res;
     }
 

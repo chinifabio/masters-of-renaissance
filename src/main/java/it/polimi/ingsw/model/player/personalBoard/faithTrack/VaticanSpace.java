@@ -5,5 +5,5 @@ package it.polimi.ingsw.model.player.personalBoard.faithTrack;
  * in different cells
  */
 public enum VaticanSpace {
-    FIRST, SECOND, THIRD, NONE
+    NONE, FIRST, SECOND, THIRD
 }

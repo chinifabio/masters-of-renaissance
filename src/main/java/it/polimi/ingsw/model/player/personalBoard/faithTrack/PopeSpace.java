@@ -6,9 +6,10 @@ package it.polimi.ingsw.model.player.personalBoard.faithTrack;
  */
 public class PopeSpace extends Cell {
 
+    //TODO Salvare un riferimento a Match e chiamare match.vaticanReport(VaticanSpace)
 
     /**
-     * * This method is the constructor of the class
+     * * This method is the constructor of the class, it is empty because it takes parameters from Json File
      */
     public PopeSpace() {
         super();
@@ -28,7 +29,7 @@ public class PopeSpace extends Cell {
      */
     @Override
     public void onPlayerCross() {
-        //To be implemented
+        //TODO DA IMPLEMENTARE
     }
 
     /**

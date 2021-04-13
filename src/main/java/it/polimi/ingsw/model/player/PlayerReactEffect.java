@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
-import it.polimi.ingsw.model.exceptions.game.GameTypeException;
-import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;

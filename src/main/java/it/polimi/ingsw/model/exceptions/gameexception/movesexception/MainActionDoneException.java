@@ -1,4 +1,7 @@
-package it.polimi.ingsw.model.exceptions.game.moves;
+package it.polimi.ingsw.model.exceptions.gameexception.movesexception;
+
+import static it.polimi.ingsw.TextColors.RESET;
+import static it.polimi.ingsw.TextColors.YELLOW;
 
 /**
  * Used to handle the error if someone do an illegal moves.
@@ -22,6 +25,6 @@ public class MainActionDoneException extends Exception{
      * print to the console the error message
      */
     public void print() {
-        System.out.println("Illegal move: " + msg);
+        System.out.println(YELLOW + "Illegal move: " + msg + RESET);
     }
 }

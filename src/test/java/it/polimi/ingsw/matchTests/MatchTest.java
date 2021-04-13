@@ -2,9 +2,15 @@ package it.polimi.ingsw.matchTests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.cards.ColorDevCard;
+import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.LevelDevCard;
+import it.polimi.ingsw.model.cards.SoloActionToken;
+import it.polimi.ingsw.model.exceptions.MissingCardException;
 import it.polimi.ingsw.model.match.PlayerToMatch;
+import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
@@ -12,9 +18,16 @@ import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Lorenzo;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerAction;
+import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -64,6 +77,14 @@ public class MatchTest {
         assertFalse(lorenzo.canDoStuff());
 
         assertTrue(player.canDoStuff());
+
+        assertTrue(player.endThisTurn());
+        assertTrue(player.endThisTurn());
+        assertTrue(player.endThisTurn());
+        assertTrue(player.endThisTurn());
+        assertTrue(player.endThisTurn());
+
+
     }
 
     /**
@@ -110,5 +131,24 @@ public class MatchTest {
                 }
             }
         }
+    }
+
+    @Test
+    public void LorenzoBelloTest() throws MissingCardException {
+        Deck<SoloActionToken> soloToken;
+        List<SoloActionToken> init = new ArrayList<>();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            init = objectMapper.readValue(
+                    new File("src/resources/SoloActionTokens.json"),
+                    new TypeReference<List<SoloActionToken>>(){});
+        }catch (IOException e){
+            e.printStackTrace();
+            System.out.println("The file to create the  wasn't found");
+        }
+        soloToken = new Deck<>(init);
+        System.out.println(soloToken.peekFirstCard());
+
     }
 }

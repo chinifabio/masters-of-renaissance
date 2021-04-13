@@ -2,9 +2,6 @@ package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.*;
-import it.polimi.ingsw.model.exceptions.game.GameException;
-import it.polimi.ingsw.model.exceptions.game.GameTypeException;
-import it.polimi.ingsw.model.exceptions.game.moves.MainActionDoneException;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -244,7 +241,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
         try {
             this.match.useMarketTray(rc, index);
         } catch (Exception e) {
-            System.out.println("market tray exception");;
+            System.out.println("market tray exception");
         }
         return true;
     }
@@ -286,6 +283,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
             return false;
         }
         this.slotDestination = destination;
+        System.out.println(nickname + ": Asking to Match to buy devCard");
         match.buyDevCard(row, col);
         return true;
     }
@@ -467,6 +465,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
         } catch (IllegalMovesException e) {
             return false;
         }
+        System.out.println(nickname + ": Turn started, waiting for action");
         // TODO mandare indietro che io ho iniziato il turno
         return true;
     }
@@ -482,6 +481,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
         } catch (IllegalMovesException e) {
             return false;
         }
+        System.out.println(nickname + ": Turn ended");
         return match.endMyTurn();
     }
 }

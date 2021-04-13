@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.exceptions;
 
+import static it.polimi.ingsw.TextColors.RESET;
+import static it.polimi.ingsw.TextColors.YELLOW;
+
 public class AlreadyInDeckException extends Exception{
 
     /**
@@ -16,5 +19,5 @@ public class AlreadyInDeckException extends Exception{
      * return the message handled
      * @return string of the message
      */
-    public String getMsg(){return msg;}
+    public String getMsg(){return YELLOW + msg + RESET;}
 }

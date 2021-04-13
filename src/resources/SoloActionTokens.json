@@ -1,0 +1,55 @@
+[
+  {
+    "type": "Token",
+    "cardID": "ST1",
+    "effect": {
+      "type": "DestroyCards",
+      "color": "BLUE"
+    }
+  },
+  {
+    "type": "Token",
+    "cardID": "ST2",
+    "effect": {
+      "type": "DestroyCards",
+      "color": "GREEN"
+    }
+  },
+  {
+    "type": "Token",
+    "cardID": "ST3",
+    "effect": {
+      "type": "DestroyCards",
+      "color": "PURPLE"
+    }
+  },
+  {
+    "type": "Token",
+    "cardID": "ST4",
+    "effect": {
+      "type": "DestroyCards",
+      "color": "YELLOW"
+    }
+  },
+  {
+    "type": "Token",
+    "cardID": "ST5",
+    "effect": {
+      "type": "MoveTwo"
+    }
+  },
+  {
+    "type": "Token",
+    "cardID": "ST6",
+    "effect": {
+      "type": "MoveTwo"
+    }
+  },
+  {
+    "type": "Token",
+    "cardID": "ST7",
+    "effect": {
+      "type": "ShuffleMoveOne"
+    }
+  }
+]

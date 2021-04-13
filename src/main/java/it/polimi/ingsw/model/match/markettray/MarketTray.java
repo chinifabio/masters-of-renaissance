@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
-import it.polimi.ingsw.model.exceptions.game.moves.MainActionDoneException;
+import it.polimi.ingsw.model.exceptions.gameexception.movesexception.MainActionDoneException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.*;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 

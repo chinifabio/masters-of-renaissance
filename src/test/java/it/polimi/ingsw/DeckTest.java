@@ -1,10 +1,11 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.cards.*;
-import it.polimi.ingsw.model.cards.effects.AddProduction;
+import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
 import it.polimi.ingsw.model.exceptions.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.MissingCardException;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.requisite.Requisite;
@@ -29,17 +30,17 @@ public class DeckTest {
     @Test
     void cardIDCheck(){
         String ID = "105", ID1 = "120",ID2 = "145";
-        List<ResourceRequisite> sample = new ArrayList<>();
-        Production p = new Production(ProductionID.BASIC,sample,sample);
+        List<Resource> sample = new ArrayList<>();
+        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
         List<Requisite> requisite = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         requisite.add(rr);
 
 
-        DevCard c1 = new DevCard(ID, new AddProduction(p), 3, LevelDevCard.LEVEL3, ColorDevCard.BLUE,requisite);
-        LeaderCard c2 = new LeaderCard(ID1, new AddProduction(p),6,requisite);
-        SoloActionToken token = new SoloActionToken(ID2, new AddProduction(p));
+        DevCard c1 = new DevCard(ID, new AddProductionEffect(p), 3, LevelDevCard.LEVEL3, ColorDevCard.BLUE,requisite);
+        LeaderCard c2 = new LeaderCard(ID1, new AddProductionEffect(p),6,requisite);
+        SoloActionToken token = new SoloActionToken(ID2, new AddProductionEffect(p));
 
         assertEquals(ID,c1.getCardID());
         assertEquals(ID1,c2.getCardID());
@@ -52,14 +53,14 @@ public class DeckTest {
     @Test
     void victoryPointDevCard(){
         int n = 7;
-        List<ResourceRequisite> sample = new ArrayList<>();
-        Production p = new Production(ProductionID.BASIC,sample,sample);
+        List<Resource> sample = new ArrayList<>();
+        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        DevCard c1 = new DevCard("000", new AddProduction(p), n, LevelDevCard.LEVEL3, ColorDevCard.BLUE,req);
+        DevCard c1 = new DevCard("000", new AddProductionEffect(p), n, LevelDevCard.LEVEL3, ColorDevCard.BLUE,req);
 
         assertEquals(n,c1.getVictoryPoint());
     }
@@ -76,10 +77,10 @@ public class DeckTest {
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        List<ResourceRequisite> sample = new ArrayList<>();
-        Production p = new Production(ProductionID.BASIC,sample,sample);
+        List<Resource> sample = new ArrayList<>();
+        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
 
-        DevCard c1 = new DevCard("000", new AddProduction(p), 2, lev, col,req);
+        DevCard c1 = new DevCard("000", new AddProductionEffect(p), 2, lev, col,req);
 
         assertEquals(lev,c1.getLevel());
         assertEquals(col,c1.getColor());
@@ -91,14 +92,14 @@ public class DeckTest {
     @Test
     void victoryPointLeaderCard(){
         int n = 12;
-        List<ResourceRequisite> sample = new ArrayList<>();
-        Production p = new Production(ProductionID.BASIC,sample,sample);
+        List<Resource> sample = new ArrayList<>();
+        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        LeaderCard c = new LeaderCard("010", new AddProduction(p), n, req);
+        LeaderCard c = new LeaderCard("010", new AddProductionEffect(p), n, req);
 
         assertEquals(n,c.getVictoryPoint());
     }
@@ -108,14 +109,14 @@ public class DeckTest {
      */
     @Test
     void activatedLeaderCard(){
-        List<ResourceRequisite> sample = new ArrayList<>();
-        Production p = new Production(ProductionID.BASIC,sample,sample);
+        List<Resource> sample = new ArrayList<>();
+        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        LeaderCard c = new LeaderCard("010", new AddProduction(p), 6, req);
+        LeaderCard c = new LeaderCard("010", new AddProductionEffect(p), 6, req);
 
         assertFalse(c.isActivated());
         c.activate();
@@ -130,8 +131,8 @@ public class DeckTest {
     @Test
     void insertCard() {
         Deck<DevCard> d = new Deck<>();
-        List<ResourceRequisite> sample = new ArrayList<>();
-        Production p = new Production(ProductionID.BASIC,sample,sample);
+        List<Resource> sample = new ArrayList<>();
+        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -139,9 +140,9 @@ public class DeckTest {
 
         assertEquals(0,d.getNumberOfCards());
 
-        DevCard c1 = new DevCard("000", new AddProduction(p),10, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
-        DevCard c2 = new DevCard("000", new AddProduction(p),5, LevelDevCard.LEVEL2, ColorDevCard.GREEN, req);
-        DevCard c3 = new DevCard("111", new AddProduction(p),5, LevelDevCard.LEVEL2, ColorDevCard.GREEN, req);
+        DevCard c1 = new DevCard("000", new AddProductionEffect(p),10, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
+        DevCard c2 = new DevCard("000", new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.GREEN, req);
+        DevCard c3 = new DevCard("111", new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.GREEN, req);
 
         try { d.insertCard(c1); } catch (AlreadyInDeckException e) {
             System.out.println(e.getMsg());
@@ -162,15 +163,15 @@ public class DeckTest {
     @Test
     void addListOfCards(){
         int n=2;
-        List<ResourceRequisite> sample = new ArrayList<>();
-        Production p = new Production(ProductionID.BASIC,sample,sample);
+        List<Resource> sample = new ArrayList<>();
+        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        Card c1 = new DevCard("000", new AddProduction(p),10, LevelDevCard.LEVEL1, ColorDevCard.GREEN,req);
-        Card c2 = new DevCard("001", new AddProduction(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
+        Card c1 = new DevCard("000", new AddProductionEffect(p),10, LevelDevCard.LEVEL1, ColorDevCard.GREEN,req);
+        Card c2 = new DevCard("001", new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
 
         List<Card> cards = new ArrayList<>();
         cards.add(c1);
@@ -194,16 +195,16 @@ public class DeckTest {
     @Test
     void addOneInsertCard() {
         int n=3;
-        List<ResourceRequisite> sample = new ArrayList<>();
-        Production p = new Production(ProductionID.BASIC,sample,sample);
+        List<Resource> sample = new ArrayList<>();
+        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        DevCard c1 = new DevCard("000", new AddProduction(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
-        DevCard c2 = new DevCard("000",  new AddProduction(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
-        DevCard c3 = new DevCard("002",  new AddProduction(p),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
+        DevCard c1 = new DevCard("000", new AddProductionEffect(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
+        DevCard c2 = new DevCard("000",  new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
+        DevCard c3 = new DevCard("002",  new AddProductionEffect(p),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
 
         List<DevCard> cards = new ArrayList<>();
         cards.add(c2);
@@ -228,16 +229,16 @@ public class DeckTest {
      */
     @Test
     void drawFromDeck(){
-        List<ResourceRequisite> sample = new ArrayList<>();
-        Production p = new Production(ProductionID.BASIC,sample,sample);
+        List<Resource> sample = new ArrayList<>();
+        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        DevCard c1 = new DevCard("000", new AddProduction(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
-        DevCard c2 = new DevCard("001",  new AddProduction(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
-        DevCard c3 = new DevCard("002",  new AddProduction(p),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
+        DevCard c1 = new DevCard("000", new AddProductionEffect(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
+        DevCard c2 = new DevCard("001",  new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
+        DevCard c3 = new DevCard("002",  new AddProductionEffect(p),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
         List<DevCard> cards = new ArrayList<>();
         cards.add(c1);
         cards.add(c2);
@@ -275,16 +276,16 @@ public class DeckTest {
      */
     @Test
     void discardCards(){
-        List<ResourceRequisite> sample = new ArrayList<>();
-        Production p = new Production(ProductionID.BASIC,sample,sample);
+        List<Resource> sample = new ArrayList<>();
+        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        DevCard c1 = new DevCard("100", new AddProduction(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
-        DevCard c2 = new DevCard("001",  new AddProduction(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
-        DevCard c3 = new DevCard("002",  new AddProduction(p),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
+        DevCard c1 = new DevCard("100", new AddProductionEffect(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
+        DevCard c2 = new DevCard("001",  new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
+        DevCard c3 = new DevCard("002",  new AddProductionEffect(p),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
         List<DevCard> cards = new ArrayList<>();
         cards.add(c1);
         cards.add(c2);
@@ -320,17 +321,17 @@ public class DeckTest {
      */
     @Test
     void peekCardFromDeck(){
-        List<ResourceRequisite> sample = new ArrayList<>();
-        Production p = new Production(ProductionID.BASIC,sample,sample);
+        List<Resource> sample = new ArrayList<>();
+        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
         String ID = "100", ID1 = "010",ID2 = "001";
 
-        DevCard c1 = new DevCard(ID, new AddProduction(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
-        DevCard c2 = new DevCard(ID1, new AddProduction(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
-        DevCard c3 = new DevCard(ID2, new AddProduction(p),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
+        DevCard c1 = new DevCard(ID, new AddProductionEffect(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
+        DevCard c2 = new DevCard(ID1, new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
+        DevCard c3 = new DevCard(ID2, new AddProductionEffect(p),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
         List<DevCard> cards = new ArrayList<>();
         cards.add(c1);
         cards.add(c2);
@@ -363,20 +364,20 @@ public class DeckTest {
      */
     @Test
     void shuffleDeck(){
-        List<ResourceRequisite> sample = new ArrayList<>();
-        Production p = new Production(ProductionID.BASIC,sample,sample);
+        List<Resource> sample = new ArrayList<>();
+        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        LeaderCard c1 = new LeaderCard("111", new AddProduction(p), 1, req);
-        LeaderCard c2 = new LeaderCard("222", new AddProduction(p), 2, req);
-        LeaderCard c3 = new LeaderCard("333", new AddProduction(p), 3, req);
-        LeaderCard c4 = new LeaderCard("444", new AddProduction(p), 4, req);
-        LeaderCard c5 = new LeaderCard("555", new AddProduction(p), 5, req);
-        LeaderCard c6 = new LeaderCard("666", new AddProduction(p), 6, req);
-        LeaderCard c7 = new LeaderCard("777", new AddProduction(p), 7, req);
+        LeaderCard c1 = new LeaderCard("111", new AddProductionEffect(p), 1, req);
+        LeaderCard c2 = new LeaderCard("222", new AddProductionEffect(p), 2, req);
+        LeaderCard c3 = new LeaderCard("333", new AddProductionEffect(p), 3, req);
+        LeaderCard c4 = new LeaderCard("444", new AddProductionEffect(p), 4, req);
+        LeaderCard c5 = new LeaderCard("555", new AddProductionEffect(p), 5, req);
+        LeaderCard c6 = new LeaderCard("666", new AddProductionEffect(p), 6, req);
+        LeaderCard c7 = new LeaderCard("777", new AddProductionEffect(p), 7, req);
         Deck<LeaderCard> d = new Deck<>(c1);
         List<LeaderCard> cards = new ArrayList<>();
         cards.add(c2);

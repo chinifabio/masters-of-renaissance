@@ -7,13 +7,15 @@ import it.polimi.ingsw.model.resource.ResourceType;
 /**
  * This class is a part of the strategy pattern, it implements the interface Effect.
  */
-public class AddDiscount implements Effect{
+public class AddDiscountEffect extends Effect{
+    public AddDiscountEffect() {
+    }
 
     /**
      * This is the constructor of the class. It needs the ResourceType that will be discounted.
      * @param t type that will be discounted.
      */
-    public AddDiscount(ResourceType t) {
+    public AddDiscountEffect(ResourceType t) {
         this.t = t;
     }
 

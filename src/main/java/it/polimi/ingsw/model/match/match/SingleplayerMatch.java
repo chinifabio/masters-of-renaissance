@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.match.match;
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
-import it.polimi.ingsw.model.exceptions.game.GameTypeException;
 import it.polimi.ingsw.model.player.Lorenzo;
 import it.polimi.ingsw.model.player.Player;
 
@@ -30,6 +29,8 @@ public class SingleplayerMatch extends Match{
         if (this.turn.playerInGame() != 2 || gameOnAir) return false;
         this.turn.getCurPlayer().startHisTurn();
         gameOnAir = true;
+
+        System.out.println("Match: Game started"); //TODO DA ELIMINARE
         return true;
     }
 
@@ -40,6 +41,6 @@ public class SingleplayerMatch extends Match{
      */
     @Override
     public void discardDevCard(ColorDevCard color) {
-
+        System.out.println("Match: Discarding card ->" + color);
     }
 }

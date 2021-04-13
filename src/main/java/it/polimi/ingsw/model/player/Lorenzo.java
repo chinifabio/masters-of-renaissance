@@ -1,8 +1,10 @@
 package it.polimi.ingsw.model.player;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.*;
-import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.gameexception.LorenzoMovesException;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
@@ -13,9 +15,15 @@ import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.TextColors.*;
+
 public class Lorenzo extends Player{
+
     /**
      * This is the faith track of the player Lorenzo
      */
@@ -26,7 +34,7 @@ public class Lorenzo extends Player{
      */
     private final Deck<SoloActionToken> soloToken;
 
-    public static final String lorenzoNickname = "Lorenzo il Magnifico";
+    public static final String lorenzoNickname = CYAN + "Lorenzo il Magnifico" + RESET ;
 
     /**
      * This method create a Lorenzo instance, which is a modified Player
@@ -35,10 +43,22 @@ public class Lorenzo extends Player{
      *
      */
     public Lorenzo(PlayerToMatch matchReference) {
-        super(Lorenzo.lorenzoNickname, matchReference);
 
-        this.soloToken = new Deck<>();
-        // TODO leggere e inizializzare token da json
+        super(Lorenzo.lorenzoNickname, matchReference);
+        this.faithTrack = new FaithTrack();
+        List<SoloActionToken> init = new ArrayList<>();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+                init = objectMapper.readValue(
+                    new File("src/resources/SoloActionTokens.json"),
+                    new TypeReference<List<SoloActionToken>>(){});
+        }catch (IOException e){
+            System.out.println("The file to create the faith track wasn't found");
+            //TODO LANCIARE UN'ECCEZIONE AL MODEL
+        }
+        this.soloToken = new Deck<>(init);
+        soloToken.shuffle();
     }
 
     /**
@@ -91,16 +111,19 @@ public class Lorenzo extends Player{
      */
     @Override
     public boolean startHisTurn() {
+        super.startHisTurn();
         try {
-            System.out.println("turno di lorenzo, se non ci sono tocken da pescare lancia un eccezione");
+            System.out.println(lorenzoNickname + ": drawing soloActionToken");
             this.soloToken.draw().useEffect(this);
         } catch (EmptyDeckException e) {
-            System.out.println("eccezione lacianta :( manca da leggere e creare i solo token da json");
+
             //TODO dire che qualcosa è andato storto
-            //return false;
+            return false;
         }
-        this.endThisTurn(); // todo riguradare se farlo fare al client o lasciarlo automatico così
-        this.match.endMyTurn();
+        System.out.println(lorenzoNickname + ": " + RED + "FaithPoint" + RESET + " amount -> " + this.faithTrack.getPlayerPosition());
+        super.endThisTurn();
+        //this.endThisTurn(); // todo rigurdare se farlo fare al client o lasciarlo automatico così
+        //this.match.endMyTurn();
         return true;
     }
 
@@ -197,9 +220,8 @@ public class Lorenzo extends Player{
     public void moveFaithMarker(int amount) {
         try {
             this.faithTrack.movePlayer(amount);
-        } catch (Exception e) {
-            System.out.println("faith track exception");
-            //todo dirlo al model
+        } catch (WrongPointsException | IllegalMovesException e) {
+            e.printStackTrace();
         }
     }
 

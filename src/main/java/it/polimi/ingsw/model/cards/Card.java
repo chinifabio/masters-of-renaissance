@@ -1,14 +1,29 @@
 package it.polimi.ingsw.model.cards;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import it.polimi.ingsw.model.cards.effects.DestroyCardsEffect;
 import it.polimi.ingsw.model.cards.effects.Effect;
+import it.polimi.ingsw.model.cards.effects.MoveTwoEffect;
+import it.polimi.ingsw.model.cards.effects.ShuffleMoveOneEffect;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 /**
  * This abstract class generalize the concept of Card, every Card has a cardID and an effect.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
+@JsonSubTypes({
+        @JsonSubTypes.Type(name = "Dev", value = DevCard.class),
+        @JsonSubTypes.Type(name = "Token", value = SoloActionToken.class),
+        @JsonSubTypes.Type(name = "Leader", value = LeaderCard.class)
+})
 public abstract class Card{
 
+    public Card(){}
     /**
      * This is the constructor of the class. It needs a cardID and an effect.
      * @param cardID of the Card.
@@ -42,7 +57,7 @@ public abstract class Card{
      */
     public void useEffect(PlayerReactEffect p){
         effect.use(p);
-    };
+    }
 
 
     /**

@@ -27,7 +27,7 @@ public abstract class Cell {
    protected  VaticanSpace vaticanSpace;
 
    /**
-    * This method is the constructor of the Cell, which takes parameters from Json File
+    * This method is the constructor of the Cell, it is empty because it takes parameters from Json File
     */
    public Cell() {
 

@@ -2,8 +2,7 @@ package it.polimi.ingsw.model.match.match;
 
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
-import it.polimi.ingsw.model.exceptions.game.GameException;
-import it.polimi.ingsw.model.exceptions.game.moves.MainActionDoneException;
+import it.polimi.ingsw.model.exceptions.gameexception.movesexception.MainActionDoneException;
 import it.polimi.ingsw.model.match.DevSetup;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
@@ -127,6 +126,7 @@ public abstract class Match implements PlayerToMatch {
      */
     @Override
     public boolean buyDevCard(LevelDevCard row, ColorDevCard col) {
+        System.out.println("Match: " + turn.getCurPlayer().getNickname() + " buys DevCard -> " + "level: " + row + " color: " + col);
         // TODO aggiornare con devsetup fatto
         return false;
     }
