@@ -142,7 +142,7 @@ public class Resource{
      */
     @Override
     public String toString() {
-        return "resource -> type: "+type.toString()+" amount: " + amount;
+        return "(type: "+type.toString() + "," + " amount: " + amount+")";
     }
 
     /**

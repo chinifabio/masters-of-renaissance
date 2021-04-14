@@ -30,8 +30,7 @@ public class DeckTest {
     @Test
     void cardIDCheck(){
         String ID = "105", ID1 = "120",ID2 = "145";
-        List<Resource> sample = new ArrayList<>();
-        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
+        Production p = null;
         List<Requisite> requisite = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -53,8 +52,7 @@ public class DeckTest {
     @Test
     void victoryPointDevCard(){
         int n = 7;
-        List<Resource> sample = new ArrayList<>();
-        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
+        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -77,8 +75,7 @@ public class DeckTest {
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        List<Resource> sample = new ArrayList<>();
-        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
+        Production p = null;
 
         DevCard c1 = new DevCard("000", new AddProductionEffect(p), 2, lev, col,req);
 
@@ -92,8 +89,7 @@ public class DeckTest {
     @Test
     void victoryPointLeaderCard(){
         int n = 12;
-        List<Resource> sample = new ArrayList<>();
-        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
+        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -109,8 +105,7 @@ public class DeckTest {
      */
     @Test
     void activatedLeaderCard(){
-        List<Resource> sample = new ArrayList<>();
-        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
+        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -131,8 +126,7 @@ public class DeckTest {
     @Test
     void insertCard() {
         Deck<DevCard> d = new Deck<>();
-        List<Resource> sample = new ArrayList<>();
-        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
+        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -163,8 +157,7 @@ public class DeckTest {
     @Test
     void addListOfCards(){
         int n=2;
-        List<Resource> sample = new ArrayList<>();
-        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
+        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -195,8 +188,7 @@ public class DeckTest {
     @Test
     void addOneInsertCard() {
         int n=3;
-        List<Resource> sample = new ArrayList<>();
-        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
+        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -229,8 +221,7 @@ public class DeckTest {
      */
     @Test
     void drawFromDeck(){
-        List<Resource> sample = new ArrayList<>();
-        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
+        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -276,8 +267,7 @@ public class DeckTest {
      */
     @Test
     void discardCards(){
-        List<Resource> sample = new ArrayList<>();
-        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
+        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -321,8 +311,7 @@ public class DeckTest {
      */
     @Test
     void peekCardFromDeck(){
-        List<Resource> sample = new ArrayList<>();
-        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
+        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -370,8 +359,7 @@ public class DeckTest {
      */
     @Test
     void shuffleDeck(){
-        List<Resource> sample = new ArrayList<>();
-        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
+        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -436,8 +424,7 @@ public class DeckTest {
      */
     @Test
     void DevSetup(){
-        List<Resource> sample = new ArrayList<>();
-        Production p = new NormalProduction(ProductionID.BASIC,sample,sample);
+        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);

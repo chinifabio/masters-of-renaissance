@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.resource;
 
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.resource.strategy.DoNothingBehavior;
 import it.polimi.ingsw.model.resource.strategy.GiveFaithPointBehavior;
 import it.polimi.ingsw.model.resource.strategy.LaunchExceptionBehavior;
@@ -137,5 +138,39 @@ public class ResourceBuilder {
         });
 
         return newOne;
+    }
+
+    /**
+     * This method return a list of resources with amount zero for each storable resource type
+     * @return list of storable resource
+     */
+    public static List<Resource> buildListOfStorable() {
+        List<Resource> result = new ArrayList<>();
+        for(ResourceType type : ResourceType.values()) {
+            Resource resource = ResourceBuilder.buildFromType(type, 0);
+            if(resource.isStorable()) result.add(resource);
+        }
+        return result;
+    }
+
+    /**
+     * build a list of all resources
+     * @return the list of all resources
+     */
+    public static List<Resource> buildListOfResource() {
+        List<Resource> result = new ArrayList<>();
+        for(ResourceType type : ResourceType.values()) result.add(buildFromType(type, 0));
+        return result;
+    }
+
+    /**
+     * create a list of resources and merge all the resources of the raw list in input
+     * @param raw raw list of resource to arrange
+     * @return an arranged list of resource
+     */
+    public static List<Resource> rearrangeResourceList(List<Resource> raw) {
+        List<Resource> arranged = ResourceBuilder.buildListOfResource();
+        for(Resource res : raw) arranged.stream().filter(x-> x.equalsType(res)).findAny().orElse(null).merge(res);
+        return arranged;
     }
 }

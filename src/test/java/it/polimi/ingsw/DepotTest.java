@@ -54,10 +54,10 @@ public class DepotTest {
         List<Resource> list = new ArrayList<>();
         boolean exc = false;
 
-        list.add(0,ResourceBuilder.buildShield(5));
+        list.add(0,ResourceBuilder.buildCoin(4));
         list.add(1, ResourceBuilder.buildStone(0));
-        list.add(2,ResourceBuilder.buildServant(2));
-        list.add(3,ResourceBuilder.buildCoin(4));
+        list.add(2,ResourceBuilder.buildShield(5));
+        list.add(3,ResourceBuilder.buildServant(2));
 
 
         depot.insert(ResourceBuilder.buildServant(2));
@@ -67,26 +67,26 @@ public class DepotTest {
 
 
         depot.withdraw(ResourceBuilder.buildCoin(3));
-        list.set(3,ResourceBuilder.buildCoin(1));
+        list.set(0,ResourceBuilder.buildCoin(1));
         assertArrayEquals(list.toArray(), depot.viewAllResources().toArray());
 
 
         depot.withdraw(ResourceBuilder.buildCoin());
-        list.set(3,ResourceBuilder.buildCoin(0));
+        list.set(0,ResourceBuilder.buildCoin(0));
         assertArrayEquals(list.toArray(), depot.viewAllResources().toArray());
 
 
 
         depot.insert(ResourceBuilder.buildServant(2));
         depot.insert(ResourceBuilder.buildStone(2));
-        list.set(2,ResourceBuilder.buildServant(4));
+        list.set(3,ResourceBuilder.buildServant(4));
         list.set(1, ResourceBuilder.buildStone(2));
         assertArrayEquals(list.toArray(), depot.viewAllResources().toArray());
 
 
 
         depot.withdraw(ResourceBuilder.buildServant(4));
-        list.set(2,ResourceBuilder.buildServant(0));
+        list.set(3,ResourceBuilder.buildServant(0));
         assertArrayEquals(list.toArray(), depot.viewAllResources().toArray());
 
         try {

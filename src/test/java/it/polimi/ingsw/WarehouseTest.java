@@ -83,10 +83,10 @@ public class WarehouseTest {
         Warehouse test = new Warehouse();
         List<Resource> list = new ArrayList<>();
 
-        list.add(0,ResourceBuilder.buildShield(0));
-        list.add(1, ResourceBuilder.buildStone(3));
-        list.add(2,ResourceBuilder.buildServant(3));
-        list.add(3,ResourceBuilder.buildCoin(2));
+        list.add(ResourceBuilder.buildCoin(2));
+        list.add(ResourceBuilder.buildStone(3));
+        list.add(ResourceBuilder.buildShield(0));
+        list.add(ResourceBuilder.buildServant(3));
 
 
 
@@ -96,19 +96,19 @@ public class WarehouseTest {
         assertArrayEquals(list.toArray(), test.viewResourcesInStrongbox(DepotSlot.STRONGBOX).toArray());
 
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildCoin(2));
-        list.set(3,ResourceBuilder.buildCoin(4));
+        list.set(0,ResourceBuilder.buildCoin(4));
         assertArrayEquals(list.toArray(), test.viewResourcesInStrongbox(DepotSlot.STRONGBOX).toArray());
 
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildServant(3));
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildStone(3));
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildStone(3));
-        list.set(2,ResourceBuilder.buildServant(6));
+        list.set(3,ResourceBuilder.buildServant(6));
         list.set(1,ResourceBuilder.buildStone(9));
         assertArrayEquals(list.toArray(), test.viewResourcesInStrongbox(DepotSlot.STRONGBOX).toArray());
 
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildShield(4));
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildShield(2));
-        list.set(0,ResourceBuilder.buildShield(6));
+        list.set(2,ResourceBuilder.buildShield(6));
         assertArrayEquals(list.toArray(), test.viewResourcesInStrongbox(DepotSlot.STRONGBOX).toArray());
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildFaithPoint(4));
         assertArrayEquals(list.toArray(), test.viewResourcesInStrongbox(DepotSlot.STRONGBOX).toArray());

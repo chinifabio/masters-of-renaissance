@@ -3,10 +3,10 @@ package it.polimi.ingsw.model.player.personalBoard.warehouse.depot;
 import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiPredicate;
 
 public class Strongbox implements Depot {
@@ -25,11 +25,7 @@ public class Strongbox implements Depot {
      * This method is the constructor of the class
      */
     public Strongbox() {
-        this.resources = new ArrayList<>();
-        this.resources.add(ResourceBuilder.buildShield(0));
-        this.resources.add(ResourceBuilder.buildStone(0));
-        this.resources.add(ResourceBuilder.buildServant(0));
-        this.resources.add(ResourceBuilder.buildCoin(0));
+        this.resources = ResourceBuilder.buildListOfStorable();
 
         this.constraints = new ArrayList<>();
     }
@@ -51,12 +47,8 @@ public class Strongbox implements Depot {
      */
     @Override
     public boolean insert(Resource input) {
-        AtomicBoolean storable = new AtomicBoolean(false);
-        resources.stream().filter(x->x.equalsType(input)).forEach(x->{
-            x.merge(input);
-            storable.set(true);
-        });
-        return storable.get();
+        if(input.isStorable()) return resources.stream().filter(x->x.equalsType(input)).reduce(null, (x, y) -> y).merge(input);
+        else return false;
     }
 
     /**

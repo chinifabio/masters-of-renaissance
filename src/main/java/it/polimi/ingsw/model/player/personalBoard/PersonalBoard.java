@@ -221,7 +221,7 @@ public class PersonalBoard {
 
     /**
      * create a new depot in the warehouse
-     * @param resource the new depot
+     * @param depot the new depot
      */
     public void addDepot(Depot depot) {
     //    try {
