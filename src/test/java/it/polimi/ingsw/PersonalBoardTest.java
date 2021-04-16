@@ -11,6 +11,10 @@ import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
 import it.polimi.ingsw.model.exceptions.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.MissingCardException;
 import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.match.match.Match;
+import it.polimi.ingsw.model.match.match.MultiplayerMatch;
+import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder;
@@ -51,7 +55,22 @@ public class PersonalBoardTest {
         DevCardSlot dcsCenter = DevCardSlot.CENTER;
         DevCardSlot dcsRight = DevCardSlot.RIGHT;
 
-        PersonalBoard personalBoard = new PersonalBoard();
+        Match match = new MultiplayerMatch();
+
+        Player player = null;
+        try {
+            player = new Player("gino",match);
+        } catch (IllegalTypeInProduction e1) {
+            System.out.println("cose");
+        }
+
+        PersonalBoard personalBoard = null;
+        try {
+            personalBoard = new PersonalBoard(player);
+        } catch (IllegalTypeInProduction e2) {
+            System.out.println("cose2");
+        }
+
 
         if (personalBoard.addDevCard(dcsLeft, c1)) {
             assertTrue(c1.equals(personalBoard.viewDevCards().get(dcsLeft)));
@@ -138,7 +157,21 @@ public class PersonalBoardTest {
         LeaderCard c1 = new LeaderCard(ID1, new AddProductionEffect(p), 1, req);
         LeaderCard c2 = new LeaderCard(ID2, new AddProductionEffect(p), 2, req);
 
-        PersonalBoard personalBoard = new PersonalBoard();
+        Match match = new MultiplayerMatch();
+
+        Player player = null;
+        try {
+            player = new Player("gino",match);
+        } catch (IllegalTypeInProduction e1) {
+            System.out.println("cose");
+        }
+
+        PersonalBoard personalBoard = null;
+        try {
+            personalBoard = new PersonalBoard(player);
+        } catch (IllegalTypeInProduction e2) {
+            System.out.println("cose2");
+        }
 
         personalBoard.addLeaderCard(c1);
         try {
@@ -192,7 +225,21 @@ public class PersonalBoardTest {
         LeaderCard c1 = new LeaderCard(ID1, new AddProductionEffect(p), 1, req);
         LeaderCard c2 = new LeaderCard(ID2, new AddProductionEffect(p), 2, req);
 
-        PersonalBoard personalBoard = new PersonalBoard();
+        Match match = new MultiplayerMatch();
+
+        Player player = null;
+        try {
+            player = new Player("gino",match);
+        } catch (IllegalTypeInProduction e1) {
+            System.out.println("cose");
+        }
+
+        PersonalBoard personalBoard = null;
+        try {
+            personalBoard = new PersonalBoard(player);
+        } catch (IllegalTypeInProduction e2) {
+            System.out.println("cose2");
+        }
 
         personalBoard.addLeaderCard(c1);
         personalBoard.addLeaderCard(c2);
@@ -230,7 +277,21 @@ public class PersonalBoardTest {
      */
     @Test
     void Resources(){
-        PersonalBoard personalBoard = new PersonalBoard();
+        Match match = new MultiplayerMatch();
+
+        Player player = null;
+        try {
+            player = new Player("gino",match);
+        } catch (IllegalTypeInProduction e1) {
+            System.out.println("cose");
+        }
+
+        PersonalBoard personalBoard = null;
+        try {
+            personalBoard = new PersonalBoard(player);
+        } catch (IllegalTypeInProduction e2) {
+            System.out.println("cose2");
+        }
 
         System.out.println(personalBoard.viewResources());
 
@@ -244,7 +305,21 @@ public class PersonalBoardTest {
         Resource first = ResourceBuilder.buildFaithPoint(1);
         Resource ten = ResourceBuilder.buildFaithPoint(10);
 
-        PersonalBoard personalBoard = new PersonalBoard();
+        Match match = new MultiplayerMatch();
+
+        Player player = null;
+        try {
+            player = new Player("gino",match);
+        } catch (IllegalTypeInProduction e1) {
+            System.out.println("cose");
+        }
+
+        PersonalBoard personalBoard = null;
+        try {
+            personalBoard = new PersonalBoard(player);
+        } catch (IllegalTypeInProduction e2) {
+            System.out.println("cose2");
+        }
 
         assertEquals(0,personalBoard.FaithMarkerPosition());
         assertTrue(personalBoard.moveFaithMarker(first.amount()));

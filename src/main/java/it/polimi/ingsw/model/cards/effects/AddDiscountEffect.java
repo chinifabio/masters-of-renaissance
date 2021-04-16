@@ -33,7 +33,7 @@ public class AddDiscountEffect extends Effect{
     @Override
     public void use(PlayerReactEffect p) {
         try {
-            p.addDiscount(ResourceBuilder.buildFromType(this.t, 1));
+            p.addDiscount(ResourceBuilder.buildFromType(this.resource, 1));
         } catch (ExtraDiscountException e) {
             System.out.println(e.getMsg());
         }

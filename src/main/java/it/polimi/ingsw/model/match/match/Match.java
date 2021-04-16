@@ -12,13 +12,10 @@ import it.polimi.ingsw.model.match.markettray.MarketTray;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
-import it.polimi.ingsw.model.requisite.Requisite;
-import it.polimi.ingsw.model.resource.Resource;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 public abstract class Match implements PlayerToMatch {
     /**
@@ -120,7 +117,7 @@ public abstract class Match implements PlayerToMatch {
     /**
      * Use the market tray
      *
-     * @param rc    enum to identify if I am pushing row or col
+     * @param rc enum to identify if I am pushing row or col
      * @param index the index of the row or column of the tray
      */
     @Override
@@ -135,8 +132,8 @@ public abstract class Match implements PlayerToMatch {
     /**
      * paint a marble in market tray
      *
-     * @param newColor    the new marble color
-     * @param marbleIndex
+     * @param newColor the new marble color
+     * @param marbleIndex the index of the marble to color
      */
     @Override
     public void paintMarbleInTray(Marble newColor, int marbleIndex) throws UnpaintableMarbleException {

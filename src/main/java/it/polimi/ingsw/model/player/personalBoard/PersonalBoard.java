@@ -257,8 +257,12 @@ public class PersonalBoard {
      * from buffer depot to a legal one
      * @param resource the resource obtained
      */
-    public void obtainResource(Resource resource) {
-        this.warehouse.insertInDepot(DepotSlot.BUFFER,resource);
+    public void obtainResourcePBoard(Resource resource) {
+        try {
+            this.warehouse.insertInDepot(DepotSlot.BUFFER,resource);
+        } catch (UnobtainableResourceException e) {
+            System.out.println(e.getMsg());
+        }
     }
 
 
@@ -269,7 +273,7 @@ public class PersonalBoard {
      */
     public List<Resource> viewResources() {
         List<Resource> temp;
-        temp = this.warehouse.viewResourcesInStrongbox(DepotSlot.STRONGBOX);
+        temp = this.warehouse.viewResourcesInStrongbox();
         for(DepotSlot depotSlot : DepotSlot.values()) {
             if(!(depotSlot == DepotSlot.STRONGBOX) && !(depotSlot == DepotSlot.BUFFER)) {
                 try {
@@ -289,7 +293,7 @@ public class PersonalBoard {
      */
     public List<Resource> askResource(DepotSlot depotSlot) {
         if(depotSlot == DepotSlot.STRONGBOX){
-            return this.warehouse.viewResourcesInStrongbox(DepotSlot.STRONGBOX);
+            return this.warehouse.viewResourcesInStrongbox();
         }
         else{
             List<Resource> temp = new ArrayList<>();
