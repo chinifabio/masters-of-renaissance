@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
-import it.polimi.ingsw.model.exceptions.AlreadyInDeckException;
-import it.polimi.ingsw.model.exceptions.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.LootTypeException;
-import it.polimi.ingsw.model.exceptions.MissingCardException;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.card.MissingCardException;
+import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
@@ -519,7 +519,7 @@ public class DeckTest {
     }
 
     @Test
-    public void cardsFromJSONTest() throws EmptyDeckException, MissingCardException, LootTypeException {
+    public void cardsFromJSONTest() throws MissingCardException, LootTypeException {
         Deck<DevCard> deckDev;
         List<DevCard> init = new ArrayList<>();
 

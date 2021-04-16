@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.exceptions.gameexception.movesexception;
+package it.polimi.ingsw.model.exceptions.game.movesexception;
 
 import static it.polimi.ingsw.TextColors.RESET;
 import static it.polimi.ingsw.TextColors.YELLOW;

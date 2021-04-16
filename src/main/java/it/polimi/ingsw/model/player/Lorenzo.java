@@ -3,9 +3,14 @@ package it.polimi.ingsw.model.player;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.cards.*;
-import it.polimi.ingsw.model.exceptions.*;
-import it.polimi.ingsw.model.exceptions.gameexception.LorenzoMovesException;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
+import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
@@ -14,7 +19,6 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.resource.Resource;
-import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,7 +59,7 @@ public class Lorenzo extends Player{
                     new File("src/resources/SoloActionTokens.json"),
                     new TypeReference<List<SoloActionToken>>(){});
         }catch (IOException e){
-            System.out.println("The file to create the SoloActionTokens wasn't found");
+            System.out.println("The file to create the faith track wasn't found");
             //TODO LANCIARE UN'ECCEZIONE AL MODEL
         }
         this.soloToken = new Deck<>(init);
@@ -111,20 +115,12 @@ public class Lorenzo extends Player{
      * @return true if success, false otherwise
      */
     @Override
-    public boolean startHisTurn() {
+    public boolean startHisTurn() throws NotHisTurnException, TurnStartedException, EmptyDeckException, LorenzoMovesException, WrongPointsException, IllegalMovesException {
         super.startHisTurn();
-        try {
-            System.out.println(lorenzoNickname + ": drawing soloActionToken");
-            this.soloToken.draw().useEffect(this);
-        } catch (EmptyDeckException e) {
-
-            //TODO dire che qualcosa è andato storto
-            return false;
-        }
+        System.out.println(lorenzoNickname + ": drawing soloActionToken");
+        this.soloToken.draw().useEffect(this);
         System.out.println(lorenzoNickname + ": " + RED + "FaithPoint" + RESET + " amount -> " + this.faithTrack.getPlayerPosition());
         super.endThisTurn();
-        //this.endThisTurn(); // todo rigurdare se farlo fare al client o lasciarlo automatico così
-        //this.match.endMyTurn();
         return true;
     }
 
@@ -134,12 +130,8 @@ public class Lorenzo extends Player{
      * @param newProd the new production
      */
     @Override
-    public void addProduction(Production newProd) {
-        try {
-            throw new LorenzoMovesException("exception: ");
-        } catch (LorenzoMovesException e) {
-            // todo dirlo al model
-        }
+    public void addProduction(Production newProd) throws LorenzoMovesException {
+        throw new LorenzoMovesException("lorenzo non può comportarsi come un player normale");
     }
 
     /**
@@ -148,12 +140,8 @@ public class Lorenzo extends Player{
      * @param depot new depot to be added to Warehouse depots
      */
     @Override
-    public void addDepot(Depot depot) {
-        try {
-            throw new LorenzoMovesException("exception: ");
-        } catch (LorenzoMovesException e) {
-            // todo dirlo al model
-        }
+    public void addDepot(Depot depot) throws LorenzoMovesException {
+        throw new LorenzoMovesException("lorenzo non può comportarsi come un player normale");
     }
 
     /**
@@ -162,12 +150,8 @@ public class Lorenzo extends Player{
      * @param discount the new discount
      */
     @Override
-    public void addDiscount(Resource discount) {
-        try {
-            throw new LorenzoMovesException("exception: ");
-        } catch (LorenzoMovesException e) {
-            // todo dirlo al model
-        }
+    public void addDiscount(Resource discount) throws LorenzoMovesException {
+        throw new LorenzoMovesException("lorenzo non può comportarsi come un player normale");
     }
 
     /**
@@ -176,26 +160,8 @@ public class Lorenzo extends Player{
      * @param conversion the resource type to transform white marbles
      */
     @Override
-    public void addMarbleConversion(Marble conversion) {
-        try {
-            throw new LorenzoMovesException("exception: ");
-        } catch (LorenzoMovesException e) {
-            // todo dirlo al model
-        }
-    }
-
-    /**
-     * This method insert the Resources obtained from the Market to the Depots
-     *
-     * @param resource the resource
-     */
-    @Override
-    public void obtainResource(Resource resource) {
-        try {
-            throw new LorenzoMovesException("exception: ");
-        } catch (LorenzoMovesException e) {
-            // todo dirlo al model
-        }
+    public void addMarbleConversion(Marble conversion) throws LorenzoMovesException {
+        throw new LorenzoMovesException("lorenzo non può comportarsi come un player normale");
     }
 
     /**
@@ -204,12 +170,8 @@ public class Lorenzo extends Player{
      * @param marble the resource in form of marble
      */
     @Override
-    public void obtainResource(Marble marble) {
-        try {
-            throw new LorenzoMovesException("exception: ");
-        } catch (LorenzoMovesException e) {
-            // todo dirlo al model
-        }
+    public void obtainResource(Marble marble) throws LorenzoMovesException {
+        throw new LorenzoMovesException("lorenzo non può comportarsi come un player normale");
     }
 
     /**
@@ -218,12 +180,8 @@ public class Lorenzo extends Player{
      * @param amount how many cells the marker moves
      */
     @Override
-    public void moveFaithMarker(int amount) {
-        try {
-            this.faithTrack.movePlayer(amount);
-        } catch (WrongPointsException | IllegalMovesException e) {
-            e.printStackTrace();
-        }
+    public void moveFaithMarker(int amount) throws WrongPointsException, IllegalMovesException {
+        this.faithTrack.movePlayer(amount, this.match);
     }
 
     /**

@@ -3,12 +3,16 @@ package it.polimi.ingsw.model.player.personalBoard;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
-import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
-import it.polimi.ingsw.model.exceptions.WrongDepotException;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.productionException.UnknownUnspecifiedException;
+import it.polimi.ingsw.model.exceptions.warehouse.*;
 import it.polimi.ingsw.model.cards.LevelDevCard;
-import it.polimi.ingsw.model.exceptions.*;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
-import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
+import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.card.MissingCardException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
+import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
@@ -17,7 +21,6 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
-import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.*;
@@ -31,78 +34,60 @@ public class PersonalBoard {
     /**
      * This attribute is the list of the available productions that the Player could activates
      */
-    private Map<ProductionID, Production> availableProductions;
-
-    /**
-     * This attribute is the list of the available Discount applied when the player buys DevCard
-     */
-    private List<ResourceRequisite> availableDiscount;
-
-    /**
-     * This attribute is the list of the available resources in the Warehouse
-     */
-    private List<ResourceRequisite> availableResources;
+    private final Map<ProductionID, Production> availableProductions;
 
     /**
      * This attribute is the Deck of the LeaderCards owned by the Player
      */
-    private Deck<LeaderCard> leaderDeck;
+    private final Deck<LeaderCard> leaderDeck;
 
     /**
      * This attribute is the Deck of the DevCards owned by the Player and their position in the PersonalBoard
      */
-    private Map<DevCardSlot, Deck<DevCard>> devDeck;
+    private final Map<DevCardSlot, Deck<DevCard>> devDeck;
 
     /**
      * This attribute maps the ProductionID to the DevCardSlot
      */
-    private Map<DevCardSlot, ProductionID> productionSlotMap;
-
-    /**
-     * This attribute contains the function that maps MarketMarble to their respective Resources
-     */
-    private Function<MarbleColor, ResourceRequisite> marbleConversion;
+    private final Map<DevCardSlot, ProductionID> productionSlotMap;
 
     /**
      * This attribute is the Warehouse contained into the PersonalBoard
      */
-    private Warehouse warehouse;
+    private final Warehouse warehouse;
 
     /**
      * This attribute is the FaithTrack of the PersonalBoard
      */
-    private FaithTrack faithTrack;
+    private final FaithTrack faithTrack;
 
     /**
      * This attribute is the Player that own this PersonalBoard
      */
-    private Player player;
+    private final Player player;
 
 
     /**
      * This method is the constructor of the class
+     * @param player the player who own this personal board
      */
     public PersonalBoard(Player player) throws IllegalTypeInProduction {
         this.availableProductions = new EnumMap<>(ProductionID.class);
-        this.availableDiscount = new ArrayList<>();
-        this.availableResources = new ArrayList<>();
         this.leaderDeck = new Deck<>();
+
         this.devDeck = new EnumMap<>(DevCardSlot.class);
         devDeck.put(DevCardSlot.LEFT,new Deck<>());
         devDeck.put(DevCardSlot.CENTER,new Deck<>());
         devDeck.put(DevCardSlot.RIGHT,new Deck<>());
-        //TODO Da guardare meglio
-        this.marbleConversion = marbleColor -> null;
+
+        this.productionSlotMap = new EnumMap<>(DevCardSlot.class);
+        productionSlotMap.put(DevCardSlot.LEFT, ProductionID.LEFT);
+        productionSlotMap.put(DevCardSlot.CENTER, ProductionID.CENTER);
+        productionSlotMap.put(DevCardSlot.RIGHT, ProductionID.RIGHT);
+
         this.warehouse = new Warehouse(player);
         this.faithTrack = new FaithTrack();
         this.player = player;
-    }
-
-    /**
-     * This method add a Discount into the list of availableDiscount
-     */
-    public void addDiscount(){
-        //TODO it's probably better if the player has them
     }
 
     /**
@@ -111,22 +96,16 @@ public class PersonalBoard {
      * @param card is the DevCard bought by the Player
      */
     public boolean addDevCard(DevCardSlot slot, DevCard card){
-        boolean result = false;
-        Deck<DevCard> temp = this.devDeck.get(slot);
-        if(temp == null) temp = new Deck<>();
-
-        // queste due righe sono inutili se nel costruttore creo i devDeck, ancora da decidere cosa fare
-
-        if(checkDevCard(slot,card)){
+        if (checkDevCard(slot, card)) {
             try {
-                temp.insertCard(card);
-                result=true;
-                this.devDeck.put(slot,temp);
-            } catch (AlreadyInDeckException e) {          // it should not be possible to enter this catch, the level is different -> can't have two cards with same ID
+                this.devDeck.get(slot).insertCard(card);
+                return true;
+            } catch (AlreadyInDeckException e) {
+                e.printStackTrace();
                 System.out.println(e.getMsg() + "big problem, this should be an unreachable statement");
             }
         }
-        return result;
+        return false;
     }
 
     /**
@@ -135,7 +114,7 @@ public class PersonalBoard {
      * @param card the card that will be inserted.
      * @return true if the card can be placed into that position.
      */
-    public boolean checkDevCard(DevCardSlot slot, DevCard card) {
+    private boolean checkDevCard(DevCardSlot slot, DevCard card) {
         boolean result = false;
         Deck<DevCard> temp = this.devDeck.get(slot);
         if(temp == null) temp = new Deck<>();
@@ -146,7 +125,7 @@ public class PersonalBoard {
             if (card.getLevel() == LevelDevCard.LEVEL1) result = true;
         }
         return result;
-        }
+    }
 
 
     /**
@@ -180,13 +159,19 @@ public class PersonalBoard {
 
     /**
      * This method activate the SpecialAbility of the LeaderCard
-     * @param card is the LeaderCard
+     * @param selected is the LeaderCard
      */
-    public void activateLeaderCard(String card){    //TODO implementation - effect
+    public void activateLeaderCard(String selected) throws MissingCardException {    //TODO implementation - effect
         try {
-            this.leaderDeck.peekCard(card).activate();
-        } catch (MissingCardException e) {
-            System.out.println(e.getMsg());
+            LeaderCard card = this.leaderDeck.peekCard(selected);
+            card.activate();
+            card.useEffect(this.player);
+        } catch (LorenzoMovesException e) {
+            e.printStackTrace();
+        } catch (WrongPointsException e) {
+            e.printStackTrace();
+        } catch (IllegalMovesException e) {
+            e.printStackTrace();
         }
     }
 
@@ -211,12 +196,6 @@ public class PersonalBoard {
     public Deck<LeaderCard> viewLeaderCard() {
         return this.leaderDeck;
     }
-
-    /**
-     * This method convert the MarketMarble into their respective Resources
-     * @param func is the function that do the conversion
-     */
-    public void MarbleConversion(Function<MarbleColor, ResourceRequisite> func){}
 
     /**
      * This method add a new Production into the list of availableProductions
@@ -262,6 +241,10 @@ public class PersonalBoard {
             this.warehouse.insertInDepot(DepotSlot.BUFFER,resource);
         } catch (UnobtainableResourceException e) {
             System.out.println(e.getMsg());
+        } catch (WrongPointsException e) {
+            e.printStackTrace();
+        } catch (IllegalMovesException e) {
+            e.printStackTrace();
         }
     }
 
@@ -307,11 +290,11 @@ public class PersonalBoard {
      * @param depot the new depot
      */
     public void addDepot(Depot depot) {
-        //    try {
-        //        warehouse.addDepot(depot);
-        //    } catch (ExtraDepotsException e) {
-        //        System.out.println(e.getMsg());
-        //    }
+        try {
+            warehouse.addDepot(depot);
+        } catch (ExtraDepotsException e) {
+            System.out.println(e.getMsg());
+        }
     }
 
     /**
@@ -322,7 +305,7 @@ public class PersonalBoard {
      * @throws NegativeResourcesDepotException if the Depot "from" hasn't enough resources to move
      * @throws WrongDepotException if the Depot "from" is empty or doesn't have the same type of resources of "resource"
      */
-    public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource resource) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException {
+    public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource resource) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
         warehouse.moveBetweenDepot(from,to, resource);
     }
 
@@ -331,10 +314,10 @@ public class PersonalBoard {
      * @param amount the amount to move.
      * @return true if the move is allowed, false otherwhise.
      */
-    public boolean moveFaithMarker(int amount) {
+    public boolean moveFaithMarker(int amount, PlayerToMatch pm) {
         boolean result = false;
         try {
-            this.faithTrack.movePlayer(amount);
+            this.faithTrack.movePlayer(amount, pm);
             result = true;
         } catch (IllegalMovesException e) {
             System.out.println(e.getMsg());
@@ -366,5 +349,15 @@ public class PersonalBoard {
      * @param resource the resource obtained
      */
     public void obtainResource(Resource resource) {
+    }
+
+    /**
+     * This method moves a resource from a depot to a production
+     * @param from the source of the resource to move
+     * @param dest the destination of the resource to move
+     * @param loot the resource to move
+     */
+    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
+        this.warehouse.moveInProduction(from, dest, loot);
     }
 }

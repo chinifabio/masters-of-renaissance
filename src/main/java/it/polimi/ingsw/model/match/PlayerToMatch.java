@@ -3,10 +3,18 @@ package it.polimi.ingsw.model.match;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
-import it.polimi.ingsw.model.exceptions.UnpaintableMarbleException;
-import it.polimi.ingsw.model.exceptions.gameexception.GameException;
-import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
-import it.polimi.ingsw.model.exceptions.gameexception.movesexception.MainActionDoneException;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
+import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
+import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
+import it.polimi.ingsw.model.exceptions.game.GameException;
+import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.MainActionDoneException;
+import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
@@ -36,7 +44,7 @@ public interface PlayerToMatch {
      * @param index the index of the row or column of the tray
      * @param rc enum to identify if I am pushing row or col
      */
-    void useMarketTray(RowCol rc, int index) throws MainActionDoneException, OutOfBoundMarketTrayException, GameException;
+    void useMarketTray(RowCol rc, int index) throws MainActionDoneException, OutOfBoundMarketTrayException, GameException, UnobtainableResourceException, WrongPointsException, IllegalMovesException;
 
     /**
      * return a view of the dev setup. It is shown only the first card of each decks
@@ -50,7 +58,7 @@ public interface PlayerToMatch {
      * @param row the row of the card required
      * @return true if there where no issue, false instead
      */
-    boolean buyDevCard(LevelDevCard row, ColorDevCard col);
+    boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws NoRequisiteException, NotHisTurnException, MainActionDoneException;
 
     /**
      * Method called when player do action such that other players obtain faith point
@@ -75,5 +83,5 @@ public interface PlayerToMatch {
      * Tells to the match the end of the player turn;
      * @return
      */
-    boolean endMyTurn();
+    boolean endMyTurn() throws NotHisTurnException, TurnStartedException, EmptyDeckException, LorenzoMovesException, WrongPointsException, IllegalMovesException;
 }

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.production;
 
-import it.polimi.ingsw.model.exceptions.productionException.IllegalNormalProduction;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 
@@ -20,8 +20,8 @@ public class NormalProduction extends Production {
     /**
      * This method is the constructor of the class
      *
-     * @param required
-     * @param output
+     * @param required required list of resource
+     * @param output output list of resource
      */
     public NormalProduction(List<Resource> required, List<Resource> output) throws IllegalTypeInProduction {
         super(required, output, Arrays.asList(ResourceType.EMPTY, ResourceType.UNKNOWN));
@@ -82,7 +82,7 @@ public class NormalProduction extends Production {
     /**
      * return a copy of the output without checking if added resource.
      * It is legal because in the warehouse we store only Production and this is a NormalProduction method
-     * @return
+     * @return copy of the output
      */
     public List<Resource> viewOutput() {
         List<Resource> clone = new ArrayList<>(this.output.size());

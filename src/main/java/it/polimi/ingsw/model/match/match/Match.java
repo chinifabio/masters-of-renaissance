@@ -1,10 +1,17 @@
 package it.polimi.ingsw.model.match.match;
 
 import it.polimi.ingsw.model.cards.*;
-import it.polimi.ingsw.model.exceptions.NoRequisiteException;
-import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
-import it.polimi.ingsw.model.exceptions.UnpaintableMarbleException;
-import it.polimi.ingsw.model.exceptions.gameexception.movesexception.MainActionDoneException;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
+import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
+import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
+import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.MainActionDoneException;
+import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.cards.DevSetup;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
@@ -92,7 +99,7 @@ public abstract class Match implements PlayerToMatch {
      * start the game: start the turn of the first player
      * @return true if success, false instead
      */
-    public abstract boolean startGame();
+    public abstract boolean startGame() throws IllegalMovesException, NotHisTurnException, TurnStartedException, EmptyDeckException, LorenzoMovesException, WrongPointsException;
 
     /**
      * request to other player to flip the pope tile passed in the parameter
@@ -121,7 +128,7 @@ public abstract class Match implements PlayerToMatch {
      * @param index the index of the row or column of the tray
      */
     @Override
-    public void useMarketTray(RowCol rc, int index) throws MainActionDoneException, OutOfBoundMarketTrayException {
+    public void useMarketTray(RowCol rc, int index) throws MainActionDoneException, OutOfBoundMarketTrayException, UnobtainableResourceException, LorenzoMovesException, WrongPointsException, IllegalMovesException {
         switch (rc) {
             case COL: this.marketTray.pushCol(index, turn.getCurPlayer());
             case ROW: this.marketTray.pushRow(index, turn.getCurPlayer());
@@ -165,21 +172,13 @@ public abstract class Match implements PlayerToMatch {
      * @return true if there where no issue, false instead
      */
     @Override
-    public boolean buyDevCard(LevelDevCard row, ColorDevCard col) {
+    public boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws NoRequisiteException, NotHisTurnException, MainActionDoneException {
         System.out.println("Match: " + this.turn.getCurPlayer().getNickname() + " tries to buy DevCard -> " + "level: " + row + " color: " + col);
-        try {
-            if (this.turn.getCurPlayer().hasRequisite(this.devSetup.showDevDeck(row, col).getCost(),row,col)){
-                this.turn.getCurPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
-                System.out.println();
-                return true;
-            }
-        } catch(NoRequisiteException e1){
-            System.out.println("problema, manca il requisite della carta");
-            return false; //TODO it should never enter here
-        } catch(IndexOutOfBoundsException e2){
-            System.out.println("Pescata da un mazzo vuoto!");
-        }
 
+        if (this.turn.getCurPlayer().hasRequisite(this.devSetup.showDevDeck(row, col).getCost(),row,col)) {
+            this.turn.getCurPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
+            return true;
+        }
         return false;
     }
 
@@ -190,7 +189,15 @@ public abstract class Match implements PlayerToMatch {
      */
     @Override
     public void othersPlayersObtainFaithPoint(int amount) {
-        turn.getOtherPlayer().forEach(x -> x.moveFaithMarker(amount));
+        for (Player x : turn.getOtherPlayer()) {
+            try {
+                x.moveFaithMarker(amount);
+            } catch (WrongPointsException e) {
+                e.printStackTrace();
+            } catch (IllegalMovesException e) {
+                e.printStackTrace();
+            } // todo lanciare eccezione al model
+        }
     }
 
 
@@ -199,7 +206,7 @@ public abstract class Match implements PlayerToMatch {
      * @return true if success
      */
     @Override
-    public boolean endMyTurn() {
+    public boolean endMyTurn() throws NotHisTurnException, TurnStartedException, EmptyDeckException, LorenzoMovesException, WrongPointsException, IllegalMovesException {
         return this.turn.nextPlayer();
     }
 }

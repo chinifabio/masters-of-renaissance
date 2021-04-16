@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.exceptions.productionException;
+package it.polimi.ingsw.model.exceptions.warehouse.production;
 
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 

@@ -7,7 +7,9 @@ import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
 import it.polimi.ingsw.model.cards.effects.DestroyCardsEffect;
 import it.polimi.ingsw.model.cards.effects.MoveTwoEffect;
 import it.polimi.ingsw.model.cards.effects.ShuffleMoveOneEffect;
-import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 /**
@@ -26,5 +28,5 @@ public interface ObtainStrategy {
      * @param player the player who obtain the resource
      * @throws UnobtainableResourceException launched if the resource is not obtainable
      */
-    void obtain(PlayerReactEffect player) throws UnobtainableResourceException;
+    void obtain(PlayerReactEffect player) throws UnobtainableResourceException, WrongPointsException, IllegalMovesException;
 }

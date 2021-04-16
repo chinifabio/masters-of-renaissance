@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 
 import com.fasterxml.jackson.annotation.*;
-import it.polimi.ingsw.model.exceptions.UnpaintableMarbleException;
+import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -71,9 +71,9 @@ public class Marble {
     }
 
     /**
-     *
-     * @param painted
-     * @throws UnpaintableMarbleException
+     * paint the marble
+     * @param painted new marble color
+     * @throws UnpaintableMarbleException this class is not paintable
      */
     public void paint(Marble painted) throws UnpaintableMarbleException {
         throw new UnpaintableMarbleException();

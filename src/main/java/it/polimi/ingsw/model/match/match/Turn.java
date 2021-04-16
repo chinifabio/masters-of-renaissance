@@ -1,5 +1,11 @@
 package it.polimi.ingsw.model.match.match;
 
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.player.Player;
 
 import java.util.ArrayList;
@@ -69,7 +75,7 @@ public class Turn {
      * set the new current player and return its instance
      * @return succeed of the operation
      */
-    public boolean nextPlayer(){
+    public boolean nextPlayer() throws TurnStartedException, NotHisTurnException, EmptyDeckException, LorenzoMovesException, WrongPointsException, IllegalMovesException {
         if((curPlayer + 1) > (playerOrder.size() - 1)) curPlayer = 0;
         else curPlayer++;
         return playerOrder.get(curPlayer).startHisTurn();

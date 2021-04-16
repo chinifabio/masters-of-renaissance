@@ -1,20 +1,14 @@
 package it.polimi.ingsw;
 
-import static org.junit.jupiter.api.Assertions.*;
-import it.polimi.ingsw.model.exceptions.IllegalMovesException;
-import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.state.MainActionDoneState;
-import it.polimi.ingsw.model.player.state.NoActionDoneState;
-import it.polimi.ingsw.model.player.state.NotHisTurnState;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
 import org.junit.jupiter.api.Test;
 
 public class PlayerStateTest {
     /**
-     * test a possible lifecycle of a player in his turn testing if throw exception to wrong input
-     * @throws IllegalMovesException
+     * test a possible lifecycle of a player in his turn testing if throw exception to wrong inpu
      */
     @Test
-    public void allInput() throws IllegalMovesException { /*
+    public void allInput() { /*
         Player player = new Player("dummy", null);
 
         // not his turn

@@ -5,7 +5,7 @@ public enum LevelDevCard {
 
     private final int levelCard;
 
-    private LevelDevCard(int levelCard){
+    LevelDevCard(int levelCard){
         this.levelCard = levelCard;
     }
 

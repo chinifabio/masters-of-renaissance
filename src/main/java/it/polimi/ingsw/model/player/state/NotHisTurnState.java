@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.player.state;
 
-import it.polimi.ingsw.model.exceptions.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
 
 public class NotHisTurnState extends State {
     /**
@@ -23,16 +23,16 @@ public class NotHisTurnState extends State {
      * player has done a leader action
      */
     @Override
-    public void doMainActionInput() throws IllegalMovesException {
-        throw new IllegalMovesException("main action not in the player turn");
+    public void doMainActionInput() throws NotHisTurnException {
+        throw new NotHisTurnException("main action not in the player turn");
     }
 
     /**
      * player end his turn
      */
     @Override
-    public void endTurnInput() throws IllegalMovesException {
-        throw new IllegalMovesException("end turn not in the player turn");
+    public void endTurnInput() throws NotHisTurnException {
+        throw new NotHisTurnException("end turn not in the player turn");
     }
 
     /**

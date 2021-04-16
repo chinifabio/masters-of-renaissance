@@ -2,14 +2,17 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
-import it.polimi.ingsw.model.exceptions.UnpaintableMarbleException;
-import it.polimi.ingsw.model.exceptions.gameexception.movesexception.MainActionDoneException;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
+import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.MainActionDoneException;
+import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
-import it.polimi.ingsw.model.match.markettray.MarkerMarble.PaintableMarble;
 import it.polimi.ingsw.model.match.markettray.MarketTray;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
@@ -60,7 +63,11 @@ public class MarketTrayTest {
 
             try {
                 tray.pushCol(shiftCol, player);
-            } catch (OutOfBoundMarketTrayException | MainActionDoneException e) {
+            } catch (OutOfBoundMarketTrayException | MainActionDoneException | UnobtainableResourceException | LorenzoMovesException e) {
+                e.printStackTrace();
+            } catch (WrongPointsException e) {
+                e.printStackTrace();
+            } catch (IllegalMovesException e) {
                 e.printStackTrace();
             } finally {
                 Marble temp = slide;
@@ -100,6 +107,14 @@ public class MarketTrayTest {
             try{
                 tray.pushRow(shiftRow, player);
             } catch (OutOfBoundMarketTrayException | MainActionDoneException e) {
+                e.printStackTrace();
+            } catch (UnobtainableResourceException e) {
+                e.printStackTrace();
+            } catch (LorenzoMovesException e) {
+                e.printStackTrace();
+            } catch (WrongPointsException e) {
+                e.printStackTrace();
+            } catch (IllegalMovesException e) {
                 e.printStackTrace();
             } finally {
                 Marble temp = slide;
@@ -213,7 +228,5 @@ public class MarketTrayTest {
         assertEquals(3, map2.get(ResourceType.STONE));
         assertEquals(2, map2.get(ResourceType.COIN));
         assertEquals(1, map2.get(ResourceType.FAITHPOINT));
-
-
     }
 }

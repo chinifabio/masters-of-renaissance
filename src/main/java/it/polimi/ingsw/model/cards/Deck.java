@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.cards;
 
-import it.polimi.ingsw.model.exceptions.AlreadyInDeckException;
-import it.polimi.ingsw.model.exceptions.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.MissingCardException;
+import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,16 +1,13 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse;
 
-import it.polimi.ingsw.model.exceptions.ExtraDepotsException;
-import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
-import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
-import it.polimi.ingsw.model.exceptions.WrongDepotException;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalNormalProduction;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
 import it.polimi.ingsw.model.exceptions.productionException.UnknownUnspecifiedException;
-import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.exceptions.warehouse.*;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
-import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.*;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.*;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -131,7 +128,7 @@ public class Warehouse {
      * @throws NegativeResourcesDepotException if the Depot "from" hasn't enough resources to move
      * @throws WrongDepotException if the Depot "from" is empty or doesn't have the same type of resources of "resource"
      */
-    public boolean moveBetweenDepot(DepotSlot from, DepotSlot dest, Resource resource) throws NegativeResourcesDepotException, WrongDepotException, UnobtainableResourceException {
+    public boolean moveBetweenDepot(DepotSlot from, DepotSlot dest, Resource resource) throws NegativeResourcesDepotException, WrongDepotException, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
         MoveResource moveResource = new MoveResource(from, dest, resource);
         AtomicBoolean testResult = new AtomicBoolean(true);
         this.constraint.forEach(x -> {
@@ -155,7 +152,7 @@ public class Warehouse {
     }
 
 
-    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource resource) throws NegativeResourcesDepotException, UnobtainableResourceException, UnknownUnspecifiedException {
+    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource resource) throws NegativeResourcesDepotException, UnobtainableResourceException, UnknownUnspecifiedException, WrongPointsException, IllegalMovesException {
         ProductionRecord temp = new ProductionRecord(from, dest, resource);
         if (removeFromDepot(from, resource)){
             if (availableProductions.get(dest).insertResource(resource)){
@@ -175,7 +172,7 @@ public class Warehouse {
     /**
      * This method activates the productions selected by the player
      */
-    public boolean activateProductions() throws UnobtainableResourceException {
+    public boolean activateProductions() throws UnobtainableResourceException, WrongPointsException, IllegalMovesException {
 
         for (Map.Entry<ProductionID, Production> entry : availableProductions.entrySet()) {
             if (entry.getValue().isSelected() && !entry.getValue().activate()){
@@ -203,7 +200,7 @@ public class Warehouse {
      * @param resource is the resource to insert into the Depot
      * @return true if the resources are correctly inserted
      */
-    public boolean insertInDepot(DepotSlot type, Resource resource) throws UnobtainableResourceException {
+    public boolean insertInDepot(DepotSlot type, Resource resource) throws UnobtainableResourceException, WrongPointsException, IllegalMovesException {
         resource.onObtain(player);
         if (resource.isStorable()) {
             if (!depots.get(type).checkTypeDepot()) {
@@ -249,7 +246,7 @@ public class Warehouse {
         return depots.get(DepotSlot.STRONGBOX).viewAllResources();
     }
 
-    public void clearProduction() throws UnobtainableResourceException {
+    public void clearProduction() throws UnobtainableResourceException, WrongPointsException, IllegalMovesException {
         restoreProductions();
         for (Map.Entry<ProductionID, Production> entry : availableProductions.entrySet()) {
             entry.getValue().reset();
@@ -265,7 +262,7 @@ public class Warehouse {
         }
     }
 
-    public boolean restoreProductions() throws UnobtainableResourceException {
+    public boolean restoreProductions() throws UnobtainableResourceException, WrongPointsException, IllegalMovesException {
         for (ProductionRecord record : movesCache){
             if(!insertInDepot(record.getFrom(), record.getResources())) return false;
         }

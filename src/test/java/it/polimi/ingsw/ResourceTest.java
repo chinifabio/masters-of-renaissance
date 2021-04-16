@@ -2,8 +2,10 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -66,6 +68,10 @@ public class ResourceTest {
             unknown.onObtain(player);
         } catch (UnobtainableResourceException e) {
             result = true;
+        } catch (WrongPointsException e) {
+            e.printStackTrace();
+        } catch (IllegalMovesException e) {
+            e.printStackTrace();
         }
         assertTrue(result);
     }

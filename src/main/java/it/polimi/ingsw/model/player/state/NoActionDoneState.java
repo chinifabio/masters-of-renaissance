@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.player.state;
 
-import it.polimi.ingsw.model.exceptions.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
 
 public class NoActionDoneState extends State {
     /**
@@ -15,8 +15,8 @@ public class NoActionDoneState extends State {
      * player start the turn
      */
     @Override
-    public void startTurnInput() throws IllegalMovesException {
-        throw new IllegalMovesException("turn already started");
+    public void startTurnInput() throws TurnStartedException {
+        throw new TurnStartedException("turn already started");
     }
 
     /**

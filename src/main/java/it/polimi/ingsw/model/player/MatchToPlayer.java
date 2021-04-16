@@ -4,8 +4,14 @@ import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
-import it.polimi.ingsw.model.exceptions.NoRequisiteException;
-import it.polimi.ingsw.model.exceptions.gameexception.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.MainActionDoneException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
+import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.model.requisite.Requisite;
 
@@ -34,7 +40,7 @@ public interface MatchToPlayer {
      * This method adds a DevCard to the player's personal board, using resources taken from the Warehouse
      * @param newDevCard the dev card received that need to be stored in the personal board
      */
-    void receiveDevCard(DevCard newDevCard);
+    void receiveDevCard(DevCard newDevCard) throws NotHisTurnException, MainActionDoneException;
 
     /**
      * This method flips the PopeTile when the Player is in a Vatican Space or passed the relative PopeSpace
@@ -46,5 +52,5 @@ public interface MatchToPlayer {
      * starts the turn of the player;
      * @return true if success, false otherwise
      */
-    boolean startHisTurn();
+    boolean startHisTurn() throws IllegalMovesException, TurnStartedException, NotHisTurnException, EmptyDeckException, LorenzoMovesException, WrongPointsException;
 }

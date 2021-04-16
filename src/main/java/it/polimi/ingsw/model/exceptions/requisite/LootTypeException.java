@@ -1,9 +1,12 @@
-package it.polimi.ingsw.model.exceptions;
+package it.polimi.ingsw.model.exceptions.requisite;
 
 import static it.polimi.ingsw.TextColors.RESET;
 import static it.polimi.ingsw.TextColors.YELLOW;
 
-public class WrongPointsException extends Exception{
+/**
+ * exception thrown when wrong method is invoked in a subclass of Loot
+ */
+public class LootTypeException extends Exception {
     /**
      * msg to identify the error
      */
@@ -13,7 +16,7 @@ public class WrongPointsException extends Exception{
      * costructor that save the message to handle
      * @param msg string
      */
-    public WrongPointsException(String msg) {
+    public LootTypeException(String msg) {
         this.msg = msg;
     }
 

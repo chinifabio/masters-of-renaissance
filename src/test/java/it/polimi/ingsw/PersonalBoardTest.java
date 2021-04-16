@@ -8,9 +8,10 @@ import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
-import it.polimi.ingsw.model.exceptions.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.MissingCardException;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.card.MissingCardException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
+import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
@@ -136,7 +137,7 @@ public class PersonalBoardTest {
      * This test creates two LeaderCards, adds them to the deck and activate them.
      */
     @Test
-    void ActivateLeaderCard(){
+    void ActivateLeaderCard() throws MissingCardException {
         String ID1="000", ID2="111";
         List<Resource> sample = new ArrayList<>();
 
@@ -301,7 +302,7 @@ public class PersonalBoardTest {
      * This test create a personalBoard and moves the player and Lorenzo on its faith track.
      */
     @Test
-    void FaithTrackMoves(){
+    void FaithTrackMoves() throws IllegalTypeInProduction {
         Resource first = ResourceBuilder.buildFaithPoint(1);
         Resource ten = ResourceBuilder.buildFaithPoint(10);
 
@@ -311,28 +312,38 @@ public class PersonalBoardTest {
         try {
             player = new Player("gino",match);
         } catch (IllegalTypeInProduction e1) {
-            System.out.println("cose");
+            fail();
+        }
+        Player player2 = null;
+        try {
+            player2 = new Player("Gino",match);
+        } catch (IllegalTypeInProduction e1) {
+            fail();
         }
 
         PersonalBoard personalBoard = null;
         try {
             personalBoard = new PersonalBoard(player);
         } catch (IllegalTypeInProduction e2) {
-            System.out.println("cose2");
+            fail();
         }
 
+        Match pm = new MultiplayerMatch();
+        pm.playerJoin(player2);
+        pm.playerJoin(player);
+
         assertEquals(0,personalBoard.FaithMarkerPosition());
-        assertTrue(personalBoard.moveFaithMarker(first.amount()));
+        assertTrue(personalBoard.moveFaithMarker(first.amount(), pm));
         assertEquals(1,personalBoard.FaithMarkerPosition());
-        assertTrue(personalBoard.moveFaithMarker(first.amount()));
+        assertTrue(personalBoard.moveFaithMarker(first.amount(), pm));
         assertEquals(2,personalBoard.FaithMarkerPosition());
-        assertTrue(personalBoard.moveFaithMarker(ten.amount()));
+        assertTrue(personalBoard.moveFaithMarker(ten.amount(), pm));
         assertEquals(12,personalBoard.FaithMarkerPosition());
-        assertTrue(personalBoard.moveFaithMarker(ten.amount()));
+        assertTrue(personalBoard.moveFaithMarker(ten.amount(), pm));
         assertEquals(22,personalBoard.FaithMarkerPosition());
-        assertTrue(personalBoard.moveFaithMarker(ten.amount()));
+        assertTrue(personalBoard.moveFaithMarker(ten.amount(), pm));
         assertEquals(24,personalBoard.FaithMarkerPosition());
-        assertFalse(personalBoard.moveFaithMarker(first.amount()));
+        assertFalse(personalBoard.moveFaithMarker(first.amount(), pm));
 
     }
 

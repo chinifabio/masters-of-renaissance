@@ -1,8 +1,6 @@
-package it.polimi.ingsw.model.exceptions.productionException;
+package it.polimi.ingsw.model.exceptions.warehouse.production;
 
 import it.polimi.ingsw.model.resource.Resource;
-
-import java.util.List;
 
 public class IllegalTypeInProduction extends Exception{
     /**

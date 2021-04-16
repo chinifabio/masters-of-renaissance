@@ -3,6 +3,8 @@ package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 
 import it.polimi.ingsw.model.match.match.Match;
 
+import it.polimi.ingsw.model.match.PlayerToMatch;
+
 /**
  * This class represents special cells that activates the Vatican Report
  */
@@ -30,8 +32,8 @@ public class PopeSpace extends Cell {
      * To be implemented
      */
     @Override
-    public void onPlayerCross() {
-        //TODO DA IMPLEMENTARE
+    public void onPlayerCross(PlayerToMatch pm) {
+        pm.vaticanReport(this.vaticanSpace);
     }
 
     /**

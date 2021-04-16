@@ -1,9 +1,9 @@
-package it.polimi.ingsw.model.exceptions;
+package it.polimi.ingsw.model.exceptions.warehouse;
 
 import static it.polimi.ingsw.TextColors.RESET;
 import static it.polimi.ingsw.TextColors.YELLOW;
 
-public class UnobtainableResourceException extends Exception{
+public class NegativeResourcesDepotException extends Exception {
     /**
      * msg to identify the error
      */
@@ -13,7 +13,7 @@ public class UnobtainableResourceException extends Exception{
      * costructor that save the message to handle
      * @param msg string
      */
-    public UnobtainableResourceException(String msg) {
+    public NegativeResourcesDepotException(String msg) {
         this.msg = msg;
     }
 
@@ -24,4 +24,5 @@ public class UnobtainableResourceException extends Exception{
     public String getMsg(){
         return YELLOW + msg + RESET;
     }
+
 }

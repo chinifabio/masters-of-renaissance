@@ -1,8 +1,24 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.cards.*;
-import it.polimi.ingsw.model.exceptions.*;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.ExtraDiscountException;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.card.MissingCardException;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.GameException;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.MainActionDoneException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
+import it.polimi.ingsw.model.exceptions.productionException.UnknownUnspecifiedException;
+import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
+import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
+import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
+import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
+import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -67,7 +83,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param nickname that identify the player
      * @param matchReference used to reference the match which i am playing
      */
-    public Player(String nickname, PlayerToMatch matchReference) throws IllegalTypeInProduction {
+    public Player(String nickname, PlayerToMatch matchReference) throws IllegalTypeInProduction, IllegalTypeInProduction {
         this.nickname = nickname;
         this.personalBoard = new PersonalBoard(this);
         this.playerState = new NotHisTurnState(this);
@@ -111,13 +127,6 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
         this.playerState = newState;
     }
 
-    /**
-     * only for test, return the current player state
-     */
-    public State getPlayerState(){
-        return playerState;
-    }
-
     // player react effect implementations
 
     /**
@@ -126,7 +135,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param newProd the new production
      */
     @Override
-    public void addProduction(Production newProd) {
+    public void addProduction(Production newProd) throws LorenzoMovesException {
         personalBoard.addProduction(newProd);
     }
 
@@ -136,7 +145,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param depot new depot to be added to Warehouse depots
      */
     @Override
-    public void addDepot(Depot depot) {
+    public void addDepot(Depot depot) throws LorenzoMovesException {
         personalBoard.addDepot(depot);
     }
 
@@ -146,7 +155,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param discount the new discount
      */
     @Override
-    public void addDiscount(Resource discount) throws ExtraDiscountException{
+    public void addDiscount(Resource discount) throws ExtraDiscountException, LorenzoMovesException {
         if(this.marketDiscount.isEmpty() || this.marketDiscount.size() <2){
             Optional<Resource> temp = Optional.of(ResourceBuilder.buildFromType(discount.type(), 1));
             this.marketDiscount.add(temp);
@@ -162,24 +171,8 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param newConversion the resource type to transform white marbles
      */
     @Override
-    public void addMarbleConversion(Marble newConversion) {
+    public void addMarbleConversion(Marble newConversion) throws LorenzoMovesException {
         this.marbleConversions.add(newConversion);
-    }
-
-    /**
-     * This method insert the Resources obtained from the Market to the Depots
-     *
-     * @param resource the resource
-     */
-    @Override
-    public void obtainResource(Resource resource) {
-        try {
-            resource.onObtain(this);
-        } catch (UnobtainableResourceException e) {
-            // todo dire al model dell'errore
-        }
-        if(resource.isStorable()) this.personalBoard.obtainResource(resource);
-            // TODO improve this mechanism
     }
 
     /**
@@ -188,8 +181,10 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param marble the resource in form of marble
      */
     @Override
-    public void obtainResource(Marble marble) {
-        this.obtainResource(marble.toResource());
+    public void obtainResource(Marble marble) throws UnobtainableResourceException, LorenzoMovesException, WrongPointsException, IllegalMovesException {
+        Resource obt = marble.toResource();
+        obt.onObtain(this);
+        if(obt.isStorable()) this.personalBoard.obtainResource(obt);
     }
 
     /**
@@ -198,8 +193,8 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param amount how many cells the marker moves
      */
     @Override
-    public void moveFaithMarker(int amount) {
-        this.personalBoard.moveFaithMarker(amount);
+    public void moveFaithMarker(int amount) throws WrongPointsException, IllegalMovesException {
+        this.personalBoard.moveFaithMarker(amount, this.match);
     }
 
     /**
@@ -240,19 +235,14 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @return true
      */
     @Override
-    public boolean useMarketTray(RowCol rc, int index) {
-        try{
+    public boolean useMarketTray(RowCol rc, int index) throws NotHisTurnException, MainActionDoneException, OutOfBoundMarketTrayException, GameException, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
+        if(this.canDoStuff()){
+            this.match.useMarketTray(rc, index);
             playerState.doMainActionInput();
-        } catch (IllegalMovesException e) {
+            return true;
+        } else {
             return false;
         }
-        // TODO aggiungere una reazione alle eccezioni
-        try {
-            this.match.useMarketTray(rc, index);
-        } catch (Exception e) {
-            System.out.println("market tray exception");
-        }
-        return true;
     }
 
     /**
@@ -262,13 +252,8 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param conversionsIndex the index of the marble conversions available
      */
     @Override
-    public void paintMarbleInTray(int conversionsIndex, int marbleIndex) {
-        try {
-            this.match.paintMarbleInTray(this.marbleConversions.get(conversionsIndex).copy(), marbleIndex);
-        } catch (UnpaintableMarbleException e) {
-            e.printStackTrace();
-            // todo da mandare al client
-        }
+    public void paintMarbleInTray(int conversionsIndex, int marbleIndex) throws UnpaintableMarbleException {
+        this.match.paintMarbleInTray(this.marbleConversions.get(conversionsIndex).copy(), marbleIndex);
     }
 
     /**
@@ -289,15 +274,12 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @return true if there where no issue, false instead
      */
     @Override
-    public boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
-        try {
-            playerState.doMainActionInput();
-        } catch (IllegalMovesException e) {
-            return false;
-        }
+    public boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NotHisTurnException, MainActionDoneException, NoRequisiteException {
         this.slotDestination = destination;
         System.out.println(nickname + ": Asking to Match to buy devCard");
-        return match.buyDevCard(row, col);
+        boolean res = match.buyDevCard(row, col);
+        if (res == true) playerState.doMainActionInput();
+        return res;
     }
 
     /**
@@ -316,24 +298,27 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @return true if success
      */
     @Override
-    public boolean activateProductions() {
+    public boolean activateProductions() throws NotHisTurnException {
+        this.personalBoard.activateProductions();
         try {
             playerState.doMainActionInput();
-        } catch (IllegalMovesException e) {
+        } catch (NotHisTurnException e) {
+            throw e;
+        } catch (MainActionDoneException e) {
             return false;
         }
-        this.personalBoard.activateProductions();
         return true;
     }
 
     /**
-     * This method select the productions that will be activated by the player
-     *
-     * @param prod the production to set as selected
+     * This method moves a resource from a depot to a production
+     * @param from the source of the resource to move
+     * @param dest the destination of the resource to move
+     * @param loot the resource to move
      */
     @Override
-    public void selectProduction(ProductionID prod) {
-        this.personalBoard.selectProduction(prod);
+    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
+        this.personalBoard.moveInProduction(from, dest, loot);
     }
 
     /**
@@ -344,7 +329,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param loot the resource to move
      */
     @Override
-    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException {
+    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
         this.personalBoard.moveResourceDepot(from, to, loot);
     }
 
@@ -354,7 +339,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param leaderId the string that identify the leader card
      */
     @Override
-    public void activateLeaderCard(String leaderId) {
+    public void activateLeaderCard(String leaderId) throws MissingCardException {
         this.personalBoard.activateLeaderCard(leaderId);
     }
 
@@ -451,7 +436,8 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param newDevCard the dev card received that need to be stored in the personal board
      */
     @Override
-    public void receiveDevCard(DevCard newDevCard) {
+    public void receiveDevCard(DevCard newDevCard) throws NotHisTurnException, MainActionDoneException {
+        this.playerState.doMainActionInput();
         this.personalBoard.addDevCard(this.slotDestination, newDevCard);
     }
 
@@ -471,14 +457,9 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @return true if success, false otherwise
      */
     @Override
-    public boolean startHisTurn() {
-        try {
-            playerState.startTurnInput();
-        } catch (IllegalMovesException e) {
-            return false;
-        }
+    public boolean startHisTurn() throws TurnStartedException, NotHisTurnException, EmptyDeckException, LorenzoMovesException, WrongPointsException, IllegalMovesException {
+        playerState.startTurnInput();
         System.out.println(nickname + ": Turn started, waiting for action");
-        // TODO mandare indietro che io ho iniziato il turno
         return true;
     }
 
@@ -487,12 +468,8 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @return true if success, false otherwise
      */
     @Override
-    public boolean endThisTurn() {
-        try {
-            playerState.endTurnInput();
-        } catch (IllegalMovesException e) {
-            return false;
-        }
+    public boolean endThisTurn() throws NotHisTurnException, TurnStartedException, EmptyDeckException, LorenzoMovesException, WrongPointsException, IllegalMovesException {
+        playerState.endTurnInput();
         System.out.println(nickname + ": Turn ended");
         return match.endMyTurn();
     }

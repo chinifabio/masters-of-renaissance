@@ -2,8 +2,8 @@ package it.polimi.ingsw.model.player.personalBoard.warehouse.production;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalNormalProduction;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.exceptions.productionException.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -33,8 +33,8 @@ public class UnknownProduction extends Production{
 
     /**
      * This method is the constructor of the class
-     * @param newRequired
-     * @param newOutput
+     * @param newRequired list of required
+     * @param newOutput list of output
      */
     @JsonCreator
     public UnknownProduction(@JsonProperty("required") List<Resource> newRequired, @JsonProperty("output") List<Resource> newOutput) throws IllegalTypeInProduction {

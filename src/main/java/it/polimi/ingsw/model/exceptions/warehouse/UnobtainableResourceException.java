@@ -1,9 +1,9 @@
-package it.polimi.ingsw.model.exceptions.gameexception;
+package it.polimi.ingsw.model.exceptions.warehouse;
 
 import static it.polimi.ingsw.TextColors.RESET;
 import static it.polimi.ingsw.TextColors.YELLOW;
 
-public class GameException extends Exception{
+public class UnobtainableResourceException extends Exception{
     /**
      * msg to identify the error
      */
@@ -13,7 +13,7 @@ public class GameException extends Exception{
      * costructor that save the message to handle
      * @param msg string
      */
-    public GameException(String msg) {
+    public UnobtainableResourceException(String msg) {
         this.msg = msg;
     }
 

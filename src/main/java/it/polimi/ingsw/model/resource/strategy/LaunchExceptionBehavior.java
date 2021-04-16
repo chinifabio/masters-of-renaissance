@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.resource.strategy;
 
-import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 /**

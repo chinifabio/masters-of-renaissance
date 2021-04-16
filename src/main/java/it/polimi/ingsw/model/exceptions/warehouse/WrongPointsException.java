@@ -1,9 +1,9 @@
-package it.polimi.ingsw.model.exceptions;
+package it.polimi.ingsw.model.exceptions.warehouse;
 
 import static it.polimi.ingsw.TextColors.RESET;
 import static it.polimi.ingsw.TextColors.YELLOW;
 
-public class IllegalMovesException extends Exception {
+public class WrongPointsException extends Exception{
     /**
      * msg to identify the error
      */
@@ -13,7 +13,7 @@ public class IllegalMovesException extends Exception {
      * costructor that save the message to handle
      * @param msg string
      */
-    public IllegalMovesException(String msg) {
+    public WrongPointsException(String msg) {
         this.msg = msg;
     }
 

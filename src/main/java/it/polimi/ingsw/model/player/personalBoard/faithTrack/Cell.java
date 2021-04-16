@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import it.polimi.ingsw.model.match.PlayerToMatch;
 
 /**
  * This interface represents the cells from which the FaithTrack is composed
@@ -43,7 +44,7 @@ public abstract class Cell {
    /**
     * To be implemented
     */
-   public abstract void onPlayerCross();
+   public abstract void onPlayerCross(PlayerToMatch pm);
 
    /**
     * This method indicates in which vaticanSpace the Cell is located

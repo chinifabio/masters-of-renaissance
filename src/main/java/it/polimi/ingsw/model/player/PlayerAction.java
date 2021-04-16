@@ -1,9 +1,22 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.cards.*;
-import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
-import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
-import it.polimi.ingsw.model.exceptions.WrongDepotException;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.card.MissingCardException;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.GameException;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.MainActionDoneException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
+import it.polimi.ingsw.model.exceptions.productionException.UnknownUnspecifiedException;
+import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
+import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
+import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
+import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
+import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
@@ -30,7 +43,7 @@ public interface PlayerAction {
      * @param index the index of the row or column of the tray
      * @return the result of the operation
      */
-    boolean useMarketTray(RowCol rc, int index);
+    boolean useMarketTray(RowCol rc, int index) throws NotHisTurnException, MainActionDoneException, OutOfBoundMarketTrayException, GameException, UnobtainableResourceException, WrongPointsException, IllegalMovesException;
 
     /**
      * This method allows the player to select which Resources to get when he activates two LeaderCards with the same
@@ -38,7 +51,7 @@ public interface PlayerAction {
      * @param marbleIndex the index of chosen tray's marble to color
      * @param conversionsIndex the index of the marble conversions available
      */
-    void paintMarbleInTray(int conversionsIndex, int marbleIndex);
+    void paintMarbleInTray(int conversionsIndex, int marbleIndex) throws UnpaintableMarbleException;
 
     /**
      * return a view of the dev setup. It is shown only the first card of each decks
@@ -53,7 +66,7 @@ public interface PlayerAction {
      * @param destination the slot where put the dev card slot
      * @return true if there where no issue, false instead
      */
-    boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination);
+    boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NotHisTurnException, MainActionDoneException, NoRequisiteException;
 
     /**
      * return a list of all available production for the player
@@ -66,26 +79,28 @@ public interface PlayerAction {
      * activate the productions and insert the Resources obtained into the Strongbox
      * @return  the result of the operation
      */
-    boolean activateProductions();
+    boolean activateProductions() throws NotHisTurnException, MainActionDoneException;
 
     /**
-     * This method select the productions that will be activated by the player
-     * @param prod the production to set as selected
+     * This method moves a resource from a depot to a production
+     * @param from the source of the resource to move
+     * @param dest the destination of the resource to move
+     * @param loot the resource to move
      */
-    void selectProduction(ProductionID prod);
+    void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, IllegalMovesException;
 
     /**
      * This method allows the player to move Resources between Depots
      * @param from depot from which withdraw resource
      * @param to depot where insert withdrawn resource
      */
-    void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException;
+    void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, IllegalMovesException;
 
     /**
      * This method activates the special ability of the LeaderCard
      * @param leaderId the string that identify the leader card
      */
-    void activateLeaderCard(String leaderId);
+    void activateLeaderCard(String leaderId) throws MissingCardException;
 
     /**
      * This method removes a LeaderCard from the player
@@ -121,7 +136,7 @@ public interface PlayerAction {
      * the player ends its turn
      * @return true if success, false otherwise
      */
-    boolean endThisTurn();
+    boolean endThisTurn() throws NotHisTurnException, IllegalMovesException, TurnStartedException, EmptyDeckException, LorenzoMovesException, WrongPointsException;
 
     /**
      * this method tell if the player can so stuff

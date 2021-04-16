@@ -1,13 +1,10 @@
 package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import it.polimi.ingsw.model.cards.effects.DestroyCardsEffect;
 import it.polimi.ingsw.model.cards.effects.Effect;
-import it.polimi.ingsw.model.cards.effects.MoveTwoEffect;
-import it.polimi.ingsw.model.cards.effects.ShuffleMoveOneEffect;
-import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 /**
@@ -53,9 +50,9 @@ public abstract class Card{
 
     /**
      * This method is used by subclasses to implement their effect: AddDepot, AddDiscount, AddProduction, DestroyCards, MoveTwo, ShuffleMoveONe, WhiteMarble.
-     * @param p
+     * @param p the player interface reference
      */
-    public void useEffect(PlayerReactEffect p){
+    public void useEffect(PlayerReactEffect p) throws LorenzoMovesException, WrongPointsException, IllegalMovesException {
         effect.use(p);
     }
 

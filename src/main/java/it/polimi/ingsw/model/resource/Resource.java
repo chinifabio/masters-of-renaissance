@@ -5,7 +5,9 @@ import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
 import it.polimi.ingsw.model.cards.effects.DestroyCardsEffect;
 import it.polimi.ingsw.model.cards.effects.MoveTwoEffect;
 import it.polimi.ingsw.model.cards.effects.ShuffleMoveOneEffect;
-import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.resource.strategy.ObtainStrategy;
 
@@ -108,7 +110,7 @@ public class Resource{
      * @param player the player that obtain the resource
      * @throws UnobtainableResourceException if the resource is not obtainable
      */
-    public void onObtain(PlayerReactEffect player) throws UnobtainableResourceException {
+    public void onObtain(PlayerReactEffect player) throws UnobtainableResourceException, WrongPointsException, IllegalMovesException {
         os.obtain(player);
     }
 

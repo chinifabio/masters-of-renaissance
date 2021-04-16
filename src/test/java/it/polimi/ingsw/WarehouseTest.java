@@ -1,23 +1,16 @@
 package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.cards.effects.Effect;
-import it.polimi.ingsw.model.exceptions.ExtraDepotsException;
-import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
-import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
-import it.polimi.ingsw.model.exceptions.WrongDepotException;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalNormalProduction;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.warehouse.*;
 import it.polimi.ingsw.model.exceptions.productionException.UnknownUnspecifiedException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
-import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.MoveResource;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.SpecialDepot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.*;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -30,7 +23,7 @@ public class WarehouseTest {
      * Testing if the resources are correctly inserted into the Depots with all the constraints
      */
     @Test
-    public void insertResources() throws IllegalTypeInProduction, UnobtainableResourceException {
+    public void insertResources() throws IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
         Player player = new Player("Dummy", null);
         Warehouse test = new Warehouse(player);
 
@@ -58,7 +51,7 @@ public class WarehouseTest {
      * Testing the warehouse returns the resources into the depots correctly
      */
     @Test
-    public void viewResources() throws IllegalTypeInProduction, UnobtainableResourceException {
+    public void viewResources() throws IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
         Player player = new Player("Dummy", null);
         Warehouse test = new Warehouse(player);
 
@@ -93,7 +86,7 @@ public class WarehouseTest {
      * Testing if the resources are correctly inserted into the warehouse
      */
     @Test
-    public void insertInStrongbox() throws IllegalTypeInProduction, UnobtainableResourceException {
+    public void insertInStrongbox() throws IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
         Player player = new Player("Dummy", null);
         Warehouse test = new Warehouse(player);
         List<Resource> list = new ArrayList<>();
@@ -134,7 +127,7 @@ public class WarehouseTest {
      * Testing if the extra Depots are correctly created
      */
     @Test
-    public void InsertInExtraDepots() throws ExtraDepotsException, IllegalTypeInProduction, UnobtainableResourceException {
+    public void InsertInExtraDepots() throws ExtraDepotsException, IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
         Player player = new Player("Dummy", null);
         Warehouse test = new Warehouse(player);
         boolean exc = false;
@@ -169,7 +162,7 @@ public class WarehouseTest {
 
 
     @Test
-    public void moveResourcesInDepots() throws NegativeResourcesDepotException, WrongDepotException, ExtraDepotsException, IllegalTypeInProduction, UnobtainableResourceException {
+    public void moveResourcesInDepots() throws NegativeResourcesDepotException, WrongDepotException, ExtraDepotsException, IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
         Player player = new Player("Dummy", null);
         Warehouse warehouse = new Warehouse(player);
         warehouse.addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildStone()));
@@ -226,7 +219,7 @@ public class WarehouseTest {
     }
 
     @Test
-    public void activateProductions() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException {
+    public void activateProductions() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, WrongPointsException, IllegalMovesException {
 
         PlayerReactEffect player = new Player("Dummy", null);
         Warehouse warehouse = new Warehouse(player);
@@ -277,7 +270,7 @@ public class WarehouseTest {
     }
 
     @Test
-    public void notEnoughResourceProduction() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, IllegalNormalProduction {
+    public void notEnoughResourceProduction() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, IllegalNormalProduction, IllegalTypeInProduction, IllegalNormalProduction, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
 
         PlayerReactEffect player = new Player("Dummy", null);
         Warehouse warehouse = new Warehouse(player);

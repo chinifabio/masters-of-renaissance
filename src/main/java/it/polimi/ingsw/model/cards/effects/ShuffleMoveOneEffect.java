@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.cards.effects;
 
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 /**
@@ -14,7 +16,7 @@ public class ShuffleMoveOneEffect extends Effect {
      * @param p the only player in the game.
      */
     @Override
-    public void use(PlayerReactEffect p) {
+    public void use(PlayerReactEffect p) throws WrongPointsException, IllegalMovesException {
         System.out.println("Move one space");
         p.moveFaithMarker(1);
         System.out.println("Shuffling");

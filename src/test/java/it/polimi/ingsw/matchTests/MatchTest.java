@@ -8,11 +8,18 @@ import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.cards.SoloActionToken;
-import it.polimi.ingsw.model.exceptions.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.MissingCardException;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
-import it.polimi.ingsw.model.match.PlayerToMatch;
-import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.card.MissingCardException;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.GameException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.MainActionDoneException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
+import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
+import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
+import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
@@ -20,12 +27,7 @@ import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Lorenzo;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerAction;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
-import it.polimi.ingsw.model.resource.Resource;
-import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -42,7 +44,7 @@ public class MatchTest {
      * so you can know if the operation is succeed of failed.
      */
     @Test
-    public void buildSingleplayerTest() throws IllegalTypeInProduction {
+    public void buildSingleplayerTest() throws NotHisTurnException, MainActionDoneException, OutOfBoundMarketTrayException, GameException, IllegalMovesException, TurnStartedException, WrongPointsException, EmptyDeckException, UnobtainableResourceException, IllegalTypeInProduction {
         Match sp = new SingleplayerMatch();
 
         Lorenzo lorenzo = new Lorenzo(sp);
@@ -69,10 +71,21 @@ public class MatchTest {
         PlayerAction lore = lorenzo;
         PlayerAction player = dummy1;
 
-        assertFalse(player.buyDevCard(LevelDevCard.LEVEL1, ColorDevCard.BLUE, DevCardSlot.CENTER));
+        try {
+            assertTrue(player.buyDevCard(LevelDevCard.LEVEL1, ColorDevCard.BLUE, DevCardSlot.CENTER));
+
+        } catch(NoRequisiteException e1){
+            System.out.println("problema, manca il requisite della carta");
+        } catch(IndexOutOfBoundsException e2){
+            System.out.println("Pescata da un mazzo vuoto!");
+        } catch (NotHisTurnException e) {
+            e.printStackTrace();
+        } catch (MainActionDoneException e) {
+            e.printStackTrace();
+        }
         //TODO change to assertTrue when devSetup in match is completed
 
-        assertFalse(player.useMarketTray(RowCol.COL, 2));
+        assertTrue(player.useMarketTray(RowCol.COL, 2));
 
         assertTrue(player.endThisTurn());
 
@@ -94,7 +107,7 @@ public class MatchTest {
      * so you can know if the operation is succeed of failed.
      */
     @Test
-    public void buildMultiplayerTest() throws IllegalTypeInProduction {
+    public void buildMultiplayerTest() throws NotHisTurnException, MainActionDoneException, OutOfBoundMarketTrayException, GameException, IllegalMovesException, TurnStartedException, WrongPointsException, EmptyDeckException, UnobtainableResourceException, IllegalTypeInProduction {
         Match match = new MultiplayerMatch();
 
         Player p1 = new Player("gino", match);
@@ -127,7 +140,13 @@ public class MatchTest {
             for (PlayerAction x : order) {
                 assertEquals(x.canDoStuff(), x.useMarketTray(RowCol.COL, 2));
                 if (x.canDoStuff()) {
-                    assertFalse(x.activateProductions());
+                    try {
+                        assertFalse(x.activateProductions());
+                    } catch (NotHisTurnException e) {
+                        System.out.println("non turno");
+                    } catch (MainActionDoneException e) {
+                        System.out.println("main done");
+                    }
                     x.endThisTurn();
                 }
             }

@@ -2,8 +2,8 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.exceptions.productionException.IllegalNormalProduction;
-import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.exceptions.productionException.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
@@ -90,7 +90,7 @@ public class ProductionTest {
             test.insertResource(ResourceBuilder.buildCoin());
             fail();
         } catch (UnknownUnspecifiedException e){
-
+            assertTrue(true);
         }
 
         // normal production ok to be added

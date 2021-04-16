@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.resource.strategy;
 
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
@@ -30,7 +32,7 @@ public class GiveFaithPointBehavior implements ObtainStrategy{
      * @param player player
      */
     @Override
-    public void obtain(PlayerReactEffect player) {
+    public void obtain(PlayerReactEffect player) throws WrongPointsException, IllegalMovesException {
         player.moveFaithMarker(amount);
     }
 }

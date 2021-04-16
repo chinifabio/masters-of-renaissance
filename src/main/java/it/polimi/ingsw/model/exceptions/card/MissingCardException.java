@@ -1,12 +1,12 @@
-package it.polimi.ingsw.model.exceptions;
+package it.polimi.ingsw.model.exceptions.card;
 
 import static it.polimi.ingsw.TextColors.RESET;
 import static it.polimi.ingsw.TextColors.YELLOW;
 
 /**
- * exception thrown when someone tries to draw or discard a card from an empty deck
+ * exception thrown when someone tries to peek a card from a deck where the card is missing
  */
-public class EmptyDeckException extends Exception{
+public class MissingCardException extends Exception{
     /**
      * msg to identify the error
      */
@@ -15,11 +15,11 @@ public class EmptyDeckException extends Exception{
      * costructor that save the message to handle
      * @param msg string
      */
-    public EmptyDeckException(String msg){this.msg = msg;}
+    public MissingCardException(String msg){this.msg = msg;}
 
     /**
      * return the message handled
      * @return string of the message
      */
     public String getMsg(){return YELLOW + msg + RESET;}
-    }
+}

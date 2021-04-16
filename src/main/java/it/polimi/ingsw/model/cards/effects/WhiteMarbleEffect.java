@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.cards.effects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
@@ -32,7 +33,7 @@ public class WhiteMarbleEffect extends Effect{
      * @param p the player that is getting the conversion bonus.
      */
     @Override
-    public void use(PlayerReactEffect p) {
+    public void use(PlayerReactEffect p) throws LorenzoMovesException {
         p.addMarbleConversion(conv); // manca da aggiungere il conv
     }
 }

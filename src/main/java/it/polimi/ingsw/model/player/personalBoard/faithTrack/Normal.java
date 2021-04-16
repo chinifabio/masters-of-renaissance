@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 
+import it.polimi.ingsw.model.match.PlayerToMatch;
+
 /**
  * This class represents normal cells that composed the FaithTrack, this Cell do nothing
  */
@@ -27,7 +29,7 @@ public class Normal extends Cell {
      * This method do nothing
      */
     @Override
-    public void onPlayerCross() {
+    public void onPlayerCross(PlayerToMatch pm) {
     }
 
     /**

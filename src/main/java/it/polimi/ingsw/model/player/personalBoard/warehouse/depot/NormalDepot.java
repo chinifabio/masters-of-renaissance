@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.depot;
 
 
-import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
+import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;

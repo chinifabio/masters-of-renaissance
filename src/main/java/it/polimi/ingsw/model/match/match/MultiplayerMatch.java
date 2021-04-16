@@ -1,7 +1,12 @@
 package it.polimi.ingsw.model.match.match;
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
-import it.polimi.ingsw.model.cards.DevCard;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.player.Player;
 
 public class MultiplayerMatch extends Match{
@@ -23,7 +28,7 @@ public class MultiplayerMatch extends Match{
      * @return true if success, false instead
      */
     @Override
-    public boolean startGame() {
+    public boolean startGame() throws NotHisTurnException, TurnStartedException, EmptyDeckException, LorenzoMovesException, WrongPointsException, IllegalMovesException {
         if(this.turn.playerInGame() < 2 || gameOnAir) return false;
         turn.getInkwellPlayer().startHisTurn();
         gameOnAir = true;

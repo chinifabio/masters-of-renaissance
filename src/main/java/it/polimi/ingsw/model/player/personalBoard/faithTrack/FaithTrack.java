@@ -3,8 +3,9 @@ package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.model.exceptions.IllegalMovesException;
-import it.polimi.ingsw.model.exceptions.WrongPointsException;
+import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
+import it.polimi.ingsw.model.match.PlayerToMatch;
 
 
 import java.io.File;
@@ -28,15 +29,10 @@ public class FaithTrack {
     private int playerPosition;
 
     /**
-     * This attribute is the position of Lorenzo in the track
-     */
-    private int lorenzoPosition;
-
-    /**
      * This attribute maps PopeSpace to the corresponding PopeTile that will be flipped if the player is in the same
      * Vatican Report space or further.
      */
-    private Map<VaticanSpace, PopeTile> popeTiles;
+    private final Map<VaticanSpace, PopeTile> popeTiles;
 
 
     /**
@@ -55,7 +51,6 @@ public class FaithTrack {
         }
 
         this.playerPosition = 0;
-        this.lorenzoPosition = 0;
 
         popeTiles = new HashMap<>();
         popeTiles.put(VaticanSpace.FIRST, new PopeTile(2));
@@ -71,17 +66,10 @@ public class FaithTrack {
     }
 
     /**
-     * This method returns the position of Lorenzo in the FaithTrack
-     */
-    public int getLorenzoPosition(){
-        return lorenzoPosition;
-    }
-
-    /**
      * This method move the FaithMarker of the player in the FaithTrack
      * @param points is the value of how far the player's marker must go
      */
-    public void movePlayer(int points) throws IllegalMovesException, WrongPointsException {
+    public void movePlayer(int points, PlayerToMatch pm) throws IllegalMovesException, WrongPointsException {
 
         if (points< 0){
             throw new WrongPointsException("exception: the Player can't move backwards!");
@@ -97,30 +85,8 @@ public class FaithTrack {
                 this.playerPosition = track.size()-1;
             } else {
                 this.playerPosition++;
-                this.track.get(playerPosition).onPlayerCross();
+                this.track.get(playerPosition).onPlayerCross(pm);
             }
-        }
-
-        //TODO Da rimuovere e aggiungere al metodo che viene chiamato quando qualcuno attiva una PopeSpace
-        //flipPopeTile();
-    }
-
-    /**
-     * This method move the marker of Lorenzo in the FaithTrack
-     * @param amount is the value of how far the Lorenzo's marker must go
-     */
-    public void moveLorenzo(int amount) throws IllegalMovesException, WrongPointsException {
-
-        if (amount < 0){
-            throw new WrongPointsException("exception: Lorenzo can't go backward");
-        }
-
-        if (this.lorenzoPosition >= track.size()-1 && amount > 0) {
-            throw new IllegalMovesException("exception: Lorenzo is in the last cell, he can't move");
-        }
-        this.lorenzoPosition = lorenzoPosition + amount;
-        if (this.lorenzoPosition >= track.size()-1) {
-            this.lorenzoPosition = track.size()-1;
         }
     }
 
@@ -142,22 +108,11 @@ public class FaithTrack {
 
     /**
      * This method flips the PopeTile if the player is in a VaticanSpace and someone activated the PopeSpace
-     * @return true if the Tile is flipped
      */
-    //TODO guardare meglio
     public void flipPopeTile(VaticanSpace toCheck){
-
         if (track.get(this.playerPosition).getVaticanSpace().ordinal() < toCheck.ordinal()){
             popeTiles.get(toCheck).flipMe();//Deactivates the PopeTile -> Il popeTile non può più essere accettato
         }
-        //Aggiungere il controllo rispetto alle posizioni degli altri giocatori
-        /*if (track.get(this.playerPosition).getVaticanSpace() != VaticanSpace.NONE) {
-            if (!popeTiles.get(track.get(this.playerPosition).getVaticanSpace()).getIsFlipped()) {
-                popeTiles.get(track.get(this.playerPosition).getVaticanSpace()).flipMe();
-                return true;
-            }
-        }
-        return false;*/
     }
 
     //Only for testing
@@ -173,6 +128,4 @@ public class FaithTrack {
         }
         else return false;
     }
-
-
 }

@@ -1,9 +1,9 @@
-package it.polimi.ingsw.model.exceptions;
+package it.polimi.ingsw.model.exceptions.game;
 
 import static it.polimi.ingsw.TextColors.RESET;
 import static it.polimi.ingsw.TextColors.YELLOW;
 
-public class WrongDepotException extends Exception {
+public class GameConstructorException extends Exception {
     /**
      * msg to identify the error
      */
@@ -13,7 +13,7 @@ public class WrongDepotException extends Exception {
      * costructor that save the message to handle
      * @param msg string
      */
-    public WrongDepotException(String msg) {
+    public GameConstructorException(String msg) {
         this.msg = msg;
     }
 

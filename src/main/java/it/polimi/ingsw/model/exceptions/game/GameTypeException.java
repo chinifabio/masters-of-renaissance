@@ -1,12 +1,9 @@
-package it.polimi.ingsw.model.exceptions;
+package it.polimi.ingsw.model.exceptions.game;
 
 import static it.polimi.ingsw.TextColors.RESET;
 import static it.polimi.ingsw.TextColors.YELLOW;
 
-/**
- * exception thrown when wrong method is invoked in a subclass of Loot
- */
-public class LootTypeException extends Exception {
+public class GameTypeException extends GameException{
     /**
      * msg to identify the error
      */
@@ -16,8 +13,8 @@ public class LootTypeException extends Exception {
      * costructor that save the message to handle
      * @param msg string
      */
-    public LootTypeException(String msg) {
-        this.msg = msg;
+    public GameTypeException(String msg) {
+        super(msg);
     }
 
     /**
@@ -27,4 +24,5 @@ public class LootTypeException extends Exception {
     public String getMsg(){
         return YELLOW + msg + RESET;
     }
+
 }
