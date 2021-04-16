@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.exceptions.gameexception.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
@@ -42,7 +43,7 @@ public class Lorenzo extends Player{
      * @param matchReference the match reference
      *
      */
-    public Lorenzo(PlayerToMatch matchReference) {
+    public Lorenzo(PlayerToMatch matchReference) throws IllegalTypeInProduction {
 
         super(Lorenzo.lorenzoNickname, matchReference);
         this.faithTrack = new FaithTrack();
@@ -54,7 +55,7 @@ public class Lorenzo extends Player{
                     new File("src/resources/SoloActionTokens.json"),
                     new TypeReference<List<SoloActionToken>>(){});
         }catch (IOException e){
-            System.out.println("The file to create the faith track wasn't found");
+            System.out.println("The file to create the SoloActionTokens wasn't found");
             //TODO LANCIARE UN'ECCEZIONE AL MODEL
         }
         this.soloToken = new Deck<>(init);
@@ -135,7 +136,7 @@ public class Lorenzo extends Player{
     @Override
     public void addProduction(Production newProd) {
         try {
-            throw new LorenzoMovesException();
+            throw new LorenzoMovesException("exception: ");
         } catch (LorenzoMovesException e) {
             // todo dirlo al model
         }
@@ -149,7 +150,7 @@ public class Lorenzo extends Player{
     @Override
     public void addDepot(Depot depot) {
         try {
-            throw new LorenzoMovesException();
+            throw new LorenzoMovesException("exception: ");
         } catch (LorenzoMovesException e) {
             // todo dirlo al model
         }
@@ -163,7 +164,7 @@ public class Lorenzo extends Player{
     @Override
     public void addDiscount(Resource discount) {
         try {
-            throw new LorenzoMovesException();
+            throw new LorenzoMovesException("exception: ");
         } catch (LorenzoMovesException e) {
             // todo dirlo al model
         }
@@ -177,7 +178,7 @@ public class Lorenzo extends Player{
     @Override
     public void addMarbleConversion(Marble conversion) {
         try {
-            throw new LorenzoMovesException();
+            throw new LorenzoMovesException("exception: ");
         } catch (LorenzoMovesException e) {
             // todo dirlo al model
         }
@@ -191,7 +192,7 @@ public class Lorenzo extends Player{
     @Override
     public void obtainResource(Resource resource) {
         try {
-            throw new LorenzoMovesException();
+            throw new LorenzoMovesException("exception: ");
         } catch (LorenzoMovesException e) {
             // todo dirlo al model
         }
@@ -205,7 +206,7 @@ public class Lorenzo extends Player{
     @Override
     public void obtainResource(Marble marble) {
         try {
-            throw new LorenzoMovesException();
+            throw new LorenzoMovesException("exception: ");
         } catch (LorenzoMovesException e) {
             // todo dirlo al model
         }

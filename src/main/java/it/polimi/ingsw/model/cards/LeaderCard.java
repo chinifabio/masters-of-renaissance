@@ -2,6 +2,8 @@ package it.polimi.ingsw.model.cards;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.cards.effects.Effect;
 import it.polimi.ingsw.model.requisite.Requisite;
 
@@ -15,7 +17,9 @@ public class LeaderCard extends Card{
      * @param victoryPoint of the card.
      * @param requirements of the card.
      */
-    public LeaderCard(String cardID, Effect effect,int victoryPoint,List<Requisite> requirements ) {
+
+    @JsonCreator
+    public LeaderCard(@JsonProperty("cardID") String cardID, @JsonProperty("effect") Effect effect, @JsonProperty("victoryPoint") int victoryPoint, @JsonProperty("requirements") List<Requisite> requirements ) {
         super(cardID, effect);
         this.victoryPoint = victoryPoint;
         this.requirements = requirements;
@@ -66,6 +70,15 @@ public class LeaderCard extends Card{
      */
     public boolean isActivated() {
         return activated;
+    }
+
+    @Override
+    public String toString() {
+        return "LeaderCard{" +
+                "VP=" + victoryPoint +
+                ", activate=" + activated +
+                ", requirements=" + getRequirements() +
+                '}';
     }
 
 }

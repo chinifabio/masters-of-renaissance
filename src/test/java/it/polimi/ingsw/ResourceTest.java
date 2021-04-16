@@ -3,6 +3,7 @@ package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -56,7 +57,7 @@ public class ResourceTest {
     }
 
     @Test
-    public void nonObtainable() {
+    public void nonObtainable() throws IllegalTypeInProduction {
         Resource unknown = ResourceBuilder.buildUnknown();
         PlayerReactEffect player = new Player("dummy", null);
         boolean result = false;

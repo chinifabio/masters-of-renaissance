@@ -1,5 +1,10 @@
 package it.polimi.ingsw.model.resource;
 
+import com.fasterxml.jackson.annotation.*;
+import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
+import it.polimi.ingsw.model.cards.effects.DestroyCardsEffect;
+import it.polimi.ingsw.model.cards.effects.MoveTwoEffect;
+import it.polimi.ingsw.model.cards.effects.ShuffleMoveOneEffect;
 import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.resource.strategy.ObtainStrategy;
@@ -7,23 +12,44 @@ import it.polimi.ingsw.model.resource.strategy.ObtainStrategy;
 /**
  * the resource class that represent a generic resource. its type is defined in the builder
  */
+
 public class Resource{
+
+    public Resource(){
+    }
+
     /**
      * flag to check before store a resource
      */
-    private final boolean storable;
+    @JsonProperty("storable")
+    private boolean storable;
     /**
      * the type of the resource
      */
-    private final ResourceType type;
+    @JsonProperty("type")
+    private ResourceType type;
     /**
      * the strategy for differentiate behaviours when the player obtain the resource
      */
-    private final ObtainStrategy os;
+    @JsonProperty("strategy")
+    private ObtainStrategy os;
     /**
      * the amount of the resource
      */
+    @JsonProperty("amount")
     private int amount;
+
+    /**
+     * constructor with amount > 1
+     * @param type the type of the resource
+     * @param os strategy
+     */
+    protected Resource(boolean storable, ResourceType type, ObtainStrategy os, int amount){
+        this.type = type;
+        this.os = os;
+        this.amount = amount;
+        this.storable = storable;
+    }
 
     /**
      * constructor for a default amount = 1
@@ -35,18 +61,6 @@ public class Resource{
         this.amount = 1;
         this.storable = storable;
         this.type = type;
-    }
-
-    /**
-     * constructor for a default amount = 1
-     * @param type the type of the resource
-     * @param os strategy
-     */
-    protected Resource(boolean storable, ResourceType type, ObtainStrategy os, int amount){
-        this.type = type;
-        this.os = os;
-        this.amount = amount;
-        this.storable = storable;
     }
 
     /**

@@ -1,10 +1,16 @@
 package it.polimi.ingsw;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
 import it.polimi.ingsw.model.exceptions.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.LootTypeException;
 import it.polimi.ingsw.model.exceptions.MissingCardException;
+import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
@@ -13,6 +19,8 @@ import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.*;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +38,7 @@ public class DeckTest {
     @Test
     void cardIDCheck(){
         String ID = "105", ID1 = "120",ID2 = "145";
+        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> requisite = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -52,6 +61,7 @@ public class DeckTest {
     @Test
     void victoryPointDevCard(){
         int n = 7;
+        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -75,6 +85,7 @@ public class DeckTest {
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
+        List<Resource> sample = new ArrayList<>();
         Production p = null;
 
         DevCard c1 = new DevCard("000", new AddProductionEffect(p), 2, lev, col,req);
@@ -89,6 +100,7 @@ public class DeckTest {
     @Test
     void victoryPointLeaderCard(){
         int n = 12;
+        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -105,6 +117,7 @@ public class DeckTest {
      */
     @Test
     void activatedLeaderCard(){
+        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -126,6 +139,7 @@ public class DeckTest {
     @Test
     void insertCard() {
         Deck<DevCard> d = new Deck<>();
+        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -157,6 +171,7 @@ public class DeckTest {
     @Test
     void addListOfCards(){
         int n=2;
+        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -188,6 +203,7 @@ public class DeckTest {
     @Test
     void addOneInsertCard() {
         int n=3;
+        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -221,6 +237,7 @@ public class DeckTest {
      */
     @Test
     void drawFromDeck(){
+        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -267,6 +284,7 @@ public class DeckTest {
      */
     @Test
     void discardCards(){
+        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -311,6 +329,7 @@ public class DeckTest {
      */
     @Test
     void peekCardFromDeck(){
+        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -359,6 +378,7 @@ public class DeckTest {
      */
     @Test
     void shuffleDeck(){
+        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -423,8 +443,9 @@ public class DeckTest {
      * This test creates two deck of devCards and checks if the method drawFromDecks works.
      */
     @Test
-    void DevSetup(){
-        Production p = null;
+    void DevSetup() throws IllegalTypeInProduction {
+        List<Resource> sample = new ArrayList<>();
+        Production p = new NormalProduction(sample,sample);
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -497,4 +518,75 @@ public class DeckTest {
         
     }
 
+    @Test
+    public void cardsFromJSONTest() throws EmptyDeckException, MissingCardException, LootTypeException {
+        Deck<DevCard> deckDev;
+        List<DevCard> init = new ArrayList<>();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            init = objectMapper.readValue(
+                    new File("src/resources/DevCards.json"),
+                    new TypeReference<List<DevCard>>(){});
+        }catch (IOException e){
+            e.printStackTrace();
+            System.out.println("The file to create the DevCards wasn't found");
+            //TODO LANCIARE UN'ECCEZIONE AL MODEL
+        }
+        deckDev = new Deck<>(init);
+        System.out.println(deckDev);
+        System.out.println(deckDev.peekCard("DC1"));
+        System.out.println(deckDev.peekCard("DC2"));
+        System.out.println(deckDev.peekCard("DC3"));
+        System.out.println(deckDev.peekCard("DC4"));
+
+        System.out.println("\n...Shuffle...\n");
+        deckDev.shuffle();
+        System.out.println(deckDev);
+
+        System.out.println("\n...Shuffle...\n");
+        deckDev.shuffle();
+        System.out.println(deckDev);
+
+        System.out.println("Cost DC1:");
+        System.out.println("type: " + deckDev.peekCard("DC1").getCost().get(0).getType());
+        System.out.println("amount: " + deckDev.peekCard("DC1").getCost().get(0).getAmount());
+
+        System.out.println("Cost DC2:");
+        System.out.println("type: " + deckDev.peekCard("DC2").getCost().get(0).getType());
+        System.out.println("amount: " + deckDev.peekCard("DC2").getCost().get(0).getAmount());
+
+        System.out.println("Cost DC3:");
+        System.out.println("type: " + deckDev.peekCard("DC3").getCost().get(0).getType());
+        System.out.println("amount: " + deckDev.peekCard("DC3").getCost().get(0).getAmount());
+
+        System.out.println("Cost DC4:");
+        System.out.println("type: " + deckDev.peekCard("DC4").getCost().get(0).getType());
+        System.out.println("amount: " + deckDev.peekCard("DC4").getCost().get(0).getAmount());
+    }
+
+    @Test
+    public void leaderCardJSON() throws MissingCardException {
+        Deck<LeaderCard> deckLeader;
+        List<LeaderCard> init = new ArrayList<>();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        //objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        try {
+            init = objectMapper.readValue(
+                    new File("src/resources/LeaderCards.json"),
+                    new TypeReference<List<LeaderCard>>(){});
+        }catch (IOException e){
+            e.printStackTrace();
+            System.out.println("The file to create the LeaderCards wasn't found");
+            //TODO LANCIARE UN'ECCEZIONE AL MODEL
+        }
+        deckLeader = new Deck<>(init);
+
+        int i = 1;
+        for (int j = 0; j<init.size(); j++){
+            System.out.println(deckLeader.peekCard("LC"+String.valueOf(i)));
+            i++;
+        }
+    }
 }

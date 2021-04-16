@@ -1,52 +1,190 @@
 [
   {
-    "cardID" : "DevCard1",
-    "victoryPoint": "1",
+    "type": "Dev",
+    "cardID" : "DC1",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint",
+              "amount": 1
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 1,
     "level": "LEVEL1",
     "color": "GREEN",
     "cost": [
       {
-        "type": "SHIELD",
-        "amount": "2"
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 2
+        }
       }
     ]
   },
   {
-    "cardID" : "DevCard2",
-    "victoryPoint": "1",
+    "type": "Dev",
+    "cardID" : "DC2",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint",
+              "amount": 1
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 1,
     "level": "LEVEL1",
     "color": "PURPLE",
     "cost": [
       {
-        "type": "SERVANT",
-        "amount": "2"
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 2
+        }
       }
     ]
   },
   {
-    "cardID" : "DevCard3",
-    "victoryPoint": "1",
+    "type": "Dev",
+    "cardID" : "DC3",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint",
+              "amount": 1
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 1,
     "level": "LEVEL1",
     "color": "BLUE",
     "cost": [
       {
-        "type": "COIN",
-        "amount": "2"
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 2
+        }
       }
     ]
   },
   {
-    "cardID" : "DevCard4",
-    "victoryPoint": "1",
+    "type": "Dev",
+    "cardID" : "DC4",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint",
+              "amount": 1
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 1,
     "level": "LEVEL1",
     "color": "YELLOW",
     "cost": [
       {
-        "type": "STONE",
-        "amount": "2"
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 2
+        }
       }
     ]
   }
-
-
 ]

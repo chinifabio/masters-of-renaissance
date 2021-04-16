@@ -59,4 +59,9 @@ public class ProductionRecord {
     public Resource getResources(){
         return resources;
     }
+
+    @Override
+    public String toString() {
+        return "From: " + this.from.toString() + ", Dest: " + this.dest.toString() + ", Resource: " + this.resources;
+    }
 }

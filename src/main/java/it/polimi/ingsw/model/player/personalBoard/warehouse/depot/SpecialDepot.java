@@ -89,7 +89,7 @@ public class SpecialDepot implements Depot {
      */
     @Override
     public Resource viewResources() {
-        return resources;
+        return ResourceBuilder.buildFromType(resources.type(),resources.amount());
     }
 
     /**

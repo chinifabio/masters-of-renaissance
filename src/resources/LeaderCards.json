@@ -1,0 +1,498 @@
+[
+  {
+    "type": "Leader",
+    "cardID": "LC1",
+    "effect": {
+      "type": "AddDiscount",
+      "resource": "SERVANT"
+    },
+    "victoryPoint": 2,
+    "requirements": [
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "YELLOW"
+      },
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "GREEN"
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC2",
+    "effect": {
+      "type": "AddDiscount",
+      "resource": "SHIELD"
+    },
+    "victoryPoint": 2,
+    "requirements": [
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "BLUE"
+      },
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "PURPLE"
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC3",
+    "effect": {
+      "type": "AddDiscount",
+      "resource": "STONE"
+    },
+    "victoryPoint": 2,
+    "requirements": [
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "GREEN"
+      },
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "BLUE"
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC4",
+    "effect": {
+      "type": "AddDiscount",
+      "resource": "COIN"
+    },
+    "victoryPoint": 2,
+    "requirements": [
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "YELLOW"
+      },
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "PURPLE"
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC5",
+    "effect": {
+      "type": "AddDepot",
+      "resource": "STONE"
+    },
+    "victoryPoint": 3,
+    "requirements": [
+      {
+        "type": "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 5
+        }
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC6",
+    "effect": {
+      "type": "AddDepot",
+      "resource": "SERVANT"
+    },
+    "victoryPoint": 3,
+    "requirements": [
+      {
+        "type": "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 5
+        }
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC7",
+    "effect": {
+      "type": "AddDepot",
+      "resource": "SHIELD"
+    },
+    "victoryPoint": 3,
+    "requirements": [
+      {
+        "type": "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 5
+        }
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC8",
+    "effect": {
+      "type": "AddDepot",
+      "resource": "COIN"
+    },
+    "victoryPoint": 3,
+    "requirements": [
+      {
+        "type": "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 5
+        }
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC9",
+    "effect": {
+      "type": "WhiteMarble",
+      "marble": {
+        "type": "Normal",
+        "color": "YELLOW",
+        "toResource": "COIN"
+      }
+    },
+    "victoryPoint": 5,
+    "requirements": [
+      {
+      "type": "CardReq",
+      "level": "LEVEL1",
+      "color": "YELLOW"
+      },
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "YELLOW"
+      },
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "BLUE"
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC10",
+    "effect": {
+      "type": "WhiteMarble",
+      "marble": {
+        "type": "Normal",
+        "color": "BLUE",
+        "toResource": "SHIELD"
+      }
+    },
+    "victoryPoint": 5,
+    "requirements": [
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "GREEN"
+      },
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "GREEN"
+      },
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "PURPLE"
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC11",
+    "effect": {
+      "type": "WhiteMarble",
+      "marble": {
+        "type": "Normal",
+        "color": "GRAY",
+        "toResource": "STONE"
+      }
+    },
+    "victoryPoint": 5,
+    "requirements": [
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "BLUE"
+      },
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "BLUE"
+      },
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "YELLOW"
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC12",
+    "effect": {
+      "type": "WhiteMarble",
+      "marble": {
+        "type": "Normal",
+        "color": "YELLOW",
+        "toResource": "COIN"
+      }
+    },
+    "victoryPoint": 5,
+    "requirements": [
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "PURPLE"
+      },
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "PURPLE"
+      },
+      {
+        "type": "CardReq",
+        "level": "LEVEL1",
+        "color": "GREEN"
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC13",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "UnknownProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": false,
+            "strategy": {
+              "type": "LaunchExc"
+            },
+            "type": "UNKNOWN",
+            "amount": 1
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint",
+              "amount": 1
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 4,
+    "requirements": [
+      {
+        "type": "CardReq",
+        "level": "LEVEL2",
+        "color": "YELLOW"
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC14",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "UnknownProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": false,
+            "strategy": {
+              "type": "LaunchExc"
+            },
+            "type": "UNKNOWN",
+            "amount": 1
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint",
+              "amount": 1
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 4,
+    "requirements": [
+      {
+        "type": "CardReq",
+        "level": "LEVEL2",
+        "color": "BLUE"
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC15",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "UnknownProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": false,
+            "strategy": {
+              "type": "LaunchExc"
+            },
+            "type": "UNKNOWN",
+            "amount": 1
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint",
+              "amount": 1
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 4,
+    "requirements": [
+      {
+        "type": "CardReq",
+        "level": "LEVEL2",
+        "color": "PURPLE"
+      }
+    ],
+    "activated": false
+  },
+  {
+    "type": "Leader",
+    "cardID": "LC16",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "UnknownProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": false,
+            "strategy": {
+              "type": "LaunchExc"
+            },
+            "type": "UNKNOWN",
+            "amount": 1
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint",
+              "amount": 1
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 4,
+    "requirements": [
+      {
+        "type": "CardReq",
+        "level": "LEVEL2",
+        "color": "GREEN"
+      }
+    ],
+    "activated": false
+  }
+]

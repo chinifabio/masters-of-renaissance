@@ -93,7 +93,7 @@ public class NormalDepot implements Depot {
      * @return Resources inside the Depot
      */
     public Resource viewResources() {
-        return resources;
+        return ResourceBuilder.buildFromType(resources.type(),resources.amount());
     }
 
     /**

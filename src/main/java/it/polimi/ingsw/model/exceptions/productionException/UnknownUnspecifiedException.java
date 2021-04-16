@@ -1,9 +1,9 @@
-package it.polimi.ingsw.model.exceptions.gameexception;
+package it.polimi.ingsw.model.exceptions.productionException;
 
 import static it.polimi.ingsw.TextColors.RESET;
 import static it.polimi.ingsw.TextColors.YELLOW;
 
-public class LorenzoMovesException extends GameException{
+public class UnknownUnspecifiedException extends Exception{
     /**
      * msg to identify the error
      */
@@ -13,7 +13,7 @@ public class LorenzoMovesException extends GameException{
      * costructor that save the message to handle
      * @param msg string
      */
-    public LorenzoMovesException(String msg) {
+    public UnknownUnspecifiedException(String msg) {
         super(msg);
     }
 
@@ -24,4 +24,5 @@ public class LorenzoMovesException extends GameException{
     public String getMsg(){
         return YELLOW + msg + RESET;
     }
+
 }

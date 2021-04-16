@@ -7,7 +7,9 @@ import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.WrongDepotException;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
+import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
@@ -52,6 +54,11 @@ public class PersonalBoard {
     private Map<DevCardSlot, Deck<DevCard>> devDeck;
 
     /**
+     * This attribute maps the ProductionID to the DevCardSlot
+     */
+    private Map<DevCardSlot, ProductionID> productionSlotMap;
+
+    /**
      * This attribute contains the function that maps MarketMarble to their respective Resources
      */
     private Function<MarbleColor, ResourceRequisite> marbleConversion;
@@ -66,11 +73,16 @@ public class PersonalBoard {
      */
     private FaithTrack faithTrack;
 
+    /**
+     * This attribute is the Player that own this PersonalBoard
+     */
+    private Player player;
+
 
     /**
      * This method is the constructor of the class
      */
-    public PersonalBoard() {
+    public PersonalBoard(Player player) throws IllegalTypeInProduction {
         this.availableProductions = new EnumMap<>(ProductionID.class);
         this.availableDiscount = new ArrayList<>();
         this.availableResources = new ArrayList<>();
@@ -81,8 +93,9 @@ public class PersonalBoard {
         devDeck.put(DevCardSlot.RIGHT,new Deck<>());
         //TODO Da guardare meglio
         this.marbleConversion = marbleColor -> null;
-        this.warehouse = new Warehouse();
+        this.warehouse = new Warehouse(player);
         this.faithTrack = new FaithTrack();
+        this.player = player;
     }
 
     /**
@@ -204,7 +217,7 @@ public class PersonalBoard {
      * @throws NegativeResourcesDepotException if the Depot "from" hasn't enough resources to move
      * @throws WrongDepotException if the Depot "from" is empty or doesn't have the same type of resources of "resource"
      */
-    public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource resource) throws WrongDepotException, NegativeResourcesDepotException {
+    public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource resource) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException {
         warehouse.moveBetweenDepot(from,to, resource);
     }
 
@@ -221,14 +234,14 @@ public class PersonalBoard {
 
     /**
      * create a new depot in the warehouse
-     * @param depot the new depot
+     * @param depot is the new depot
      */
     public void addDepot(Depot depot) {
-    //    try {
-    //        warehouse.addDepot(resource);
-    //    } catch (ExtraDepotsException e) {
-    //        System.out.println(e.getMsg());
-    //    }
+        try {
+            warehouse.addDepot(depot);
+        } catch (ExtraDepotsException e) {
+            System.out.println(e.getMsg());
+        }
     }
 
     /**
@@ -269,7 +282,7 @@ public class PersonalBoard {
      */
     public List<Resource> viewResources() {
         List<Resource> temp;
-        temp = warehouse.viewResourcesInStrongbox(DepotSlot.STRONGBOX);
+        temp = warehouse.viewResourcesInStrongbox();
         for(DepotSlot depotSlot : DepotSlot.values()) {
             if(!(depotSlot == DepotSlot.STRONGBOX) && !(depotSlot == DepotSlot.BUFFER)) {
                 try {

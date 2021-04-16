@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.exceptions.productionException.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.productionException.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.UnknownProduction;
@@ -19,7 +20,7 @@ public class ProductionTest {
      * create a production as normal production and test all the methods of the production class to check if it works correctly
      */
     @Test
-    public void normalProductionCreation() {
+    public void normalProductionCreation() throws UnknownUnspecifiedException {
         List<Resource> req = Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildShield());
         List<Resource> out = Arrays.asList(ResourceBuilder.buildFaithPoint());
 
@@ -59,8 +60,7 @@ public class ProductionTest {
      * create a production as normal production and test all the methods of the production class to check if it works correctly
      */
     @Test
-    // work in progress do not touch
-    public void unknownProductionCreation() {
+    public void unknownProductionCreation() throws UnknownUnspecifiedException {
         Production test = null;
         NormalProduction ok = null;
         NormalProduction illegal = null;
@@ -85,8 +85,13 @@ public class ProductionTest {
             fail();
         }
 
-        assertFalse(test.insertResource(ResourceBuilder.buildShield()));
-        assertFalse(test.insertResource(ResourceBuilder.buildCoin()));
+        try{
+            test.insertResource(ResourceBuilder.buildShield());
+            test.insertResource(ResourceBuilder.buildCoin());
+            fail();
+        } catch (UnknownUnspecifiedException e){
+
+        }
 
         // normal production ok to be added
         try {
@@ -98,7 +103,6 @@ public class ProductionTest {
             illegalTypeInProduction.printStackTrace();
             fail();
         }
-        System.out.println(ok);
 
         assertFalse(test.activate());
 

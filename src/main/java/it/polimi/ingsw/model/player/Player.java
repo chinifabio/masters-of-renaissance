@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -65,9 +66,9 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param nickname that identify the player
      * @param matchReference used to reference the match which i am playing
      */
-    public Player(String nickname, PlayerToMatch matchReference){
+    public Player(String nickname, PlayerToMatch matchReference) throws IllegalTypeInProduction {
         this.nickname = nickname;
-        this.personalBoard = new PersonalBoard();
+        this.personalBoard = new PersonalBoard(this);
         this.playerState = new NotHisTurnState(this);
 
         this.marbleConversions = new ArrayList<>();
@@ -337,7 +338,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param loot the resource to move
      */
     @Override
-    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws WrongDepotException, NegativeResourcesDepotException {
+    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException {
         this.personalBoard.moveResourceDepot(from, to, loot);
     }
 
