@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.cards.effects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -16,7 +18,8 @@ public class AddDepotEffect extends Effect{
      * This is the constructor of the class. It needs a ResourceType that will be used to determine what Resource can be stored in this depot.
      * @param res that defines what can be stored.
      */
-    public AddDepotEffect(ResourceType res) {
+    @JsonCreator
+    public AddDepotEffect(@JsonProperty("resource") ResourceType res) {
         this.res = res;
     }
 

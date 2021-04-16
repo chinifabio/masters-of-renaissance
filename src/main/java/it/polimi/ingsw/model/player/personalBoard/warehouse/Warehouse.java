@@ -2,13 +2,18 @@ package it.polimi.ingsw.model.player.personalBoard.warehouse;
 
 import it.polimi.ingsw.model.exceptions.ExtraDepotsException;
 import it.polimi.ingsw.model.exceptions.NegativeResourcesDepotException;
+import it.polimi.ingsw.model.exceptions.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.WrongDepotException;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
+import it.polimi.ingsw.model.exceptions.productionException.IllegalNormalProduction;
+import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.productionException.UnknownUnspecifiedException;
+import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerReactEffect;
+import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.*;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.*;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionRecord;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 
 
 import java.util.*;
@@ -19,6 +24,11 @@ import java.util.function.Predicate;
  * This class is the Warehouse that contains Depots
  */
 public class Warehouse {
+
+    /**
+     * This attribute is the list of the available productions that the Player could activates
+     */
+    private Map<ProductionID, Production> availableProductions;
 
     /**
      * This attribute associates the Depot with its DepotSlot
@@ -34,11 +44,30 @@ public class Warehouse {
      * This attribute is a list of all the movements done to activate the Productions, it wil be used to restore the Depot
      * status if the Productions won't be activated
      */
-    private List<ProductionRecord> movesCache;
+    private LinkedList<ProductionRecord> movesCache;
+
+    /**
+     * This attribute is the Player that use this Warehouse
+     */
+    private PlayerReactEffect player;
+
     /**
      * This method is the constructor of the class
      */
-    public Warehouse() {
+    public Warehouse(PlayerReactEffect player) throws IllegalTypeInProduction {
+
+        this.player = player;
+
+        //Initializing Production
+        List<Resource> req = new ArrayList<>();
+        List<Resource> output = new ArrayList<>();
+        req.add(ResourceBuilder.buildUnknown());
+        req.add(ResourceBuilder.buildUnknown());
+        output.add(ResourceBuilder.buildUnknown());
+        this.availableProductions = new EnumMap<>(ProductionID.class);
+        availableProductions.put(ProductionID.BASIC, new UnknownProduction(req,output));
+        this.movesCache = new LinkedList<>();
+
         //Initializing Depots
         depots = new EnumMap<>(DepotSlot.class);
         depots.put(DepotSlot.BOTTOM, DepotBuilder.buildBottomDepot());
@@ -56,7 +85,7 @@ public class Warehouse {
         this.addConstraint(x -> x.getFrom() != DepotSlot.BUFFER);
         this.addConstraint(x-> x.getDest() != DepotSlot.BUFFER);
 
-
+        //TODO Fare la parte di Buffer per ricevere le risorse dal mercato
 
     }
 
@@ -66,11 +95,11 @@ public class Warehouse {
 
     /**
      * This method add extra depots into the Warehouse when the SpecialAbility of LeaderCards are activated
-     * @param resource is for the creation of extra depot that the LeaderCard adds
+     * @param newDepot is the new Depot that will be added into the Warehouse
      * @return true if the Depot is correctly made and there aren't other extraDepot with the same resources
      * @throws ExtraDepotsException when the LeaderCard adds more than the number of extra depots that the warehouse can creates
      */
-    public boolean addDepot(Resource resource) throws ExtraDepotsException {
+    public boolean addDepot(Depot newDepot) throws ExtraDepotsException {
 
         for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()) {
             //Find the first empty space to create extra Depot
@@ -79,13 +108,13 @@ public class Warehouse {
                     //Check if there is already another ExtraDepot with the same resources
                     if (newEntry.getValue() != null) {
                         if(newEntry.getKey() != DepotSlot.BUFFER && newEntry.getKey() != DepotSlot.STRONGBOX && !newEntry.getValue().checkTypeDepot()){
-                            if (newEntry.getValue().viewResources().equalsType(resource)){
+                            if (newEntry.getValue().viewResources().equalsType(newDepot.viewResources())){
                                 return false;
                             }
                         }
                     }
                 }
-                entry.setValue(DepotBuilder.buildSpecialDepot(resource));
+                entry.setValue(newDepot);
                 return true;
             }
         }
@@ -102,7 +131,7 @@ public class Warehouse {
      * @throws NegativeResourcesDepotException if the Depot "from" hasn't enough resources to move
      * @throws WrongDepotException if the Depot "from" is empty or doesn't have the same type of resources of "resource"
      */
-    public boolean moveBetweenDepot(DepotSlot from, DepotSlot dest, Resource resource) throws NegativeResourcesDepotException, WrongDepotException {
+    public boolean moveBetweenDepot(DepotSlot from, DepotSlot dest, Resource resource) throws NegativeResourcesDepotException, WrongDepotException, UnobtainableResourceException {
         MoveResource moveResource = new MoveResource(from, dest, resource);
         AtomicBoolean testResult = new AtomicBoolean(true);
         this.constraint.forEach(x -> {
@@ -125,16 +154,46 @@ public class Warehouse {
         return false;
     }
 
-    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource resource){
+
+    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource resource) throws NegativeResourcesDepotException, UnobtainableResourceException, UnknownUnspecifiedException {
+        ProductionRecord temp = new ProductionRecord(from, dest, resource);
+        if (removeFromDepot(from, resource)){
+            if (availableProductions.get(dest).insertResource(resource)){
+                this.movesCache.add(temp);
+                return true;
+            } else {
+                insertInDepot(from, resource);
+                return false;
+            }
+        }
         return false;
-        //TODO DA IMPLEMENTARE
+        //TODO DA RICONTROLLARE
+
+
     }
 
     /**
      * This method activates the productions selected by the player
      */
-    public void activateProductions(){
-        //TODO Da implementare
+    public boolean activateProductions() throws UnobtainableResourceException {
+
+        for (Map.Entry<ProductionID, Production> entry : availableProductions.entrySet()) {
+            if (entry.getValue().isSelected() && !entry.getValue().activate()){
+                clearProduction();
+                return false;
+            }
+        }
+
+        for (Map.Entry<ProductionID, Production> entry : availableProductions.entrySet()){
+            if(entry.getValue().isActivated()){
+                for (Resource res : entry.getValue().getOutput()){
+                    insertInDepot(DepotSlot.STRONGBOX, res);
+                }
+            }
+            entry.getValue().reset();
+        }
+        return true;
+        //TODO Da ricontrollare
         //Per ogni produzione selezionata prendo le risorse di output e le metto nello strongbox
     }
 
@@ -144,18 +203,22 @@ public class Warehouse {
      * @param resource is the resource to insert into the Depot
      * @return true if the resources are correctly inserted
      */
-    public boolean insertInDepot(DepotSlot type, Resource resource) {
-        if (!depots.get(type).checkTypeDepot()) {
-            return depots.get(type).insert(resource);
-        }
-        for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()) {
-            if ((entry.getValue()) != null && (entry.getValue().checkTypeDepot())) {
-                if((entry.getKey() != type) && entry.getValue().viewResources().equalsType(resource)){
-                    return false;
+    public boolean insertInDepot(DepotSlot type, Resource resource) throws UnobtainableResourceException {
+        resource.onObtain(player);
+        if (resource.isStorable()) {
+            if (!depots.get(type).checkTypeDepot()) {
+                return depots.get(type).insert(resource);
+            }
+            for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()) {
+                if ((entry.getValue()) != null && (entry.getValue().checkTypeDepot())) {
+                    if ((entry.getKey() != type) && entry.getValue().viewResources().equalsType(resource)) {
+                        return false;
+                    }
                 }
             }
+            return depots.get(type).insert(resource);
         }
-        return depots.get(type).insert(resource);
+        return false;
     }
 
     /**
@@ -180,21 +243,41 @@ public class Warehouse {
 
     /**
      * This methods returns a list of resources inside the Strongbox
-     * @param slot is the Strongbox from which the Resources are taken
      * @return the list of all the Resources inside the Strongbox
      */
-    public List<Resource> viewResourcesInStrongbox(DepotSlot slot){
-        return depots.get(slot).viewAllResources();
+    public List<Resource> viewResourcesInStrongbox(){
+        return depots.get(DepotSlot.STRONGBOX).viewAllResources();
     }
 
-    public boolean clearProduction(ProductionID production){
-        return false;
-    }
-    public boolean setNormalProduction(ProductionID productionID, NormalProduction normalProduction){
-        return false;
+    public void clearProduction() throws UnobtainableResourceException {
+        restoreProductions();
+        for (Map.Entry<ProductionID, Production> entry : availableProductions.entrySet()) {
+            entry.getValue().reset();
+        }
     }
 
-    public boolean restoreProduction(){
-        return false;
+    public boolean setNormalProduction(ProductionID productionID, NormalProduction normalProduction) throws IllegalNormalProduction {
+        try {
+            availableProductions.get(productionID).setNormalProduction(normalProduction);
+            return true;
+        } catch (IllegalNormalProduction e) {
+            throw new IllegalNormalProduction(normalProduction, "The method to set this production to normal failed");
+        }
+    }
+
+    public boolean restoreProductions() throws UnobtainableResourceException {
+        for (ProductionRecord record : movesCache){
+            if(!insertInDepot(record.getFrom(), record.getResources())) return false;
+        }
+        return true;
+    }
+
+    //maybe only for testing
+    public void addProduction(ProductionID key, Production value){
+        this.availableProductions.put(key, value);
+    }
+
+    public Map<ProductionID, Production> getProduction(){
+        return this.availableProductions;
     }
 }

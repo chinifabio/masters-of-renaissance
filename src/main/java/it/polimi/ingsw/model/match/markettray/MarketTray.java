@@ -55,7 +55,7 @@ public class MarketTray {
      * the constructor read from a json file the size of the tray and instantiate the right amount and type of marble, saved in the json.
      * then it shuffle the order of the marbles and inster them all in the tray
      */
-    public MarketTray() {
+    public MarketTray(){
         Random rand = new Random();
 
         //Reading the Dimensions of the MarketTray
@@ -90,7 +90,11 @@ public class MarketTray {
         col = dim.col;
 
         if (marbleBuilder.size() != (((row)*(col))+1)){
-            //TODO IMPLEMENTARE LA EXCEPTION
+            try {
+                throw new OutOfBoundMarketTrayException("exception: The Market Tray could not be created because the number of marbles and the size of the Market Tray are different");
+            }catch (OutOfBoundMarketTrayException e){
+                //TODO Da completare
+            }
         }
 
         // TODO implementare un check che le biglie siano del giusto numero (guardando la dimensione del tray ROW*COL)
@@ -116,7 +120,7 @@ public class MarketTray {
      * @throws OutOfBoundMarketTrayException launched when shiftCol is out of bound
      */
     public void pushCol(int shiftCol, PlayerReactEffect player) throws OutOfBoundMarketTrayException, MainActionDoneException {
-        if (boundCheck.test(this.col, shiftCol)) throw new OutOfBoundMarketTrayException();
+        if (boundCheck.test(this.col, shiftCol)) throw new OutOfBoundMarketTrayException("exception: shiftCol is out of bound");
 
         for (int i = 0; i < row; i++) player.obtainResource(marbles[i][shiftCol]);
 
@@ -137,7 +141,7 @@ public class MarketTray {
      * @throws OutOfBoundMarketTrayException launched when shiftRow is out of bound
      */
     public void pushRow(int shiftRow, PlayerReactEffect player) throws OutOfBoundMarketTrayException, MainActionDoneException {
-        if (boundCheck.test(this.row, shiftRow)) throw new OutOfBoundMarketTrayException();
+        if (boundCheck.test(this.row, shiftRow)) throw new OutOfBoundMarketTrayException("exception:shiftRow is out of bound");
 
         for (int i = 0; i < col; i++) player.obtainResource(marbles[shiftRow][i]);
 

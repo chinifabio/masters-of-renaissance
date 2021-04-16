@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.cards.SoloActionToken;
 import it.polimi.ingsw.model.exceptions.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.MissingCardException;
+import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -41,7 +42,7 @@ public class MatchTest {
      * so you can know if the operation is succeed of failed.
      */
     @Test
-    public void buildSingleplayerTest() {
+    public void buildSingleplayerTest() throws IllegalTypeInProduction {
         Match sp = new SingleplayerMatch();
 
         Lorenzo lorenzo = new Lorenzo(sp);
@@ -93,7 +94,7 @@ public class MatchTest {
      * so you can know if the operation is succeed of failed.
      */
     @Test
-    public void buildMultiplayerTest() {
+    public void buildMultiplayerTest() throws IllegalTypeInProduction {
         Match match = new MultiplayerMatch();
 
         Player p1 = new Player("gino", match);

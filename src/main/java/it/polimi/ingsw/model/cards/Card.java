@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.cards;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import it.polimi.ingsw.model.cards.effects.DestroyCardsEffect;
 import it.polimi.ingsw.model.cards.effects.Effect;
@@ -24,13 +22,13 @@ import it.polimi.ingsw.model.player.PlayerReactEffect;
 })
 public abstract class Card{
 
-    public Card(){}
     /**
      * This is the constructor of the class. It needs a cardID and an effect.
      * @param cardID of the Card.
      * @param effect of the Card.
      */
-    public Card(String cardID, Effect effect) {
+    @JsonCreator
+    public Card(@JsonProperty("cardID") String cardID, @JsonProperty("effect") Effect effect) {
         this.cardID = cardID;
         this.effect = effect;
     }

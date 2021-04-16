@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.UnpaintableMarbleException;
 import it.polimi.ingsw.model.exceptions.gameexception.movesexception.MainActionDoneException;
+import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
@@ -43,7 +44,7 @@ public class MarketTrayTest {
      * if the tray contains the same marbles order of the modified configuration.
      */
     @Test
-    public void pushCol() {
+    public void pushCol() throws IllegalTypeInProduction {
         int row = 3;
         int col = 4;
 
@@ -82,7 +83,7 @@ public class MarketTrayTest {
      * if the tray contains the same marbles order of the modified configuration.
      */
     @Test
-    public void pushRow() {
+    public void pushRow() throws IllegalTypeInProduction {
         int row = 3;
         int col = 4;
 

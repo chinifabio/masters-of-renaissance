@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.requisite;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.LootTypeException;
@@ -10,6 +12,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
  * this is used to contain a Resource required to activate a LeaderCard or to buy a devCard
  */
 public class ResourceRequisite implements Requisite {
+
     /**
      * resource type for the activation/buy
      */
@@ -19,7 +22,8 @@ public class ResourceRequisite implements Requisite {
      * constructor need the resource type and
      * @param resource set the resource to handle
      */
-    public ResourceRequisite(Resource resource) {
+    @JsonCreator
+    public ResourceRequisite(@JsonProperty("resource") Resource resource) {
         this.resource = resource;
     }
 
@@ -63,5 +67,13 @@ public class ResourceRequisite implements Requisite {
     //Only for testing
     public Resource getResource(){
         return resource;
+    }
+
+    @Override
+    public String toString() {
+        return "ResourceReq{" +
+                ", type=" + getType() +
+                ", amount=" + getAmount() +
+                '}';
     }
 }

@@ -1,21 +1,27 @@
 package it.polimi.ingsw.model.resource.strategy;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 /**
  * strategy for obtaining faithpoint from resources
  */
 public class GiveFaithPointBehavior implements ObtainStrategy{
+
     /**
      * amount of faith point to give to the player
      */
     int amount;
 
+
+
     /**
      * the constructor receive the amount of faithpoint
      * @param amount amount of the resource
      */
-    public GiveFaithPointBehavior(int amount) {
+    @JsonCreator
+    public GiveFaithPointBehavior(@JsonProperty("amount") int amount) {
         this.amount = amount;
     }
 

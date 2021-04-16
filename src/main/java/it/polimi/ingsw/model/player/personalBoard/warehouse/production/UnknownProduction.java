@@ -1,7 +1,10 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.production;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.exceptions.productionException.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.productionException.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -30,11 +33,11 @@ public class UnknownProduction extends Production{
 
     /**
      * This method is the constructor of the class
-     *
      * @param newRequired
      * @param newOutput
      */
-    public UnknownProduction(List<Resource> newRequired, List<Resource> newOutput) throws IllegalTypeInProduction {
+    @JsonCreator
+    public UnknownProduction(@JsonProperty("required") List<Resource> newRequired, @JsonProperty("output") List<Resource> newOutput) throws IllegalTypeInProduction {
         super(newRequired, newOutput, Arrays.asList(ResourceType.EMPTY));
         this.normal = Optional.empty();
         this.unknownInRequired = this.required.stream().filter(x->x.type() == ResourceType.UNKNOWN).findAny().orElse(null).amount();
@@ -78,8 +81,13 @@ public class UnknownProduction extends Production{
      * @return the succeed of the operation
      */
     @Override
-    public boolean insertResource(Resource resource) {
-        return this.normal.isPresent() && this.normal.get().insertResource(resource);
+    public boolean insertResource(Resource resource) throws UnknownUnspecifiedException {
+        if (!this.normal.isPresent()){
+            throw new UnknownUnspecifiedException("This production is unspecified");
+        }
+        boolean result = this.normal.get().insertResource(resource);
+        if (result) this.selected = true;
+        return result;
     }
 
     /**
@@ -127,7 +135,14 @@ public class UnknownProduction extends Production{
      */
     @Override
     public boolean reset() {
-        this.normal = Optional.of(null);
+        this.normal = Optional.empty();
         return super.reset();
+    }
+
+    @Override
+    public List<Resource> viewResourcesAdded() {
+        return this.normal.isPresent() ?
+                this.normal.get().viewResourcesAdded() :
+                super.viewResourcesAdded();
     }
 }

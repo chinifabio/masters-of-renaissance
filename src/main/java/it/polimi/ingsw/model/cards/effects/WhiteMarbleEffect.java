@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.cards.effects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.resource.ResourceType;
 
@@ -15,7 +17,8 @@ public class WhiteMarbleEffect extends Effect{
      * This is the constructor of the method. It needs a ResourceType which is the one that white marbles will be converted to during the Market phase.
      * @param conv that defines the resource the player will get from white marbles.
      */
-    public WhiteMarbleEffect(Marble conv) {
+    @JsonCreator
+    public WhiteMarbleEffect(@JsonProperty("marble") Marble conv) {
         this.conv = conv;
     }
 

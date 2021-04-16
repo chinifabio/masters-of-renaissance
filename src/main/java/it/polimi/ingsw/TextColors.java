@@ -11,11 +11,11 @@ public class TextColors {
 
     public static String colorResourceType(ResourceType resourceType){
         Map<ResourceType, String> colors = new EnumMap<>(ResourceType.class);
-        colors.put(ResourceType.COIN, YELLOW);
-        colors.put(ResourceType.FAITHPOINT, RED);
-        colors.put(ResourceType.SERVANT, PURPLE);
-        colors.put(ResourceType.STONE, GREEN);
-        colors.put(ResourceType.SHIELD, BLUE);
+        colors.put(ResourceType.COIN, YELLOW_BRIGHT);
+        colors.put(ResourceType.FAITHPOINT, RED_BRIGHT);
+        colors.put(ResourceType.SERVANT, PURPLE_BRIGHT);
+        colors.put(ResourceType.STONE, WHITE_BRIGHT);
+        colors.put(ResourceType.SHIELD, BLUE_BRIGHT);
         colors.put(ResourceType.EMPTY, WHITE);
         colors.put(ResourceType.UNKNOWN, WHITE);
 

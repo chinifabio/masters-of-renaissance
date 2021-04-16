@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.production;
 
+import it.polimi.ingsw.model.exceptions.productionException.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.productionException.IllegalTypeInProduction;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -8,7 +9,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class NormalProduction extends Production{
+public class NormalProduction extends Production {
+    /**
+     * This Constructor is only for the JSON File, don't use it!
+     */
+    public NormalProduction() {
+        super();
+    }
 
     /**
      * This method is the constructor of the class
@@ -20,11 +27,6 @@ public class NormalProduction extends Production{
         super(required, output, Arrays.asList(ResourceType.EMPTY, ResourceType.UNKNOWN));
     }
 
-    /**
-     * This method transform the input resource in output resource if given one matches required one
-     *
-     * @return the succeed of the operation
-     */
     @Override
     public boolean activate() {
         if (this.activated) return false;
@@ -58,7 +60,10 @@ public class NormalProduction extends Production{
         result &= (copy.amount() <= required.stream().filter(x->x.equalsType(copy)).reduce(null, (x,y) -> y).amount());
 
         // store the input if it is legal
-        if (result) stored.merge(input);
+        if (result) {
+            stored.merge(input);
+            this.selected = true;
+        }
 
        return result;
     }
@@ -70,8 +75,8 @@ public class NormalProduction extends Production{
      * @return the succeed of the operation
      */
     @Override
-    public boolean setNormalProduction(NormalProduction normalProduction) {
-        return false;
+    public boolean setNormalProduction(NormalProduction normalProduction) throws IllegalNormalProduction {
+        throw new IllegalNormalProduction(this,"This production can't use this method");
     }
 
     /**
@@ -83,5 +88,10 @@ public class NormalProduction extends Production{
         List<Resource> clone = new ArrayList<>(this.output.size());
         for (Resource item : this.output) if (item.amount() > 0) clone.add(item);
         return clone;
+    }
+
+    //TODO ONLY FOR TESTING
+    public List<Resource> viewResourcesAdded(){
+        return addedResource;
     }
 }

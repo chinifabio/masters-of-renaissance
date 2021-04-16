@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.exceptions.ExtraDiscountException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 
@@ -30,7 +31,7 @@ public interface PlayerReactEffect {
 
     /**
      * This method allow adding a marble conversion to the player
-     * @param fromWhite the resource type to transform white marbles
+     * @param conversion is the Marble to convert
      */
     void addMarbleConversion(Marble conversion);
 

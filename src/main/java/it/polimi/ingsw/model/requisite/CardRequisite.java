@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.requisite;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.LootTypeException;
@@ -10,6 +12,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
  */
 
 public class CardRequisite implements Requisite {
+
     /**
      * level of devCard
      */
@@ -29,7 +32,8 @@ public class CardRequisite implements Requisite {
      * @param level of the card
      * @param color of the card
      */
-    public CardRequisite(LevelDevCard level, ColorDevCard color) {
+    @JsonCreator
+    public CardRequisite(@JsonProperty("level") LevelDevCard level, @JsonProperty("color") ColorDevCard color) {
         this.level = level;
         this.color = color;
     }
@@ -69,5 +73,13 @@ public class CardRequisite implements Requisite {
     @Override
     public int getAmount() {
         return 1;
+    }
+
+    @Override
+    public String toString() {
+        return "CardReq{" +
+                ", lev=" + level +
+                ", color=" + color +
+                '}';
     }
 }

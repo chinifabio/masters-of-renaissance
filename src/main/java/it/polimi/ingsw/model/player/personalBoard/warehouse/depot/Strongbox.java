@@ -56,7 +56,7 @@ public class Strongbox implements Depot {
      * to be withdraw and then checks if the Strongbox have enough resources to remove, otherwise it throws an exception
      * @param output is the resources that will be withdrawn
      * @return true if the resources are correctly withdrawn
-     * @throws NegativeResourcesDepotException if the Strongbox doens't have enough resources to remove
+     * @throws NegativeResourcesDepotException if the Strongbox doesn't have enough resources to remove
      */
     @Override
     public boolean withdraw(Resource output) throws NegativeResourcesDepotException{
@@ -89,7 +89,9 @@ public class Strongbox implements Depot {
      * @return a list of all the resources inside the Strongbox
      */
     public List<Resource> viewAllResources() {
-        return resources;
+        List<Resource> clone = new ArrayList<>(this.resources.size());
+        clone.addAll(this.resources);
+        return clone;
     }
 
     /**

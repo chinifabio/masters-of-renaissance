@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.cards.effects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 
@@ -7,14 +9,15 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Productio
  * This class is a part of the strategy pattern, it implements the interface Effect.
  */
 public class AddProductionEffect extends Effect{
-    public AddProductionEffect() {
-    }
+
+    public AddProductionEffect() {}
 
     /**
      * This is the constructor of the class. It needs the Production that will added to the PersonalBoard.
      * @param prod that will be available to the player once activated.
      */
-    public AddProductionEffect(Production prod) {
+    @JsonCreator
+    public AddProductionEffect(@JsonProperty("prod") Production prod) {
         this.prod = prod;
     }
 

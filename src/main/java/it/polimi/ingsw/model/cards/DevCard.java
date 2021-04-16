@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.cards;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.cards.effects.Effect;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.resource.Resource;
@@ -16,7 +18,8 @@ public class DevCard extends Card{
      * @param level of the card.
      * @param color of the card.
      */
-    public DevCard(String cardID, Effect effect, int victoryPoint, LevelDevCard level, ColorDevCard color, List<Requisite> cost){
+    @JsonCreator
+    public DevCard(@JsonProperty("cardID") String cardID, @JsonProperty("effect") Effect effect, @JsonProperty("victoryPoint") int victoryPoint, @JsonProperty("level") LevelDevCard level, @JsonProperty("color") ColorDevCard color, @JsonProperty("cost") List<Requisite> cost){
         super(cardID, effect);
         this.victoryPoint = victoryPoint;
         this.level = level;
