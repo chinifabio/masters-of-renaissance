@@ -29,7 +29,7 @@ public class DevSetup {
      * @return the top card of the deck which color and level matches the one of the parameters.
      */
     public DevCard showDevDeck(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException {
-        Deck<DevCard> tempDeck = takeFirstCard(row, col);
+        Deck<DevCard> tempDeck = takeOneDeck(row, col);
         try {
             return tempDeck.peekFirstCard();
         } catch (EmptyDeckException e) {
@@ -46,7 +46,7 @@ public class DevSetup {
      * @throws IndexOutOfBoundsException if you are trying to get a card from an empty deck with the chosen colors.
      */
     public DevCard drawFromDeck(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException{
-        Deck<DevCard> tempDeck = takeFirstCard(row, col);
+        Deck<DevCard> tempDeck = takeOneDeck(row, col);
         try {
             return tempDeck.draw();
         } catch (EmptyDeckException e) {
@@ -56,13 +56,13 @@ public class DevSetup {
     }
 
     /**
-     * This method returns a card from a deck selected with level and color.
+     * This method returns the deck  selected with level and color from the list of decks.
      * @param row is the level of the searched deck
      * @param col is the color of the searched deck
      * @return the top card of the deck which color and level matches the one of the parameters.
      * @throws IndexOutOfBoundsException if you are trying to get a card from an empty deck with the chosen colors.
      */
-    private Deck<DevCard> takeFirstCard(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException{
+    private Deck<DevCard> takeOneDeck(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException{
         List<Deck<DevCard>> tempDeck = devDeckGrid
                 .stream()
                 .filter(c -> {

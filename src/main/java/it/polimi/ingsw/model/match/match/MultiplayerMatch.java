@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.match.match;
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
+import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.player.Player;
 
 public class MultiplayerMatch extends Match{

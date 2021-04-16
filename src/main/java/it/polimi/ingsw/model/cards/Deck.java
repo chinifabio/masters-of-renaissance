@@ -112,6 +112,7 @@ public class Deck<T extends Card>{
                 this.discardedCards.add(this.cards.remove(i));
             }
         }
+        this.updateNumberOfCards();
     }
 
     /**

@@ -17,6 +17,7 @@ import it.polimi.ingsw.model.player.state.NotHisTurnState;
 import it.polimi.ingsw.model.player.state.State;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.*;
@@ -144,8 +145,14 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param discount the new discount
      */
     @Override
-    public void addDiscount(Resource discount) {
-        // TODO da implementare i discount
+    public void addDiscount(Resource discount) throws ExtraDiscountException{
+        if(this.marketDiscount.isEmpty() || this.marketDiscount.size() <2){
+            Optional<Resource> temp = Optional.of(ResourceBuilder.buildFromType(discount.type(), 1));
+            this.marketDiscount.add(temp);
+        }
+        else {
+            throw new ExtraDiscountException(this.nickname + " has already two discounts.");
+        }
     }
 
     /**
@@ -289,8 +296,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
         }
         this.slotDestination = destination;
         System.out.println(nickname + ": Asking to Match to buy devCard");
-        match.buyDevCard(row, col);
-        return true;
+        return match.buyDevCard(row, col);
     }
 
     /**
@@ -425,7 +431,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
     }
 
     /**
-     * this method check if the player has requisite.
+     * this method check if the player has requisite
      * If it return true then the warehouse has eliminate the requisites yet
      * If it return false then the player has not the requisite;
      *
@@ -433,8 +439,8 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @return boolean indicating the succeed of the method
      */
     @Override
-    public boolean hasRequisite(Requisite req) throws NoRequisiteException {
-        // TODO gino
+    public boolean hasRequisite(List<Requisite> req, LevelDevCard row, ColorDevCard col) throws NoRequisiteException {
+        // TODO use checkDevCard before removing resources and adding it. use discount here!
         return false;
     }
 

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
+import it.polimi.ingsw.model.exceptions.ExtraDiscountException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
@@ -25,7 +26,7 @@ public interface PlayerReactEffect {
     /**
      * This method gives a discount to the player when buying DevCards
      */
-    void addDiscount(Resource discount);
+    void addDiscount(Resource discount) throws ExtraDiscountException;
 
     /**
      * This method allow adding a marble conversion to the player

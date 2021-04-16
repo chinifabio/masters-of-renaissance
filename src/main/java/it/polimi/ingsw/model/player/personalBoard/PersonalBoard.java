@@ -88,7 +88,9 @@ public class PersonalBoard {
     /**
      * This method add a Discount into the list of availableDiscount
      */
-    public void addDiscount(){}
+    public void addDiscount(){
+        //TODO it's probably better if the player has them
+    }
 
     /**
      * This method add the DevCard bought by the Player into the DevCardSlot
@@ -96,40 +98,59 @@ public class PersonalBoard {
      * @param card is the DevCard bought by the Player
      */
     public boolean addDevCard(DevCardSlot slot, DevCard card){
-        Deck<DevCard> temp = this.devDeck.remove(slot);
         boolean result = false;
+        Deck<DevCard> temp = this.devDeck.get(slot);
         if(temp == null) temp = new Deck<>();
 
-        // queste due righe sono inutili se nel costruttore creo i devDeck, ancora da decidere cosa fare
+        //TODO queste due righe sono inutili se nel costruttore creo i devDeck, ancora da decidere cosa fare
 
-        try {
-            System.out.println(temp.peekFirstCard().getLevel().getLevelCard()+","+(card.getLevel().getLevelCard()-1));
-            if(temp.peekFirstCard().getLevel().getLevelCard() == (card.getLevel().getLevelCard()-1)) {
-                try {
-                    temp.insertCard(card);
-                    result=true;
-                } catch (AlreadyInDeckException e) {          // it should not be possible to enter this catch, the level is different -> can't have two cards with same ID
-                    System.out.println(e.getMsg());
-                }
-            }
-            else{
-            }
-        } catch (EmptyDeckException e1) {
-            if(card.getLevel() == LevelDevCard.LEVEL1){
-                try {
-                    temp.insertCard(card);
-                    result = true;
-                } catch (AlreadyInDeckException e2) {         // it should not be possible to enter this catch, empty deck -> can't have two cards with same ID
-                    System.out.println(e2.getMsg());
-                }
+        if(checkDevCard(slot,card)){
+            try {
+                temp.insertCard(card);
+                result=true;
+                this.devDeck.put(slot,temp);
+            } catch (AlreadyInDeckException e) {          // it should not be possible to enter this catch, the level is different -> can't have two cards with same ID
+                System.out.println(e.getMsg() + "big problem, this should be an unreachable statement");
             }
         }
-        finally {
-            this.devDeck.put(slot,temp);
-            return result;
-        }
+        return result;
     }
 
+    /**
+     * This method checks if a card can be inserted into a given position in the playerBoard.
+     * @param slot where the card will be inserted.
+     * @param card the card that will be inserted.
+     * @return true if the card can be placed into that position.
+     */
+    public boolean checkDevCard(DevCardSlot slot, DevCard card) {
+        boolean result = false;
+        Deck<DevCard> temp = this.devDeck.get(slot);
+        if(temp == null) temp = new Deck<>();
+
+        try {
+            if (temp.peekFirstCard().getLevel().getLevelCard() == (card.getLevel().getLevelCard() - 1)) result = true;
+        } catch (EmptyDeckException e) {
+            if (card.getLevel() == LevelDevCard.LEVEL1) result = true;
+        }
+        return result;
+        }
+
+
+    /**
+     * return a map of the top develop card placed in the player board decks
+     * @return a map of devCardSlot - DevCard
+     */
+    public Map<DevCardSlot, DevCard> viewDevCards() {
+        Map<DevCardSlot, DevCard> tempMap = new EnumMap<>(DevCardSlot.class);
+        for(DevCardSlot devCardSlot : DevCardSlot.values()){
+            try {
+                tempMap.put(devCardSlot,this.devDeck.get(devCardSlot).peekFirstCard());
+            } catch (EmptyDeckException e) {
+                System.out.println(e.getMsg() + "; no " + devCardSlot + " production.");  // needs some changes
+            }
+        }
+        return tempMap;
+    }
 
     /**
      * This method add the LeaderCard in the Player's PersonalBoard
@@ -170,6 +191,14 @@ public class PersonalBoard {
     }
 
     /**
+     * return all the leader card of the player packed in a deck
+     * @return deck of leader card
+     */
+    public Deck<LeaderCard> viewLeaderCard() {
+        return this.leaderDeck;
+    }
+
+    /**
      * This method convert the MarketMarble into their respective Resources
      * @param func is the function that do the conversion
      */
@@ -184,16 +213,87 @@ public class PersonalBoard {
     }
 
     /**
+     * return all the available production
+     * @return list of produciton
+     */
+    public List<Production> possibleProduction() {
+        List<Production> temp = new ArrayList<>();
+        for(ProductionID productionID : ProductionID.values()){
+            temp.add(this.availableProductions.get(productionID));
+        }
+        return temp;
+    }
+
+    /**
      * This method select the production that the Player wants to activate
      * @param productionID is the identifier of the Production that will be activated
      */
     public void selectProduction(ProductionID productionID){
+
     }
 
     /**
      * This method activate the productions selected by the Player
      */
     public void activateProductions(){
+    }
+
+    /**
+     * store the resource in the buffer depot, then it will be the player to move
+     * from buffer depot to a legal one
+     * @param resource the resource obtained
+     */
+    public void obtainResource(Resource resource) {
+        this.warehouse.insertInDepot(DepotSlot.BUFFER,resource);
+    }
+
+
+    //TODO not sure if needed.
+    /**
+     * return all the resources that the player has. It doesn't matter the depot in which they are stored
+     * @return list of resources
+     */
+    public List<Resource> viewResources() {
+        List<Resource> temp;
+        temp = this.warehouse.viewResourcesInStrongbox(DepotSlot.STRONGBOX);
+        for(DepotSlot depotSlot : DepotSlot.values()) {
+            if(!(depotSlot == DepotSlot.STRONGBOX) && !(depotSlot == DepotSlot.BUFFER)) {
+                try {
+                    temp.add(this.warehouse.viewResourcesInDepot(depotSlot));
+                }
+                catch (NullPointerException e){
+                    System.out.println("Il depot " + depotSlot + " non esiste.");
+                }
+            }
+        }
+        return temp;
+    }
+
+    /**
+     * return the resources that the player has in the specified depot
+     * @return list of resources
+     */
+    public List<Resource> askResource(DepotSlot depotSlot) {
+        if(depotSlot == DepotSlot.STRONGBOX){
+            return this.warehouse.viewResourcesInStrongbox(DepotSlot.STRONGBOX);
+        }
+        else{
+            List<Resource> temp = new ArrayList<>();
+            temp.add(warehouse.viewResourcesInDepot(depotSlot));
+            return temp;
+        }
+    }
+
+    /**
+     * create a new depot in the warehouse
+     * @param depot the new depot
+     */
+    public void addDepot(Depot depot) {
+        //    try {
+        //        warehouse.addDepot(depot);
+        //    } catch (ExtraDepotsException e) {
+        //        System.out.println(e.getMsg());
+        //    }
     }
 
     /**
@@ -208,100 +308,26 @@ public class PersonalBoard {
         warehouse.moveBetweenDepot(from,to, resource);
     }
 
-
-
-
     /**
-     * tells to the faith track to move amount times the player marker
-     * @param amount the amount to move
+     * tells to the faith track to move amount times the player marker.
+     * @param amount the amount to move.
+     * @return true if the move is allowed, false otherwhise.
      */
-    public void moveFaithMarker(int amount) {
-        //TODO implementation
-    }
-
-    /**
-     * create a new depot in the warehouse
-     * @param depot the new depot
-     */
-    public void addDepot(Depot depot) {
-    //    try {
-    //        warehouse.addDepot(resource);
-    //    } catch (ExtraDepotsException e) {
-    //        System.out.println(e.getMsg());
-    //    }
-    }
-
-    /**
-     * Move the Lorenzo marker amount times
-     * @param amount moves of lorenzo
-     */
-    public void moveLorenzo(int amount) {
+    public boolean moveFaithMarker(int amount) {
+        boolean result = false;
         try {
-            faithTrack.moveLorenzo(amount);
+            this.faithTrack.movePlayer(amount);
+            result = true;
         } catch (IllegalMovesException e) {
             System.out.println(e.getMsg());
         } catch (WrongPointsException e) {
             System.out.println(e.getMsg());
         }
-    }
-
-    /**
-     * return all the available production
-     * @return list of produciton
-     */
-    public List<Production> possibleProduction() {
-        // TODO implementazione
-        return null;
-    }
-
-    /**
-     * return all the leader card of the player packed in a deck
-     * @return deck of leader card
-     */
-    public Deck<LeaderCard> viewLeaderCard() {
-        Deck<LeaderCard> temp = this.leaderDeck;
-        return temp;
-    }
-
-    /**
-     * return all the resources that the player has. It doesn't matter the depot in which they are stored
-     * @return list of resources
-     */
-    public List<Resource> viewResources() {
-        List<Resource> temp;
-        temp = warehouse.viewResourcesInStrongbox(DepotSlot.STRONGBOX);
-        for(DepotSlot depotSlot : DepotSlot.values()) {
-            if(!(depotSlot == DepotSlot.STRONGBOX) && !(depotSlot == DepotSlot.BUFFER)) {
-                try {
-                    temp.add(warehouse.viewResourcesInDepot(depotSlot));
-                }
-                catch (NullPointerException e){
-                    System.out.println("Il depot " + depotSlot + " non esiste.");
-                }
-            }
-        }
-        return temp;
-    }
-
-    /**
-     * return a map of the top develop card placed in the player board decks
-     * @return a map of devCardSlot - DevCard
-     */
-    public Map<DevCardSlot, DevCard> viewDevCards() {
-        Map<DevCardSlot, DevCard> tempMap = new EnumMap<>(DevCardSlot.class);
-        for(DevCardSlot devCardSlot : DevCardSlot.values()){
-            try {
-                tempMap.put(devCardSlot,this.devDeck.get(devCardSlot).peekFirstCard());
-            } catch (EmptyDeckException e) {
-                System.out.println(e.getMsg() + "; no " + devCardSlot + " production.");
-            }
-        }
-        return tempMap;
+        return result;
     }
 
     /**
      * return the faith marker position of the player
-     *
      * @return faith marker position of the player
      */
     public int FaithMarkerPosition() {
@@ -309,18 +335,36 @@ public class PersonalBoard {
     }
 
     /**
+     * Move the Lorenzo marker amount times
+     * @param amount moves of lorenzo
+     */
+    public boolean moveLorenzo(int amount) {
+        boolean result = false;
+        try {
+            faithTrack.moveLorenzo(amount);
+            result = true;
+        } catch (IllegalMovesException e) {
+            System.out.println(e.getMsg());
+        } catch (WrongPointsException e) {
+            System.out.println(e.getMsg());
+        }
+        return result;
+    }
+
+    /**
+     * return the faith marker position of Lorenzo
+     * @return faith marker position of Lorenzo
+     */
+    public int LorenzoMarkerPosition() {
+        return faithTrack.getLorenzoPosition();
+    }
+
+    /**
      * check if it need to be flipped the pope tile passed as parameter
      * @param popeTile the pope tile to check
      */
     public void flipPopeTile(VaticanSpace popeTile) {
-        // TODO implementazione
+        this.faithTrack.flipPopeTile(popeTile);
     }
 
-    /**
-     * store the resource in the buffer depot, then it will be the player to move
-     * from buffer depot to a legal one
-     * @param resource the resource obtained
-     */
-    public void obtainResource(Resource resource) {
-    }
 }

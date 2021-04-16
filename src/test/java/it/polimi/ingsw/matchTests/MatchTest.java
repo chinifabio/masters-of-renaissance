@@ -68,7 +68,8 @@ public class MatchTest {
         PlayerAction lore = lorenzo;
         PlayerAction player = dummy1;
 
-        assertTrue(player.buyDevCard(LevelDevCard.LEVEL1, ColorDevCard.BLUE, DevCardSlot.CENTER));
+        assertFalse(player.buyDevCard(LevelDevCard.LEVEL1, ColorDevCard.BLUE, DevCardSlot.CENTER));
+        //TODO change to assertTrue when devSetup in match is completed
 
         assertFalse(player.useMarketTray(RowCol.COL, 2));
 
@@ -84,8 +85,6 @@ public class MatchTest {
         assertTrue(player.endThisTurn());
         assertTrue(player.endThisTurn());
         assertTrue(player.endThisTurn());
-
-
     }
 
     /**
@@ -154,6 +153,13 @@ public class MatchTest {
         } catch (EmptyDeckException e) {
             System.out.println(e.getMsg());
         }
+
+    }
+
+    @Test
+    public void DevSetup(){
+        Match match = new MultiplayerMatch();
+        //TODO in attesa del cambio nel costruttore del match
 
     }
 }

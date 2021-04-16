@@ -84,7 +84,7 @@ public class FaithTrack {
     public void movePlayer(int points) throws IllegalMovesException, WrongPointsException {
 
         if (points< 0){
-            throw new WrongPointsException("exception: the Player can't use this resources to move!");
+            throw new WrongPointsException("exception: the Player can't move backwards!");
         }
 
         if (this.playerPosition >= track.size()-1 && points > 0) {

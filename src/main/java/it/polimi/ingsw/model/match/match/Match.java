@@ -1,18 +1,24 @@
 package it.polimi.ingsw.model.match.match;
 
 import it.polimi.ingsw.model.cards.*;
+import it.polimi.ingsw.model.exceptions.NoRequisiteException;
 import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.UnpaintableMarbleException;
 import it.polimi.ingsw.model.exceptions.gameexception.movesexception.MainActionDoneException;
-import it.polimi.ingsw.model.match.DevSetup;
+import it.polimi.ingsw.model.cards.DevSetup;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.MarketTray;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
+import it.polimi.ingsw.model.requisite.Requisite;
+import it.polimi.ingsw.model.resource.Resource;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class Match implements PlayerToMatch {
     /**
@@ -55,10 +61,28 @@ public abstract class Match implements PlayerToMatch {
         gameOnAir = false;
 
         this.marketTray = new MarketTray();
-        this.devSetup = new DevSetup();
+
+        List<Deck<DevCard>> decks = new ArrayList<>(); //TODO da aggiungere al costruttore! sia qui che nelle sottoclassi
+
+        this.devSetup = new DevSetup(decks);
         this.leaderCardDeck = new Deck<>();
         // legge e crea tutte le carte leader
     }
+
+    //TODO cancellare questo costruttore: usato nei test prima dell'implementazione json delle devCard
+    protected Match(int gameSize, List<Deck<DevCard>> decks) {
+        this.gameSize = gameSize;
+
+        this.turn = new Turn();
+        gameOnAir = false;
+
+        this.marketTray = new MarketTray();
+
+        this.devSetup = new DevSetup(decks);
+        this.leaderCardDeck = new Deck<>();
+        // legge e crea tutte le carte leader
+    }
+
 
     /**
      * add a new player to the game
@@ -126,7 +150,14 @@ public abstract class Match implements PlayerToMatch {
      */
     @Override
     public List<DevCard> viewDevSetup() {
-        return this.devSetup.viewDevSetup();
+        List<DevCard> temp = new ArrayList<>();
+        for(ColorDevCard colorDevCard : ColorDevCard.values()){
+            for(LevelDevCard levelDevCard : LevelDevCard.values()){
+                temp.add(this.devSetup.showDevDeck(levelDevCard,colorDevCard));
+            }
+        }
+        return temp;
+        //TODO testing: what if the level1 deck is empty? does it break?
     }
 
     /**
@@ -138,8 +169,20 @@ public abstract class Match implements PlayerToMatch {
      */
     @Override
     public boolean buyDevCard(LevelDevCard row, ColorDevCard col) {
-        System.out.println("Match: " + turn.getCurPlayer().getNickname() + " buys DevCard -> " + "level: " + row + " color: " + col);
-        // TODO aggiornare con devsetup fatto
+        System.out.println("Match: " + this.turn.getCurPlayer().getNickname() + " tries to buy DevCard -> " + "level: " + row + " color: " + col);
+        try {
+            if (this.turn.getCurPlayer().hasRequisite(this.devSetup.showDevDeck(row, col).getCost(),row,col)){
+                this.turn.getCurPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
+                System.out.println();
+                return true;
+            }
+        } catch(NoRequisiteException e1){
+            System.out.println("problema, manca il requisite della carta");
+            return false; //TODO it should never enter here
+        } catch(IndexOutOfBoundsException e2){
+            System.out.println("Pescata da un mazzo vuoto!");
+        }
+
         return false;
     }
 

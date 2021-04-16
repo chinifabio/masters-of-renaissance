@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.cards.effects;
 
+import it.polimi.ingsw.model.exceptions.ExtraDiscountException;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -30,6 +31,10 @@ public class AddDiscountEffect extends Effect{
      */
     @Override
     public void use(PlayerReactEffect p) {
-        p.addDiscount(ResourceBuilder.buildFromType(this.t, 1));
+        try {
+            p.addDiscount(ResourceBuilder.buildFromType(this.t, 1));
+        } catch (ExtraDiscountException e) {
+            System.out.println(e.getMsg());
+        }
     }
 }

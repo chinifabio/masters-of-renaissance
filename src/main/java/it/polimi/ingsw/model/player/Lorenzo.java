@@ -80,7 +80,7 @@ public class Lorenzo extends Player{
      * @return boolean indicating the succeed of the method
      */
     @Override
-    public boolean hasRequisite(Requisite req) throws NoRequisiteException {
+    public boolean hasRequisite(List<Requisite> req,LevelDevCard row, ColorDevCard col) throws NoRequisiteException {
         return false;
     }
 

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 
 
+import it.polimi.ingsw.model.match.match.Match;
+
 /**
  * This class represents special cells that activates the Vatican Report
  */

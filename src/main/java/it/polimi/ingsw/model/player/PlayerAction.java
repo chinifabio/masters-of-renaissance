@@ -13,6 +13,7 @@ import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface PlayerAction {
 
@@ -98,7 +99,7 @@ public interface PlayerAction {
     Deck<LeaderCard> viewLeader();
 
     /**
-     * return a list of all available player's resource. It doesn't mattare the depot they are stored
+     * return a list of all available player's resource. It doesn't matter the depot they are stored
      * @return a list of resource
      */
     List<Resource> viewResource();
