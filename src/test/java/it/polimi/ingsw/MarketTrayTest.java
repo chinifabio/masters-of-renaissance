@@ -3,12 +3,16 @@ package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
+import it.polimi.ingsw.model.exceptions.UnpaintableMarbleException;
 import it.polimi.ingsw.model.exceptions.gameexception.movesexception.MainActionDoneException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
+import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
+import it.polimi.ingsw.model.match.markettray.MarkerMarble.PaintableMarble;
 import it.polimi.ingsw.model.match.markettray.MarketTray;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
+import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumMap;
@@ -147,6 +151,68 @@ public class MarketTrayTest {
         assertEquals(2, map.get(MarbleColor.YELLOW));
         assertEquals(2, map.get(MarbleColor.PURPLE));
         assertEquals(1, map.get(MarbleColor.RED));
+
+    }
+
+    @Test
+    public void testMarblePainting() {
+        MarketTray tray = new MarketTray();
+
+        Marble conversion = MarbleBuilder.buildGray();
+
+        List<Marble> marbles = tray.showMarketTray();
+        marbles.add(tray.showSlideMarble());
+        marbles.forEach(x-> System.out.println(x.toResource()));
+
+        System.out.println("1- "+marbles);
+        Map<ResourceType, Integer> map = new EnumMap<>(ResourceType.class);
+
+        for (Marble marble : marbles) {
+            if (map.containsKey(marble.toResource().type())) {
+                int j = map.get(marble.toResource().type());
+                map.put(marble.toResource().type(), ++j);
+            } else {
+                map.put(marble.toResource().type(), 1);
+            }
+        }
+
+        assertEquals(4, map.get(ResourceType.EMPTY));
+        assertEquals(2, map.get(ResourceType.SERVANT));
+        assertEquals(2, map.get(ResourceType.SHIELD));
+        assertEquals(2, map.get(ResourceType.STONE));
+        assertEquals(2, map.get(ResourceType.COIN));
+        assertEquals(1, map.get(ResourceType.FAITHPOINT));
+
+        int i = 0;
+        while (marbles.get(i).type() != MarbleColor.WHITE) i++;
+        try {
+            tray.paintMarble(conversion, i);
+        } catch (UnpaintableMarbleException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        marbles = tray.showMarketTray();
+        marbles.add(tray.showSlideMarble());
+        marbles.forEach(x-> System.out.println(x.toResource().type()));
+
+        Map<ResourceType, Integer> map2 = new EnumMap<>(ResourceType.class);
+        for (Marble x : marbles) {
+            if (map2.containsKey(x.toResource().type())) {
+                int j = map2.get(x.toResource().type());
+                map2.put(x.toResource().type(), ++j);
+            } else {
+                map2.put(x.toResource().type(), 1);
+            }
+        }
+
+        assertEquals(3, map2.get(ResourceType.EMPTY));
+        assertEquals(2, map2.get(ResourceType.SERVANT));
+        assertEquals(2, map2.get(ResourceType.SHIELD));
+        assertEquals(3, map2.get(ResourceType.STONE));
+        assertEquals(2, map2.get(ResourceType.COIN));
+        assertEquals(1, map2.get(ResourceType.FAITHPOINT));
+
 
     }
 }

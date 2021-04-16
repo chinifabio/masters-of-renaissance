@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.match.match;
 
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
+import it.polimi.ingsw.model.exceptions.UnpaintableMarbleException;
 import it.polimi.ingsw.model.exceptions.gameexception.movesexception.MainActionDoneException;
 import it.polimi.ingsw.model.match.DevSetup;
 import it.polimi.ingsw.model.match.PlayerToMatch;
@@ -105,6 +106,17 @@ public abstract class Match implements PlayerToMatch {
             case ROW: this.marketTray.pushRow(index, turn.getCurPlayer());
             //default: throw new GameException();
         }
+    }
+
+    /**
+     * paint a marble in market tray
+     *
+     * @param newColor    the new marble color
+     * @param marbleIndex
+     */
+    @Override
+    public void paintMarbleInTray(Marble newColor, int marbleIndex) throws UnpaintableMarbleException {
+        this.marketTray.paintMarble(newColor, marbleIndex);
     }
 
     /**

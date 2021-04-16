@@ -43,7 +43,7 @@ public class MarbleBuilder {
      * @return white marble
      */
     public static Marble buildWhite() {
-        return new Marble(MarbleColor.WHITE, ResourceType.UNKNOWN);
+        return new PaintableMarble(MarbleColor.WHITE);
     }
 
     /**

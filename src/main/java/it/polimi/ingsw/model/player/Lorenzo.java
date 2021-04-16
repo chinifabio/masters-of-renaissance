@@ -172,10 +172,10 @@ public class Lorenzo extends Player{
     /**
      * This method allow adding a marble conversion to the player
      *
-     * @param fromWhite the resource type to transform white marbles
+     * @param conversion the resource type to transform white marbles
      */
     @Override
-    public void addMarbleConversion(ResourceType fromWhite) {
+    public void addMarbleConversion(Marble conversion) {
         try {
             throw new LorenzoMovesException();
         } catch (LorenzoMovesException e) {

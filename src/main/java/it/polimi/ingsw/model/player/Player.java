@@ -48,7 +48,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
     /**
      * This attribute contains all the player's white marble conversion
      */
-    private final LinkedList<ResourceType> marbleConversions;
+    private final List<Marble> marbleConversions;
 
     /**
      * the match instance that player uses to talk with the match instance
@@ -69,9 +69,10 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
         this.nickname = nickname;
         this.personalBoard = new PersonalBoard();
         this.playerState = new NotHisTurnState(this);
-        this.marbleConversions = new LinkedList<>();
-        this.marbleConversions.add(ResourceType.UNKNOWN);
+
+        this.marbleConversions = new ArrayList<>();
         this.marketDiscount = new ArrayList<>();
+
         this.match = matchReference;
     }
 
@@ -153,7 +154,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param newConversion the resource type to transform white marbles
      */
     @Override
-    public void addMarbleConversion(ResourceType newConversion) {
+    public void addMarbleConversion(Marble newConversion) {
         this.marbleConversions.add(newConversion);
     }
 
@@ -180,7 +181,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      */
     @Override
     public void obtainResource(Marble marble) {
-        this.obtainResource(marble.toResource(this.marbleConversions.element()));
+        this.obtainResource(marble.toResource());
     }
 
     /**
@@ -249,13 +250,17 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
     /**
      * This method allows the player to select which Resources to get when he activates two LeaderCards with the same
      * SpecialAbility that converts white marbles in resources
-     *
-     * @param resource resource to set as default as white marble conversion
+     * @param marbleIndex the index of chosen tray's marble to color
+     * @param conversionsIndex the index of the marble conversions available
      */
     @Override
-    public void selectWhiteConversion(Resource resource) {
-        this.marbleConversions.remove(resource.type());
-        this.marbleConversions.addFirst(resource.type());
+    public void paintMarbleInTray(int conversionsIndex, int marbleIndex) {
+        try {
+            this.match.paintMarbleInTray(this.marbleConversions.get(conversionsIndex).copy(), marbleIndex);
+        } catch (UnpaintableMarbleException e) {
+            e.printStackTrace();
+            // todo da mandare al client
+        }
     }
 
     /**

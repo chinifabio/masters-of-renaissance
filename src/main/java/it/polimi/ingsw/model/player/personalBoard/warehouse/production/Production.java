@@ -89,8 +89,8 @@ public abstract class Production{
     }
 
     /**
-     * This method turns the "selected" attribute to true
-     * @return true when this Production is selected
+     * This method turns the "activated" attribute to true
+     * @return true when this Production is activated
      */
     public boolean isActivated() {
         return this.activated;

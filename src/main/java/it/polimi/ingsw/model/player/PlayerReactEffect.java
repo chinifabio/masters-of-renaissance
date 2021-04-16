@@ -31,7 +31,7 @@ public interface PlayerReactEffect {
      * This method allow adding a marble conversion to the player
      * @param fromWhite the resource type to transform white marbles
      */
-    void addMarbleConversion(ResourceType fromWhite);
+    void addMarbleConversion(Marble conversion);
 
     /**
      * This method insert the Resources obtained from the Market to the Depots

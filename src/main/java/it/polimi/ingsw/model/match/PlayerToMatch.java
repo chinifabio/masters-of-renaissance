@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.match;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
+import it.polimi.ingsw.model.exceptions.UnpaintableMarbleException;
 import it.polimi.ingsw.model.exceptions.gameexception.GameException;
 import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.gameexception.movesexception.MainActionDoneException;
@@ -60,6 +61,13 @@ public interface PlayerToMatch {
      * @param color the color of discarded cards in dev setup
      */
     void discardDevCard(ColorDevCard color);
+
+    /**
+     * paint a marble in market tray
+     * @param newColor the new marble color
+     * @param marbleIndex
+     */
+    void paintMarbleInTray(Marble newColor, int marbleIndex) throws UnpaintableMarbleException;
 
     /**
      * Tells to the match the end of the player turn;

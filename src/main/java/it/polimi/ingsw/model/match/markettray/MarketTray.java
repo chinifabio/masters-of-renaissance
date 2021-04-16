@@ -1,16 +1,19 @@
 package it.polimi.ingsw.model.match.markettray;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import it.polimi.ingsw.model.cards.Deck;
+import it.polimi.ingsw.model.cards.SoloActionToken;
 import it.polimi.ingsw.model.exceptions.OutOfBoundMarketTrayException;
+import it.polimi.ingsw.model.exceptions.UnpaintableMarbleException;
 import it.polimi.ingsw.model.exceptions.gameexception.movesexception.MainActionDoneException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.*;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -70,12 +73,16 @@ public class MarketTray {
 
         //Reading the Marbles
         List<Marble> marbleBuilder = new ArrayList<>();
-        Gson gson = new Gson();
-        try{
-            BufferedReader br = new BufferedReader(new FileReader("src/resources/Marble.json"));
-            marbleBuilder = gson.fromJson(br, new TypeToken<List<Marble>>(){}.getType());
-        } catch (FileNotFoundException e){
-            System.out.println("The JSON file to create Marbles was not found!");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            marbleBuilder = objectMapper.readValue(
+                    new File("src/resources/Marble.json"),
+                    new TypeReference<List<Marble>>(){});
+        }catch (IOException e){
+            e.printStackTrace();
+            System.out.println("The file to create the marbles list wasn't found");
+            //TODO LANCIARE UN'ECCEZIONE AL MODEL
         }
 
 
@@ -161,5 +168,31 @@ public class MarketTray {
      */
     public Marble showSlideMarble() {
         return slideMarble.copy();
+    }
+
+    /**
+     * set a new marble color in a paintable
+     * @param newColor the new marble color
+     * @param marbleIndex the number in the list of marble
+     * @throws UnpaintableMarbleException throw if
+     */
+    public void paintMarble(Marble newColor, int marbleIndex) throws UnpaintableMarbleException {
+        int x = marbleIndex / col;
+        int y = marbleIndex % col;
+        if(this.marbles[x][y].isPaintable()) {
+            this.marbles[x][y].paint(newColor);
+        }
+        else throw new UnpaintableMarbleException();
+    }
+
+    /**
+     * restore all marble in the tray
+     */
+    public void unPaint(){
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                marbles[i][j].copy().unPaint();
+            }
+        }
     }
 }

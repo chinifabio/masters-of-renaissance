@@ -119,4 +119,15 @@ public class UnknownProduction extends Production{
         this.normal = Optional.of(normalProduction);
         return true;
     }
+
+    /**
+     * This method reset the production
+     *
+     * @return the succeed of the operation
+     */
+    @Override
+    public boolean reset() {
+        this.normal = Optional.of(null);
+        return super.reset();
+    }
 }

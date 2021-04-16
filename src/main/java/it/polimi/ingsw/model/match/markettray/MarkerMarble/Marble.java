@@ -1,9 +1,17 @@
 package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 
+import com.fasterxml.jackson.annotation.*;
+import it.polimi.ingsw.model.exceptions.UnpaintableMarbleException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
+@JsonSubTypes({
+        @JsonSubTypes.Type(name = "Normal", value = Marble.class),
+        @JsonSubTypes.Type(name = "White", value = PaintableMarble.class)
+})
 /**
  * interface that contains the method to handle marbles obtained from the marketTray
  */
@@ -11,18 +19,25 @@ public class Marble {
     /**
      * the color of the marble
      */
-    private MarbleColor color;
+    @JsonProperty("color")
+    protected MarbleColor color;
     /**
      * the resource associated to the color
      */
-    private ResourceType toResource;
+    protected ResourceType toResource;
+
+    /**
+     * for jackson
+     */
+    public Marble(){}
 
     /**
      * the constructor take the color and the resource mapped
      * @param color color of the marble
      * @param toResource resourceType to build the resource when someone request it
      */
-    protected Marble(MarbleColor color, ResourceType toResource) {
+    @JsonCreator
+    protected Marble(@JsonProperty("color") MarbleColor color, @JsonProperty("toResource") ResourceType toResource) {
         this.color = color;
         this.toResource = toResource;
     }
@@ -39,11 +54,12 @@ public class Marble {
      * return the resource associated to the color
      * @return the mapped resource
      */
-    public Resource toResource(ResourceType whiteCase) {
-        return this.color == MarbleColor.WHITE ?
-                ResourceBuilder.buildFromType(whiteCase, 1):
-                ResourceBuilder.buildFromType(toResource, 1);
+    public Resource toResource(){
+        return ResourceBuilder.buildFromType(toResource, 1);
+    }
 
+    public boolean isPaintable(){
+        return false;
     }
 
     /**
@@ -52,6 +68,15 @@ public class Marble {
      */
     public Marble copy(){
         return new Marble(color, toResource);
+    }
+
+    /**
+     *
+     * @param painted
+     * @throws UnpaintableMarbleException
+     */
+    public void paint(Marble painted) throws UnpaintableMarbleException {
+        throw new UnpaintableMarbleException();
     }
 
     /**
@@ -74,5 +99,12 @@ public class Marble {
     @Override
     public String toString() {
         return this.color.toString();
+    }
+
+    /**
+     * reset the paint of this marble
+     */
+    public void unPaint() {
+
     }
 }

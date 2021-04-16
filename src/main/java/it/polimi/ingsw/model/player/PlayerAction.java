@@ -33,9 +33,10 @@ public interface PlayerAction {
     /**
      * This method allows the player to select which Resources to get when he activates two LeaderCards with the same
      * SpecialAbility that converts white marbles in resources
-     * @param resource resource to set as default as white marble conversion
+     * @param marbleIndex the index of chosen tray's marble to color
+     * @param conversionsIndex the index of the marble conversions available
      */
-    void selectWhiteConversion(Resource resource);
+    void paintMarbleInTray(int conversionsIndex, int marbleIndex);
 
     /**
      * return a view of the dev setup. It is shown only the first card of each decks

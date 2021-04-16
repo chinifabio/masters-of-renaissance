@@ -1,53 +1,62 @@
 [
   {
-    "color": "WHITE",
-    "toResource": "UNKNOWN"
+    "type": "White",
+    "color": "WHITE"
   },
   {
-    "color": "WHITE",
-    "toResource": "UNKNOWN"
+    "type": "White",
+    "color": "WHITE"
   },
   {
-    "color": "WHITE",
-    "toResource": "UNKNOWN"
+    "type": "White",
+    "color": "WHITE"
   },
   {
-    "color": "WHITE",
-    "toResource": "UNKNOWN"
+    "type": "White",
+    "color": "WHITE"
   },
   {
+    "type": "Normal",
     "color": "BLUE",
     "toResource": "SHIELD"
   },
   {
+    "type": "Normal",
     "color": "BLUE",
     "toResource": "SHIELD"
   },
   {
+    "type": "Normal",
     "color": "GRAY",
     "toResource": "STONE"
   },
   {
+    "type": "Normal",
     "color": "GRAY",
     "toResource": "STONE"
   },
   {
+    "type": "Normal",
     "color": "YELLOW",
     "toResource": "COIN"
   },
   {
+    "type": "Normal",
     "color": "YELLOW",
     "toResource": "COIN"
   },
   {
+    "type": "Normal",
     "color": "PURPLE",
     "toResource": "SERVANT"
   },
   {
+    "type": "Normal",
     "color": "PURPLE",
     "toResource": "SERVANT"
   },
   {
+    "type": "Normal",
     "color": "RED",
     "toResource": "FAITHPOINT"
   }
