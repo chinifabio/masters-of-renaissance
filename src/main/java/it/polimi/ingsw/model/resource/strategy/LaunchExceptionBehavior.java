@@ -17,6 +17,6 @@ public class LaunchExceptionBehavior implements ObtainStrategy{
      */
     @Override
     public void obtain(PlayerReactEffect player) throws UnobtainableResourceException {
-        throw new UnobtainableResourceException("exception: The Player can't receive this resource");
+        throw new UnobtainableResourceException();
     }
 }

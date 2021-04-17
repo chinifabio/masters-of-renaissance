@@ -1,10 +1,6 @@
 package it.polimi.ingsw.model.resource;
 
 import com.fasterxml.jackson.annotation.*;
-import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
-import it.polimi.ingsw.model.cards.effects.DestroyCardsEffect;
-import it.polimi.ingsw.model.cards.effects.MoveTwoEffect;
-import it.polimi.ingsw.model.cards.effects.ShuffleMoveOneEffect;
 import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;

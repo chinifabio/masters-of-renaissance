@@ -74,14 +74,8 @@ public class MatchTest {
         try {
             assertTrue(player.buyDevCard(LevelDevCard.LEVEL1, ColorDevCard.BLUE, DevCardSlot.CENTER));
 
-        } catch(NoRequisiteException e1){
-            System.out.println("problema, manca il requisite della carta");
-        } catch(IndexOutOfBoundsException e2){
-            System.out.println("Pescata da un mazzo vuoto!");
-        } catch (NotHisTurnException e) {
-            e.printStackTrace();
-        } catch (MainActionDoneException e) {
-            e.printStackTrace();
+        } catch(NoRequisiteException | IndexOutOfBoundsException | NotHisTurnException | MainActionDoneException e1){
+            e1.printStackTrace();
         }
         //TODO change to assertTrue when devSetup in match is completed
 
@@ -143,9 +137,9 @@ public class MatchTest {
                     try {
                         assertFalse(x.activateProductions());
                     } catch (NotHisTurnException e) {
-                        System.out.println("non turno");
+                        e.printStackTrace();
                     } catch (MainActionDoneException e) {
-                        System.out.println("main done");
+                        e.printStackTrace();
                     }
                     x.endThisTurn();
                 }
@@ -154,7 +148,7 @@ public class MatchTest {
     }
 
     @Test
-    public void LorenzoBelloTest() throws MissingCardException {
+    public void CreateTokensTest() throws MissingCardException, EmptyDeckException {
         Deck<SoloActionToken> soloToken;
         List<SoloActionToken> init = new ArrayList<>();
 
@@ -165,14 +159,13 @@ public class MatchTest {
                     new TypeReference<List<SoloActionToken>>(){});
         }catch (IOException e){
             e.printStackTrace();
-            System.out.println("The file to create the  wasn't found");
+            System.out.println("The file to create the SoloActionTokens wasn't found");
         }
         soloToken = new Deck<>(init);
-        try {
-            System.out.println(soloToken.peekFirstCard());
-        } catch (EmptyDeckException e) {
-            System.out.println(e.getMsg());
-        }
+
+        assertEquals(7, soloToken.getNumberOfCards());
+        assertEquals("ST1", soloToken.peekFirstCard().getCardID());
+        assertEquals("ST5", soloToken.peekCard("ST5").getCardID());
 
     }
 
@@ -180,6 +173,5 @@ public class MatchTest {
     public void DevSetup(){
         Match match = new MultiplayerMatch();
         //TODO in attesa del cambio nel costruttore del match
-
     }
 }

@@ -161,7 +161,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
             this.marketDiscount.add(temp);
         }
         else {
-            throw new ExtraDiscountException(this.nickname + " has already two discounts.");
+            throw new ExtraDiscountException();
         }
     }
 
@@ -278,7 +278,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
         this.slotDestination = destination;
         System.out.println(nickname + ": Asking to Match to buy devCard");
         boolean res = match.buyDevCard(row, col);
-        if (res == true) playerState.doMainActionInput();
+        if (res) playerState.doMainActionInput();
         return res;
     }
 

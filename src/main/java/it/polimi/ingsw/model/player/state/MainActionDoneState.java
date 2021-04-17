@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.player.state;
 
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
 import it.polimi.ingsw.model.exceptions.game.movesexception.MainActionDoneException;
 import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
 
@@ -18,7 +17,7 @@ public class MainActionDoneState extends State {
      */
     @Override
     public void startTurnInput() throws TurnStartedException {
-        throw new TurnStartedException("turn already started");
+        throw new TurnStartedException();
     }
 
     /**
@@ -26,7 +25,7 @@ public class MainActionDoneState extends State {
      */
     @Override
     public void doMainActionInput() throws MainActionDoneException {
-        throw new MainActionDoneException("no more action can be done");
+        throw new MainActionDoneException();
     }
 
     /**

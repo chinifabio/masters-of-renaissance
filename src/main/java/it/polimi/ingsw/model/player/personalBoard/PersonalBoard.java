@@ -101,7 +101,6 @@ public class PersonalBoard {
                 return true;
             } catch (AlreadyInDeckException e) {
                 e.printStackTrace();
-                System.out.println(e.getMsg() + "big problem, this should be an unreachable statement");
             }
         }
         return false;
@@ -137,7 +136,7 @@ public class PersonalBoard {
             try {
                 tempMap.put(devCardSlot,this.devDeck.get(devCardSlot).peekFirstCard());
             } catch (EmptyDeckException e) {
-                System.out.println(e.getMsg() + "; no " + devCardSlot + " production.");  // needs some changes
+                e.printStackTrace();
             }
         }
         return tempMap;
@@ -152,7 +151,6 @@ public class PersonalBoard {
         try {
             this.leaderDeck.insertCard(card);
         } catch (AlreadyInDeckException e) {
-            System.out.println(e.getMsg());
         }
     }
 
@@ -182,9 +180,9 @@ public class PersonalBoard {
         try {
             this.leaderDeck.discard(card);
         } catch (EmptyDeckException e) {
-            System.out.println(e.getMsg() + "il deck è vuoto");
+            e.printStackTrace();
         } catch (MissingCardException e) {
-            System.out.println(e.getMsg() + "non c'è leader card con questo id");
+            e.printStackTrace();
         }
     }
 
@@ -239,11 +237,7 @@ public class PersonalBoard {
     public void obtainResourcePBoard(Resource resource) {
         try {
             this.warehouse.insertInDepot(DepotSlot.BUFFER,resource);
-        } catch (UnobtainableResourceException e) {
-            System.out.println(e.getMsg());
-        } catch (WrongPointsException e) {
-            e.printStackTrace();
-        } catch (IllegalMovesException e) {
+        } catch (UnobtainableResourceException | WrongPointsException | IllegalMovesException e) {
             e.printStackTrace();
         }
     }
@@ -295,7 +289,7 @@ public class PersonalBoard {
         try {
             warehouse.addDepot(depot);
         } catch (ExtraDepotsException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
     }
 
@@ -323,9 +317,9 @@ public class PersonalBoard {
             this.faithTrack.movePlayer(amount, pm);
             result = true;
         } catch (IllegalMovesException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         } catch (WrongPointsException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
         return result;
     }

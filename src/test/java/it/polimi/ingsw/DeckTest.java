@@ -1,7 +1,6 @@
 package it.polimi.ingsw;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
@@ -10,10 +9,8 @@ import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.*;
@@ -24,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.model.resource.ResourceType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -153,13 +151,13 @@ public class DeckTest {
         DevCard c3 = new DevCard("111", new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.GREEN, req);
 
         try { d.insertCard(c1); } catch (AlreadyInDeckException e) {
-            System.out.println(e.getMsg());
+
         }
         try { d.insertCard(c2); } catch (AlreadyInDeckException e) {
-            System.out.println(e.getMsg());
+
         }
         try { d.insertCard(c3); } catch (AlreadyInDeckException e) {
-            System.out.println(e.getMsg());
+
         }
 
         assertEquals(2,d.getNumberOfCards());
@@ -190,7 +188,7 @@ public class DeckTest {
             try {
                 d.insertCard(cards.get(i));
             } catch (AlreadyInDeckException e) {
-                System.out.println(e.getMsg());
+
             }
         }
 
@@ -224,7 +222,7 @@ public class DeckTest {
             try {
                 d1.insertCard(cards.get(i));
             } catch (AlreadyInDeckException e) {
-                System.out.println(e.getMsg());
+                e.printStackTrace();
             }
         }
 
@@ -257,7 +255,7 @@ public class DeckTest {
             try {
                 d2.insertCard(cards.get(i));
             } catch (AlreadyInDeckException e) {
-                System.out.println(e.getMsg());
+
             }
         }
         assertEquals(0,d1.getNumberOfCards());
@@ -266,14 +264,14 @@ public class DeckTest {
             d1.draw();
             fail();
         } catch (EmptyDeckException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
         try {
             DevCard cTop = d2.draw();
             assertEquals(2,d2.getNumberOfCards());
             assertEquals("002",cTop.getCardID());
         } catch (EmptyDeckException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
             fail();
         }
     }
@@ -304,7 +302,7 @@ public class DeckTest {
             try {
                 d2.insertCard(cards.get(i));
             } catch (AlreadyInDeckException e) {
-                System.out.println(e.getMsg());
+
             }
         }
         assertEquals(0,d1.getNumberOfCards());
@@ -313,13 +311,13 @@ public class DeckTest {
             d1.discard();
             fail();
         } catch (EmptyDeckException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
         try {
             d2.discard();
             assertEquals(2,d2.getNumberOfCards());
         } catch (EmptyDeckException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
             fail();
         }
     }
@@ -350,25 +348,25 @@ public class DeckTest {
             try {
                 d.insertCard(cards.get(i));
             } catch (AlreadyInDeckException e) {
-                System.out.println(e.getMsg());
+
             }
         }
 
         try {
             assertEquals(ID2,d.peekFirstCard().getCardID());
         } catch (EmptyDeckException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
         try {
-            d.peekCard("000");
+            d.peekCard("002");
             fail();
         } catch (MissingCardException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
         try {
             assertEquals(LevelDevCard.LEVEL3,d.peekCard(ID).getLevel());
         } catch (MissingCardException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
             fail();
         }
     }
@@ -404,7 +402,6 @@ public class DeckTest {
             try {
                 d.insertCard(cards.get(i));
             } catch (AlreadyInDeckException e) {
-                System.out.println(e.getMsg());
             }
         }
 
@@ -415,25 +412,25 @@ public class DeckTest {
             d.discard();
             assertEquals(6,d.getNumberOfCards());
         } catch (EmptyDeckException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
         try {
             d.discard();
             assertEquals(5,d.getNumberOfCards());
         } catch (EmptyDeckException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
         try {
             d.discard();
             assertEquals(4,d.getNumberOfCards());
         } catch (EmptyDeckException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
         try {
             d.discard();
             assertEquals(3,d.getNumberOfCards());
         } catch (EmptyDeckException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
         d.shuffle();
         assertEquals(7,d.getNumberOfCards());
@@ -474,14 +471,12 @@ public class DeckTest {
             try {
                 greenDeck.insertCard(cards1.get(i));
             } catch (AlreadyInDeckException e) {
-                System.out.println(e.getMsg());
             }
         }
         for(int i=0;i<3;i++) {
             try {
                 yellowDeck.insertCard(cards2.get(i));
             } catch (AlreadyInDeckException e) {
-                System.out.println(e.getMsg());
             }
         }
         List<Deck<DevCard>> deckList = new ArrayList<>();
@@ -491,29 +486,28 @@ public class DeckTest {
         try {
             vuota.showDevDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("bho");
         }
 
         deckList.add(greenDeck);
         deckList.add(yellowDeck);
 
         DevSetup grid = new DevSetup(deckList);
-        System.out.println(grid.toString());
+
         try {
-            System.out.println(grid.showDevDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN));
+            grid.showDevDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("bho");
+            e.printStackTrace();
         }
 
         try {
-            System.out.println(grid.drawFromDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN).getCardID());
+            grid.drawFromDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("bho");
+            e.printStackTrace();
         }
         try {
-            System.out.println(grid.drawFromDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN).getCardID());
+            grid.drawFromDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("bho");
+           e.printStackTrace();
         }
         
     }
@@ -533,35 +527,27 @@ public class DeckTest {
             fail();
         }
         deckDev = new Deck<>(init);
-        System.out.println(deckDev);
-        System.out.println(deckDev.peekCard("DC1"));
-        System.out.println(deckDev.peekCard("DC2"));
-        System.out.println(deckDev.peekCard("DC3"));
-        System.out.println(deckDev.peekCard("DC4"));
 
-        System.out.println("\n...Shuffle...\n");
+        assertEquals("DC1", deckDev.peekCard("DC1").getCardID());
+        assertEquals("DC2", deckDev.peekCard("DC2").getCardID());
+        assertEquals("DC3", deckDev.peekCard("DC3").getCardID());
+        assertEquals("DC4", deckDev.peekCard("DC4").getCardID());
+
+
         deckDev.shuffle();
-        System.out.println(deckDev);
-
-        System.out.println("\n...Shuffle...\n");
         deckDev.shuffle();
-        System.out.println(deckDev);
 
-        System.out.println("Cost DC1:");
-        System.out.println("type: " + deckDev.peekCard("DC1").getCost().get(0).getType());
-        System.out.println("amount: " + deckDev.peekCard("DC1").getCost().get(0).getAmount());
+        assertEquals(SHIELD,deckDev.peekCard("DC1").getCost().get(0).getType());
+        assertEquals(2,deckDev.peekCard("DC1").getCost().get(0).getAmount());
 
-        System.out.println("Cost DC2:");
-        System.out.println("type: " + deckDev.peekCard("DC2").getCost().get(0).getType());
-        System.out.println("amount: " + deckDev.peekCard("DC2").getCost().get(0).getAmount());
+        assertEquals(SERVANT,deckDev.peekCard("DC2").getCost().get(0).getType());
+        assertEquals(2,deckDev.peekCard("DC2").getCost().get(0).getAmount());
 
-        System.out.println("Cost DC3:");
-        System.out.println("type: " + deckDev.peekCard("DC3").getCost().get(0).getType());
-        System.out.println("amount: " + deckDev.peekCard("DC3").getCost().get(0).getAmount());
+        assertEquals(COIN,deckDev.peekCard("DC3").getCost().get(0).getType());
+        assertEquals(2,deckDev.peekCard("DC3").getCost().get(0).getAmount());
 
-        System.out.println("Cost DC4:");
-        System.out.println("type: " + deckDev.peekCard("DC4").getCost().get(0).getType());
-        System.out.println("amount: " + deckDev.peekCard("DC4").getCost().get(0).getAmount());
+        assertEquals(STONE,deckDev.peekCard("DC4").getCost().get(0).getType());
+        assertEquals(2,deckDev.peekCard("DC4").getCost().get(0).getAmount());
     }
 
     @Test
@@ -570,7 +556,7 @@ public class DeckTest {
         List<LeaderCard> init = new ArrayList<>();
 
         ObjectMapper objectMapper = new ObjectMapper();
-        //objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
         try {
             init = objectMapper.readValue(
                     new File("src/resources/LeaderCards.json"),
@@ -583,7 +569,7 @@ public class DeckTest {
 
         int i = 1;
         for (int j = 0; j<init.size(); j++){
-            System.out.println(deckLeader.peekCard("LC"+String.valueOf(i)));
+            assertEquals("LC"+String.valueOf(i),deckLeader.peekCard("LC"+String.valueOf(i)).getCardID());
             i++;
         }
     }

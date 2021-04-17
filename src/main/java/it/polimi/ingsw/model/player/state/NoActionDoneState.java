@@ -16,7 +16,7 @@ public class NoActionDoneState extends State {
      */
     @Override
     public void startTurnInput() throws TurnStartedException {
-        throw new TurnStartedException("turn already started");
+        throw new TurnStartedException();
     }
 
     /**

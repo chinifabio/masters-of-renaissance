@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.personalboardTests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
@@ -309,7 +309,6 @@ public class WarehouseTest {
         warehouse.moveInProduction(DepotSlot.BOTTOM,ProductionID.LEFT,ResourceBuilder.buildCoin(1));
         warehouse.moveInProduction(DepotSlot.MIDDLE, ProductionID.LEFT, ResourceBuilder.buildShield());
 
-        //System.out.println(warehouse.getProduction().get(ProductionID.LEFT).viewResourcesAdded());
         assertTrue(warehouse.getProduction().get(ProductionID.LEFT).viewResourcesAdded().contains(ResourceBuilder.buildCoin(1)));
         assertTrue(warehouse.getProduction().get(ProductionID.LEFT).viewResourcesAdded().contains(ResourceBuilder.buildShield()));
 
@@ -320,18 +319,36 @@ public class WarehouseTest {
         assertTrue(warehouse.getProduction().get(ProductionID.CENTER).viewResourcesAdded().contains(ResourceBuilder.buildShield(2)));
         assertTrue(warehouse.getProduction().get(ProductionID.CENTER).viewResourcesAdded().contains(ResourceBuilder.buildStone(2)));
 
-        System.out.println(warehouse.viewResourcesInStrongbox());
-        System.out.println(warehouse.viewResourcesInDepot(DepotSlot.BOTTOM));
-        System.out.println(warehouse.viewResourcesInDepot(DepotSlot.MIDDLE));
-        System.out.println(warehouse.viewResourcesInDepot(DepotSlot.TOP));
+
+        assertEquals(ResourceBuilder.buildCoin(2),warehouse.viewResourcesInDepot(DepotSlot.BOTTOM));
+        assertEquals(ResourceBuilder.buildShield(),warehouse.viewResourcesInDepot(DepotSlot.MIDDLE));
+        assertEquals(ResourceBuilder.buildEmpty(),warehouse.viewResourcesInDepot(DepotSlot.TOP));
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildCoin(20)));
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildShield(18)));
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildStone(18)));
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildServant(0)));
+
 
         //Activating the productions
         warehouse.activateProductions();
+        //This production will failed so the resources will return to their original position
 
-        System.out.println(warehouse.viewResourcesInStrongbox());
-        System.out.println(warehouse.viewResourcesInDepot(DepotSlot.BOTTOM));
-        System.out.println(warehouse.viewResourcesInDepot(DepotSlot.MIDDLE));
-        System.out.println(warehouse.viewResourcesInDepot(DepotSlot.TOP));
+
+        assertEquals(ResourceBuilder.buildCoin(3),warehouse.viewResourcesInDepot(DepotSlot.BOTTOM));
+        assertEquals(ResourceBuilder.buildShield(2),warehouse.viewResourcesInDepot(DepotSlot.MIDDLE));
+        assertEquals(ResourceBuilder.buildEmpty(),warehouse.viewResourcesInDepot(DepotSlot.TOP));
+
+        //The strongbox will not receive the resources of the productions
+        assertFalse(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildStone(28)));
+        assertFalse(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildServant(10)));
+
+        //The strongbox will receive only the resources taken to use the production
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildCoin(20)));
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildShield(20)));
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildStone(20)));
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildServant(0)));
 
     }
+
+    //TODO Test per le eccezioni del warehouse
 }

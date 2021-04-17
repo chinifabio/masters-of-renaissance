@@ -75,9 +75,9 @@ public class Deck<T extends Card>{
      * @return the first card of the list.
      * @throws EmptyDeckException if the list is empty.
      */
-    public T draw() throws EmptyDeckException{
+    public T draw() throws EmptyDeckException {
         if(this.cards.isEmpty()){
-            throw new EmptyDeckException("exception: draw from empty deck");
+            throw new EmptyDeckException();
         }
         T tempCard;
         tempCard = this.cards.remove(0);
@@ -91,7 +91,7 @@ public class Deck<T extends Card>{
      */
     public void discard() throws EmptyDeckException {
         if(this.cards.isEmpty()){
-            throw new EmptyDeckException("exception: discard from empty deck");
+            throw new EmptyDeckException();
         }
         this.discardedCards.add(this.cards.remove(0));
         this.updateNumberOfCards();
@@ -103,9 +103,9 @@ public class Deck<T extends Card>{
      * @throws EmptyDeckException if the deck is empty.
      * @throws MissingCardException if the card is not in the deck.
      */
-    public void discard(String cardID) throws EmptyDeckException, MissingCardException{
+    public void discard(String cardID) throws EmptyDeckException, MissingCardException {
         if(this.cards.isEmpty()){
-            throw new EmptyDeckException("exception: discard from empty deck");
+            throw new EmptyDeckException();
         }
         for(int i=0;i<this.numberOfCards;i++){
             if(this.peekCard(cardID).equals(cards.get(i))){
@@ -120,10 +120,10 @@ public class Deck<T extends Card>{
      * @param card to insert.
      * @throws AlreadyInDeckException if the deck already contains this card.
      */
-    public void insertCard(T card) throws AlreadyInDeckException{
+    public void insertCard(T card) throws AlreadyInDeckException {
         for(int i=0;i<this.numberOfCards;i++){
             if(card.equals(this.cards.get(i))){
-                throw new AlreadyInDeckException("exception: two cards with the same ID");
+                throw new AlreadyInDeckException(card);
             }
         }
         this.cards.add(0,card);
@@ -134,8 +134,8 @@ public class Deck<T extends Card>{
      * This method return the first card (position 0) of the deck.
      * @return the top card of the deck.
      */
-    public T peekFirstCard() throws EmptyDeckException{
-        if(this.cards.isEmpty()) throw new EmptyDeckException("exception: peeking from an empty deck");
+    public T peekFirstCard() throws EmptyDeckException {
+        if(this.cards.isEmpty()) throw new EmptyDeckException();
         return this.cards.get(0);
     }
 
@@ -145,11 +145,11 @@ public class Deck<T extends Card>{
      * @return the card which cardID matches the parameter.
      * @throws MissingCardException when the card you are searching for is not inside the deck.
      */
-    public T peekCard(String cardID) throws MissingCardException{
+    public T peekCard(String cardID) throws MissingCardException {
         for(int i=this.numberOfCards;i>0;i--) {
             if (this.cards.get(i-1).getCardID().equals(cardID)) return this.cards.get(i-1);
         }
-        throw new MissingCardException("exception: missing card to peek");
+        throw new MissingCardException(cardID);
     }
 
     /**

@@ -44,7 +44,7 @@ public class CardRequisite implements Requisite {
      */
     @Override
     public ResourceType getType() throws LootTypeException {
-        throw new LootTypeException("exception: CardLoot.getType();");
+        throw new LootTypeException();
     }
 
     /**

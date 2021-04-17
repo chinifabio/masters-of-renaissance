@@ -65,4 +65,9 @@ public abstract class Card{
     public boolean equals(Card card) {
         return this.cardID.equals(card.cardID);
     }
+
+    @Override
+    public String toString() {
+        return this.cardID;
+    }
 }

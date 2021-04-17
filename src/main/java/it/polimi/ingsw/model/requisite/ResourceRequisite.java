@@ -42,7 +42,7 @@ public class ResourceRequisite implements Requisite {
      */
     @Override
     public LevelDevCard getLevel() throws LootTypeException {
-        throw new LootTypeException("exception: ResourceLoot.getLevel();");
+        throw new LootTypeException();
     }
 
     /**
@@ -51,7 +51,7 @@ public class ResourceRequisite implements Requisite {
      */
     @Override
     public ColorDevCard getColor() throws LootTypeException {
-        throw new LootTypeException("exception: ResourceLoot.getColot();");
+        throw new LootTypeException();
     }
 
     /**

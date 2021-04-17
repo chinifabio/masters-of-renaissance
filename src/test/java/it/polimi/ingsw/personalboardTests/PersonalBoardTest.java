@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.personalboardTests;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,14 +11,11 @@ import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
-import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.requisite.Requisite;
@@ -62,14 +59,14 @@ public class PersonalBoardTest {
         try {
             player = new Player("gino",match);
         } catch (IllegalTypeInProduction e1) {
-            System.out.println("cose");
+            e1.printStackTrace();
         }
 
         PersonalBoard personalBoard = null;
         try {
             personalBoard = new PersonalBoard(player);
         } catch (IllegalTypeInProduction e2) {
-            System.out.println("cose2");
+            e2.printStackTrace();
         }
 
 
@@ -92,7 +89,6 @@ public class PersonalBoardTest {
                 assertTrue(personalBoard.viewDevCards().get(dcsCenter).equals(null));
                 fail();
             } catch (NullPointerException e) {
-                System.out.println("Sto cercando di guardare una carta che non esiste!");
             }
         }
 
@@ -109,7 +105,6 @@ public class PersonalBoardTest {
                 assertTrue(personalBoard.viewDevCards().get(dcsCenter).equals(null));
                 fail();
             } catch (NullPointerException e) {
-                System.out.println("Sto cercando di guardare una carta che non esiste!");
             }
         }
 
@@ -164,21 +159,21 @@ public class PersonalBoardTest {
         try {
             player = new Player("gino",match);
         } catch (IllegalTypeInProduction e1) {
-            System.out.println("cose");
+            e1.printStackTrace();
         }
 
         PersonalBoard personalBoard = null;
         try {
             personalBoard = new PersonalBoard(player);
         } catch (IllegalTypeInProduction e2) {
-            System.out.println("cose2");
+            e2.printStackTrace();
         }
 
         personalBoard.addLeaderCard(c1);
         try {
             assertTrue(personalBoard.viewLeaderCard().peekFirstCard().equals(c1));
         } catch (EmptyDeckException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
             fail();
         }
 
@@ -193,16 +188,16 @@ public class PersonalBoardTest {
         try {
             assertFalse(personalBoard.viewLeaderCard().peekCard(ID1).isActivated());
         } catch (MissingCardException e) {
-            System.out.println(e.getMsg());
+           e.printStackTrace();
         }
 
         personalBoard.activateLeaderCard(ID1);
-        System.out.println("Ho attivato la carta con id: "+ID1);
+
 
         try {
             assertTrue(personalBoard.viewLeaderCard().peekCard(ID1).isActivated());
         } catch (MissingCardException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
     }
 
@@ -232,14 +227,14 @@ public class PersonalBoardTest {
         try {
             player = new Player("gino",match);
         } catch (IllegalTypeInProduction e1) {
-            System.out.println("cose");
+            e1.printStackTrace();
         }
 
         PersonalBoard personalBoard = null;
         try {
             personalBoard = new PersonalBoard(player);
         } catch (IllegalTypeInProduction e2) {
-            System.out.println("cose2");
+            e2.printStackTrace();
         }
 
         personalBoard.addLeaderCard(c1);
@@ -255,7 +250,7 @@ public class PersonalBoardTest {
             personalBoard.viewLeaderCard().peekCard(ID1);
             fail();
         } catch (MissingCardException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
 
         personalBoard.discardLeaderCard(ID1);
@@ -266,7 +261,7 @@ public class PersonalBoardTest {
             personalBoard.viewLeaderCard().peekCard(ID1);
             fail();
         } catch (MissingCardException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
 
         assertEquals(0,personalBoard.viewLeaderCard().getNumberOfCards());
@@ -284,17 +279,15 @@ public class PersonalBoardTest {
         try {
             player = new Player("gino",match);
         } catch (IllegalTypeInProduction e1) {
-            System.out.println("cose");
+            e1.printStackTrace();
         }
 
         PersonalBoard personalBoard = null;
         try {
             personalBoard = new PersonalBoard(player);
         } catch (IllegalTypeInProduction e2) {
-            System.out.println("cose2");
+           e2.printStackTrace();
         }
-
-        System.out.println(personalBoard.viewResources());
 
     }
 

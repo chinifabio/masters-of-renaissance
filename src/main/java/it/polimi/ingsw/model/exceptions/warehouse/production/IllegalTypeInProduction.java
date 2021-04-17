@@ -2,7 +2,10 @@ package it.polimi.ingsw.model.exceptions.warehouse.production;
 
 import it.polimi.ingsw.model.resource.Resource;
 
+import static it.polimi.ingsw.TextColors.*;
+
 public class IllegalTypeInProduction extends Exception{
+
     /**
      * the required resource list of wrong production
      */
@@ -23,7 +26,6 @@ public class IllegalTypeInProduction extends Exception{
      */
     @Override
     public void printStackTrace() {
-        System.out.println("NormalProduction got an ILLEGAL res: " + this.illegal);
-        super.printStackTrace();
+        System.out.println(colorText(RED_BRIGHT, "NormalProduction got an ILLEGAL res: " + RESET + this.illegal));
     }
 }

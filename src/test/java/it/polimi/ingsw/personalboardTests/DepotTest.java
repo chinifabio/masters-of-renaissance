@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.personalboardTests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;

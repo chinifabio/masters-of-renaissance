@@ -66,7 +66,7 @@ public class Strongbox implements Depot {
                         resource.reduce(output);
                         return true;
                     } else {
-                        throw new NegativeResourcesDepotException("exception: The Strongbox does not have enough resources to withdraw");
+                        throw new NegativeResourcesDepotException();
                     }
                 }
             }

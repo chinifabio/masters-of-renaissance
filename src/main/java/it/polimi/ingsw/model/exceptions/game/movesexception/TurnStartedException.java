@@ -1,18 +1,16 @@
 package it.polimi.ingsw.model.exceptions.game.movesexception;
 
+import it.polimi.ingsw.TextColors;
+
+import static it.polimi.ingsw.TextColors.RED_BRIGHT;
+
 public class TurnStartedException extends Exception{
     /**
-     * message to handle
+     * Constructs a new exception with {@code null} as its detail message.
+     * The cause is not initialized, and may subsequently be initialized by a
+     * call to {@link #initCause}.
      */
-    private String msg;
-
-    /**
-     * create an exception with a message
-     * @param msg  message to handle
-     */
-    public TurnStartedException(String msg){
-        this.msg = msg;
-    }
+    public TurnStartedException() {}
 
     /**
      * Prints this throwable and its backtrace to the
@@ -20,6 +18,6 @@ public class TurnStartedException extends Exception{
      */
     @Override
     public void printStackTrace() {
-        System.out.println(msg);
+        System.out.println(TextColors.colorText(RED_BRIGHT, "Turn already started!"));
     }
 }

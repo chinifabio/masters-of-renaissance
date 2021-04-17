@@ -36,7 +36,7 @@ public class AddDiscountEffect extends Effect{
         try {
             p.addDiscount(ResourceBuilder.buildFromType(this.resource, 1));
         } catch (ExtraDiscountException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
     }
 }

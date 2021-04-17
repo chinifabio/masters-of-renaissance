@@ -1,6 +1,7 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.personalboardTests;
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
 import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
@@ -8,7 +9,6 @@ import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException
 import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
-import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
@@ -146,7 +146,7 @@ public class FaithTrackTest {
             track.movePlayer(negative.amount(), pm);
             fail();
         } catch (WrongPointsException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
 
         try{

@@ -92,7 +92,7 @@ public class MarketTray {
 
         if (marbleBuilder.size() != (((row)*(col))+1)){
             try {
-                throw new OutOfBoundMarketTrayException("exception: The Market Tray could not be created because the number of marbles and the size of the Market Tray are different");
+                throw new OutOfBoundMarketTrayException();
             }catch (OutOfBoundMarketTrayException e){
                 //TODO Da completare
             }
@@ -121,7 +121,7 @@ public class MarketTray {
      * @throws OutOfBoundMarketTrayException launched when shiftCol is out of bound
      */
     public void pushCol(int shiftCol, PlayerReactEffect player) throws OutOfBoundMarketTrayException, MainActionDoneException, UnobtainableResourceException, LorenzoMovesException, WrongPointsException, IllegalMovesException {
-        if (boundCheck.test(this.col, shiftCol)) throw new OutOfBoundMarketTrayException("exception: shiftCol is out of bound");
+        if (boundCheck.test(this.col, shiftCol)) throw new OutOfBoundMarketTrayException();
 
         for (int i = 0; i < row; i++) player.obtainResource(marbles[i][shiftCol]);
 
@@ -142,7 +142,7 @@ public class MarketTray {
      * @throws OutOfBoundMarketTrayException launched when shiftRow is out of bound
      */
     public void pushRow(int shiftRow, PlayerReactEffect player) throws OutOfBoundMarketTrayException, MainActionDoneException, UnobtainableResourceException, LorenzoMovesException, WrongPointsException, IllegalMovesException {
-        if (boundCheck.test(this.row, shiftRow)) throw new OutOfBoundMarketTrayException("exception:shiftRow is out of bound");
+        if (boundCheck.test(this.row, shiftRow)) throw new OutOfBoundMarketTrayException();
 
         for (int i = 0; i < col; i++) player.obtainResource(marbles[shiftRow][i]);
 
@@ -193,6 +193,7 @@ public class MarketTray {
     /**
      * restore all marble in the tray
      */
+    //TODO TO TEST
     public void unPaint(){
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {

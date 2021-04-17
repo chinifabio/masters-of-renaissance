@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.player.state;
 
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
 import it.polimi.ingsw.model.exceptions.game.movesexception.MainActionDoneException;
 import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
 import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.exceptions.game.movesexception;
 
-import static it.polimi.ingsw.TextColors.RESET;
-import static it.polimi.ingsw.TextColors.YELLOW;
+import static it.polimi.ingsw.TextColors.*;
 
 /**
  * Used to handle the error if someone do an illegal moves.
@@ -9,22 +8,18 @@ import static it.polimi.ingsw.TextColors.YELLOW;
  */
 public class MainActionDoneException extends Exception{
     /**
-     * handle a message to debug the error
+     * Constructs a new exception with {@code null} as its detail message.
+     * The cause is not initialized, and may subsequently be initialized by a
+     * call to {@link #initCause}.
      */
-    private String msg;
+    public MainActionDoneException() {}
 
     /**
-     * construct the exception with the message to handle
-     * @param m the message
+     * Prints this throwable and its backtrace to the
+     * standard error stream.
      */
-    public MainActionDoneException(String m){
-        this.msg = m;
-    }
-
-    /**
-     * print to the console the error message
-     */
-    public void print() {
-        System.out.println(YELLOW + "Illegal move: " + msg + RESET);
+    @Override
+    public void printStackTrace() {
+        System.out.println(colorText(RED_BRIGHT, "It is not possible to do further actions!"));
     }
 }

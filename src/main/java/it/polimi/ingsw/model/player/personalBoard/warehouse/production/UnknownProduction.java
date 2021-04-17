@@ -83,7 +83,7 @@ public class UnknownProduction extends Production{
     @Override
     public boolean insertResource(Resource resource) throws UnknownUnspecifiedException {
         if (!this.normal.isPresent()){
-            throw new UnknownUnspecifiedException("This production is unspecified");
+            throw new UnknownUnspecifiedException();
         }
         boolean result = this.normal.get().insertResource(resource);
         if (result) this.selected = true;
@@ -108,10 +108,10 @@ public class UnknownProduction extends Production{
         for(int i = 0; i < this.required.size(); i++) {
             tempSum = lnorm.get(i).amount() - lthis.get(i).amount();
             if(lthis.get(i).type() == ResourceType.UNKNOWN) tempSum = 0;
-            if(tempSum < 0) throw new IllegalNormalProduction(normalProduction, "too low req");
+            if(tempSum < 0) throw new IllegalNormalProduction(normalProduction, "There are too few requirements");
             counter += tempSum;
         }
-        if(counter > this.unknownInRequired) throw new IllegalNormalProduction(normalProduction, "too many req");
+        if(counter > this.unknownInRequired) throw new IllegalNormalProduction(normalProduction, "There are too many requirements");
 
         counter = 0;
         lnorm = ResourceBuilder.rearrangeResourceList(normalProduction.viewOutput());
@@ -122,7 +122,7 @@ public class UnknownProduction extends Production{
             if(tempSum < 0 && lthis.get(i).type() != ResourceType.UNKNOWN) throw new IllegalNormalProduction(normalProduction, "too low out");
             counter += tempSum;
         }
-        if(counter > this.unknownInOutput) throw new IllegalNormalProduction(normalProduction, "too many req");
+        if(counter > this.unknownInOutput) throw new IllegalNormalProduction(normalProduction, "There are too many requirements");
 
         this.normal = Optional.of(normalProduction);
         return true;

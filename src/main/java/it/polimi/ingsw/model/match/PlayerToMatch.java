@@ -18,10 +18,8 @@ import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
-import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This interface contains all the method a player need to call on a Match

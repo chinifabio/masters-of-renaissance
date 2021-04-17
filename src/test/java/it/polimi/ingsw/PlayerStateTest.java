@@ -1,6 +1,5 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
 import org.junit.jupiter.api.Test;
 
 public class PlayerStateTest {

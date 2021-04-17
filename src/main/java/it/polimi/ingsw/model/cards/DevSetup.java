@@ -32,7 +32,7 @@ public class DevSetup {
         try {
             return tempDeck.peekFirstCard();
         } catch (EmptyDeckException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
             return null;
         }
     }
@@ -49,7 +49,7 @@ public class DevSetup {
         try {
             return tempDeck.draw();
         } catch (EmptyDeckException e) {
-            System.out.println(e.getMsg());
+            e.printStackTrace();
             return null;
         }
     }
@@ -75,7 +75,7 @@ public class DevSetup {
                     try {
                         return row.equals(c.peekFirstCard().getLevel());
                     } catch (EmptyDeckException e) {
-                        System.out.println(e.getMsg());
+                        e.printStackTrace();
                         return false;
                     }
                 })

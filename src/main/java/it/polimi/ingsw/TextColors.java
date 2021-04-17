@@ -9,6 +9,10 @@ import java.util.Map;
 
 public class TextColors {
 
+    public static String colorText(String textColors, String text){
+        return textColors + text + RESET ;
+    }
+
     public static String colorResourceType(ResourceType resourceType){
         Map<ResourceType, String> colors = new EnumMap<>(ResourceType.class);
         colors.put(ResourceType.COIN, YELLOW_BRIGHT);

@@ -24,7 +24,7 @@ public class NotHisTurnState extends State {
      */
     @Override
     public void doMainActionInput() throws NotHisTurnException {
-        throw new NotHisTurnException("main action not in the player turn");
+        throw new NotHisTurnException();
     }
 
     /**
@@ -32,7 +32,7 @@ public class NotHisTurnState extends State {
      */
     @Override
     public void endTurnInput() throws NotHisTurnException {
-        throw new NotHisTurnException("end turn not in the player turn");
+        throw new NotHisTurnException();
     }
 
     /**

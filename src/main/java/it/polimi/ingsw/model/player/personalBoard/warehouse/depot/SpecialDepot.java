@@ -79,7 +79,7 @@ public class SpecialDepot implements Depot {
             this.resources = ResourceBuilder.buildFromType(resources.type(),0);
             return true;
         } else {
-            throw new NegativeResourcesDepotException("exception: This Depot does not have enough resources to withdraw ");
+            throw new NegativeResourcesDepotException();
         }
     }
 

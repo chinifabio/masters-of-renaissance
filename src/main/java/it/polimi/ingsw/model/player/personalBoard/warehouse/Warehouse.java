@@ -22,6 +22,8 @@ import java.util.function.Predicate;
  */
 public class Warehouse {
 
+    //TODO DA METTERE UN METODO CHE CONTA TUTTE LE RISORSE NEI DEPOT POI DIVIDO PER 5
+
     /**
      * This attribute is the list of the available productions that the Player could activates
      */
@@ -115,7 +117,7 @@ public class Warehouse {
                 return true;
             }
         }
-        throw new ExtraDepotsException("exception: All the extra depots have already been built");
+        throw new ExtraDepotsException();
     }
 
 
@@ -136,7 +138,7 @@ public class Warehouse {
         });
         if (testResult.get()) {
             if (depots.get(from).viewResources().amount() == 0 || !depots.get(from).viewResources().equalsType(resource)) {
-                throw new WrongDepotException("exception: You can't take resources from this Depot");
+                throw new WrongDepotException();
             }
 
             if (removeFromDepot(from, resource)) {

@@ -72,11 +72,11 @@ public class FaithTrack {
     public void movePlayer(int points, PlayerToMatch pm) throws IllegalMovesException, WrongPointsException {
 
         if (points< 0){
-            throw new WrongPointsException("exception: the Player can't move backwards!");
+            throw new WrongPointsException();
         }
 
         if (this.playerPosition >= track.size()-1 && points > 0) {
-            throw new IllegalMovesException("exception: The Player is in the last cell, he can't move");
+            throw new IllegalMovesException();
         }
 
         for (int i = 0; i< points; i++){

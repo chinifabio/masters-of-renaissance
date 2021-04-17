@@ -2,6 +2,8 @@ package it.polimi.ingsw.model.exceptions.warehouse.production;
 
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 
+import static it.polimi.ingsw.TextColors.*;
+
 public class IllegalNormalProduction extends Exception{
 
     private NormalProduction err;
@@ -25,6 +27,6 @@ public class IllegalNormalProduction extends Exception{
      */
     @Override
     public void printStackTrace() {
-        System.out.println("exception - " + this.err);
+        System.out.println(colorText(RED_BRIGHT, "Something went wrong with this production: " + RESET + this.err));
     }
 }
