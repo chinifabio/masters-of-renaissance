@@ -5,5 +5,11 @@ package it.polimi.ingsw.model.player.personalBoard.faithTrack;
  * in different cells
  */
 public enum VaticanSpace {
-    NONE, FIRST, SECOND, THIRD
+    NONE(0), FIRST(1), SECOND(2), THIRD(3);
+
+    public final int ordinal;
+
+    VaticanSpace(int value) {
+        this.ordinal = value;
+    }
 }

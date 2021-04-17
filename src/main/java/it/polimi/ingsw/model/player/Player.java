@@ -10,7 +10,7 @@ import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
 import it.polimi.ingsw.model.exceptions.game.movesexception.MainActionDoneException;
 import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
 import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
-import it.polimi.ingsw.model.exceptions.productionException.UnknownUnspecifiedException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
@@ -24,6 +24,7 @@ import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
+import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
@@ -35,7 +36,6 @@ import it.polimi.ingsw.model.player.state.State;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
-import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.*;
 
@@ -83,7 +83,7 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      * @param nickname that identify the player
      * @param matchReference used to reference the match which i am playing
      */
-    public Player(String nickname, PlayerToMatch matchReference) throws IllegalTypeInProduction, IllegalTypeInProduction {
+    public Player(String nickname, PlayerToMatch matchReference) throws IllegalTypeInProduction {
         this.nickname = nickname;
         this.personalBoard = new PersonalBoard(this);
         this.playerState = new NotHisTurnState(this);
@@ -299,7 +299,18 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
      */
     @Override
     public boolean activateProductions() throws NotHisTurnException {
-        this.personalBoard.activateProductions();
+        try {
+            this.personalBoard.activateProductions();
+        } catch (UnobtainableResourceException e) {
+            e.printStackTrace();
+            System.out.println("qui mai perchè non dovrebbe verificarsi mai");
+        } catch (WrongPointsException e) {
+            System.out.println("qui se ne già al 25 ma non è finito il match");
+            e.printStackTrace();
+        } catch (IllegalMovesException e) {
+            System.out.println("qui boh, se si muove di una quantità negativa");
+            e.printStackTrace();
+        }
         try {
             playerState.doMainActionInput();
         } catch (NotHisTurnException e) {
@@ -472,5 +483,10 @@ public class Player implements Context, PlayerAction, PlayerReactEffect, MatchTo
         playerState.endTurnInput();
         System.out.println(nickname + ": Turn ended");
         return match.endMyTurn();
+    }
+
+    // only for test
+    public FaithTrack getFT_forTest() {
+        return this.personalBoard.getFT_forTest();
     }
 }

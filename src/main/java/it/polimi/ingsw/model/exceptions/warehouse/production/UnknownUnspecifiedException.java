@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.exceptions.productionException;
+package it.polimi.ingsw.model.exceptions.warehouse.production;
 
 import static it.polimi.ingsw.TextColors.RESET;
 import static it.polimi.ingsw.TextColors.YELLOW;

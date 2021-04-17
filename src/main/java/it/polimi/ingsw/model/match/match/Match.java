@@ -175,6 +175,8 @@ public abstract class Match implements PlayerToMatch {
     public boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws NoRequisiteException, NotHisTurnException, MainActionDoneException {
         System.out.println("Match: " + this.turn.getCurPlayer().getNickname() + " tries to buy DevCard -> " + "level: " + row + " color: " + col);
 
+        // todo row e col sono controllabili nel player perchè è lui che chiama la funzione
+        // ed è sempre lui che controlla i requisiti
         if (this.turn.getCurPlayer().hasRequisite(this.devSetup.showDevDeck(row, col).getCost(),row,col)) {
             this.turn.getCurPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
             return true;
@@ -207,6 +209,12 @@ public abstract class Match implements PlayerToMatch {
      */
     @Override
     public boolean endMyTurn() throws NotHisTurnException, TurnStartedException, EmptyDeckException, LorenzoMovesException, WrongPointsException, IllegalMovesException {
+        this.marketTray.unPaint();
         return this.turn.nextPlayer();
+    }
+
+    //for test
+    public Player getcurr_test(){
+        return turn.getCurPlayer();
     }
 }

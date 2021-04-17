@@ -2,19 +2,28 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.game.GameException;
 import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
 import it.polimi.ingsw.model.exceptions.game.movesexception.MainActionDoneException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
+import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.match.markettray.MarketTray;
+import it.polimi.ingsw.model.match.markettray.RowCol;
+import it.polimi.ingsw.model.match.match.Match;
+import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerAction;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.Test;
@@ -178,9 +187,7 @@ public class MarketTrayTest {
 
         List<Marble> marbles = tray.showMarketTray();
         marbles.add(tray.showSlideMarble());
-        marbles.forEach(x-> System.out.println(x.toResource()));
 
-        System.out.println("1- "+marbles);
         Map<ResourceType, Integer> map = new EnumMap<>(ResourceType.class);
 
         for (Marble marble : marbles) {
@@ -210,7 +217,6 @@ public class MarketTrayTest {
 
         marbles = tray.showMarketTray();
         marbles.add(tray.showSlideMarble());
-        marbles.forEach(x-> System.out.println(x.toResource().type()));
 
         Map<ResourceType, Integer> map2 = new EnumMap<>(ResourceType.class);
         for (Marble x : marbles) {
@@ -228,5 +234,73 @@ public class MarketTrayTest {
         assertEquals(3, map2.get(ResourceType.STONE));
         assertEquals(2, map2.get(ResourceType.COIN));
         assertEquals(1, map2.get(ResourceType.FAITHPOINT));
+    }
+
+    @Test
+    public void outOfBound() {
+        Match game = new MultiplayerMatch();
+        Player player1 = null;
+        Player player2 = null;
+
+        try {
+            player1 = new Player("pino", game);
+            player2 = new Player("gino", game);
+        } catch (IllegalTypeInProduction e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        game.playerJoin(player1);
+        game.playerJoin(player2);
+
+        try {
+            assertTrue(game.startGame());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        // to simulate the controller who has PlayerAction interface to use players
+        PlayerAction p1 = player1;
+        PlayerAction p2 = player2;
+
+        for (int i = 0; i < 5; i++) {
+            // player 1 turn
+            if (p1.canDoStuff()) {
+                try {
+                    p1.useMarketTray(RowCol.COL, 5);
+                    fail();
+                } catch (OutOfBoundMarketTrayException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    fail();
+                    e.printStackTrace();
+                }
+                try {
+                    p1.endThisTurn();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    fail();
+                }
+                // player 2 turn
+            } else if (p2.canDoStuff()) {
+                try {
+                    p2.useMarketTray(RowCol.COL, 1);
+                } catch (OutOfBoundMarketTrayException e) {
+                    e.printStackTrace();
+                    fail();
+                } catch (Exception e) {
+                    fail();
+                    e.printStackTrace();
+                }
+                try {
+                    p2.endThisTurn();
+                }  catch (Exception e) {
+                    e.printStackTrace();
+                    fail();
+                }
+            } else fail();
+        }
+
     }
 }

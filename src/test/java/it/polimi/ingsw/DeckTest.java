@@ -530,8 +530,7 @@ public class DeckTest {
                     new TypeReference<List<DevCard>>(){});
         }catch (IOException e){
             e.printStackTrace();
-            System.out.println("The file to create the DevCards wasn't found");
-            //TODO LANCIARE UN'ECCEZIONE AL MODEL
+            fail();
         }
         deckDev = new Deck<>(init);
         System.out.println(deckDev);
@@ -578,8 +577,7 @@ public class DeckTest {
                     new TypeReference<List<LeaderCard>>(){});
         }catch (IOException e){
             e.printStackTrace();
-            System.out.println("The file to create the LeaderCards wasn't found");
-            //TODO LANCIARE UN'ECCEZIONE AL MODEL
+            fail();
         }
         deckLeader = new Deck<>(init);
 

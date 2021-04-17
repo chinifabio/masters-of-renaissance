@@ -5,11 +5,7 @@ import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduc
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
-import it.polimi.ingsw.model.cards.effects.DestroyCardsEffect;
-import it.polimi.ingsw.model.cards.effects.MoveTwoEffect;
-import it.polimi.ingsw.model.cards.effects.ShuffleMoveOneEffect;
-import it.polimi.ingsw.model.exceptions.productionException.UnknownUnspecifiedException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;

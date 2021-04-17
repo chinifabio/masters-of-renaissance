@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
 import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
-import it.polimi.ingsw.model.exceptions.productionException.UnknownUnspecifiedException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.exceptions.warehouse.*;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
@@ -24,7 +24,6 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Productio
 import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * This class identify the Player's PersonalBoard
@@ -228,7 +227,8 @@ public class PersonalBoard {
     /**
      * This method activate the productions selected by the Player
      */
-    public void activateProductions(){
+    public void activateProductions() throws UnobtainableResourceException, WrongPointsException, IllegalMovesException {
+        this.warehouse.activateProductions();
     }
 
     /**
@@ -274,6 +274,8 @@ public class PersonalBoard {
      * return the resources that the player has in the specified depot
      * @return list of resources
      */
+    //todo da eliminare
+    // anche se secondo me serve per i test
     public List<Resource> askResource(DepotSlot depotSlot) {
         if(depotSlot == DepotSlot.STRONGBOX){
             return this.warehouse.viewResourcesInStrongbox();
@@ -314,6 +316,7 @@ public class PersonalBoard {
      * @param amount the amount to move.
      * @return true if the move is allowed, false otherwhise.
      */
+    // todo exception
     public boolean moveFaithMarker(int amount, PlayerToMatch pm) {
         boolean result = false;
         try {
@@ -359,5 +362,10 @@ public class PersonalBoard {
      */
     public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
         this.warehouse.moveInProduction(from, dest, loot);
+    }
+
+    // only for testing
+    public FaithTrack getFT_forTest() {
+        return this.faithTrack;
     }
 }

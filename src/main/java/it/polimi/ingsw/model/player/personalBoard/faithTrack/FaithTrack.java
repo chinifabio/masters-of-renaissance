@@ -110,22 +110,20 @@ public class FaithTrack {
      * This method flips the PopeTile if the player is in a VaticanSpace and someone activated the PopeSpace
      */
     public void flipPopeTile(VaticanSpace toCheck){
-        if (track.get(this.playerPosition).getVaticanSpace().ordinal() < toCheck.ordinal()){
-            popeTiles.get(toCheck).flipMe();//Deactivates the PopeTile -> Il popeTile non può più essere accettato
+        if (track.get(this.playerPosition).getVaticanSpace().ordinal < toCheck.ordinal){
+            //Deactivates the PopeTile -> Il popeTile non può più essere accettato
+            popeTiles.get(toCheck).deactivate();
         }
     }
 
     //Only for testing
-    public boolean getTile(int tile){
-        if (tile == 1) {
-            return popeTiles.get(VaticanSpace.FIRST).getIsFlipped();
-        }
-        if (tile == 2) {
-            return popeTiles.get(VaticanSpace.SECOND).getIsFlipped();
-        }
-        if (tile == 3) {
-            return popeTiles.get(VaticanSpace.THIRD).getIsFlipped();
-        }
-        else return false;
+    public Cell getTile(){
+        return this.track.get(playerPosition);
+    }
+
+    //only for testing
+    public boolean isFlipped(VaticanSpace vs){
+        if(vs == VaticanSpace.NONE) return false;
+        return this.popeTiles.get(vs).isDeactivated();
     }
 }

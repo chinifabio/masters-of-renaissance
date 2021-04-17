@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse;
 
 import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
-import it.polimi.ingsw.model.exceptions.productionException.UnknownUnspecifiedException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.exceptions.warehouse.*;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;

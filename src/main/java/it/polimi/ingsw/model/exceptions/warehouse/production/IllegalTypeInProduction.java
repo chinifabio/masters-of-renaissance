@@ -24,5 +24,6 @@ public class IllegalTypeInProduction extends Exception{
     @Override
     public void printStackTrace() {
         System.out.println("NormalProduction got an ILLEGAL res: " + this.illegal);
+        super.printStackTrace();
     }
 }

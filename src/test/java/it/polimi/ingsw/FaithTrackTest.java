@@ -1,6 +1,10 @@
 package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
+import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
@@ -130,32 +134,83 @@ public class FaithTrackTest {
         track.movePlayer(last.amount(), pm);
         track.movePlayer(last.amount(), pm);
         assertEquals(24, track.getPlayerPosition());
-        boolean move = false;
-        boolean result = false;
-        boolean otherRes = false;
 
         try {
             track.movePlayer(first.amount(), pm);
+            fail();
         } catch (IllegalMovesException e) {
-            move = true;
-            System.out.println(e.getMsg());
+            e.printStackTrace();
         }
-        assertTrue(move);
 
         try {
             track.movePlayer(negative.amount(), pm);
+            fail();
         } catch (WrongPointsException e) {
-            result = true;
             System.out.println(e.getMsg());
         }
-        assertTrue(result);
 
         try{
             track.movePlayer(error.amount(), pm);
+            fail();
         } catch (IllegalMovesException e){
-            otherRes = true;
+            e.printStackTrace();
         }
-        assertTrue(otherRes);
+    }
+
+    @Test
+    public void flipOtherPopeTile() throws WrongPointsException, IllegalMovesException, LorenzoMovesException, NotHisTurnException, TurnStartedException, EmptyDeckException {
+        Player player1 = null;
+        Player player2 = null;
+
+        try {
+            player1 = new Player(TextColors.BLUE + "gino" + TextColors.RESET, pm);
+            player2 = new Player(TextColors.PURPLE + "lino" + TextColors.RESET, pm);
+        } catch (Exception e) {
+            fail();
+        }
+
+        pm.playerJoin(player1);
+        pm.playerJoin(player2);
+
+        FaithTrack ft1 = player1.getFT_forTest();
+        FaithTrack ft2 = player2.getFT_forTest();
+
+        try {
+            pm.startGame();
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        pm.getcurr_test().moveFaithMarker(4);
+        pm.getcurr_test().endThisTurn();
+
+        pm.getcurr_test().moveFaithMarker(9);
+        pm.getcurr_test().endThisTurn();
+
+        assertTrue(pm.getcurr_test().getFT_forTest().isFlipped(VaticanSpace.FIRST));
+        pm.getcurr_test().endThisTurn();
+        assertFalse(pm.getcurr_test().getFT_forTest().isFlipped(VaticanSpace.FIRST));
+        pm.getcurr_test().endThisTurn();
+
+        pm.getcurr_test().moveFaithMarker(8);
+        pm.getcurr_test().endThisTurn();
+
+        pm.getcurr_test().moveFaithMarker(7);
+        pm.getcurr_test().endThisTurn();
+
+        assertFalse(pm.getcurr_test().getFT_forTest().isFlipped(VaticanSpace.SECOND));
+        pm.getcurr_test().endThisTurn();
+        assertFalse(pm.getcurr_test().getFT_forTest().isFlipped(VaticanSpace.SECOND));
+
+        pm.getcurr_test().moveFaithMarker(20);
+        pm.getcurr_test().endThisTurn();
+
+        assertTrue(pm.getcurr_test().getFT_forTest().isFlipped(VaticanSpace.THIRD));
+        pm.getcurr_test().endThisTurn();
+        assertFalse(pm.getcurr_test().getFT_forTest().isFlipped(VaticanSpace.THIRD));
+        pm.getcurr_test().endThisTurn();
+
     }
 
 }
