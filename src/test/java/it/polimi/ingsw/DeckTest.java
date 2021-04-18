@@ -486,6 +486,8 @@ public class DeckTest {
         try {
             vuota.showDevDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
         } catch (IndexOutOfBoundsException e) {
+        } catch (EmptyDeckException e) {
+            e.printStackTrace();
         }
 
         deckList.add(greenDeck);
@@ -497,19 +499,25 @@ public class DeckTest {
             grid.showDevDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
+        } catch (EmptyDeckException e) {
+            e.printStackTrace();
         }
 
         try {
             grid.drawFromDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
+        } catch (EmptyDeckException e) {
+            e.printStackTrace();
         }
         try {
             grid.drawFromDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
         } catch (IndexOutOfBoundsException e) {
            e.printStackTrace();
+        } catch (EmptyDeckException e) {
+            e.printStackTrace();
         }
-        
+
     }
 
     @Test

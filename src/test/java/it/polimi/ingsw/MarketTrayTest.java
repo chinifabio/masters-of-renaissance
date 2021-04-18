@@ -2,14 +2,9 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
-import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
-import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
+import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
-import it.polimi.ingsw.model.exceptions.game.movesexception.MainActionDoneException;
-import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
@@ -24,27 +19,12 @@ import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 public class MarketTrayTest {
-    //TODO DA TESTARE OUT OF BOUND
-    /**
-     * checks if two lists contain the same elements trough the equals method of the element
-     * @param one the first list
-     * @param two the second list
-     * @return true if the lists are equivalent, otherwise return false
-     */
-    public boolean equalsList(List<?> one, List<?> two) {
-        if (one.size() != two.size()) return false;
-        else {
-            for(int i = 0; i < one.size(); i++) {
-                if(!one.get(i).equals(two.get(i))) return false;
-            }
-        }
-        return true;
-    }
 
     /**
      * test for each row of the tray if the pushCol works correctly.
@@ -68,24 +48,21 @@ public class MarketTrayTest {
 
             try {
                 tray.pushCol(shiftCol, player);
-            } catch (OutOfBoundMarketTrayException | MainActionDoneException | UnobtainableResourceException | LorenzoMovesException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (WrongPointsException e) {
-                e.printStackTrace();
-            } catch (IllegalMovesException e) {
-                e.printStackTrace();
-            } finally {
-                Marble temp = slide;
-
-                slide = beforePush.get(shiftCol);
-                for(int i = shiftCol; i < shiftCol+(row-1)*col; i += col) {
-                    beforePush.set(i, beforePush.get(i+col));
-                }
-                beforePush.set(shiftCol+(row-1)*col, temp);
-
-                assertArrayEquals(beforePush.toArray(), tray.showMarketTray().toArray());
-                assertEquals(slide,tray.showSlideMarble());
+                fail();
             }
+
+            Marble temp = slide;
+
+            slide = beforePush.get(shiftCol);
+            for(int i = shiftCol; i < shiftCol+(row-1)*col; i += col) {
+                beforePush.set(i, beforePush.get(i+col));
+            }
+            beforePush.set(shiftCol+(row-1)*col, temp);
+
+            assertArrayEquals(beforePush.toArray(), tray.showMarketTray().toArray());
+            assertEquals(slide,tray.showSlideMarble());
         }
     }
 
@@ -111,29 +88,22 @@ public class MarketTrayTest {
 
             try{
                 tray.pushRow(shiftRow, player);
-            } catch (OutOfBoundMarketTrayException | MainActionDoneException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (UnobtainableResourceException e) {
-                e.printStackTrace();
-            } catch (LorenzoMovesException e) {
-                e.printStackTrace();
-            } catch (WrongPointsException e) {
-                e.printStackTrace();
-            } catch (IllegalMovesException e) {
-                e.printStackTrace();
-            } finally {
-                Marble temp = slide;
-                int startPos = shiftRow*col;
-
-                slide = beforePush.get(startPos);
-                for (int i = 0; i < col - 1; i++) {
-                    beforePush.set(startPos+i,(beforePush.get(startPos+i+1)));
-                }
-                beforePush.set(startPos+col-1, temp);
-
-                assertTrue(equalsList(beforePush, tray.showMarketTray()));
-                assertEquals(slide, tray.showSlideMarble());
+                fail();
             }
+
+            Marble temp = slide;
+            int startPos = shiftRow*col;
+
+            slide = beforePush.get(startPos);
+            for (int i = 0; i < col - 1; i++) {
+                beforePush.set(startPos+i,(beforePush.get(startPos+i+1)));
+            }
+            beforePush.set(startPos+col-1, temp);
+
+            assertArrayEquals(beforePush.toArray(), tray.showMarketTray().toArray());
+            assertEquals(slide, tray.showSlideMarble());
         }
     }
 
@@ -233,7 +203,7 @@ public class MarketTrayTest {
     }
 
     @Test
-    public void outOfBound() {
+    public void outOfBound() throws PlayerStateException {
         Match game = new MultiplayerMatch();
         Player player1 = null;
         Player player2 = null;
@@ -249,39 +219,46 @@ public class MarketTrayTest {
         game.playerJoin(player1);
         game.playerJoin(player2);
 
-        try {
-            assertTrue(game.startGame());
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
+        assertTrue(game.startGame());
+
+        List<Player> order = new ArrayList<>();
+
+        if(player1.canDoStuff()){
+            order.add(player1);
+            order.add(player2);
+        } else {
+            order.add(player2);
+            order.add(player1);
         }
 
-        // to simulate the controller who has PlayerAction interface to use players
-        PlayerAction p1 = player1;
-        PlayerAction p2 = player2;
+        order.get(0).discardLeader_test();
+        order.get(0).discardLeader_test();
+
+        order.get(1).discardLeader_test();
+        order.get(1).discardLeader_test();
 
         for (int i = 0; i < 5; i++) {
             // player 1 turn
-            if (p1.canDoStuff()) {
+            if (order.get(0).canDoStuff()) {
                 try {
-                    p1.useMarketTray(RowCol.COL, 5);
+                    order.get(0).useMarketTray(RowCol.COL, 5);
                     fail();
                 } catch (OutOfBoundMarketTrayException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
-                    fail();
                     e.printStackTrace();
+                    fail();
                 }
                 try {
-                    p1.endThisTurn();
+                    order.get(0).endThisTurn();
                 } catch (Exception e) {
                     e.printStackTrace();
                     fail();
                 }
                 // player 2 turn
-            } else if (p2.canDoStuff()) {
+            } else if (order.get(1).canDoStuff()) {
                 try {
-                    p2.useMarketTray(RowCol.COL, 1);
+                    order.get(1).useMarketTray(RowCol.COL, 1);
                 } catch (OutOfBoundMarketTrayException e) {
                     e.printStackTrace();
                     fail();
@@ -290,7 +267,7 @@ public class MarketTrayTest {
                     e.printStackTrace();
                 }
                 try {
-                    p2.endThisTurn();
+                    order.get(1).endThisTurn();
                 }  catch (Exception e) {
                     e.printStackTrace();
                     fail();

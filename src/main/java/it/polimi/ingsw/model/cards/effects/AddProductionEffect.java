@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.cards.effects;
 
-import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
@@ -33,7 +32,7 @@ public class AddProductionEffect extends Effect{
      * @param p the player that is getting a new production.
      */
     @Override
-    public void use(PlayerReactEffect p) throws LorenzoMovesException {
+    public void use(PlayerReactEffect p) {
         p.addProduction(this.prod);
     }
 }

@@ -20,5 +20,6 @@ public class EmptyDeckException extends Exception{
     @Override
     public void printStackTrace() {
         System.out.println(colorText(RED_BRIGHT, "This Deck is empty!"));
+        super.printStackTrace();
     }
 }

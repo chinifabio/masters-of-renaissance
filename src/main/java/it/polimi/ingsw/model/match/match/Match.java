@@ -1,17 +1,15 @@
 package it.polimi.ingsw.model.match.match;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.cards.*;
+import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
-import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
-import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
-import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
-import it.polimi.ingsw.model.exceptions.game.movesexception.MainActionDoneException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.cards.DevSetup;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
@@ -20,15 +18,21 @@ import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public abstract class Match implements PlayerToMatch {
     /**
      * the number of possible players in the game
      */
     protected final int gameSize;
+
+    /**
+     * the minimum player number to start the game
+     */
+    private final int minimumPlayer;
 
     /**
      * this flag is used to check if the game is started
@@ -58,48 +62,51 @@ public abstract class Match implements PlayerToMatch {
     /**
      * initialize the match
      */
-    protected Match(int gameSize) {
+    protected Match(int gameSize, int min) {
         this.gameSize = gameSize;
+        this.minimumPlayer = min;
 
         this.turn = new Turn();
         gameOnAir = false;
 
         this.marketTray = new MarketTray();
 
-        List<Deck<DevCard>> decks = new ArrayList<>(); //TODO da aggiungere al costruttore! sia qui che nelle sottoclassi
+        this.devSetup = new DevSetup();
 
-        this.devSetup = new DevSetup(decks);
-        this.leaderCardDeck = new Deck<>();
-        // legge e crea tutte le carte leader
+        List<LeaderCard> init = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            init = objectMapper.readValue(
+                    new File("src/resources/LeaderCards.json"),
+                    new TypeReference<List<LeaderCard>>(){});
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.leaderCardDeck = new Deck<>(init);
+        this.leaderCardDeck.shuffle();
     }
-
-    //TODO cancellare questo costruttore: usato nei test prima dell'implementazione json delle devCard
-    protected Match(int gameSize, List<Deck<DevCard>> decks) {
-        this.gameSize = gameSize;
-
-        this.turn = new Turn();
-        gameOnAir = false;
-
-        this.marketTray = new MarketTray();
-
-        this.devSetup = new DevSetup(decks);
-        this.leaderCardDeck = new Deck<>();
-        // legge e crea tutte le carte leader
-    }
-
 
     /**
      * add a new player to the game
      * @param joined player who join
      * @return true if success, false instead
      */
-    public abstract boolean playerJoin(Player joined);
+    public boolean playerJoin(Player joined) {
+        if( turn.playerInGame() < this.gameSize && !gameOnAir) return turn.joinPlayer(joined);
+        else return false;
+    }
+
 
     /**
      * start the game: start the turn of the first player
      * @return true if success, false instead
      */
-    public abstract boolean startGame() throws IllegalMovesException, NotHisTurnException, TurnStartedException, EmptyDeckException, LorenzoMovesException, WrongPointsException;
+    public boolean startGame() throws PlayerStateException {
+        if(this.turn.playerInGame() < this.minimumPlayer || gameOnAir) return false;
+        turn.getInkwellPlayer().startHisTurn();
+        gameOnAir = true;
+        return true;
+    }
 
     /**
      * request to other player to flip the pope tile passed in the parameter
@@ -128,7 +135,7 @@ public abstract class Match implements PlayerToMatch {
      * @param index the index of the row or column of the tray
      */
     @Override
-    public void useMarketTray(RowCol rc, int index) throws MainActionDoneException, OutOfBoundMarketTrayException, UnobtainableResourceException, LorenzoMovesException, WrongPointsException, IllegalMovesException {
+    public void useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException {
         switch (rc) {
             case COL: this.marketTray.pushCol(index, turn.getCurPlayer());
             case ROW: this.marketTray.pushRow(index, turn.getCurPlayer());
@@ -157,7 +164,11 @@ public abstract class Match implements PlayerToMatch {
         List<DevCard> temp = new ArrayList<>();
         for(ColorDevCard colorDevCard : ColorDevCard.values()){
             for(LevelDevCard levelDevCard : LevelDevCard.values()){
-                temp.add(this.devSetup.showDevDeck(levelDevCard,colorDevCard));
+                try {
+                    temp.add(this.devSetup.showDevDeck(levelDevCard,colorDevCard));
+                } catch (EmptyDeckException e) {
+                    // if there is no card skip to next deck
+                }
             }
         }
         return temp;
@@ -172,14 +183,18 @@ public abstract class Match implements PlayerToMatch {
      * @return true if there where no issue, false instead
      */
     @Override
-    public boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws NoRequisiteException, NotHisTurnException, MainActionDoneException {
+    public boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws NoRequisiteException, PlayerStateException, EmptyDeckException {
         System.out.println("Match: " + this.turn.getCurPlayer().getNickname() + " tries to buy DevCard -> " + "level: " + row + " color: " + col);
 
         // todo row e col sono controllabili nel player perchè è lui che chiama la funzione
         // ed è sempre lui che controlla i requisiti
         if (this.turn.getCurPlayer().hasRequisite(this.devSetup.showDevDeck(row, col).getCost(),row,col)) {
-            this.turn.getCurPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
-            return true;
+            try {
+                this.turn.getCurPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
+                return true;
+            } catch (EmptyDeckException e) {
+                return false;
+            }
         }
         return false;
     }
@@ -194,11 +209,9 @@ public abstract class Match implements PlayerToMatch {
         for (Player x : turn.getOtherPlayer()) {
             try {
                 x.moveFaithMarker(amount);
-            } catch (WrongPointsException e) {
-                e.printStackTrace();
-            } catch (IllegalMovesException e) {
-                e.printStackTrace();
-            } // todo lanciare eccezione al model
+            } catch (EndGameException e) {
+                // todo end game logic
+            }
         }
     }
 
@@ -208,9 +221,28 @@ public abstract class Match implements PlayerToMatch {
      * @return true if success
      */
     @Override
-    public boolean endMyTurn() throws NotHisTurnException, TurnStartedException, EmptyDeckException, LorenzoMovesException, WrongPointsException, IllegalMovesException {
+    public boolean endMyTurn() throws PlayerStateException {
         this.marketTray.unPaint();
         return this.turn.nextPlayer();
+    }
+
+    /**
+     * This method return a Leader Card Deck
+     *
+     * @return Leader Card Deck
+     */
+    @Override
+    public List<LeaderCard> requestLeaderCard() {
+        int size = 4;
+        List<LeaderCard> ret = new ArrayList<>();
+        for(int i = 0; i < size; i++) {
+            try {
+                ret.add(this.leaderCardDeck.draw());
+            } catch (EmptyDeckException e) {
+                // todo rifare il mazzo o lanciare errore al model
+            }
+        }
+        return ret;
     }
 
     //for test

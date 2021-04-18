@@ -1,7 +1,7 @@
 package it.polimi.ingsw.personalboardTests;
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.*;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
@@ -23,7 +23,7 @@ public class WarehouseTest {
      * Testing if the resources are correctly inserted into the Depots with all the constraints
      */
     @Test
-    public void insertResources() throws IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
+    public void insertResources() throws IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, EndGameException {
         Player player = new Player("Dummy", null);
         Warehouse test = new Warehouse(player);
 
@@ -51,7 +51,7 @@ public class WarehouseTest {
      * Testing the warehouse returns the resources into the depots correctly
      */
     @Test
-    public void viewResources() throws IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
+    public void viewResources() throws IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, EndGameException {
         Player player = new Player("Dummy", null);
         Warehouse test = new Warehouse(player);
 
@@ -86,7 +86,7 @@ public class WarehouseTest {
      * Testing if the resources are correctly inserted into the warehouse
      */
     @Test
-    public void insertInStrongbox() throws IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
+    public void insertInStrongbox() throws IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, EndGameException {
         Player player = new Player("Dummy", null);
         Warehouse test = new Warehouse(player);
         List<Resource> list = new ArrayList<>();
@@ -127,7 +127,7 @@ public class WarehouseTest {
      * Testing if the extra Depots are correctly created
      */
     @Test
-    public void InsertInExtraDepots() throws ExtraDepotsException, IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
+    public void InsertInExtraDepots() throws ExtraDepotsException, IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, EndGameException {
         Player player = new Player("Dummy", null);
         Warehouse test = new Warehouse(player);
         boolean exc = false;
@@ -162,7 +162,7 @@ public class WarehouseTest {
 
 
     @Test
-    public void moveResourcesInDepots() throws NegativeResourcesDepotException, WrongDepotException, ExtraDepotsException, IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
+    public void moveResourcesInDepots() throws NegativeResourcesDepotException, WrongDepotException, ExtraDepotsException, IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, EndGameException {
         Player player = new Player("Dummy", null);
         Warehouse warehouse = new Warehouse(player);
         warehouse.addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildStone()));
@@ -219,7 +219,7 @@ public class WarehouseTest {
     }
 
     @Test
-    public void activateProductions() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, WrongPointsException, IllegalMovesException {
+    public void activateProductions() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, WrongPointsException, EndGameException {
 
         PlayerReactEffect player = new Player("Dummy", null);
         Warehouse warehouse = new Warehouse(player);
@@ -270,7 +270,7 @@ public class WarehouseTest {
     }
 
     @Test
-    public void notEnoughResourceProduction() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, IllegalNormalProduction, IllegalTypeInProduction, IllegalNormalProduction, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
+    public void notEnoughResourceProduction() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, IllegalNormalProduction, IllegalTypeInProduction, IllegalNormalProduction, UnobtainableResourceException, WrongPointsException, EndGameException {
 
         PlayerReactEffect player = new Player("Dummy", null);
         Warehouse warehouse = new Warehouse(player);

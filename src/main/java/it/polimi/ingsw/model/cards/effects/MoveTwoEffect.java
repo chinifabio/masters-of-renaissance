@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.cards.effects;
 
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.exceptions.game.GameException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 
@@ -16,7 +17,7 @@ public class MoveTwoEffect extends Effect{
      * @param p the only player in the game.
      */
     @Override
-    public void use(PlayerReactEffect p) throws WrongPointsException, IllegalMovesException {
+    public void use(PlayerReactEffect p) throws EndGameException {
         System.out.println("Moving two spaces");
         p.moveFaithMarker(2); // aggiungere movimento 2
     }

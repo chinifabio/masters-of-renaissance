@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.resource;
 
 import com.fasterxml.jackson.annotation.*;
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
@@ -106,7 +106,7 @@ public class Resource{
      * @param player the player that obtain the resource
      * @throws UnobtainableResourceException if the resource is not obtainable
      */
-    public void onObtain(PlayerReactEffect player) throws UnobtainableResourceException, WrongPointsException, IllegalMovesException {
+    public void onObtain(PlayerReactEffect player) throws UnobtainableResourceException, EndGameException {
         os.obtain(player);
     }
 

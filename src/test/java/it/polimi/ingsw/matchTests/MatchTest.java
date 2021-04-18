@@ -8,13 +8,11 @@ import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.cards.SoloActionToken;
+import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.game.GameException;
-import it.polimi.ingsw.model.exceptions.game.movesexception.MainActionDoneException;
-import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
-import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
 import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
@@ -24,7 +22,6 @@ import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
-import it.polimi.ingsw.model.player.Lorenzo;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerAction;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
@@ -33,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,38 +42,39 @@ public class MatchTest {
      * so you can know if the operation is succeed of failed.
      */
     @Test
-    public void buildSingleplayerTest() throws NotHisTurnException, MainActionDoneException, OutOfBoundMarketTrayException, GameException, IllegalMovesException, TurnStartedException, WrongPointsException, EmptyDeckException, UnobtainableResourceException, IllegalTypeInProduction {
+    public void buildSingleplayerTest() throws OutOfBoundMarketTrayException, EndGameException,  UnobtainableResourceException, IllegalTypeInProduction, PlayerStateException {
         Match sp = new SingleplayerMatch();
 
-        Lorenzo lorenzo = new Lorenzo(sp);
         Player dummy1 = new Player("Dobby", sp);
         Player dummy2 = new Player("Bobby", sp);
 
-        assertFalse(sp.playerJoin(lorenzo));
         assertFalse(sp.startGame());
         assertTrue(sp.playerJoin(dummy1));
-        assertFalse(sp.startGame());
-        assertTrue(sp.playerJoin(lorenzo));
         assertFalse(sp.playerJoin(dummy2));
+        assertTrue(sp.startGame());
         assertFalse(sp.playerJoin(dummy1));
 
-        assertFalse(dummy1.canDoStuff());
-
-        assertTrue(sp.startGame());
-        assertFalse(sp.playerJoin(dummy2));
-
-        assertFalse(lorenzo.canDoStuff());
         assertTrue(dummy1.canDoStuff());
 
-        // i need to use player action to simulate the server that call player action methods
-        PlayerAction lore = lorenzo;
+        assertFalse(sp.startGame());
+        assertFalse(sp.playerJoin(dummy2));
+
+        assertTrue(dummy1.canDoStuff());
+
         PlayerAction player = dummy1;
+
+        dummy1.discardLeader_test();
+        dummy1.discardLeader_test();
 
         try {
             assertTrue(player.buyDevCard(LevelDevCard.LEVEL1, ColorDevCard.BLUE, DevCardSlot.CENTER));
 
-        } catch(NoRequisiteException | IndexOutOfBoundsException | NotHisTurnException | MainActionDoneException e1){
-            e1.printStackTrace();
+        } catch(NoRequisiteException e1){
+            System.out.println("problema, manca il requisite della carta");
+        } catch(IndexOutOfBoundsException e2){
+            System.out.println("Pescata da un mazzo vuoto!");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         //TODO change to assertTrue when devSetup in match is completed
 
@@ -83,10 +82,7 @@ public class MatchTest {
 
         assertTrue(player.endThisTurn());
 
-        // must be false because lorenzo is manage automatically
-        assertFalse(lorenzo.canDoStuff());
-
-        assertTrue(player.canDoStuff());
+        assertTrue(dummy1.canDoStuff());
 
         assertTrue(player.endThisTurn());
         assertTrue(player.endThisTurn());
@@ -101,7 +97,7 @@ public class MatchTest {
      * so you can know if the operation is succeed of failed.
      */
     @Test
-    public void buildMultiplayerTest() throws NotHisTurnException, MainActionDoneException, OutOfBoundMarketTrayException, GameException, IllegalMovesException, TurnStartedException, WrongPointsException, EmptyDeckException, UnobtainableResourceException, IllegalTypeInProduction {
+    public void buildMultiplayerTest() throws OutOfBoundMarketTrayException, EndGameException, UnobtainableResourceException, IllegalTypeInProduction, PlayerStateException {
         Match match = new MultiplayerMatch();
 
         Player p1 = new Player("gino", match);
@@ -123,28 +119,44 @@ public class MatchTest {
         assertTrue(match.startGame());
         assertFalse(match.startGame());
 
-        List<PlayerAction> order = new LinkedList<>();
+        List<Player> order = new LinkedList<>();
 
         order.add(p1);
         order.add(p2);
         order.add(p3);
         order.add(p4);
 
-        for(int i = 0; i < 5; i++) {
-            for (PlayerAction x : order) {
-                assertEquals(x.canDoStuff(), x.useMarketTray(RowCol.COL, 2));
-                if (x.canDoStuff()) {
-                    try {
-                        assertFalse(x.activateProductions());
-                    } catch (NotHisTurnException e) {
-                        e.printStackTrace();
-                    } catch (MainActionDoneException e) {
-                        e.printStackTrace();
-                    }
-                    x.endThisTurn();
-                }
-            }
-        }
+        Collections.rotate(order, -order.indexOf(order.stream().filter(Player::canDoStuff).findAny().get()));
+
+        order.get(0).discardLeader_test();
+        order.get(0).discardLeader_test();
+
+        order.get(1).discardLeader_test();
+        order.get(1).discardLeader_test();
+
+        order.get(2).discardLeader_test();
+        order.get(2).discardLeader_test();
+
+        order.get(3).discardLeader_test();
+        order.get(3).discardLeader_test();
+
+        assertTrue(order.get(0).canDoStuff());
+
+        assertTrue(order.get(0).useMarketTray(RowCol.COL, 2));
+        assertFalse(order.get(0).useMarketTray(RowCol.COL, 2));
+        assertTrue(order.get(0).endThisTurn());
+
+        assertTrue(order.get(1).useMarketTray(RowCol.COL, 2));
+        assertFalse(order.get(1).useMarketTray(RowCol.COL, 2));
+        assertTrue(order.get(1).endThisTurn());
+
+        assertTrue(order.get(2).useMarketTray(RowCol.COL, 2));
+        assertFalse(order.get(2).useMarketTray(RowCol.COL, 2));
+        assertTrue(order.get(2).endThisTurn());
+
+        assertTrue(order.get(3).useMarketTray(RowCol.COL, 2));
+        assertFalse(order.get(3).useMarketTray(RowCol.COL, 2));
+        assertTrue(order.get(3).endThisTurn());
     }
 
     @Test

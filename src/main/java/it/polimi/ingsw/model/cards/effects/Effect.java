@@ -3,9 +3,7 @@ package it.polimi.ingsw.model.cards.effects;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
-import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 
@@ -26,5 +24,5 @@ public abstract class Effect {
      * This method activates the effect of cards
      * @param p is the PlayerReact
      */
-    public abstract void use(PlayerReactEffect p) throws LorenzoMovesException, WrongPointsException, IllegalMovesException;
+    public abstract void use(PlayerReactEffect p) throws EndGameException;
 }

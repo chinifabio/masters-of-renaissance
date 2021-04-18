@@ -1,43 +1,55 @@
 package it.polimi.ingsw.model.match.match;
 
-import it.polimi.ingsw.model.cards.ColorDevCard;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
-import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
-import it.polimi.ingsw.model.exceptions.game.movesexception.NotHisTurnException;
-import it.polimi.ingsw.model.exceptions.game.movesexception.TurnStartedException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
-import it.polimi.ingsw.model.player.Lorenzo;
-import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
 
-public class SingleplayerMatch extends Match{
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
-    public SingleplayerMatch() {
-        super(2);
-    }
-
-    @Override
-    public boolean playerJoin(Player joined) {
-        int num = turn.playerInGame();
-
-        if(num > this.gameSize || gameOnAir) return false;
-        else if (num == 1 && joined.getNickname().equals(Lorenzo.lorenzoNickname)) return turn.joinPlayer(joined);
-        else if (num == 0 && !joined.getNickname().equals(Lorenzo.lorenzoNickname)) return turn.joinPlayer(joined);
-        else return false;
-    }
+/**
+ * The single player game to start need only one player.
+ * It contains a Lorenzo representation as a faith track and as got a deck of solo action token
+ * Lorenzo and solo token are managed automatically once the player end its turn.
+ * All lorenzo status change will be sent as "StateHandler" object to remote client player to be shown
+ */
+public class SingleplayerMatch extends Match {
 
     /**
-     * start the game: start the turn of the first player and set the gameOnAir as true
-     * @return true if success, false instead
+     * The representation of lorenzo faith tack
      */
-    @Override
-    public boolean startGame() throws NotHisTurnException, TurnStartedException, EmptyDeckException, LorenzoMovesException, WrongPointsException, IllegalMovesException {
-        if (this.turn.playerInGame() != 2 || gameOnAir) return false;
-        this.turn.getCurPlayer().startHisTurn();
-        gameOnAir = true;
+    private final FaithTrack lorenzo;
 
-        System.out.println("Match: Game started"); //TODO DA ELIMINARE
-        return true;
+    /**
+     * The solo action token used at end turn of a single player match
+     */
+    private final Deck<SoloActionToken> soloToken;
+
+    /**
+     * Build a single player game instance: the number of player that the game accept is 1 and the minimum 1
+     */
+    public SingleplayerMatch() {
+        super(1, 1);
+
+        this.lorenzo = new FaithTrack();
+
+        List<SoloActionToken> init = new ArrayList<>();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            init = objectMapper.readValue(
+                    new File("src/resources/SoloActionTokens.json"),
+                    new TypeReference<List<SoloActionToken>>(){});
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        this.soloToken = new Deck<>(init);
+        this.soloToken.shuffle();
     }
 
     /**
@@ -46,7 +58,39 @@ public class SingleplayerMatch extends Match{
      * @param color the color of discarded cards in dev setup
      */
     @Override
-    public void discardDevCard(ColorDevCard color) {
-        System.out.println("Match: Discarding card ->" + color);
+    public void discardDevCard(ColorDevCard color) throws EndGameException {
+        // todo da mettere nell'effect come amount
+        int toDiscard = 2;
+        List<LevelDevCard> list = Arrays.asList(LevelDevCard.values());
+
+        for(int i = 0; i < toDiscard; i++) {
+            Iterator levels = list.iterator();
+            boolean res = false;
+
+            LevelDevCard level = (LevelDevCard) levels.next();
+            while (!res) {
+                try {
+                    this.devSetup.drawFromDeck(level, color);
+                    res = true;
+                } catch (EmptyDeckException e) {
+                    if(levels.hasNext()) level = (LevelDevCard) levels.next();
+                    else throw new EndGameException();
+                }
+            }
+        }
+
+        try {
+            this.devSetup.showDevDeck(list.get(list.size()-1), color);
+        } catch (EmptyDeckException e) {
+            throw new EndGameException();
+        }
+    }
+
+    /**
+     * This method shuffle the solo token deck;
+     */
+    @Override
+    public void shuffleSoloToken() {
+        this.soloToken.shuffle();
     }
 }

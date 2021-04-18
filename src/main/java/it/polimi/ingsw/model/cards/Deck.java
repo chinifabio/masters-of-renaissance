@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.lang.Math;
 
@@ -107,11 +108,7 @@ public class Deck<T extends Card>{
         if(this.cards.isEmpty()){
             throw new EmptyDeckException();
         }
-        for(int i=0;i<this.numberOfCards;i++){
-            if(this.peekCard(cardID).equals(cards.get(i))){
-                this.discardedCards.add(this.cards.remove(i));
-            }
-        }
+        if (!this.cards.remove(this.peekCard(cardID))) throw new MissingCardException("can't find " + cardID);
         this.updateNumberOfCards();
     }
 
@@ -121,11 +118,7 @@ public class Deck<T extends Card>{
      * @throws AlreadyInDeckException if the deck already contains this card.
      */
     public void insertCard(T card) throws AlreadyInDeckException {
-        for(int i=0;i<this.numberOfCards;i++){
-            if(card.equals(this.cards.get(i))){
-                throw new AlreadyInDeckException(card);
-            }
-        }
+        if (this.cards.contains(card)) throw new AlreadyInDeckException(card);
         this.cards.add(0,card);
         this.updateNumberOfCards();
     }
@@ -169,10 +162,10 @@ public class Deck<T extends Card>{
 
     @Override
     public String toString() {
-        return "Deck{" +
+        return "Deck{\n" +
                 "numberOfCards=" + numberOfCards +
-                ", cards=" + cards +
-                ", discardedCards=" + discardedCards +
+                ",\n cards=" + cards +
+                ",\n discardedCards=" + discardedCards +
                 '}';
     }
 }

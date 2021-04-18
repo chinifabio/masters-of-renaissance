@@ -2,7 +2,7 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
@@ -66,14 +66,10 @@ public class ResourceTest {
 
         try {
             unknown.onObtain(player);
-        } catch (UnobtainableResourceException e) {
-            result = true;
-        } catch (WrongPointsException e) {
-            e.printStackTrace();
-        } catch (IllegalMovesException e) {
+            fail();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        assertTrue(result);
     }
 
     @Test

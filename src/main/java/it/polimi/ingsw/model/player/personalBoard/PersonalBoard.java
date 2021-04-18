@@ -3,8 +3,7 @@ package it.polimi.ingsw.model.player.personalBoard;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
-import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.exceptions.warehouse.*;
 import it.polimi.ingsw.model.cards.LevelDevCard;
@@ -151,6 +150,8 @@ public class PersonalBoard {
         try {
             this.leaderDeck.insertCard(card);
         } catch (AlreadyInDeckException e) {
+            // todo sistemare l'eccezione
+            e.printStackTrace();
         }
     }
 
@@ -158,32 +159,18 @@ public class PersonalBoard {
      * This method activate the SpecialAbility of the LeaderCard
      * @param selected is the LeaderCard
      */
-    public void activateLeaderCard(String selected) throws MissingCardException {    //TODO implementation - effect
-        try {
-            LeaderCard card = this.leaderDeck.peekCard(selected);
-            card.activate();
-            card.useEffect(this.player);
-        } catch (LorenzoMovesException e) {
-            e.printStackTrace();
-        } catch (WrongPointsException e) {
-            e.printStackTrace();
-        } catch (IllegalMovesException e) {
-            e.printStackTrace();
-        }
+    public void activateLeaderCard(String selected) throws MissingCardException, EndGameException {    //TODO implementation - effect
+        LeaderCard card = this.leaderDeck.peekCard(selected);
+        card.activate();
+        card.useEffect(this.player);
     }
 
     /**
      * This method remove the LeaderCard from Player's PersonalBoard
      * @param card is the card to be removed
      */
-    public void discardLeaderCard(String card){
-        try {
-            this.leaderDeck.discard(card);
-        } catch (EmptyDeckException e) {
-            e.printStackTrace();
-        } catch (MissingCardException e) {
-            e.printStackTrace();
-        }
+    public void discardLeaderCard(String card) throws EmptyDeckException, MissingCardException {
+        this.leaderDeck.discard(card);
     }
 
     /**
@@ -225,7 +212,7 @@ public class PersonalBoard {
     /**
      * This method activate the productions selected by the Player
      */
-    public void activateProductions() throws UnobtainableResourceException, WrongPointsException, IllegalMovesException {
+    public void activateProductions() throws UnobtainableResourceException, EndGameException {
         this.warehouse.activateProductions();
     }
 
@@ -235,11 +222,7 @@ public class PersonalBoard {
      * @param resource the resource obtained
      */
     public void obtainResourcePBoard(Resource resource) {
-        try {
-            this.warehouse.insertInDepot(DepotSlot.BUFFER,resource);
-        } catch (UnobtainableResourceException | WrongPointsException | IllegalMovesException e) {
-            e.printStackTrace();
-        }
+        this.warehouse.insertInDepot(DepotSlot.BUFFER, resource);
     }
 
 
@@ -301,7 +284,7 @@ public class PersonalBoard {
      * @throws NegativeResourcesDepotException if the Depot "from" hasn't enough resources to move
      * @throws WrongDepotException if the Depot "from" is empty or doesn't have the same type of resources of "resource"
      */
-    public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource resource) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
+    public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource resource) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, EndGameException {
         warehouse.moveBetweenDepot(from,to, resource);
     }
 
@@ -310,18 +293,9 @@ public class PersonalBoard {
      * @param amount the amount to move.
      * @return true if the move is allowed, false otherwhise.
      */
-    // todo exception
-    public boolean moveFaithMarker(int amount, PlayerToMatch pm) {
-        boolean result = false;
-        try {
-            this.faithTrack.movePlayer(amount, pm);
-            result = true;
-        } catch (IllegalMovesException e) {
-            e.printStackTrace();
-        } catch (WrongPointsException e) {
-            e.printStackTrace();
-        }
-        return result;
+    public boolean moveFaithMarker(int amount, PlayerToMatch pm) throws EndGameException {
+        this.faithTrack.movePlayer(amount, pm);
+        return true;
     }
 
     /**
@@ -354,7 +328,7 @@ public class PersonalBoard {
      * @param dest the destination of the resource to move
      * @param loot the resource to move
      */
-    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, IllegalMovesException {
+    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException {
         this.warehouse.moveInProduction(from, dest, loot);
     }
 

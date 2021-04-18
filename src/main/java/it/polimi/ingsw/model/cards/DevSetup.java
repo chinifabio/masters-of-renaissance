@@ -9,13 +9,19 @@ import java.util.stream.Collectors;
  * This class contains a List of Deck of DevCards. It contains the 12 decks of DevCards divided by level and color.
  */
 public class DevSetup {
-
     /**
      * This is the constructor of the devSetup class.
      * @param decks to insert.
      */
     public DevSetup(List<Deck<DevCard>> decks){
         this.devDeckGrid = decks;
+    }
+
+    /**
+     * This is the constructor of the devSetup class.
+     */
+    public DevSetup(){
+        // todo leggere e piazzare i vari deck
     }
 
     /**
@@ -27,14 +33,9 @@ public class DevSetup {
      * This method returns the first card of a single deck of DevCards. It needs the level and the color of the Deck.
      * @return the top card of the deck which color and level matches the one of the parameters.
      */
-    public DevCard showDevDeck(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException {
+    public DevCard showDevDeck(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException, EmptyDeckException {
         Deck<DevCard> tempDeck = takeOneDeck(row, col);
-        try {
-            return tempDeck.peekFirstCard();
-        } catch (EmptyDeckException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return tempDeck.peekFirstCard();
     }
 
     /**
@@ -44,14 +45,8 @@ public class DevSetup {
      * @return the top card of the deck which color and level matches the one of the parameters.
      * @throws IndexOutOfBoundsException if you are trying to get a card from an empty deck with the chosen colors.
      */
-    public DevCard drawFromDeck(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException{
-        Deck<DevCard> tempDeck = takeOneDeck(row, col);
-        try {
-            return tempDeck.draw();
-        } catch (EmptyDeckException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public DevCard drawFromDeck(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException, EmptyDeckException {
+        return takeOneDeck(row, col).draw();
     }
 
     /**

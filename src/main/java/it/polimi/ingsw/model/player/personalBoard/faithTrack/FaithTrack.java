@@ -3,8 +3,8 @@ package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.exceptions.game.GameException;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 
 
@@ -69,20 +69,11 @@ public class FaithTrack {
      * This method move the FaithMarker of the player in the FaithTrack
      * @param points is the value of how far the player's marker must go
      */
-    public void movePlayer(int points, PlayerToMatch pm) throws IllegalMovesException, WrongPointsException {
-
-        if (points< 0){
-            throw new WrongPointsException();
-        }
-
-        if (this.playerPosition >= track.size()-1 && points > 0) {
-            throw new IllegalMovesException();
-        }
-
+    public void movePlayer(int points, PlayerToMatch pm) throws EndGameException {
+        if(playerPosition >= (track.size()-1)) return;
         for (int i = 0; i< points; i++){
             if (this.playerPosition >= track.size()-1) {
-                i = points;
-                this.playerPosition = track.size()-1;
+                throw new EndGameException();
             } else {
                 this.playerPosition++;
                 this.track.get(playerPosition).onPlayerCross(pm);

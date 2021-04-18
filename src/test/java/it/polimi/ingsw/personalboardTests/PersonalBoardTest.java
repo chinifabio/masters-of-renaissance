@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
@@ -132,7 +133,7 @@ public class PersonalBoardTest {
      * This test creates two LeaderCards, adds them to the deck and activate them.
      */
     @Test
-    void ActivateLeaderCard() throws MissingCardException {
+    void ActivateLeaderCard() throws MissingCardException, EndGameException {
         String ID1="000", ID2="111";
         List<Resource> sample = new ArrayList<>();
 
@@ -205,7 +206,7 @@ public class PersonalBoardTest {
      * This test creates two LeaderCards and discard them one by one
      */
     @Test
-    void DiscardLeaderCard(){
+    void DiscardLeaderCard() throws EmptyDeckException, MissingCardException {
         String ID1="000", ID2="111";
         List<Resource> sample = new ArrayList<>();
 
@@ -253,9 +254,17 @@ public class PersonalBoardTest {
             e.printStackTrace();
         }
 
-        personalBoard.discardLeaderCard(ID1);
-
-        personalBoard.discardLeaderCard(ID2);
+        // todo togliere i try quando ci sono le leader distribuite
+        try {
+            personalBoard.discardLeaderCard(ID1);
+        } catch (MissingCardException e) {
+            e.printStackTrace();
+        }
+        try {
+            personalBoard.discardLeaderCard(ID2);
+        } catch (MissingCardException e) {
+            e.printStackTrace();
+        }
 
         try {
             personalBoard.viewLeaderCard().peekCard(ID1);
@@ -295,7 +304,7 @@ public class PersonalBoardTest {
      * This test create a personalBoard and moves the player and Lorenzo on its faith track.
      */
     @Test
-    void FaithTrackMoves() throws IllegalTypeInProduction {
+    void FaithTrackMoves() throws EndGameException {
         Resource first = ResourceBuilder.buildFaithPoint(1);
         Resource ten = ResourceBuilder.buildFaithPoint(10);
 
@@ -327,16 +336,24 @@ public class PersonalBoardTest {
 
         assertEquals(0,personalBoard.FaithMarkerPosition());
         assertTrue(personalBoard.moveFaithMarker(first.amount(), pm));
+
         assertEquals(1,personalBoard.FaithMarkerPosition());
         assertTrue(personalBoard.moveFaithMarker(first.amount(), pm));
+
         assertEquals(2,personalBoard.FaithMarkerPosition());
         assertTrue(personalBoard.moveFaithMarker(ten.amount(), pm));
+
         assertEquals(12,personalBoard.FaithMarkerPosition());
         assertTrue(personalBoard.moveFaithMarker(ten.amount(), pm));
+
         assertEquals(22,personalBoard.FaithMarkerPosition());
-        assertTrue(personalBoard.moveFaithMarker(ten.amount(), pm));
-        assertEquals(24,personalBoard.FaithMarkerPosition());
-        assertFalse(personalBoard.moveFaithMarker(first.amount(), pm));
+
+        try {
+            personalBoard.moveFaithMarker(ten.amount(), pm);
+            fail();
+        } catch (EndGameException e) {
+
+        }
 
     }
 

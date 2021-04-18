@@ -2,9 +2,8 @@ package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.model.cards.effects.Effect;
-import it.polimi.ingsw.model.exceptions.faithtrack.IllegalMovesException;
-import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.exceptions.game.GameException;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 /**
@@ -52,7 +51,7 @@ public abstract class Card{
      * This method is used by subclasses to implement their effect: AddDepot, AddDiscount, AddProduction, DestroyCards, MoveTwo, ShuffleMoveONe, WhiteMarble.
      * @param p the player interface reference
      */
-    public void useEffect(PlayerReactEffect p) throws LorenzoMovesException, WrongPointsException, IllegalMovesException {
+    public void useEffect(PlayerReactEffect p) throws EndGameException {
         effect.use(p);
     }
 
@@ -62,8 +61,9 @@ public abstract class Card{
      * @param card to confront with the first.
      * @return true if cardID are equals, false if not.
      */
-    public boolean equals(Card card) {
-        return this.cardID.equals(card.cardID);
+    public boolean equals(Object card) {
+        if (card instanceof Card) return ((Card) card).cardID.equals(this.cardID);
+        else return false;
     }
 
     @Override

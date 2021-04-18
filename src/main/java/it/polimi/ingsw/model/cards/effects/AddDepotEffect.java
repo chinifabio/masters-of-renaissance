@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.cards.effects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.model.exceptions.game.LorenzoMovesException;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -34,7 +33,7 @@ public class AddDepotEffect extends Effect{
      * @param p the player that is getting a new depot.
      */
     @Override
-    public void use(PlayerReactEffect p) throws LorenzoMovesException {
+    public void use(PlayerReactEffect p) {
         p.addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildFromType(res, 1)));
     }
 }

@@ -2,7 +2,7 @@ package it.polimi.ingsw;
 
 import org.junit.jupiter.api.Test;
 
-public class PlayerStateTest {
+public class PlayerPlayerStateTest {
     /**
      * test a possible lifecycle of a player in his turn testing if throw exception to wrong inpu
      */
