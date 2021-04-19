@@ -20,6 +20,6 @@ public class PlayerStateException extends Exception{
     @Override
     public void printStackTrace() {
         System.out.println(this.getMessage());
-        super.printStackTrace();
+        //super.printStackTrace();
     }
 }

@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
@@ -113,8 +114,8 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
         */
 
         // todo temporaneo fino quando non sono state implementate tutte le dev card
-        this.discardedFromToken.insertCard(new DevCard("riga da eliminare1", null, 0, null, null, null));
-        this.discardedFromToken.insertCard(new DevCard("riga da eliminare2", null, 0, null, null, null));
+        this.discardedFromToken.insertCard(new DevCard(String.valueOf(System.nanoTime()), null, 0, null, null, null));
+        this.discardedFromToken.insertCard(new DevCard(String.valueOf(System.nanoTime()), null, 0, null, null, null));
     }
 
     /**
@@ -125,7 +126,9 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     @Override
     public boolean endMyTurn() throws PlayerStateException {
         try {
-            this.soloToken.useAndDiscard().useEffect(this);
+            SoloActionToken s = this.soloToken.useAndDiscard();
+            System.out.println(TextColors.colorText(TextColors.BLUE, "Lorenzo: ") + "drawn " + s);
+            s.useEffect(this);
         } catch (EndGameException e) {
             // todo logica di fine gioco
             e.printStackTrace();

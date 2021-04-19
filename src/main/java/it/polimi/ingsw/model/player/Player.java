@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.ExtraDiscountException;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
@@ -206,10 +207,14 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     @Override
     public boolean useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException {
+        System.out.println(this.nickname + ": try to use market tray - " + rc + " " + index);
         try {
             this.playerState.useMarketTray(rc, index);
+            System.out.println("result: " + TextColors.colorText(TextColors.GREEN, "OK"));
             return true;
         } catch (PlayerStateException e) {
+            System.out.println("result: " + TextColors.colorText(TextColors.RED, "FAIL"));
+
             e.printStackTrace();
             return false;
         }

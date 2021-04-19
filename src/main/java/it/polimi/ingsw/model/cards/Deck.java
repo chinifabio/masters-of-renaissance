@@ -62,12 +62,7 @@ public class Deck<T extends Card>{
         this.cards.addAll(this.discardedCards);
         this.discardedCards.clear();
         this.updateNumberOfCards();
-        List<T> tempCards = new ArrayList<>();
-        for(int i=this.numberOfCards;i>0;i--){
-            tempCards.add(this.cards.remove((int)(Math.random()*this.numberOfCards)));
-            this.updateNumberOfCards();
-        }
-        this.cards = tempCards;
+        Collections.shuffle(this.cards);
         this.updateNumberOfCards();
     }
 
@@ -185,7 +180,7 @@ public class Deck<T extends Card>{
 
     //for testing
     public T test_getLastDiscarded() {
-        if (this.discardedCards.isEmpty()) return null;
+        if (this.discardedCards.isEmpty()) return (T) new SoloActionToken("vuoto", null);
         return this.discardedCards.get(discardedCards.size()-1);
     }
 }

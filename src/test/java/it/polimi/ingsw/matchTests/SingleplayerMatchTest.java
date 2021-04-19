@@ -13,6 +13,7 @@ import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -58,6 +59,7 @@ public class SingleplayerMatchTest {
      * so you can know if the operation is succeed of failed.
      */
     @Test
+    @RepeatedTest(10)
     public void simpleLifeCycleOfMatch() {
         this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().test_getLastDiscarded().getCardID());
 
@@ -67,11 +69,13 @@ public class SingleplayerMatchTest {
         assertDoesNotThrow(()->assertFalse(gino.useMarketTray(RowCol.ROW, 0)));
 
         assertDoesNotThrow(()->gino.endThisTurn());
+        this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().test_getLastDiscarded().getCardID());
 
         assertDoesNotThrow(()->assertTrue(gino.useMarketTray(RowCol.ROW, 0)));
         assertDoesNotThrow(()->assertFalse(gino.useMarketTray(RowCol.ROW, 0)));
 
         assertDoesNotThrow(()->gino.endThisTurn());
+        this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().test_getLastDiscarded().getCardID());
     }
 
     @Test
@@ -101,18 +105,20 @@ public class SingleplayerMatchTest {
             case "ST3":
             case "ST2":
             case "ST4":
-                assertEquals(2, ((SingleplayerMatch) this.singleplayer).test_getDiscarded().getNumberOfCards());
+                assertEquals(this.oldNumDiscarded + 2, ((SingleplayerMatch) this.singleplayer).test_getDiscarded().getNumberOfCards());
                 this.oldNumDiscarded += 2;
                 break;
             case "ST5":
             case "ST6":
-                assertEquals(2, ((SingleplayerMatch) this.singleplayer).test_getLorenzoPosition());
+                assertEquals(this.oldLorenzoPos + 2, ((SingleplayerMatch) this.singleplayer).test_getLorenzoPosition());
                 this.oldLorenzoPos += 2;
                 break;
-            case "ST7":
-                assertEquals(1, ((SingleplayerMatch) this.singleplayer).test_getLorenzoPosition());
+            case "vuoto":
+                assertEquals(this.oldLorenzoPos + 1, ((SingleplayerMatch) this.singleplayer).test_getLorenzoPosition());
                 this.oldLorenzoPos += 1;
                 break;
+            default: fail();
+            // non posso avere ST7 perchè svuota la pila degli scarti
         }
     }
 }
