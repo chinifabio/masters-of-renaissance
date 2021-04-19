@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedE
 import it.polimi.ingsw.model.exceptions.warehouse.*;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
+import it.polimi.ingsw.model.player.PlayableCardReaction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.*;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.*;
@@ -48,12 +48,12 @@ public class Warehouse {
     /**
      * This attribute is the Player that use this Warehouse
      */
-    private PlayerReactEffect player;
+    private PlayableCardReaction player;
 
     /**
      * This method is the constructor of the class
      */
-    public Warehouse(PlayerReactEffect player) throws IllegalTypeInProduction {
+    public Warehouse(PlayableCardReaction player) throws IllegalTypeInProduction {
 
         this.player = player;
 

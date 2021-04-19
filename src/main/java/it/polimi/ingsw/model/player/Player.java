@@ -35,7 +35,7 @@ import java.util.*;
 /**
  * This class identify the Player
  */
-public class Player implements PlayerAction, PlayerReactEffect, MatchToPlayer {
+public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer {
     /**
      * represent the player state and contains the implementation of the method of PlayerModifier
      */
@@ -196,24 +196,6 @@ public class Player implements PlayerAction, PlayerReactEffect, MatchToPlayer {
         this.personalBoard.moveFaithMarker(amount, this.match);
     }
 
-    /**
-     * This method shuffle the solo action token
-     */
-    @Override
-    public void shuffleToken(){
-        //todo sistemare
-    }
-
-    /**
-     * This method discard two card of the color passed in the dev setup
-     *
-     * @param color color of the dev card to discard
-     */
-    @Override
-    public void discardDevCard(ColorDevCard color) {
-        //todo sistemare
-    }
-
     // player action implementations
 
     /**
@@ -296,8 +278,16 @@ public class Player implements PlayerAction, PlayerReactEffect, MatchToPlayer {
      * @param leaderId the string that identify the leader card
      */
     @Override
-    public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EndGameException {
-        this.playerState.activateLeaderCard(leaderId);
+    public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException {
+        try {
+            this.playerState.activateLeaderCard(leaderId);
+        } catch (EndGameException e) {
+            e.printStackTrace();
+            // todo avvisare il match che del fine game
+        } catch (EmptyDeckException e) {
+            e.printStackTrace();
+            // todo avvisare il match [solo per single player] che il match è finito perchè non ci sono più dev card
+        }
     }
 
     /**
@@ -382,11 +372,7 @@ public class Player implements PlayerAction, PlayerReactEffect, MatchToPlayer {
         return this.personalBoard.getFT_forTest();
     }
 
-    public void discardLeader_test(){
-        try {
-            this.discardLeader(this.personalBoard.viewLeaderCard().peekFirstCard().getCardID());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void test_discardLeader() throws EmptyDeckException, PlayerStateException, MissingCardException, EndGameException {
+        this.discardLeader(this.personalBoard.viewLeaderCard().peekFirstCard().getCardID());
     }
 }

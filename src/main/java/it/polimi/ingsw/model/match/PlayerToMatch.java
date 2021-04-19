@@ -58,17 +58,6 @@ public interface PlayerToMatch {
     void othersPlayersObtainFaithPoint(int amount);
 
     /**
-     * discard a develop card from the dev setup
-     * @param color the color of discarded cards in dev setup
-     */
-    void discardDevCard(ColorDevCard color) throws EndGameException;
-
-    /**
-     * This method shuffle the solo token deck;
-     */
-    void shuffleSoloToken();
-
-    /**
      * paint a marble in market tray
      * @param newColor the new marble color
      * @param marbleIndex

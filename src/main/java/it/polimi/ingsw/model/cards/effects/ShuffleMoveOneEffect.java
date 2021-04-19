@@ -2,9 +2,7 @@ package it.polimi.ingsw.model.cards.effects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
-import it.polimi.ingsw.model.exceptions.game.GameException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
+import it.polimi.ingsw.model.match.SoloTokenReaction;
 
 /**
  * This class is a part of the strategy pattern, it implements the interface Effect.
@@ -19,10 +17,8 @@ public class ShuffleMoveOneEffect extends Effect {
      * @param p the only player in the game.
      */
     @Override
-    public void use(PlayerReactEffect p) throws EndGameException {
-        System.out.println("Move one space");
-        p.moveFaithMarker(1);
-        System.out.println("Shuffling");
-        p.shuffleToken();
+    public void use(CardReaction p) throws EndGameException {
+        ((SoloTokenReaction) p).moveLorenzo(1);
+        ((SoloTokenReaction) p).shuffleToken();
     }
 }

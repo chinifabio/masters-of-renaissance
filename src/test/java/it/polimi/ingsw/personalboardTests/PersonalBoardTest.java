@@ -60,14 +60,14 @@ public class PersonalBoardTest {
         try {
             player = new Player("gino",match);
         } catch (IllegalTypeInProduction e1) {
-            e1.printStackTrace();
+            fail();
         }
 
         PersonalBoard personalBoard = null;
         try {
             personalBoard = new PersonalBoard(player);
         } catch (IllegalTypeInProduction e2) {
-            e2.printStackTrace();
+            fail();
         }
 
 
@@ -105,8 +105,7 @@ public class PersonalBoardTest {
             try {
                 assertTrue(personalBoard.viewDevCards().get(dcsCenter).equals(null));
                 fail();
-            } catch (NullPointerException e) {
-            }
+            } catch (NullPointerException e) {}
         }
 
         if (personalBoard.addDevCard(dcsCenter, c1)){
@@ -118,13 +117,13 @@ public class PersonalBoardTest {
         if (personalBoard.addDevCard(dcsCenter, c3)){
             fail();
         } else {
-                assertTrue(c1.equals(personalBoard.viewDevCards().get(dcsCenter)));
-            }
+            assertTrue(c1.equals(personalBoard.viewDevCards().get(dcsCenter)));
+        }
 
         if (personalBoard.addDevCard(dcsLeft, c31)){
             fail();
         } else {
-                assertTrue(c3.equals(personalBoard.viewDevCards().get(dcsLeft)));
+            assertTrue(c3.equals(personalBoard.viewDevCards().get(dcsLeft)));
         }
 
     }
@@ -160,21 +159,20 @@ public class PersonalBoardTest {
         try {
             player = new Player("gino",match);
         } catch (IllegalTypeInProduction e1) {
-            e1.printStackTrace();
+            fail();
         }
 
         PersonalBoard personalBoard = null;
         try {
             personalBoard = new PersonalBoard(player);
         } catch (IllegalTypeInProduction e2) {
-            e2.printStackTrace();
+            fail();
         }
 
         personalBoard.addLeaderCard(c1);
         try {
             assertTrue(personalBoard.viewLeaderCard().peekFirstCard().equals(c1));
         } catch (EmptyDeckException e) {
-            e.printStackTrace();
             fail();
         }
 
@@ -192,13 +190,17 @@ public class PersonalBoardTest {
            e.printStackTrace();
         }
 
-        personalBoard.activateLeaderCard(ID1);
+        try {
+            personalBoard.activateLeaderCard(ID1);
+        } catch (EmptyDeckException e) {
+            fail();
+        }
 
 
         try {
             assertTrue(personalBoard.viewLeaderCard().peekCard(ID1).isActivated());
         } catch (MissingCardException e) {
-            e.printStackTrace();
+            fail();
         }
     }
 

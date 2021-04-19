@@ -126,7 +126,7 @@ public class MainActionDonePlayerState extends PlayerState {
      * @param leaderId the string that identify the leader card
      */
     @Override
-    public void activateLeaderCard(String leaderId) throws MissingCardException, EndGameException {
+    public void activateLeaderCard(String leaderId) throws MissingCardException, EndGameException, EmptyDeckException {
         this.context.personalBoard.activateLeaderCard(leaderId);
     }
 

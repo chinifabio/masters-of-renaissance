@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.cards.*;
+import it.polimi.ingsw.model.cards.effects.CardReaction;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.ExtraDiscountException;
@@ -12,7 +13,7 @@ import it.polimi.ingsw.model.resource.Resource;
 /**
  * This interface includes all the methods that can be called to modify the Player when an effect ca
  */
-public interface PlayerReactEffect {
+public interface PlayableCardReaction extends CardReaction {
     /**
      * This method adds a Production to the list of available productions
      */
@@ -46,15 +47,4 @@ public interface PlayerReactEffect {
      * @param amount how many cells the marker moves
      */
     void moveFaithMarker(int amount) throws EndGameException;
-
-    /**
-     * This method shuffle the solo action token
-     */
-    void shuffleToken();
-
-    /**
-     * This method discard two card of the color passed in the dev setup
-     * @param color color of the dev card to discard
-     */
-    void discardDevCard(ColorDevCard color);
 }

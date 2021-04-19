@@ -1,11 +1,12 @@
 package it.polimi.ingsw.model.cards.effects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import it.polimi.ingsw.model.cards.ColorDevCard;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
+import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.match.SoloTokenReaction;
 
 
 /**
@@ -33,8 +34,7 @@ public class DestroyCardsEffect extends Effect {
      * This method is used only during single player matches: it discard two cards of the same color, starting from level 1 to 3, from the devSetup.
      * @param p the player
      */
-    public void use(PlayerReactEffect p) {
-        System.out.println("Discarding cards: " + color);
-         p.discardDevCard(this.color);
+    public void use(CardReaction p) throws EmptyDeckException, EndGameException, AlreadyInDeckException {
+        ((SoloTokenReaction) p).discardDevCard(this.color);
     }
 }

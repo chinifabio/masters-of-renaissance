@@ -72,7 +72,7 @@ public interface PlayerAction {
      * This method activates the special ability of the LeaderCard
      * @param leaderId the string that identify the leader card
      */
-    void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EndGameException;
+    void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EndGameException, EmptyDeckException;
 
     /**
      * This method removes a LeaderCard from the player

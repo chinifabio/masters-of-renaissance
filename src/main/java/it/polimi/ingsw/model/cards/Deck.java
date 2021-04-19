@@ -87,6 +87,20 @@ public class Deck<T extends Card>{
     }
 
     /**
+     * This method return the first card of the deck and thann add it to the discarded cards
+     * @throws EmptyDeckException if the deck is empty.
+     */
+    public T useAndDiscard() throws EmptyDeckException {
+        if(this.cards.isEmpty()){
+            throw new EmptyDeckException();
+        }
+        T card = this.cards.remove(0);
+        this.discardedCards.add(card);
+        this.updateNumberOfCards();
+        return card;
+    }
+
+    /**
      * This method takes the first card from the List of Card and adds it to the List of discardedCards.
      * @throws EmptyDeckException if the deck is empty.
      */
@@ -167,5 +181,11 @@ public class Deck<T extends Card>{
                 ",\n cards=" + cards +
                 ",\n discardedCards=" + discardedCards +
                 '}';
+    }
+
+    //for testing
+    public T test_getLastDiscarded() {
+        if (this.discardedCards.isEmpty()) return null;
+        return this.discardedCards.get(discardedCards.size()-1);
     }
 }

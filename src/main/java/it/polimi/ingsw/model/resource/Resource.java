@@ -3,8 +3,7 @@ package it.polimi.ingsw.model.resource;
 import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
+import it.polimi.ingsw.model.player.PlayableCardReaction;
 import it.polimi.ingsw.model.resource.strategy.ObtainStrategy;
 
 /**
@@ -106,7 +105,7 @@ public class Resource{
      * @param player the player that obtain the resource
      * @throws UnobtainableResourceException if the resource is not obtainable
      */
-    public void onObtain(PlayerReactEffect player) throws UnobtainableResourceException, EndGameException {
+    public void onObtain(PlayableCardReaction player) throws UnobtainableResourceException, EndGameException {
         os.obtain(player);
     }
 

@@ -159,10 +159,15 @@ public class PersonalBoard {
      * This method activate the SpecialAbility of the LeaderCard
      * @param selected is the LeaderCard
      */
-    public void activateLeaderCard(String selected) throws MissingCardException, EndGameException {    //TODO implementation - effect
+    public void activateLeaderCard(String selected) throws MissingCardException, EndGameException, EmptyDeckException {    //TODO implementation - effect
         LeaderCard card = this.leaderDeck.peekCard(selected);
         card.activate();
-        card.useEffect(this.player);
+        try {
+            card.useEffect(this.player);
+        } catch (AlreadyInDeckException e) {
+            e.printStackTrace();
+            // todo questa eccezione viene da quando scarti un solo token quindi dovrei dire che si è rotto il gioco
+        }
     }
 
     /**

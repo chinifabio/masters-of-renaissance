@@ -1,10 +1,11 @@
 package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.annotation.*;
+import it.polimi.ingsw.model.cards.effects.CardReaction;
 import it.polimi.ingsw.model.cards.effects.Effect;
+import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
-import it.polimi.ingsw.model.exceptions.game.GameException;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
 
 /**
  * This abstract class generalize the concept of Card, every Card has a cardID and an effect.
@@ -51,7 +52,7 @@ public abstract class Card{
      * This method is used by subclasses to implement their effect: AddDepot, AddDiscount, AddProduction, DestroyCards, MoveTwo, ShuffleMoveONe, WhiteMarble.
      * @param p the player interface reference
      */
-    public void useEffect(PlayerReactEffect p) throws EndGameException {
+    public void useEffect(CardReaction p) throws EndGameException, EmptyDeckException, AlreadyInDeckException {
         effect.use(p);
     }
 

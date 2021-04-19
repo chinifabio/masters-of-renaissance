@@ -2,12 +2,9 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
-import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
+import it.polimi.ingsw.model.player.PlayableCardReaction;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -61,7 +58,7 @@ public class ResourceTest {
     @Test
     public void nonObtainable() throws IllegalTypeInProduction {
         Resource unknown = ResourceBuilder.buildUnknown();
-        PlayerReactEffect player = new Player("dummy", null);
+        PlayableCardReaction player = new Player("dummy", null);
         boolean result = false;
 
         try {

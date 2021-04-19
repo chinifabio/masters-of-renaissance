@@ -196,50 +196,50 @@ public class FaithTrackTest {
             order.add(player1);
         }
 
-        order.get(0).discardLeader_test();
-        order.get(0).discardLeader_test();
+        assertDoesNotThrow(()->order.get(0).test_discardLeader());
+        assertDoesNotThrow(()->order.get(0).test_discardLeader());
 
-        order.get(1).discardLeader_test();
-        order.get(1).discardLeader_test();
+        assertDoesNotThrow(()->order.get(1).test_discardLeader());
+        assertDoesNotThrow(()->order.get(1).test_discardLeader());
 
         try {
-            pm.getcurr_test().moveFaithMarker(4);
-            pm.getcurr_test().endThisTurn();
+            pm.test_getCurrPlayer().moveFaithMarker(4);
+            pm.test_getCurrPlayer().endThisTurn();
 
-            pm.getcurr_test().moveFaithMarker(9);
-            pm.getcurr_test().endThisTurn();
+            pm.test_getCurrPlayer().moveFaithMarker(9);
+            pm.test_getCurrPlayer().endThisTurn();
 
-            assertTrue(pm.getcurr_test().getFT_forTest().isFlipped(VaticanSpace.FIRST));
-            pm.getcurr_test().endThisTurn();
-            assertFalse(pm.getcurr_test().getFT_forTest().isFlipped(VaticanSpace.FIRST));
-            pm.getcurr_test().endThisTurn();
+            assertTrue(pm.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.FIRST));
+            pm.test_getCurrPlayer().endThisTurn();
+            assertFalse(pm.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.FIRST));
+            pm.test_getCurrPlayer().endThisTurn();
 
-            pm.getcurr_test().moveFaithMarker(8);
-            pm.getcurr_test().endThisTurn();
+            pm.test_getCurrPlayer().moveFaithMarker(8);
+            pm.test_getCurrPlayer().endThisTurn();
 
-            pm.getcurr_test().moveFaithMarker(7);
-            pm.getcurr_test().endThisTurn();
+            pm.test_getCurrPlayer().moveFaithMarker(7);
+            pm.test_getCurrPlayer().endThisTurn();
 
-            assertFalse(pm.getcurr_test().getFT_forTest().isFlipped(VaticanSpace.SECOND));
-            pm.getcurr_test().endThisTurn();
-            assertFalse(pm.getcurr_test().getFT_forTest().isFlipped(VaticanSpace.SECOND));
+            assertFalse(pm.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.SECOND));
+            pm.test_getCurrPlayer().endThisTurn();
+            assertFalse(pm.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.SECOND));
         } catch (EndGameException e) {
             e.printStackTrace();
             fail();
         }
 
         try {
-            pm.getcurr_test().moveFaithMarker(20);
+            pm.test_getCurrPlayer().moveFaithMarker(20);
             fail();
         } catch (EndGameException e) {
 
         }
-        pm.getcurr_test().endThisTurn();
+        pm.test_getCurrPlayer().endThisTurn();
 
-        assertTrue(pm.getcurr_test().getFT_forTest().isFlipped(VaticanSpace.THIRD));
-        pm.getcurr_test().endThisTurn();
-        assertFalse(pm.getcurr_test().getFT_forTest().isFlipped(VaticanSpace.THIRD));
-        pm.getcurr_test().endThisTurn();
+        assertTrue(pm.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.THIRD));
+        pm.test_getCurrPlayer().endThisTurn();
+        assertFalse(pm.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.THIRD));
+        pm.test_getCurrPlayer().endThisTurn();
 
     }
 

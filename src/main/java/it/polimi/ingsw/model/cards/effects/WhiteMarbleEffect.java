@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.cards.effects;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
+import it.polimi.ingsw.model.player.PlayableCardReaction;
 
 /**
  * This class is a part of the strategy pattern, it implements the interface Effect.
@@ -29,7 +29,7 @@ public class WhiteMarbleEffect extends Effect{
      * @param p the player that is getting the conversion bonus.
      */
     @Override
-    public void use(PlayerReactEffect p) {
-        p.addMarbleConversion(conv); // manca da aggiungere il conv
+    public void use(CardReaction p) {
+        ((PlayableCardReaction) p).addMarbleConversion(conv);
     }
 }

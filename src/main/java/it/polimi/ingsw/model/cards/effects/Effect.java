@@ -3,8 +3,10 @@ package it.polimi.ingsw.model.cards.effects;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
+import it.polimi.ingsw.model.player.PlayableCardReaction;
 
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
@@ -22,7 +24,7 @@ public abstract class Effect {
 
     /**
      * This method activates the effect of cards
-     * @param p is the PlayerReact
+     * @param p is the interface to react a card effect
      */
-    public abstract void use(PlayerReactEffect p) throws EndGameException;
+    public abstract void use(CardReaction p) throws EndGameException, EmptyDeckException, AlreadyInDeckException;
 }

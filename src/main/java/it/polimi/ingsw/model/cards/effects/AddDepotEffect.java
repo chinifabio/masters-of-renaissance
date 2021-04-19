@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.cards.effects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
+import it.polimi.ingsw.model.player.PlayableCardReaction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -32,7 +32,8 @@ public class AddDepotEffect extends Effect{
      * @param p the player that is getting a new depot.
      */
     @Override
-    public void use(PlayerReactEffect p) {
-        p.addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildFromType(res, 1)));
+    public void use(CardReaction p) {
+        ((PlayableCardReaction) p).addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildFromType(res, 1)));
+        // todo extra depot exception da fare e da portare su
     }
 }

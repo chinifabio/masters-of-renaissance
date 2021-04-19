@@ -246,7 +246,12 @@ public abstract class Match implements PlayerToMatch {
     }
 
     //for test
-    public Player getcurr_test(){
+    public Player test_getCurrPlayer(){
         return turn.getCurPlayer();
+    }
+
+    //for test
+    public Turn test_getTurn() {
+        return this.turn;
     }
 }

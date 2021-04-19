@@ -14,8 +14,7 @@ import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerAction;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
+import it.polimi.ingsw.model.player.PlayableCardReaction;
 import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +36,7 @@ public class MarketTrayTest {
         int col = 4;
 
         MarketTray tray = new MarketTray();
-        PlayerReactEffect player = new Player("dummy", null);
+        PlayableCardReaction player = new Player("dummy", null);
 
         List<Marble> beforePush;
         Marble slide;
@@ -77,7 +76,7 @@ public class MarketTrayTest {
         int col = 4;
 
         MarketTray tray = new MarketTray();
-        PlayerReactEffect player = new Player("dummy", null);
+        PlayableCardReaction player = new Player("dummy", null);
 
         List<Marble> beforePush;
         Marble slide;
@@ -231,11 +230,12 @@ public class MarketTrayTest {
             order.add(player1);
         }
 
-        order.get(0).discardLeader_test();
-        order.get(0).discardLeader_test();
 
-        order.get(1).discardLeader_test();
-        order.get(1).discardLeader_test();
+        assertDoesNotThrow(()->order.get(0).test_discardLeader());
+        assertDoesNotThrow(()->order.get(0).test_discardLeader());
+
+        assertDoesNotThrow(()->order.get(1).test_discardLeader());
+        assertDoesNotThrow(()->order.get(1).test_discardLeader());
 
         for (int i = 0; i < 5; i++) {
             // player 1 turn

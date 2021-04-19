@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedE
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
+import it.polimi.ingsw.model.player.PlayableCardReaction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder;
@@ -223,7 +223,7 @@ public class WarehouseTest {
     @Test
     public void activateProductions() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, EndGameException {
 
-        PlayerReactEffect player = new Player("Dummy", null);
+        PlayableCardReaction player = new Player("Dummy", null);
         Warehouse warehouse = new Warehouse(player);
         List<Resource> req = Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildShield());
         List<Resource> out = Arrays.asList(ResourceBuilder.buildStone(10));
@@ -274,7 +274,7 @@ public class WarehouseTest {
     @Test
     public void notEnoughResourceProduction() throws  NegativeResourcesDepotException, UnknownUnspecifiedException, IllegalTypeInProduction, IllegalNormalProduction, UnobtainableResourceException, EndGameException {
 
-        PlayerReactEffect player = new Player("Dummy", null);
+        PlayableCardReaction player = new Player("Dummy", null);
         Warehouse warehouse = new Warehouse(player);
         List<Resource> req = Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildUnknown());
         List<Resource> out = Arrays.asList(ResourceBuilder.buildStone(10));
@@ -355,7 +355,7 @@ public class WarehouseTest {
     @Test
     public void countTotalResources() throws IllegalTypeInProduction, ExtraDepotsException {
 
-        PlayerReactEffect player = new Player("name", null);
+        PlayableCardReaction player = new Player("name", null);
 
         Warehouse warehouse = new Warehouse(player);
         warehouse.insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildShield(2));
@@ -382,7 +382,7 @@ public class WarehouseTest {
 
     @Test
     public void usingBuffer() throws IllegalTypeInProduction, UnobtainableResourceException, WrongDepotException, NegativeResourcesDepotException, ExtraDepotsException, EndGameException {
-        PlayerReactEffect player = new Player("Name", null);
+        PlayableCardReaction player = new Player("Name", null);
         Warehouse warehouse = new Warehouse(player);
 
         warehouse.insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildServant(3));

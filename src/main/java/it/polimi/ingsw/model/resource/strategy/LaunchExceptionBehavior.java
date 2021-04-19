@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.resource.strategy;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
-import it.polimi.ingsw.model.player.PlayerReactEffect;
+import it.polimi.ingsw.model.player.PlayableCardReaction;
 
 /**
  * strategy for launch exception when a resource not obtainable is obtained
@@ -18,7 +18,7 @@ public class LaunchExceptionBehavior implements ObtainStrategy{
      * @throws UnobtainableResourceException thrown because unknown resource is not obtainable
      */
     @Override
-    public void obtain(PlayerReactEffect player) throws UnobtainableResourceException {
+    public void obtain(PlayableCardReaction player) throws UnobtainableResourceException {
         throw new UnobtainableResourceException();
     }
 }

@@ -1,30 +1,12 @@
 package it.polimi.ingsw.model.match.match;
 
-import it.polimi.ingsw.model.cards.ColorDevCard;
-
 public class MultiplayerMatch extends Match{
     /**
-     * build a multiplayer match
+     * build a multiplayer match.
+     * A multiplayer match has a game size of 4 players
+     * and require at least 2 player to be started
      */
     public MultiplayerMatch() {
         super(4, 2);
-    }
-
-    /**
-     * discard a develop card from the dev setup
-     *
-     * @param color the color of discarded cards in dev setup
-     */
-    @Override
-    public void discardDevCard(ColorDevCard color) {
-        //todo throw GameModeException
-    }
-
-    /**
-     * This method shuffle the solo token deck;
-     */
-    @Override
-    public void shuffleSoloToken() {
-        //todo throw GameModeException
     }
 }
