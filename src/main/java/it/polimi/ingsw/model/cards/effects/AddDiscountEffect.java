@@ -24,7 +24,7 @@ public class AddDiscountEffect extends Effect{
     /**
      * This attribute saves the discounted resource of the Card.
      */
-    private ResourceType resource;
+    private final ResourceType resource;
 
     /**
      * This method is activated by a LeaderCard, it adds a discount to a specific resource when buying a DevCard.

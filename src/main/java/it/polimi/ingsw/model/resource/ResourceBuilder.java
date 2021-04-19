@@ -1,10 +1,15 @@
 package it.polimi.ingsw.model.resource;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.model.player.personalBoard.faithTrack.Cell;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.resource.strategy.DoNothingBehavior;
 import it.polimi.ingsw.model.resource.strategy.GiveFaithPointBehavior;
 import it.polimi.ingsw.model.resource.strategy.LaunchExceptionBehavior;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

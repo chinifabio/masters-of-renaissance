@@ -9,8 +9,10 @@ import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduc
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.SpecialDepot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.*;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -23,7 +25,7 @@ public class WarehouseTest {
      * Testing if the resources are correctly inserted into the Depots with all the constraints
      */
     @Test
-    public void insertResources() throws IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, EndGameException {
+    public void insertResources() throws IllegalTypeInProduction{
         Player player = new Player("Dummy", null);
         Warehouse test = new Warehouse(player);
 
@@ -51,7 +53,7 @@ public class WarehouseTest {
      * Testing the warehouse returns the resources into the depots correctly
      */
     @Test
-    public void viewResources() throws IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, EndGameException {
+    public void viewResources() throws IllegalTypeInProduction{
         Player player = new Player("Dummy", null);
         Warehouse test = new Warehouse(player);
 
@@ -86,7 +88,7 @@ public class WarehouseTest {
      * Testing if the resources are correctly inserted into the warehouse
      */
     @Test
-    public void insertInStrongbox() throws IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, EndGameException {
+    public void insertInStrongbox() throws IllegalTypeInProduction{
         Player player = new Player("Dummy", null);
         Warehouse test = new Warehouse(player);
         List<Resource> list = new ArrayList<>();
@@ -127,7 +129,7 @@ public class WarehouseTest {
      * Testing if the extra Depots are correctly created
      */
     @Test
-    public void InsertInExtraDepots() throws ExtraDepotsException, IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, EndGameException {
+    public void InsertInExtraDepots() throws ExtraDepotsException, IllegalTypeInProduction{
         Player player = new Player("Dummy", null);
         Warehouse test = new Warehouse(player);
         boolean exc = false;
@@ -162,7 +164,7 @@ public class WarehouseTest {
 
 
     @Test
-    public void moveResourcesInDepots() throws NegativeResourcesDepotException, WrongDepotException, ExtraDepotsException, IllegalTypeInProduction, UnobtainableResourceException, WrongPointsException, EndGameException {
+    public void moveResourcesInDepots() throws NegativeResourcesDepotException, WrongDepotException, ExtraDepotsException, IllegalTypeInProduction, UnobtainableResourceException, EndGameException {
         Player player = new Player("Dummy", null);
         Warehouse warehouse = new Warehouse(player);
         warehouse.addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildStone()));
@@ -219,7 +221,7 @@ public class WarehouseTest {
     }
 
     @Test
-    public void activateProductions() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, WrongPointsException, EndGameException {
+    public void activateProductions() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, EndGameException {
 
         PlayerReactEffect player = new Player("Dummy", null);
         Warehouse warehouse = new Warehouse(player);
@@ -270,7 +272,7 @@ public class WarehouseTest {
     }
 
     @Test
-    public void notEnoughResourceProduction() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, IllegalNormalProduction, IllegalTypeInProduction, IllegalNormalProduction, UnobtainableResourceException, WrongPointsException, EndGameException {
+    public void notEnoughResourceProduction() throws  NegativeResourcesDepotException, UnknownUnspecifiedException, IllegalTypeInProduction, IllegalNormalProduction, UnobtainableResourceException, EndGameException {
 
         PlayerReactEffect player = new Player("Dummy", null);
         Warehouse warehouse = new Warehouse(player);
@@ -350,5 +352,111 @@ public class WarehouseTest {
 
     }
 
-    //TODO Test per le eccezioni del warehouse
+    @Test
+    public void countTotalResources() throws IllegalTypeInProduction, ExtraDepotsException {
+
+        PlayerReactEffect player = new Player("name", null);
+
+        Warehouse warehouse = new Warehouse(player);
+        warehouse.insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildShield(2));
+        warehouse.insertInDepot(DepotSlot.MIDDLE, ResourceBuilder.buildCoin(2));
+        warehouse.insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildStone(5));
+
+        assertEquals(1, warehouse.countPointsWarehouse());
+
+        warehouse.insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildShield(10));
+        assertEquals(3, warehouse.countPointsWarehouse());
+
+        warehouse.addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildServant()));
+        warehouse.insertInDepot(DepotSlot.SPECIAL1, ResourceBuilder.buildServant(2));
+
+        assertEquals(4, warehouse.countPointsWarehouse());
+
+        warehouse.insertInDepot(DepotSlot.TOP, ResourceBuilder.buildServant());
+        assertEquals(4, warehouse.countPointsWarehouse());
+
+        warehouse.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildServant(20));
+        assertEquals(8, warehouse.countPointsWarehouse());
+
+    }
+
+    @Test
+    public void usingBuffer() throws IllegalTypeInProduction, UnobtainableResourceException, WrongDepotException, NegativeResourcesDepotException, ExtraDepotsException, EndGameException {
+        PlayerReactEffect player = new Player("Name", null);
+        Warehouse warehouse = new Warehouse(player);
+
+        warehouse.insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildServant(3));
+        warehouse.moveBetweenDepot(DepotSlot.BOTTOM, DepotSlot.BUFFER, ResourceBuilder.buildServant());
+
+        assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildServant()));
+
+        warehouse.moveBetweenDepot(DepotSlot.BUFFER, DepotSlot.BOTTOM, ResourceBuilder.buildServant());
+
+        assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildServant(0)));
+
+        //trying some limit cases:
+        //Buffer is empty:
+        try {
+            warehouse.moveBetweenDepot(DepotSlot.BUFFER, DepotSlot.BOTTOM, ResourceBuilder.buildServant());
+            fail();
+        } catch (NegativeResourcesDepotException e){
+            e.printStackTrace();
+        }
+        assertEquals(ResourceBuilder.buildServant(3), warehouse.viewResourcesInDepot(DepotSlot.BOTTOM));
+
+        //Dest depot doesn't have that type of resources:
+        warehouse.insertInDepot(DepotSlot.BUFFER,ResourceBuilder.buildCoin(2));
+
+        warehouse.removeFromDepot(DepotSlot.BOTTOM, ResourceBuilder.buildServant());
+        assertEquals(ResourceBuilder.buildServant(2), warehouse.viewResourcesInDepot(DepotSlot.BOTTOM));
+
+        assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildCoin(2)));
+
+        warehouse.moveBetweenDepot(DepotSlot.BUFFER, DepotSlot.BOTTOM, ResourceBuilder.buildCoin(1));
+
+        assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildCoin(2)));
+
+        warehouse.moveBetweenDepot(DepotSlot.BOTTOM, DepotSlot.MIDDLE, ResourceBuilder.buildServant(2));
+        warehouse.moveBetweenDepot(DepotSlot.BUFFER, DepotSlot.BOTTOM, ResourceBuilder.buildCoin(2));
+
+        assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildCoin(0)));
+        assertEquals(ResourceBuilder.buildCoin(2), warehouse.viewResourcesInDepot(DepotSlot.BOTTOM));
+        assertEquals(ResourceBuilder.buildServant(2), warehouse.viewResourcesInDepot(DepotSlot.MIDDLE));
+
+        //Moving resources from and to SpecialDepot
+        warehouse.insertInDepot(DepotSlot.BUFFER, ResourceBuilder.buildStone(3));
+        warehouse.insertInDepot(DepotSlot.BUFFER, ResourceBuilder.buildShield(2));
+
+        Depot special = new SpecialDepot(ResourceBuilder.buildShield());
+        warehouse.addDepot(special);
+
+        warehouse.moveBetweenDepot(DepotSlot.BUFFER, DepotSlot.SPECIAL1, ResourceBuilder.buildShield(2));
+
+        assertEquals(ResourceBuilder.buildShield(2), warehouse.viewResourcesInDepot(DepotSlot.SPECIAL1));
+        assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildShield(0)));
+
+        warehouse.moveBetweenDepot(DepotSlot.SPECIAL1, DepotSlot.BUFFER, ResourceBuilder.buildShield(1));
+
+        assertEquals(ResourceBuilder.buildShield(1), warehouse.viewResourcesInDepot(DepotSlot.SPECIAL1));
+        assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildShield(1)));
+
+        //Moving resources from and to Strongbox
+        warehouse.insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildCoin(3));
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildCoin(3)));
+
+        warehouse.moveBetweenDepot(DepotSlot.STRONGBOX,DepotSlot.BOTTOM, ResourceBuilder.buildCoin());
+
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildCoin(3)));
+
+        warehouse.moveBetweenDepot(DepotSlot.STRONGBOX, DepotSlot.BUFFER, ResourceBuilder.buildCoin(2));
+
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildCoin(1)));
+        assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildCoin(2)));
+
+        warehouse.moveBetweenDepot(DepotSlot.BUFFER, DepotSlot.STRONGBOX, ResourceBuilder.buildStone(3));
+
+        assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildStone(0)));
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildStone(3)));
+
+    }
 }

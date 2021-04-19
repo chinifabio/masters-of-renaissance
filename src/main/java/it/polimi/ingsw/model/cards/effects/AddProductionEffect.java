@@ -10,8 +10,6 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Productio
  */
 public class AddProductionEffect extends Effect{
 
-    public AddProductionEffect() {}
-
     /**
      * This is the constructor of the class. It needs the Production that will added to the PersonalBoard.
      * @param prod that will be available to the player once activated.

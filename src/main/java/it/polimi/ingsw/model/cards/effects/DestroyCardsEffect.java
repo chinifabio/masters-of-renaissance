@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.cards.effects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -16,14 +17,13 @@ public class DestroyCardsEffect extends Effect {
      */
     private ColorDevCard color;
 
-    public DestroyCardsEffect() {
-    }
 
     /**
      * This is the constructor of the class. It needs a ColoDevCard that will be destroyed.
      * @param c color of the card that will be destroyed.
      */
-    public DestroyCardsEffect(ColorDevCard c) {
+    @JsonCreator
+    public DestroyCardsEffect(@JsonProperty("color") ColorDevCard c) {
         this.color = c;
     }
 

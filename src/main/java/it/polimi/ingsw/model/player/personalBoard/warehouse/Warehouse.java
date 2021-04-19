@@ -65,6 +65,8 @@ public class Warehouse {
         output.add(ResourceBuilder.buildUnknown());
         this.availableProductions = new EnumMap<>(ProductionID.class);
         availableProductions.put(ProductionID.BASIC, new UnknownProduction(req,output));
+
+
         this.movesCache = new LinkedList<>();
 
         //Initializing Depots
@@ -79,12 +81,9 @@ public class Warehouse {
 
 
         this.constraint = new ArrayList<>();
-        this.addConstraint(x -> x.getFrom() != DepotSlot.STRONGBOX);
-        this.addConstraint(x-> x.getDest() != DepotSlot.STRONGBOX);
-        this.addConstraint(x -> x.getFrom() != DepotSlot.BUFFER);
-        this.addConstraint(x-> x.getDest() != DepotSlot.BUFFER);
+        this.addConstraint(x -> x.getFrom() != DepotSlot.STRONGBOX || x.getDest() == DepotSlot.BUFFER);
+        this.addConstraint(x-> x.getDest() != DepotSlot.STRONGBOX || x.getFrom() == DepotSlot.BUFFER);
 
-        //TODO Fare la parte di Buffer per ricevere le risorse dal mercato
 
     }
 
@@ -136,8 +135,10 @@ public class Warehouse {
         this.constraint.forEach(x -> {
             if (!x.test(moveResource)) testResult.set(false);
         });
+
         if (testResult.get()) {
-            if (depots.get(from).viewResources().amount() == 0 || !depots.get(from).viewResources().equalsType(resource)) {
+
+            if ((from != DepotSlot.BUFFER && from != DepotSlot.STRONGBOX) && (viewResourcesInDepot(from).amount() == 0 || !viewResourcesInDepot(from).equalsType(resource))) {
                 throw new WrongDepotException();
             }
 
@@ -267,12 +268,33 @@ public class Warehouse {
         return true;
     }
 
-    //maybe only for testing
+
     public void addProduction(ProductionID key, Production value){
-        this.availableProductions.put(key, value);
+        if(this.availableProductions.putIfAbsent(key, value) != null){
+            this.availableProductions.replace(key,value);
+        }
     }
 
+    public int countPointsWarehouse(){
+        int total = 0;
+        for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()){
+            if (!(entry.getValue() == null || entry.getKey() == DepotSlot.STRONGBOX || entry.getKey()==DepotSlot.BUFFER)){
+                total = total + entry.getValue().viewResources().amount();
+            }
+        }
+        for (Resource res : viewResourcesInStrongbox()){
+            total = total + res.amount();
+        }
+
+        return total/5;
+    }
+
+    //maybe only for testing
     public Map<ProductionID, Production> getProduction(){
         return this.availableProductions;
+    }
+
+    public List<Resource> viewResourcesInBuffer(){
+        return depots.get(DepotSlot.BUFFER).viewAllResources();
     }
 }

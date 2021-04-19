@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.resource.strategy;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.player.PlayerReactEffect;
 
@@ -8,6 +9,7 @@ import it.polimi.ingsw.model.player.PlayerReactEffect;
  */
 public class LaunchExceptionBehavior implements ObtainStrategy{
 
+    @JsonCreator
     public LaunchExceptionBehavior() {}
 
     /**

@@ -9,8 +9,6 @@ import it.polimi.ingsw.model.player.PlayerReactEffect;
  * This class is a part of the strategy pattern, it implements the interface Effect.
  */
 public class WhiteMarbleEffect extends Effect{
-    public WhiteMarbleEffect() {
-    }
 
     /**
      * This is the constructor of the method. It needs a ResourceType which is the one that white marbles will be converted to during the Market phase.

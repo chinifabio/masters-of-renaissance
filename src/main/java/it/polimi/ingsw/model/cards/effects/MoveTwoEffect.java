@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.cards.effects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.game.GameException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
@@ -9,8 +10,9 @@ import it.polimi.ingsw.model.player.PlayerReactEffect;
  * This class is a part of the strategy pattern, it implements the interface Effect.
  */
 public class MoveTwoEffect extends Effect{
-    public MoveTwoEffect() {
-    }
+
+    @JsonCreator
+    public MoveTwoEffect() {}
 
     /**
      * This method is activated by a SoloActionToken, it gives two FaithPoint to Lorenzo.
