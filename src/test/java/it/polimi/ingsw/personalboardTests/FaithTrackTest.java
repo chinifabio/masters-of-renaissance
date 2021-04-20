@@ -1,12 +1,10 @@
 package it.polimi.ingsw.personalboardTests;
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.TextColors;
+import it.polimi.ingsw.CustomAssertion;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
-import it.polimi.ingsw.model.exceptions.game.GameException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
-import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
@@ -46,35 +44,42 @@ public class FaithTrackTest {
     }
 
     @Test
-    public void infoFaithTrack() throws EndGameException {
+    public void infoFaithTrack() {
 
         FaithTrack track = new FaithTrack();
         Resource point = ResourceBuilder.buildFaithPoint();
 
-        assertEquals(0, track.victoryPointCellPlayer());
-        assertEquals(VaticanSpace.NONE, track.vaticanSpaceCell());
-        track.movePlayer(point.amount(), game);
-        track.movePlayer(point.amount(), game);
-        track.movePlayer(point.amount(), game);
-        assertEquals(VaticanSpace.NONE, track.vaticanSpaceCell());
-        assertEquals(1, track.victoryPointCellPlayer());
-        track.movePlayer(point.amount(), game);
-        track.movePlayer(point.amount(), game);
-        track.movePlayer(point.amount(), game);
-        assertEquals(VaticanSpace.FIRST, track.vaticanSpaceCell());
-        assertEquals(2, track.victoryPointCellPlayer());
-        track.movePlayer(point.amount(), game);
-        track.movePlayer(point.amount(), game);
-        assertEquals(VaticanSpace.FIRST, track.vaticanSpaceCell());
-        assertEquals(0, track.victoryPointCellPlayer());
+        assertDoesNotThrow(()->{
+            assertEquals(0, track.victoryPointCellPlayer());
+            assertEquals(VaticanSpace.NONE, track.vaticanSpaceCell());
+            track.movePlayer(point.amount(), game);
+            track.movePlayer(point.amount(), game);
+            track.movePlayer(point.amount(), game);
+            assertEquals(VaticanSpace.NONE, track.vaticanSpaceCell());
+            assertEquals(1, track.victoryPointCellPlayer());
+            track.movePlayer(point.amount(), game);
+            track.movePlayer(point.amount(), game);
+            track.movePlayer(point.amount(), game);
+            assertEquals(VaticanSpace.FIRST, track.vaticanSpaceCell());
+            assertEquals(2, track.victoryPointCellPlayer());
+            track.movePlayer(point.amount(), game);
+            track.movePlayer(point.amount(), game);
+            assertEquals(VaticanSpace.FIRST, track.vaticanSpaceCell());
+            assertEquals(0, track.victoryPointCellPlayer());
 
-        Resource mid = ResourceBuilder.buildFaithPoint(7);
-        track.movePlayer(mid.amount(), game);
-        assertEquals(VaticanSpace.SECOND, track.vaticanSpaceCell());
-        assertEquals(9, track.victoryPointCellPlayer());
+            Resource mid = ResourceBuilder.buildFaithPoint(7);
+            track.movePlayer(mid.amount(), game);
+            assertEquals(VaticanSpace.SECOND, track.vaticanSpaceCell());
+            assertEquals(9, track.victoryPointCellPlayer());
+        });
 
         Resource last = ResourceBuilder.buildFaithPoint(9);
-        track.movePlayer(last.amount(), game);
+        try {
+            track.movePlayer(last.amount(), game);
+            fail();
+        } catch (EndGameException e){
+
+        }
         assertEquals(VaticanSpace.THIRD, track.vaticanSpaceCell());
         assertEquals(20, track.victoryPointCellPlayer());
 
@@ -112,6 +117,9 @@ public class FaithTrackTest {
 
 
 
+    /**
+     * Testing if the model calls an exception when the player try to pass the last cell of the FaithTrack
+     */
     @Test
     public void callExceptionsPlayer() {
 
@@ -148,9 +156,18 @@ public class FaithTrackTest {
     }
 
     @Test
-    public void flipOtherPopeTile() throws PlayerStateException {
+    public void flipOtherPopeTile() {
 
-        try {
+        List<Player> order = new ArrayList<>();
+        if (player1.canDoStuff()){
+            order.add(player1);
+            order.add(player2);
+        } else {
+            order.add(player2);
+            order.add(player1);
+        }
+
+        assertDoesNotThrow(()->{
             game.test_getCurrPlayer().moveFaithMarker(4);
             game.test_getCurrPlayer().endThisTurn();
 
@@ -171,102 +188,13 @@ public class FaithTrackTest {
             assertTrue(game.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.SECOND));
             game.test_getCurrPlayer().endThisTurn();
             assertTrue(game.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.SECOND));
-        } catch (EndGameException e) {
-            e.printStackTrace();
-            fail();
-        }
 
-        try {
-            game.test_getCurrPlayer().moveFaithMarker(20);
-            fail();
-        } catch (EndGameException ignored) {
+            CustomAssertion.assertThrown(()-> game.test_getCurrPlayer().moveFaithMarker(20));
+            // the game is ended
 
-        }
-        game.test_getCurrPlayer().endThisTurn();
-
-        assertFalse(game.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.THIRD));
-        game.test_getCurrPlayer().endThisTurn();
-        assertTrue(game.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.THIRD));
-        game.test_getCurrPlayer().endThisTurn();
-
-    }
-
-    @Test
-    public void countingPoints() throws PlayerStateException {
-
-        //starting the game
-        List<Player> orderList = new ArrayList<>();
-        orderList.add(player1);
-        orderList.add(player2);
-
-        Collections.rotate(orderList, -orderList.indexOf(orderList.stream().filter(Player :: canDoStuff).findAny().get()));
-
-        try{
-            assertEquals(0, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //FIRST PLAYER
-            game.test_getCurrPlayer().endThisTurn();
-            assertEquals(0, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //SECOND PLAYER
-            game.test_getCurrPlayer().endThisTurn();
-
-
-            game.test_getCurrPlayer().moveFaithMarker(4);
-            game.test_getCurrPlayer().endThisTurn();
-
-            game.test_getCurrPlayer().moveFaithMarker(2);
-            game.test_getCurrPlayer().endThisTurn();
-
-            assertEquals(1, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //FIRST PLAYER
-            game.test_getCurrPlayer().endThisTurn();
-            assertEquals(0, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //SECOND PLAYER
-            game.test_getCurrPlayer().endThisTurn();
-
-            game.test_getCurrPlayer().moveFaithMarker(3);
-            game.test_getCurrPlayer().endThisTurn();
-
-            game.test_getCurrPlayer().moveFaithMarker(4);
-            game.test_getCurrPlayer().endThisTurn();
-
-            assertEquals(2, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //FIRST PLAYER
-            game.test_getCurrPlayer().endThisTurn();
-            assertEquals(2, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //SECOND PLAYER
-            game.test_getCurrPlayer().endThisTurn();
-
-
-            game.test_getCurrPlayer().moveFaithMarker(2);
-            game.test_getCurrPlayer().endThisTurn();
-
-            game.test_getCurrPlayer().moveFaithMarker(1);
-            game.test_getCurrPlayer().endThisTurn();
-
-            assertEquals(4 + 2, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //FIRST PLAYER
-            game.test_getCurrPlayer().endThisTurn();
-            assertEquals(2 + 2, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //SECOND PLAYER
-            game.test_getCurrPlayer().endThisTurn();
-
-
-            game.test_getCurrPlayer().moveFaithMarker(10); //Player1: 19
-            game.test_getCurrPlayer().endThisTurn();
-            //When the first player reach the second PopeSpace, the second player is in the Cell 7 so he doesn't obtain the
-            //victoryPoints of the second PopeTile
-            game.test_getCurrPlayer().moveFaithMarker(10); //Player2: 17
-            game.test_getCurrPlayer().endThisTurn();
-
-            assertEquals(12 + 3 + 2, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //FIRST PLAYER
-            game.test_getCurrPlayer().endThisTurn();
-            assertEquals(9 + 2, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //SECOND PLAYER
-            game.test_getCurrPlayer().endThisTurn();
-
-            game.test_getCurrPlayer().moveFaithMarker(1);//Player1: 20
-            game.test_getCurrPlayer().endThisTurn();
-
-            game.test_getCurrPlayer().moveFaithMarker(8);//Player2: 24
-            game.test_getCurrPlayer().endThisTurn();
-
-
-        }catch (EndGameException ignored){}
-
-        assertEquals(12 + 4 + 3 + 2, orderList.get(0).getFT_forTest().countingCellPoint()); //FIRST PLAYER
-        assertEquals(20 + 4 + 2, orderList.get(1).getFT_forTest().countingCellPoint()); //SECOND PLAYER
-
+            assertFalse(order.get(0).getFT_forTest().isFlipped(VaticanSpace.THIRD));
+            assertTrue(order.get(1).getFT_forTest().isFlipped(VaticanSpace.THIRD));
+        });
 
     }
 

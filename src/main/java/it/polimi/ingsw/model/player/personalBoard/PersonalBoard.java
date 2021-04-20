@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard;
 
+import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
@@ -93,7 +94,11 @@ public class PersonalBoard {
      * @param slot is the slot where the DevCard is inserted
      * @param card is the DevCard bought by the Player
      */
-    public boolean addDevCard(DevCardSlot slot, DevCard card){
+    public boolean addDevCard(DevCardSlot slot, DevCard card, PlayerToMatch pm) {
+        int sum = 0;
+        for (DevCardSlot key : DevCardSlot.values()) sum += devDeck.get(key).getNumberOfCards();
+        if(sum >= 7) pm.startEndGameLogic();
+
         if (checkDevCard(slot, card)) {
             try {
                 this.devDeck.get(slot).insertCard(card);
@@ -151,7 +156,6 @@ public class PersonalBoard {
             this.leaderDeck.insertCard(card);
         } catch (AlreadyInDeckException e) {
             // todo sistemare l'eccezione
-            e.printStackTrace();
         }
     }
 
@@ -159,15 +163,10 @@ public class PersonalBoard {
      * This method activate the SpecialAbility of the LeaderCard
      * @param selected is the LeaderCard
      */
-    public void activateLeaderCard(String selected) throws MissingCardException, EndGameException, EmptyDeckException {    //TODO implementation - effect
+    public void activateLeaderCard(String selected) throws MissingCardException, EmptyDeckException {    //TODO implementation - effect
         LeaderCard card = this.leaderDeck.peekCard(selected);
         card.activate();
-        try {
-            card.useEffect(this.player);
-        } catch (AlreadyInDeckException e) {
-            e.printStackTrace();
-            // todo questa eccezione viene da quando scarti un solo token quindi dovrei dire che si è rotto il gioco
-        }
+        card.useEffect(this.player);
     }
 
     /**
@@ -289,7 +288,7 @@ public class PersonalBoard {
      * @throws NegativeResourcesDepotException if the Depot "from" hasn't enough resources to move
      * @throws WrongDepotException if the Depot "from" is empty or doesn't have the same type of resources of "resource"
      */
-    public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource resource) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, EndGameException {
+    public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource resource) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException {
         warehouse.moveBetweenDepot(from,to, resource);
     }
 
@@ -298,8 +297,12 @@ public class PersonalBoard {
      * @param amount the amount to move.
      * @return true if the move is allowed, false otherwhise.
      */
-    public boolean moveFaithMarker(int amount, PlayerToMatch pm) throws EndGameException {
-        this.faithTrack.movePlayer(amount, pm);
+    public boolean moveFaithMarker(int amount, PlayerToMatch pm) {
+        try {
+            this.faithTrack.movePlayer(amount, pm);
+        } catch (EndGameException e) {
+            pm.startEndGameLogic();
+        }
         return true;
     }
 

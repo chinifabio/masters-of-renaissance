@@ -8,6 +8,9 @@ import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.SoloActionToken;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
@@ -19,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class SingleplayerMatchTest {
@@ -97,6 +99,18 @@ public class SingleplayerMatchTest {
         assertEquals(7, soloToken.getNumberOfCards());
         assertEquals("ST1", soloToken.peekFirstCard().getCardID());
         assertEquals("ST5", soloToken.peekCard("ST5").getCardID());
+    }
+
+    @Test
+    public void endGameByLorenzo() {
+        assertDoesNotThrow(()-> {
+            while (singleplayer.test_getGameOnAir()) {
+                System.out.println(((SingleplayerMatch) singleplayer).test_getLorenzoPosition());
+                gino.endThisTurn();
+            };
+        });
+
+        assertTrue(((SingleplayerMatch) singleplayer).test_getLorenzoWinner());
     }
 
     private void testLorenzoAction(String idToken) {

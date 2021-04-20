@@ -26,5 +26,5 @@ public abstract class Effect {
      * This method activates the effect of cards
      * @param p is the interface to react a card effect
      */
-    public abstract void use(CardReaction p) throws EndGameException, EmptyDeckException, AlreadyInDeckException;
+    public abstract void use(CardReaction p);
 }

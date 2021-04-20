@@ -106,6 +106,14 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     }
 
     /**
+     * This method start the end game logic. The player state is set to counting points so
+     * you can call only the countPoint method on a player with this state
+     */
+    public void setCountingPoints() {
+        this.playerState = new CountingPointsPlayerState(this);
+    }
+
+    /**
      * Indicates whether some other object is "equal to" this one.
      *
      * @param obj the reference object with which to compare.
@@ -181,9 +189,14 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param marble the resource in form of marble
      */
     @Override
-    public void obtainResource(Marble marble) throws UnobtainableResourceException, EndGameException {
-        Resource obt = marble.toResource();
-        obt.onObtain(this);
+    public void obtainResource(Marble marble) throws UnobtainableResourceException {
+        Resource obt = marble.toResource(); // todo da spostare nel market tray e riceve risorsa come parametro
+        try {
+            obt.onObtain(this);
+        } catch (EndGameException e) {
+            // reached the end of faith track so tells to the match to start end game logic
+            this.match.startEndGameLogic();
+        }
         if(obt.isStorable()) this.personalBoard.obtainResource(obt);
     }
 
@@ -193,7 +206,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param amount how many cells the marker moves
      */
     @Override
-    public void moveFaithMarker(int amount) throws EndGameException {
+    public void moveFaithMarker(int amount) {
         this.personalBoard.moveFaithMarker(amount, this.match);
     }
 
@@ -206,16 +219,11 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @return true
      */
     @Override
-    public boolean useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException {
-        System.out.println(this.nickname + ": try to use market tray - " + rc + " " + index);
+    public boolean useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, UnobtainableResourceException {
         try {
-            this.playerState.useMarketTray(rc, index);
-            System.out.println("result: " + TextColors.colorText(TextColors.GREEN, "OK"));
-            return true;
+            return this.playerState.useMarketTray(rc, index);
         } catch (PlayerStateException e) {
-            System.out.println("result: " + TextColors.colorText(TextColors.RED, "FAIL"));
-
-            e.printStackTrace();
+            System.out.println(TextColors.colorText(TextColors.RED_BRIGHT, "fail using market tray"));
             return false;
         }
     }
@@ -239,8 +247,13 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @return true if there where no issue, false instead
      */
     @Override
-    public boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NoRequisiteException, PlayerStateException, EmptyDeckException {
-        return this.playerState.buyDevCard(row, col, destination);
+    public boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NoRequisiteException, EmptyDeckException {
+        try {
+            return this.playerState.buyDevCard(row, col, destination);
+        } catch (PlayerStateException e) {
+            System.out.println(TextColors.colorText(TextColors.RED_BRIGHT, "fail buying develop card"));
+            return false;
+        }
     }
 
     /**
@@ -249,9 +262,13 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @return true if success
      */
     @Override
-    public boolean activateProductions() throws PlayerStateException, UnobtainableResourceException, WrongPointsException, EndGameException {
-        this.playerState.activateProductions();
-        return true;
+    public boolean activateProductions() throws UnobtainableResourceException, WrongPointsException {
+        try {
+            return this.playerState.activateProductions();
+        } catch (PlayerStateException e) {
+            System.out.println(TextColors.colorText(TextColors.RED_BRIGHT, "fail activating production"));
+            return false;
+        }
     }
 
     /**
@@ -259,10 +276,16 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
+     * @return th succeed of the operation
      */
     @Override
-    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws PlayerStateException, UnknownUnspecifiedException, NegativeResourcesDepotException {
-        this.playerState.moveInProduction(from, dest, loot);
+    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException {
+        try {
+            return this.playerState.moveInProduction(from, dest, loot);
+        } catch (PlayerStateException e) {
+            System.out.println(TextColors.colorText(TextColors.RED_BRIGHT, "fail moving resources in production"));
+            return false;
+        }
     }
 
     /**
@@ -273,7 +296,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param loot the resource to move
      */
     @Override
-    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, EndGameException, PlayerStateException {
+    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, PlayerStateException {
         this.playerState.moveBetweenDepot(from, to, loot);
     }
 
@@ -286,12 +309,8 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException {
         try {
             this.playerState.activateLeaderCard(leaderId);
-        } catch (EndGameException e) {
-            e.printStackTrace();
-            // todo avvisare il match che del fine game
-        } catch (EmptyDeckException e) {
-            e.printStackTrace();
-            // todo avvisare il match [solo per single player] che il match è finito perchè non ci sono più dev card
+        } catch (EmptyDeckException ignore) {
+            // there is no leader card
         }
     }
 
@@ -301,7 +320,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param leaderId the string that identify the leader card to be discarded
      */
     @Override
-    public void discardLeader(String leaderId) throws PlayerStateException, EndGameException, EmptyDeckException, MissingCardException {
+    public void discardLeader(String leaderId) throws PlayerStateException, EmptyDeckException, MissingCardException {
         this.playerState.discardLeader(leaderId);
     }
 
@@ -347,7 +366,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     @Override
     public void receiveDevCard(DevCard newDevCard) {
-        this.personalBoard.addDevCard(this.slotDestination, newDevCard);
+        this.personalBoard.addDevCard(this.slotDestination, newDevCard, this.match);
     }
 
     /**
@@ -366,18 +385,37 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @return true if success, false otherwise
      */
     @Override
-    public boolean startHisTurn() throws PlayerStateException {
-        this.playerState.startTurn();
-        System.out.println(this.nickname + ": Turn started, waiting for action");
+    public boolean startHisTurn() {
+        try {
+            this.playerState.startTurn();
+        } catch (PlayerStateException e) {
+            // todo dire al model e al player errore
+        }
         return true;
     }
 
-    // only for test
+    // FOR TESTING
     public FaithTrack getFT_forTest() {
         return this.personalBoard.getFT_forTest();
     }
 
-    public void test_discardLeader() throws EmptyDeckException, PlayerStateException, MissingCardException, EndGameException {
+    // FOR TESTING
+    public void test_discardLeader() throws EmptyDeckException, PlayerStateException, MissingCardException {
         this.discardLeader(this.personalBoard.viewLeaderCard().peekFirstCard().getCardID());
+    }
+
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return this.nickname;
+    }
+
+    // for testing
+    public PlayerState test_getState() {
+        return this.playerState;
     }
 }

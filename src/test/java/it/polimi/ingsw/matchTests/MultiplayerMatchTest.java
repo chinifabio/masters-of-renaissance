@@ -1,15 +1,18 @@
 package it.polimi.ingsw.matchTests;
 
+import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
+import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -27,6 +30,8 @@ public class MultiplayerMatchTest {
     private Player pino;
     private Player mino;
     private Player dino;
+
+    List<Player> order = new LinkedList<>();
 
     @BeforeEach
     public void initializeMatch() {
@@ -50,16 +55,16 @@ public class MultiplayerMatchTest {
         assertFalse(multiplayer.playerJoin(dino));
 
         assertDoesNotThrow(()->assertTrue(multiplayer.startGame()));
+        assertTrue(multiplayer.test_getTurn().getCurPlayer().canDoStuff());
 
         // creating a list of the players in order to have player(0) = inkwell player
-        List<Player> order = new LinkedList<>();
 
         order.add(gino);
         order.add(lino);
         order.add(pino);
         order.add(mino);
 
-        Collections.rotate(order, -order.indexOf(order.stream().filter(Player::canDoStuff).findAny().get()));
+        Collections.rotate(order, -order.indexOf(multiplayer.test_getTurn().getCurPlayer()));
 
         // discarding the leader cards
         for (int i = 0; i < order.size(); i++) {
@@ -67,8 +72,26 @@ public class MultiplayerMatchTest {
             assertDoesNotThrow(()->order.get(in).test_discardLeader());
             assertDoesNotThrow(()->order.get(in).test_discardLeader());
         }
+    }
 
+    @Test
+    @RepeatedTest(5)
+    public void endMatchByEndFaithTrack() {
+        for(int i = 0; i < 24; i++ ) {
+            try {
+                order.get(0).obtainResource(MarbleBuilder.buildRed());
+            } catch (UnobtainableResourceException e) {
+                fail();
+            }
+        }
 
+        assertDoesNotThrow(()->{
+            order.get(1).endThisTurn();
+            order.get(2).endThisTurn();
+            order.get(3).endThisTurn();
+        });
+
+        assertFalse(multiplayer.test_getGameOnAir());
     }
 
     /**
@@ -77,7 +100,7 @@ public class MultiplayerMatchTest {
      * so you can know if the operation is succeed of failed.
      */
     @Test
-    public void buildMultiplayerTest() throws OutOfBoundMarketTrayException, EndGameException, UnobtainableResourceException, IllegalTypeInProduction, PlayerStateException {
+    public void buildMultiplayerTest() throws OutOfBoundMarketTrayException, UnobtainableResourceException, IllegalTypeInProduction, PlayerStateException {
 
         assertTrue(multiplayer.test_getCurrPlayer().canDoStuff());
 
@@ -86,6 +109,11 @@ public class MultiplayerMatchTest {
             assertFalse(multiplayer.test_getCurrPlayer().useMarketTray(RowCol.COL, 2));
             assertTrue(multiplayer.test_getCurrPlayer().endThisTurn());
         }
+
+    }
+
+    @Test
+    public void turnTest() {
 
     }
 }

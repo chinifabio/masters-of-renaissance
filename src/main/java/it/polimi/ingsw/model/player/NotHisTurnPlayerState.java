@@ -91,13 +91,13 @@ public class NotHisTurnPlayerState extends PlayerState {
 
     /**
      * This method moves a resource from a depot to a production
-     *
-     * @param from the source of the resource to move
+     *  @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
+     * @return
      */
     @Override
-    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws PlayerStateException {
+    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws PlayerStateException {
         throw new PlayerStateException("it is not your turn");
     }
 

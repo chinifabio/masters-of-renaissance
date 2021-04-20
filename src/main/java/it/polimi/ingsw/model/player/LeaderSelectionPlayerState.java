@@ -2,11 +2,11 @@ package it.polimi.ingsw.model.player;
 
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
+import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
-import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
@@ -33,6 +33,7 @@ public class LeaderSelectionPlayerState extends PlayerState {
      */
     protected LeaderSelectionPlayerState(Player context) {
         super(context);
+        for(LeaderCard ld : this.context.match.requestLeaderCard()) this.context.personalBoard.addLeaderCard(ld);
     }
 
     /**
@@ -106,13 +107,13 @@ public class LeaderSelectionPlayerState extends PlayerState {
 
     /**
      * This method moves a resource from a depot to a production
-     *
-     * @param from the source of the resource to move
+     *  @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
+     * @return
      */
     @Override
-    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws PlayerStateException {
+    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws PlayerStateException {
         throw new PlayerStateException("you need to discard leader card");
     }
 
@@ -144,7 +145,7 @@ public class LeaderSelectionPlayerState extends PlayerState {
      * @param leaderId the string that identify the leader card to be discarded
      */
     @Override
-    public void discardLeader(String leaderId) throws PlayerStateException, EndGameException, EmptyDeckException, MissingCardException {
+    public void discardLeader(String leaderId) throws PlayerStateException, EmptyDeckException, MissingCardException {
         this.context.personalBoard.discardLeaderCard(leaderId);
         discarded++;
         if (discarded == toDiscard) {
@@ -161,5 +162,15 @@ public class LeaderSelectionPlayerState extends PlayerState {
     @Override
     public boolean endThisTurn() throws PlayerStateException {
         throw new PlayerStateException("you need to discard leader card");
+    }
+
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return "LeaderSelection state";
     }
 }

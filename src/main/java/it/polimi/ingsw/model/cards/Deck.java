@@ -128,7 +128,7 @@ public class Deck<T extends Card>{
      */
     public void insertCard(T card) throws AlreadyInDeckException {
         if (this.cards.contains(card)) throw new AlreadyInDeckException(card);
-        this.cards.add(0,card);
+        this.cards.add(0, card);
         this.updateNumberOfCards();
     }
 

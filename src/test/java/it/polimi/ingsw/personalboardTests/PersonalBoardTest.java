@@ -70,61 +70,63 @@ public class PersonalBoardTest {
             fail();
         }
 
+        PersonalBoard finalPersonalBoard = personalBoard;
+        assertDoesNotThrow(()->{
+            if (finalPersonalBoard.addDevCard(dcsLeft, c1, null)) {
+                assertTrue(c1.equals(finalPersonalBoard.viewDevCards().get(dcsLeft)));
+            } else {
 
-        if (personalBoard.addDevCard(dcsLeft, c1)) {
-            assertTrue(c1.equals(personalBoard.viewDevCards().get(dcsLeft)));
-        } else {
-
-        }
-
-        if (personalBoard.addDevCard(dcsLeft, c2)) {
-            assertTrue(c2.equals(personalBoard.viewDevCards().get(dcsLeft)));
-        } else {
-            fail();
-        }
-
-        if (personalBoard.addDevCard(dcsCenter, c2)) {
-            fail();
-        } else {
-            try {
-                assertTrue(personalBoard.viewDevCards().get(dcsCenter).equals(null));
-                fail();
-            } catch (NullPointerException e) {
             }
-        }
 
-        if (personalBoard.addDevCard(dcsLeft, c3)){
-            assertTrue(c3.equals(personalBoard.viewDevCards().get(dcsLeft)));
-        } else {
-            fail();
-        }
-
-        if (personalBoard.addDevCard(dcsCenter, c3)){
-            fail();
-        } else {
-            try {
-                assertTrue(personalBoard.viewDevCards().get(dcsCenter).equals(null));
+            if (finalPersonalBoard.addDevCard(dcsLeft, c2, null)) {
+                assertTrue(c2.equals(finalPersonalBoard.viewDevCards().get(dcsLeft)));
+            } else {
                 fail();
-            } catch (NullPointerException e) {}
-        }
+            }
 
-        if (personalBoard.addDevCard(dcsCenter, c1)){
-            assertTrue(c1.equals(personalBoard.viewDevCards().get(dcsCenter)));
-        } else {
-            fail();
-        }
+            if (finalPersonalBoard.addDevCard(dcsCenter, c2, null)) {
+                fail();
+            } else {
+                try {
+                    assertTrue(finalPersonalBoard.viewDevCards().get(dcsCenter).equals(null));
+                    fail();
+                } catch (NullPointerException e) {
+                }
+            }
 
-        if (personalBoard.addDevCard(dcsCenter, c3)){
-            fail();
-        } else {
-            assertTrue(c1.equals(personalBoard.viewDevCards().get(dcsCenter)));
-        }
+            if (finalPersonalBoard.addDevCard(dcsLeft, c3, null)){
+                assertTrue(c3.equals(finalPersonalBoard.viewDevCards().get(dcsLeft)));
+            } else {
+                fail();
+            }
 
-        if (personalBoard.addDevCard(dcsLeft, c31)){
-            fail();
-        } else {
-            assertTrue(c3.equals(personalBoard.viewDevCards().get(dcsLeft)));
-        }
+            if (finalPersonalBoard.addDevCard(dcsCenter, c3, null)){
+                fail();
+            } else {
+                try {
+                    assertTrue(finalPersonalBoard.viewDevCards().get(dcsCenter).equals(null));
+                    fail();
+                } catch (NullPointerException e) {}
+            }
+
+            if (finalPersonalBoard.addDevCard(dcsCenter, c1, null)){
+                assertTrue(c1.equals(finalPersonalBoard.viewDevCards().get(dcsCenter)));
+            } else {
+                fail();
+            }
+
+            if (finalPersonalBoard.addDevCard(dcsCenter, c3, null)){
+                fail();
+            } else {
+                assertTrue(c1.equals(finalPersonalBoard.viewDevCards().get(dcsCenter)));
+            }
+
+            if (finalPersonalBoard.addDevCard(dcsLeft, c31, null)){
+                fail();
+            } else {
+                assertTrue(c3.equals(finalPersonalBoard.viewDevCards().get(dcsLeft)));
+            }
+        });
 
     }
 
@@ -350,12 +352,7 @@ public class PersonalBoardTest {
 
         assertEquals(22,personalBoard.FaithMarkerPosition());
 
-        try {
-            personalBoard.moveFaithMarker(ten.amount(), pm);
-            fail();
-        } catch (EndGameException e) {
-
-        }
+        personalBoard.moveFaithMarker(ten.amount(), pm);
 
     }
 

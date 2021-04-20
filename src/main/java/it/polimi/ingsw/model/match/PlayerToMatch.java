@@ -75,4 +75,9 @@ public interface PlayerToMatch {
      * @return Leader Card Deck
      */
     List<LeaderCard> requestLeaderCard();
+
+    /**
+     * This method starts the end game logic
+     */
+    void startEndGameLogic();
 }

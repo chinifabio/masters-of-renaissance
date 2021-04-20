@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.match.match;
 
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.player.Player;
 
 import java.util.ArrayList;
@@ -27,6 +27,11 @@ public class Turn {
      * the player with the inkwell start the match
      */
     private int inkwellPlayer;
+
+    /**
+     * This attribute indicate if it need to be applied the end game logic
+     */
+    private boolean endGameLogic = false;
 
     /**
      * create a turn instance and initialize the playerOrder array
@@ -70,9 +75,15 @@ public class Turn {
      * set the new current player and return its instance
      * @return succeed of the operation
      */
-    public boolean nextPlayer() throws PlayerStateException {
-        if((curPlayer + 1) > (playerOrder.size() - 1)) curPlayer = 0;
-        else curPlayer++;
+    public boolean nextPlayer() throws EndGameException {
+        // if the cur player is the right player of inkwell player the match ends
+        if (endGameLogic) {
+            int mod;
+            mod = (mod = (inkwellPlayer - 1) % this.playerInGame()) < 0 ? mod + this.playerInGame() : mod;
+            if (curPlayer == mod) throw new EndGameException();
+        }
+
+        curPlayer = (curPlayer + 1) % this.playerInGame();
         return playerOrder.get(curPlayer).startHisTurn();
     }
 
@@ -93,5 +104,19 @@ public class Turn {
      */
     public int playerInGame() {
         return playerOrder.size();
+    }
+
+    /**
+     * This method is used to set the end game logic to true
+     */
+    public void endGame() {
+        this.endGameLogic = true;
+    }
+
+    /**
+     * this method set the state af all player as counting points
+     */
+    public void countingPoints() {
+        this.playerOrder.forEach(Player::setCountingPoints);
     }
 }

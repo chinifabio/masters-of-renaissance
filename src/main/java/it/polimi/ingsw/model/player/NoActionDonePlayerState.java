@@ -60,8 +60,12 @@ public class NoActionDonePlayerState extends PlayerState {
      * @return the result of the operation
      */
     @Override
-    public boolean useMarketTray(RowCol rc, int index) throws UnobtainableResourceException, OutOfBoundMarketTrayException, EndGameException {
-        this.context.match.useMarketTray(rc, index);
+    public boolean useMarketTray(RowCol rc, int index) throws UnobtainableResourceException, OutOfBoundMarketTrayException {
+        try {
+            this.context.match.useMarketTray(rc, index);
+        } catch (EndGameException e) {
+            this.context.match.startEndGameLogic();
+        }
         this.context.setState(new MainActionDonePlayerState(this.context));
         return true;
     }
@@ -89,7 +93,6 @@ public class NoActionDonePlayerState extends PlayerState {
     @Override
     public boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NoRequisiteException, PlayerStateException, EmptyDeckException {
         this.context.slotDestination = destination;
-        System.out.println(this.context.nickname + ": Asking to Match to buy devCard");
         boolean res = this.context.match.buyDevCard(row, col);
         if (res) this.context.setState(new MainActionDonePlayerState(this.context));
         return res;
@@ -102,22 +105,27 @@ public class NoActionDonePlayerState extends PlayerState {
      * @return the result of the operation
      */
     @Override
-    public boolean activateProductions() throws UnobtainableResourceException, EndGameException {
-        this.context.personalBoard.activateProductions();
+    public boolean activateProductions() throws UnobtainableResourceException {
+        try {
+            this.context.personalBoard.activateProductions();
+        } catch (EndGameException e) {
+            this.context.match.startEndGameLogic();
+        }
         this.context.setState(new MainActionDonePlayerState(this.context));
         return true;
     }
 
     /**
      * This method moves a resource from a depot to a production
-     *
-     * @param from the source of the resource to move
+     *  @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
+     * @return
      */
     @Override
-    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException {
+    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException {
         this.context.personalBoard.moveInProduction(from, dest, loot);
+        return true;
     }
 
     /**
@@ -128,7 +136,7 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param loot loot to move
      */
     @Override
-    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws UnobtainableResourceException, WrongPointsException, WrongDepotException, NegativeResourcesDepotException, EndGameException {
+    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws UnobtainableResourceException, WrongPointsException, WrongDepotException, NegativeResourcesDepotException {
         this.context.personalBoard.moveResourceDepot(from, to, loot);
     }
 
@@ -138,7 +146,7 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param leaderId the string that identify the leader card
      */
     @Override
-    public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EndGameException, EmptyDeckException {
+    public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EmptyDeckException {
         this.context.personalBoard.activateLeaderCard(leaderId);
     }
 
@@ -150,6 +158,7 @@ public class NoActionDonePlayerState extends PlayerState {
     @Override
     public void discardLeader(String leaderId) throws PlayerStateException, EmptyDeckException, MissingCardException {
         this.context.personalBoard.discardLeaderCard(leaderId);
+        this.context.personalBoard.moveFaithMarker(1, this.context.match);
     }
 
     /**
@@ -159,7 +168,6 @@ public class NoActionDonePlayerState extends PlayerState {
      */
     @Override
     public boolean endThisTurn() throws PlayerStateException {
-        System.out.println(this.context.nickname + ": Turn ended");
         this.context.setState(new NotHisTurnPlayerState(this.context));
         return this.context.match.endMyTurn();
     }

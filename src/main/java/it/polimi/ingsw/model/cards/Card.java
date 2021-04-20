@@ -52,7 +52,7 @@ public abstract class Card{
      * This method is used by subclasses to implement their effect: AddDepot, AddDiscount, AddProduction, DestroyCards, MoveTwo, ShuffleMoveONe, WhiteMarble.
      * @param p the player interface reference
      */
-    public void useEffect(CardReaction p) throws EndGameException, EmptyDeckException, AlreadyInDeckException {
+    public void useEffect(CardReaction p) {
         effect.use(p);
     }
 

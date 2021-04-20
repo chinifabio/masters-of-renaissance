@@ -36,8 +36,7 @@ public class PendingMatchStartPlayerState extends PlayerState {
      * this method start the turn of the player
      */
     @Override
-    public void startTurn() throws PlayerStateException {
-        for(LeaderCard ld : this.context.match.requestLeaderCard()) this.context.personalBoard.addLeaderCard(ld);
+    public void startTurn() {
         this.context.setState(new LeaderSelectionPlayerState(this.context));
     }
 
@@ -94,13 +93,13 @@ public class PendingMatchStartPlayerState extends PlayerState {
 
     /**
      * This method moves a resource from a depot to a production
-     *
-     * @param from the source of the resource to move
+     *  @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
+     * @return
      */
     @Override
-    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws PlayerStateException {
+    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws PlayerStateException {
         throw new PlayerStateException("match not started yet");
     }
 
@@ -144,5 +143,15 @@ public class PendingMatchStartPlayerState extends PlayerState {
     @Override
     public boolean endThisTurn() throws PlayerStateException {
         throw new PlayerStateException("match not started yet");
+    }
+
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return "PendingStart state";
     }
 }

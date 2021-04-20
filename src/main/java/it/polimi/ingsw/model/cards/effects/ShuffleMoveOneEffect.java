@@ -17,7 +17,7 @@ public class ShuffleMoveOneEffect extends Effect {
      * @param p the only player in the game.
      */
     @Override
-    public void use(CardReaction p) throws EndGameException {
+    public void use(CardReaction p) {
         ((SoloTokenReaction) p).moveLorenzo(1);
         ((SoloTokenReaction) p).shuffleToken();
     }

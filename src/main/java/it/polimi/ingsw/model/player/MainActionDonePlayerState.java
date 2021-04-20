@@ -9,7 +9,6 @@ import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
@@ -98,13 +97,13 @@ public class MainActionDonePlayerState extends PlayerState {
 
     /**
      * This method moves a resource from a depot to a production
-     *
-     * @param from the source of the resource to move
+     *  @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
+     * @return
      */
     @Override
-    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws PlayerStateException {
+    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws PlayerStateException {
         throw new PlayerStateException("main action already done");
     }
 
@@ -116,7 +115,7 @@ public class MainActionDonePlayerState extends PlayerState {
      * @param loot resource to move
      */
     @Override
-    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, PlayerStateException, EndGameException {
+    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException, PlayerStateException {
         this.context.personalBoard.moveResourceDepot(from, to, loot);
     }
 
@@ -126,7 +125,7 @@ public class MainActionDonePlayerState extends PlayerState {
      * @param leaderId the string that identify the leader card
      */
     @Override
-    public void activateLeaderCard(String leaderId) throws MissingCardException, EndGameException, EmptyDeckException {
+    public void activateLeaderCard(String leaderId) throws MissingCardException, EmptyDeckException {
         this.context.personalBoard.activateLeaderCard(leaderId);
     }
 
@@ -138,6 +137,7 @@ public class MainActionDonePlayerState extends PlayerState {
     @Override
     public void discardLeader(String leaderId) throws EmptyDeckException, MissingCardException {
         this.context.personalBoard.discardLeaderCard(leaderId);
+        this.context.personalBoard.moveFaithMarker(1, this.context.match);
     }
 
     /**

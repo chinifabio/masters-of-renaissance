@@ -34,7 +34,7 @@ public class DestroyCardsEffect extends Effect {
      * This method is used only during single player matches: it discard two cards of the same color, starting from level 1 to 3, from the devSetup.
      * @param p the player
      */
-    public void use(CardReaction p) throws EmptyDeckException, EndGameException, AlreadyInDeckException {
+    public void use(CardReaction p) {
         ((SoloTokenReaction) p).discardDevCard(this.color);
     }
 }

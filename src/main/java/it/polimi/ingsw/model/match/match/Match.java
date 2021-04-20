@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
@@ -114,7 +115,7 @@ public abstract class Match implements PlayerToMatch {
      * start the game: start the turn of the first player
      * @return true if success, false instead
      */
-    public boolean startGame() throws PlayerStateException {
+    public boolean startGame() {
         if(this.turn.playerInGame() < this.minimumPlayer || gameOnAir) return false;
         turn.getInkwellPlayer().startHisTurn();
         gameOnAir = true;
@@ -201,16 +202,12 @@ public abstract class Match implements PlayerToMatch {
      */
     @Override
     public boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws NoRequisiteException, PlayerStateException, EmptyDeckException {
-        System.out.println("Match: " + this.turn.getCurPlayer().getNickname() + " tries to buy DevCard -> " + "level: " + row + " color: " + col);
-
-        // todo row e col sono controllabili nel player perchè è lui che chiama la funzione
-        // ed è sempre lui che controlla i requisiti
         if (this.turn.getCurPlayer().hasRequisite(this.devSetup.showDevDeck(row, col).getCost(),row,col)) {
             try {
                 this.turn.getCurPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
                 return true;
             } catch (EmptyDeckException e) {
-                return false;
+                // todo dire al model che si è rotto il gioco
             }
         }
         return false;
@@ -223,13 +220,7 @@ public abstract class Match implements PlayerToMatch {
      */
     @Override
     public void othersPlayersObtainFaithPoint(int amount) {
-        for (Player x : turn.getOtherPlayer()) {
-            try {
-                x.moveFaithMarker(amount);
-            } catch (EndGameException e) {
-                // todo end game logic
-            }
-        }
+        for (Player x : turn.getOtherPlayer()) x.moveFaithMarker(amount);
     }
 
 
@@ -238,9 +229,16 @@ public abstract class Match implements PlayerToMatch {
      * @return true if success
      */
     @Override
-    public boolean endMyTurn() throws PlayerStateException {
+    public boolean endMyTurn() {
         this.marketTray.unPaint();
-        return this.turn.nextPlayer();
+        try {
+            return this.turn.nextPlayer();
+        } catch (EndGameException e) {
+            gameOnAir = false;
+            this.turn.countingPoints();
+            return true;
+            // todo dire al model che il gioco è finito quindi lui chiamerà la funzione winner calculator
+        }
     }
 
     /**
@@ -251,24 +249,43 @@ public abstract class Match implements PlayerToMatch {
     @Override
     public List<LeaderCard> requestLeaderCard() {
         int size = 4;
-        List<LeaderCard> ret = new ArrayList<>();
+        List<LeaderCard> ret = new ArrayList<>(size);
         for(int i = 0; i < size; i++) {
             try {
                 ret.add(this.leaderCardDeck.draw());
             } catch (EmptyDeckException e) {
-                // todo rifare il mazzo o lanciare errore al model
+                // todo finisco il gioco con uno stato di errore
             }
         }
         return ret;
     }
 
-    //for test
+    /**
+     * This method starts the end game logic
+     */
+    @Override
+    public void startEndGameLogic(){
+        this.turn.endGame();
+    }
+
+    /**
+     * This method is used to calculate and notify the winner of the match.
+     * On each player is call the method to calculate the points obtained and the higher one wins
+     */
+    public abstract void winnerCalculator();
+
+    // for test
     public Player test_getCurrPlayer(){
         return turn.getCurPlayer();
     }
 
-    //for test
+    // for test
     public Turn test_getTurn() {
         return this.turn;
+    }
+
+    // for test
+    public boolean test_getGameOnAir() {
+        return gameOnAir;
     }
 }

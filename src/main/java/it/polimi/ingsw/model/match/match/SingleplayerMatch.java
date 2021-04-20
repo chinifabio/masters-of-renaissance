@@ -38,6 +38,8 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      */
     private final Deck<DevCard> discardedFromToken;
 
+    private boolean lorenzoWinner = false;
+
     /**
      * Build a single player game instance: the number of player that the game accept is 1 and the minimum 1
      */
@@ -69,8 +71,14 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      * @param i the amount of cells to move Lorenzo
      */
     @Override
-    public void moveLorenzo(int i) throws EndGameException {
-        this.lorenzo.movePlayer(i, this);
+    public void moveLorenzo(int i) {
+        try {
+            this.lorenzo.movePlayer(i, this);
+        } catch (EndGameException e) {
+            System.out.println("end of the game: Lorenzo reach the end of faith track");
+            lorenzoWinner = true;
+            this.turn.endGame();
+        }
     }
 
     /**
@@ -87,7 +95,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      * @param color the color of discarded cards in dev setup
      */
     @Override
-    public void discardDevCard(ColorDevCard color) throws EndGameException, EmptyDeckException, AlreadyInDeckException {
+    public void discardDevCard(ColorDevCard color) {
         // todo da mettere nell'effect come amount
         /*
         int toDiscard = 2;
@@ -104,18 +112,21 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
                     res = true;
                 } catch (EmptyDeckException e) {
                     if(levels.hasNext()) level = (LevelDevCard) levels.next();
-                    else throw new EndGameException();
+                    else this.endGame();// logica di fine gioco al posto di throw new EndGameException();
                 }
             }
         }
 
-        this.devSetup.showDevDeck(list.get(list.size()-1), color);
+        // logica di fine gioco al posto this.devSetup.showDevDeck(list.get(list.size()-1), color);
+        this.endGame();
         // if exception is thrown then the end game logic need to be started
         */
 
         // todo temporaneo fino quando non sono state implementate tutte le dev card
-        this.discardedFromToken.insertCard(new DevCard(String.valueOf(System.nanoTime()), null, 0, null, null, null));
-        this.discardedFromToken.insertCard(new DevCard(String.valueOf(System.nanoTime()), null, 0, null, null, null));
+        try {
+            this.discardedFromToken.insertCard(new DevCard(String.valueOf(System.nanoTime()), null, 0, null, null, null));
+            this.discardedFromToken.insertCard(new DevCard(String.valueOf(System.nanoTime()), null, 0, null, null, null));
+        } catch (Exception e){}
     }
 
     /**
@@ -124,22 +135,28 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      * @return true if success
      */
     @Override
-    public boolean endMyTurn() throws PlayerStateException {
+    public boolean endMyTurn() {
         try {
             SoloActionToken s = this.soloToken.useAndDiscard();
             System.out.println(TextColors.colorText(TextColors.BLUE, "Lorenzo: ") + "drawn " + s);
             s.useEffect(this);
-        } catch (EndGameException e) {
-            // todo logica di fine gioco
-            e.printStackTrace();
         } catch (EmptyDeckException e) {
-            // todo finire la partita con uno stato di errore
-            e.printStackTrace();
-        } catch (AlreadyInDeckException e) {
-            e.printStackTrace();
+            // solo tocken stack è vuota
             // todo finire la partita con uno stato di errore
         }
         return super.endMyTurn();
+    }
+
+    /**
+     * This method is used to calculate and notify the winner of the match.
+     * On each player is call the method to calculate the points obtained and the higher one wins
+     */
+    @Override
+    public void winnerCalculator() {
+        // guardo il flag lorenzowinner che si attiva quando lorenzo arriva alla fine del tracciato
+        // oppure quando non ci sono più carte sviluppo
+
+        // altrimenti vince sempre il player e calcolo il punteggio
     }
 
     // for testing
@@ -155,5 +172,10 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     // for testing
     public int test_getLorenzoPosition() {
         return this.lorenzo.getPlayerPosition();
+    }
+
+    // for testing
+    public boolean test_getLorenzoWinner() {
+        return lorenzoWinner;
     }
 }

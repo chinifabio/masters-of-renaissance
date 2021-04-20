@@ -129,7 +129,7 @@ public class Warehouse {
      * @throws NegativeResourcesDepotException if the Depot "from" hasn't enough resources to move
      * @throws WrongDepotException if the Depot "from" is empty or doesn't have the same type of resources of "resource"
      */
-    public boolean moveBetweenDepot(DepotSlot from, DepotSlot dest, Resource resource) throws NegativeResourcesDepotException, WrongDepotException, UnobtainableResourceException, EndGameException {
+    public boolean moveBetweenDepot(DepotSlot from, DepotSlot dest, Resource resource) throws NegativeResourcesDepotException, WrongDepotException, UnobtainableResourceException {
         MoveResource moveResource = new MoveResource(from, dest, resource);
         AtomicBoolean testResult = new AtomicBoolean(true);
         this.constraint.forEach(x -> {

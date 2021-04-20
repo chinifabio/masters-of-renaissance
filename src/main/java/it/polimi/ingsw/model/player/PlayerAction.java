@@ -4,7 +4,6 @@ import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
-import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
@@ -27,7 +26,7 @@ public interface PlayerAction {
      * @param index the index of the row or column of the tray
      * @return the result of the operation
      */
-    boolean useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, EndGameException, PlayerStateException, UnobtainableResourceException;
+    boolean useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, PlayerStateException, UnobtainableResourceException;
 
     /**
      * This method allows the player to select which Resources to get when he activates two LeaderCards with the same
@@ -51,34 +50,35 @@ public interface PlayerAction {
      * activate the productions and insert the Resources obtained into the Strongbox
      * @return  the result of the operation
      */
-    boolean activateProductions() throws PlayerStateException, UnobtainableResourceException, EndGameException, WrongPointsException;
+    boolean activateProductions() throws PlayerStateException, UnobtainableResourceException, WrongPointsException;
 
     /**
      * This method moves a resource from a depot to a production
      * @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
+     * @return
      */
-    void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, PlayerStateException;
+    boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, PlayerStateException;
 
     /**
      * This method allows the player to move Resources between Depots
      * @param from depot from which withdraw resource
      * @param to depot where insert withdrawn resource
      */
-    void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws NegativeResourcesDepotException, EndGameException, PlayerStateException, UnobtainableResourceException, WrongPointsException, WrongDepotException;
+    void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws NegativeResourcesDepotException, PlayerStateException, UnobtainableResourceException, WrongPointsException, WrongDepotException;
 
     /**
      * This method activates the special ability of the LeaderCard
      * @param leaderId the string that identify the leader card
      */
-    void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EndGameException, EmptyDeckException;
+    void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EmptyDeckException;
 
     /**
      * This method removes a LeaderCard from the player
      * @param leaderId the string that identify the leader card to be discarded
      */
-    void discardLeader(String leaderId) throws PlayerStateException, EndGameException, EmptyDeckException, MissingCardException;
+    void discardLeader(String leaderId) throws PlayerStateException, EmptyDeckException, MissingCardException;
 
     /**
      * the player ends its turn
