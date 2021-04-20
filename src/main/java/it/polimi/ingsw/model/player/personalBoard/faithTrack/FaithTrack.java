@@ -4,7 +4,6 @@ package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
-import it.polimi.ingsw.model.exceptions.game.GameException;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 
 
@@ -66,8 +65,10 @@ public class FaithTrack {
     }
 
     /**
-     * This method move the FaithMarker of the player in the FaithTrack
+     * This method moves the FaithMarker of the player in the FaithTrack
      * @param points is the value of how far the player's marker must go
+     * @param pm is the Player that receive the faithPoints
+     * @throws EndGameException if the FaithMarker is in the last cell
      */
     public void movePlayer(int points, PlayerToMatch pm) throws EndGameException {
         if(playerPosition >= (track.size()-1)) return;
@@ -85,7 +86,7 @@ public class FaithTrack {
      * This method returns the value of the victoryPoint of the cell
      * @return victoryPoint
      */
-    public int victoryPointCell(){
+    public int victoryPointCellPlayer(){
         return track.get(playerPosition).getVictoryPoint();
     }
 
@@ -98,14 +99,44 @@ public class FaithTrack {
     }
 
     /**
-     * This method flips the PopeTile if the player is in a VaticanSpace and someone activated the PopeSpace
+     * This method flips the PopeTile if someone activated the PopeSpace and the Player is before the VaticanSpace section activated
+     * @param toCheck is the VaticanSpace that has been activated
      */
     public void flipPopeTile(VaticanSpace toCheck){
-        if (track.get(this.playerPosition).getVaticanSpace().ordinal < toCheck.ordinal){
-            //Deactivates the PopeTile -> Il popeTile non può più essere accettato
-            popeTiles.get(toCheck).deactivate();
+        if (!(track.get(this.playerPosition).getVaticanSpace().ordinal < toCheck.ordinal)){
+            popeTiles.get(toCheck).flipMe();
         }
     }
+
+
+
+    /**
+     * This method counts the victory points earned by the player
+     * @return the value of the VictoryPoints
+     */
+    public int countingCellPoint(){
+        int points = 0;
+        int position = getPlayerPosition();
+
+        try {
+            while (track.get(position).getVictoryPoint() == 0) {
+                position--;
+            }
+        } catch (IndexOutOfBoundsException e){
+            return 0;
+        }
+
+        for (Map.Entry<VaticanSpace, PopeTile> entry : popeTiles.entrySet()) {
+            if (entry.getValue().isFlipped()){
+                points = points + entry.getValue().getVictoryPoint();
+            }
+        }
+
+        return points + track.get(position).getVictoryPoint();
+    }
+
+
+    //TODO Includere nel metodo i punti vittoria dei PopeTile oppure fare un metodo a parte
 
     //Only for testing
     public Cell getTile(){
@@ -115,6 +146,6 @@ public class FaithTrack {
     //only for testing
     public boolean isFlipped(VaticanSpace vs){
         if(vs == VaticanSpace.NONE) return false;
-        return this.popeTiles.get(vs).isDeactivated();
+        return this.popeTiles.get(vs).isFlipped();
     }
 }

@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 
 /**
@@ -30,9 +27,8 @@ public abstract class Cell {
    /**
     * This method is the constructor of the Cell, it is empty because it takes parameters from Json File
     */
-   public Cell() {
-
-   }
+   @JsonCreator
+   public Cell() {}
 
 
    /**

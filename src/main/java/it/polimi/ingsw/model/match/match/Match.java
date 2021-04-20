@@ -21,7 +21,9 @@ import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class Match implements PlayerToMatch {
     /**
@@ -60,6 +62,11 @@ public abstract class Match implements PlayerToMatch {
     protected final Deck<LeaderCard> leaderCardDeck;
 
     /**
+     * This attribute indicates if the VaticanSpace is activated and the Player can take the victoryPoints of the PopeTile
+     */
+    protected Map<VaticanSpace, Boolean> vaticanSpaceCheck;
+
+    /**
      * initialize the match
      */
     protected Match(int gameSize, int min) {
@@ -68,6 +75,12 @@ public abstract class Match implements PlayerToMatch {
 
         this.turn = new Turn();
         gameOnAir = false;
+
+        this.vaticanSpaceCheck = new EnumMap<>(VaticanSpace.class);
+
+        this.vaticanSpaceCheck.put(VaticanSpace.FIRST, true);
+        this.vaticanSpaceCheck.put(VaticanSpace.SECOND, true);
+        this.vaticanSpaceCheck.put(VaticanSpace.THIRD, true);
 
         this.marketTray = new MarketTray();
 
@@ -115,7 +128,11 @@ public abstract class Match implements PlayerToMatch {
      */
     @Override
     public void vaticanReport(VaticanSpace toCheck) {
-        this.turn.getOtherPlayer().forEach(x -> x.flipPopeTile(toCheck));
+        if(vaticanSpaceCheck.get(toCheck)) {
+            this.turn.getOtherPlayer().forEach(x -> x.flipPopeTile(toCheck));
+            this.turn.getCurPlayer().flipPopeTile(toCheck);
+            vaticanSpaceCheck.put(toCheck, false);
+        }
     }
 
     /**

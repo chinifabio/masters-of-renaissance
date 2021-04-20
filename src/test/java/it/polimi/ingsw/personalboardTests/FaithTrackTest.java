@@ -13,75 +13,75 @@ import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.*;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FaithTrackTest {
 
-    Match pm = new MultiplayerMatch();
+    Match game;
 
-    /**
-     * Testing if the FaithTrack is correctly created using the player position to take cells info
-     * @throws EndGameException if the Player or Lorenzo moves when they are in the last cell
-     * @throws WrongPointsException if the Player or Lorenzo receives negative points
-     */
+    Player player1;
+    Player player2;
+
+    @BeforeEach
+    public void initialization() {
+        game = new MultiplayerMatch();
+
+        assertDoesNotThrow(()->player1 = new Player("uno", game));
+        assertDoesNotThrow(()->player2 = new Player("due", game));
+
+        assertTrue(game.playerJoin(player1));
+        assertTrue(game.playerJoin(player2));
+
+        assertDoesNotThrow(()-> game.startGame());
+
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+    }
+
     @Test
-    public void infoFaithTrack() throws EndGameException, GameException {
-
-        try {
-            pm.playerJoin(new Player("uno", pm));
-            pm.playerJoin(new Player("due", pm));
-        } catch (IllegalTypeInProduction e) {
-            e.printStackTrace();
-        }
+    public void infoFaithTrack() throws EndGameException {
 
         FaithTrack track = new FaithTrack();
         Resource point = ResourceBuilder.buildFaithPoint();
 
-        assertEquals(0, track.victoryPointCell());
+        assertEquals(0, track.victoryPointCellPlayer());
         assertEquals(VaticanSpace.NONE, track.vaticanSpaceCell());
-        track.movePlayer(point.amount(), pm);
-        track.movePlayer(point.amount(), pm);
-        track.movePlayer(point.amount(), pm);
+        track.movePlayer(point.amount(), game);
+        track.movePlayer(point.amount(), game);
+        track.movePlayer(point.amount(), game);
         assertEquals(VaticanSpace.NONE, track.vaticanSpaceCell());
-        assertEquals(1, track.victoryPointCell());
-        track.movePlayer(point.amount(), pm);
-        track.movePlayer(point.amount(), pm);
-        track.movePlayer(point.amount(), pm);
+        assertEquals(1, track.victoryPointCellPlayer());
+        track.movePlayer(point.amount(), game);
+        track.movePlayer(point.amount(), game);
+        track.movePlayer(point.amount(), game);
         assertEquals(VaticanSpace.FIRST, track.vaticanSpaceCell());
-        assertEquals(2, track.victoryPointCell());
-        track.movePlayer(point.amount(), pm);
-        track.movePlayer(point.amount(), pm);
+        assertEquals(2, track.victoryPointCellPlayer());
+        track.movePlayer(point.amount(), game);
+        track.movePlayer(point.amount(), game);
         assertEquals(VaticanSpace.FIRST, track.vaticanSpaceCell());
-        assertEquals(0, track.victoryPointCell());
+        assertEquals(0, track.victoryPointCellPlayer());
 
         Resource mid = ResourceBuilder.buildFaithPoint(7);
-        track.movePlayer(mid.amount(), pm);
+        track.movePlayer(mid.amount(), game);
         assertEquals(VaticanSpace.SECOND, track.vaticanSpaceCell());
-        assertEquals(9, track.victoryPointCell());
+        assertEquals(9, track.victoryPointCellPlayer());
 
         Resource last = ResourceBuilder.buildFaithPoint(9);
-        track.movePlayer(last.amount(), pm);
+        track.movePlayer(last.amount(), game);
         assertEquals(VaticanSpace.THIRD, track.vaticanSpaceCell());
-        assertEquals(20, track.victoryPointCell());
+        assertEquals(20, track.victoryPointCellPlayer());
 
     }
 
-    /**
-     * Testing if the PlayerPosition is correctly updated
-     * @throws EndGameException if the Player or Lorenzo moves when they are in the last cell
-     * @throws WrongPointsException if the Player or Lorenzo receives negative points
-     */
     @Test
-    public void checkPlayerPosition() throws EndGameException, GameException {
-        try {
-            pm.playerJoin(new Player("uno", pm));
-            pm.playerJoin(new Player("due", pm));
-        } catch (IllegalTypeInProduction e) {
-            e.printStackTrace();
-        }
+    public void checkPlayerPosition() throws EndGameException {
 
         Resource first = ResourceBuilder.buildFaithPoint(1);
         Resource second = ResourceBuilder.buildFaithPoint(2);
@@ -91,18 +91,18 @@ public class FaithTrackTest {
         FaithTrack faithTrack = new FaithTrack();
 
         assertEquals(0,faithTrack.getPlayerPosition());
-        faithTrack.movePlayer(first.amount(), pm);
+        faithTrack.movePlayer(first.amount(), game);
         assertEquals(1,faithTrack.getPlayerPosition());
-        faithTrack.movePlayer(first.amount(), pm);
+        faithTrack.movePlayer(first.amount(), game);
         assertEquals(2,faithTrack.getPlayerPosition());
-        faithTrack.movePlayer(second.amount(), pm);
+        faithTrack.movePlayer(second.amount(), game);
         assertEquals(4,faithTrack.getPlayerPosition());
-        faithTrack.movePlayer(first.amount(), pm);
+        faithTrack.movePlayer(first.amount(), game);
         assertEquals(5,faithTrack.getPlayerPosition());
-        faithTrack.movePlayer(third.amount(), pm);
+        faithTrack.movePlayer(third.amount(), game);
         assertEquals(8,faithTrack.getPlayerPosition());
         try {
-            faithTrack.movePlayer(last.amount(), pm);
+            faithTrack.movePlayer(last.amount(), game);
             fail();
         } catch (EndGameException e) {
             e.printStackTrace();//Player should be in the cell 28 but the Track is composed with 24 positions
@@ -110,24 +110,10 @@ public class FaithTrackTest {
         assertEquals(24,faithTrack.getPlayerPosition());
     }
 
-    /**
-     * Testing if the Tiles of the VaticanSpace are correctly flipped when the player moves
-     */
-     @Test
-     public void flipPopeTiles() {
-     }
 
-    /**
-     * Testing if the model calls an exception when the player try to pass the last cell of the FaithTrack
-     */
+
     @Test
     public void callExceptionsPlayer() {
-        try {
-            pm.playerJoin(new Player("uno", pm));
-            pm.playerJoin(new Player("due", pm));
-        } catch (IllegalTypeInProduction e) {
-            e.printStackTrace();
-        }
 
         FaithTrack track = new FaithTrack();
         //Resource negative = ResourceBuilder.buildFaithPoint(-3);
@@ -138,16 +124,16 @@ public class FaithTrackTest {
 
         assertEquals(0,track.getPlayerPosition());
         try {
-            track.movePlayer(8, pm);
-            track.movePlayer(8, pm);
-            track.movePlayer(7, pm);
+            track.movePlayer(8, game);
+            track.movePlayer(8, game);
+            track.movePlayer(7, game);
         } catch (EndGameException e) {
             fail();
         }
         assertEquals(23, track.getPlayerPosition());
 
         try {
-            track.movePlayer(2, pm);
+            track.movePlayer(2, game);
             fail();
         } catch (EndGameException e) {
             e.printStackTrace();
@@ -163,83 +149,124 @@ public class FaithTrackTest {
 
     @Test
     public void flipOtherPopeTile() throws PlayerStateException {
-        Player player1 = null;
-        Player player2 = null;
 
         try {
-            player1 = new Player(TextColors.BLUE + "gino" + TextColors.RESET, pm);
-            player2 = new Player(TextColors.PURPLE + "lino" + TextColors.RESET, pm);
-        } catch (Exception e) {
-            fail();
-        }
+            game.test_getCurrPlayer().moveFaithMarker(4);
+            game.test_getCurrPlayer().endThisTurn();
 
-        pm.playerJoin(player1);
-        pm.playerJoin(player2);
+            game.test_getCurrPlayer().moveFaithMarker(9);
+            game.test_getCurrPlayer().endThisTurn();
 
-        FaithTrack ft1 = player1.getFT_forTest();
-        FaithTrack ft2 = player2.getFT_forTest();
+            assertFalse(game.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.FIRST));
+            game.test_getCurrPlayer().endThisTurn();
+            assertTrue(game.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.FIRST));
+            game.test_getCurrPlayer().endThisTurn();
 
-        try {
-            pm.startGame();
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail();
-        }
+            game.test_getCurrPlayer().moveFaithMarker(8);
+            game.test_getCurrPlayer().endThisTurn();
 
-        List<Player> order = new ArrayList<>();
+            game.test_getCurrPlayer().moveFaithMarker(7);
+            game.test_getCurrPlayer().endThisTurn();
 
-        if(player1.canDoStuff()){
-            order.add(player1);
-            order.add(player2);
-        } else {
-            order.add(player2);
-            order.add(player1);
-        }
-
-        assertDoesNotThrow(()->order.get(0).test_discardLeader());
-        assertDoesNotThrow(()->order.get(0).test_discardLeader());
-
-        assertDoesNotThrow(()->order.get(1).test_discardLeader());
-        assertDoesNotThrow(()->order.get(1).test_discardLeader());
-
-        try {
-            pm.test_getCurrPlayer().moveFaithMarker(4);
-            pm.test_getCurrPlayer().endThisTurn();
-
-            pm.test_getCurrPlayer().moveFaithMarker(9);
-            pm.test_getCurrPlayer().endThisTurn();
-
-            assertTrue(pm.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.FIRST));
-            pm.test_getCurrPlayer().endThisTurn();
-            assertFalse(pm.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.FIRST));
-            pm.test_getCurrPlayer().endThisTurn();
-
-            pm.test_getCurrPlayer().moveFaithMarker(8);
-            pm.test_getCurrPlayer().endThisTurn();
-
-            pm.test_getCurrPlayer().moveFaithMarker(7);
-            pm.test_getCurrPlayer().endThisTurn();
-
-            assertFalse(pm.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.SECOND));
-            pm.test_getCurrPlayer().endThisTurn();
-            assertFalse(pm.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.SECOND));
+            assertTrue(game.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.SECOND));
+            game.test_getCurrPlayer().endThisTurn();
+            assertTrue(game.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.SECOND));
         } catch (EndGameException e) {
             e.printStackTrace();
             fail();
         }
 
         try {
-            pm.test_getCurrPlayer().moveFaithMarker(20);
+            game.test_getCurrPlayer().moveFaithMarker(20);
             fail();
-        } catch (EndGameException e) {
+        } catch (EndGameException ignored) {
 
         }
-        pm.test_getCurrPlayer().endThisTurn();
+        game.test_getCurrPlayer().endThisTurn();
 
-        assertTrue(pm.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.THIRD));
-        pm.test_getCurrPlayer().endThisTurn();
-        assertFalse(pm.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.THIRD));
-        pm.test_getCurrPlayer().endThisTurn();
+        assertFalse(game.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.THIRD));
+        game.test_getCurrPlayer().endThisTurn();
+        assertTrue(game.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.THIRD));
+        game.test_getCurrPlayer().endThisTurn();
+
+    }
+
+    @Test
+    public void countingPoints() throws PlayerStateException {
+
+        //starting the game
+        List<Player> orderList = new ArrayList<>();
+        orderList.add(player1);
+        orderList.add(player2);
+
+        Collections.rotate(orderList, -orderList.indexOf(orderList.stream().filter(Player :: canDoStuff).findAny().get()));
+
+        try{
+            assertEquals(0, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //FIRST PLAYER
+            game.test_getCurrPlayer().endThisTurn();
+            assertEquals(0, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //SECOND PLAYER
+            game.test_getCurrPlayer().endThisTurn();
+
+
+            game.test_getCurrPlayer().moveFaithMarker(4);
+            game.test_getCurrPlayer().endThisTurn();
+
+            game.test_getCurrPlayer().moveFaithMarker(2);
+            game.test_getCurrPlayer().endThisTurn();
+
+            assertEquals(1, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //FIRST PLAYER
+            game.test_getCurrPlayer().endThisTurn();
+            assertEquals(0, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //SECOND PLAYER
+            game.test_getCurrPlayer().endThisTurn();
+
+            game.test_getCurrPlayer().moveFaithMarker(3);
+            game.test_getCurrPlayer().endThisTurn();
+
+            game.test_getCurrPlayer().moveFaithMarker(4);
+            game.test_getCurrPlayer().endThisTurn();
+
+            assertEquals(2, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //FIRST PLAYER
+            game.test_getCurrPlayer().endThisTurn();
+            assertEquals(2, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //SECOND PLAYER
+            game.test_getCurrPlayer().endThisTurn();
+
+
+            game.test_getCurrPlayer().moveFaithMarker(2);
+            game.test_getCurrPlayer().endThisTurn();
+
+            game.test_getCurrPlayer().moveFaithMarker(1);
+            game.test_getCurrPlayer().endThisTurn();
+
+            assertEquals(4 + 2, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //FIRST PLAYER
+            game.test_getCurrPlayer().endThisTurn();
+            assertEquals(2 + 2, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //SECOND PLAYER
+            game.test_getCurrPlayer().endThisTurn();
+
+
+            game.test_getCurrPlayer().moveFaithMarker(10); //Player1: 19
+            game.test_getCurrPlayer().endThisTurn();
+            //When the first player reach the second PopeSpace, the second player is in the Cell 7 so he doesn't obtain the
+            //victoryPoints of the second PopeTile
+            game.test_getCurrPlayer().moveFaithMarker(10); //Player2: 17
+            game.test_getCurrPlayer().endThisTurn();
+
+            assertEquals(12 + 3 + 2, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //FIRST PLAYER
+            game.test_getCurrPlayer().endThisTurn();
+            assertEquals(9 + 2, game.test_getCurrPlayer().getFT_forTest().countingCellPoint()); //SECOND PLAYER
+            game.test_getCurrPlayer().endThisTurn();
+
+            game.test_getCurrPlayer().moveFaithMarker(1);//Player1: 20
+            game.test_getCurrPlayer().endThisTurn();
+
+            game.test_getCurrPlayer().moveFaithMarker(8);//Player2: 24
+            game.test_getCurrPlayer().endThisTurn();
+
+
+        }catch (EndGameException ignored){}
+
+        assertEquals(12 + 4 + 3 + 2, orderList.get(0).getFT_forTest().countingCellPoint()); //FIRST PLAYER
+        assertEquals(20 + 4 + 2, orderList.get(1).getFT_forTest().countingCellPoint()); //SECOND PLAYER
+
 
     }
 

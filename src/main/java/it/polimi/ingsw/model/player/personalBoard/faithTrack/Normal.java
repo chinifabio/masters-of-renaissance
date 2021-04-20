@@ -27,6 +27,7 @@ public class Normal extends Cell {
 
     /**
      * This method do nothing
+     * @param pm is the Player that crossed this cell
      */
     @Override
     public void onPlayerCross(PlayerToMatch pm) {

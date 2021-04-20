@@ -29,7 +29,8 @@ public class PopeSpace extends Cell {
     }
 
     /**
-     * To be implemented
+     * This method activated the VaticanSpace report when the Player cross on this cell
+     * @param pm is the player that crossed the cell
      */
     @Override
     public void onPlayerCross(PlayerToMatch pm) {

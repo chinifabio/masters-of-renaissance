@@ -13,7 +13,7 @@ public class PopeTile {
     /**
      * This attribute indicates if the Tile is deactivated
      */
-    private boolean deactivated;
+    private boolean flipped;
 
     /**
      * This method is the constructor of the class
@@ -21,22 +21,22 @@ public class PopeTile {
      */
     public PopeTile(int victoryPoint) {
         this.victoryPoint = victoryPoint;
-        this.deactivated = false;
+        this.flipped = false;
     }
 
     /**
      * This method deactivates the Tile
      */
-    public void deactivate(){
-        this.deactivated = true;
+    public void flipMe(){
+        this.flipped = true;
     }
 
     /**
      * This method indicates if the Tile is flipped or not
      * @return the status of the Tile
      */
-    public boolean isDeactivated(){
-        return this.deactivated;
+    public boolean isFlipped(){
+        return this.flipped;
     }
 
     /**
