@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
+import it.polimi.ingsw.model.cards.effects.AddExtraProductionEffect;
 import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
@@ -152,8 +153,8 @@ public class PersonalBoardTest {
 
 
 
-        LeaderCard c1 = new LeaderCard(ID1, new AddProductionEffect(p), 1, req);
-        LeaderCard c2 = new LeaderCard(ID2, new AddProductionEffect(p), 2, req);
+        LeaderCard c1 = new LeaderCard(ID1, new AddExtraProductionEffect(p), 1, req);
+        LeaderCard c2 = new LeaderCard(ID2, new AddExtraProductionEffect(p), 2, req);
 
         Match match = new MultiplayerMatch();
 

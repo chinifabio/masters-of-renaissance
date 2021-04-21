@@ -2,8 +2,6 @@ package it.polimi.ingsw.personalboardTests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.CustomAssertion;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
@@ -15,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class FaithTrackTest {
@@ -122,37 +119,16 @@ public class FaithTrackTest {
      */
     @Test
     public void callExceptionsPlayer() {
-
         FaithTrack track = new FaithTrack();
-        //Resource negative = ResourceBuilder.buildFaithPoint(-3);
-        // todo eccezione per amount negativo nel builder - guarda che hai commentato sotto anche
-        Resource first = ResourceBuilder.buildFaithPoint(1);
-        Resource last = ResourceBuilder.buildFaithPoint(18);
-        Resource error = ResourceBuilder.buildServant(3);
 
-        assertEquals(0,track.getPlayerPosition());
-        try {
+        assertDoesNotThrow(()->{
             track.movePlayer(8, game);
             track.movePlayer(8, game);
             track.movePlayer(7, game);
-        } catch (EndGameException e) {
-            fail();
-        }
+        });
         assertEquals(23, track.getPlayerPosition());
 
-        try {
-            track.movePlayer(2, game);
-            fail();
-        } catch (EndGameException e) {
-            e.printStackTrace();
-        }
-
-        /*try {
-            track.movePlayer(negative.amount(), pm);
-            fail();
-        } catch (EndGameException e) {
-            e.printStackTrace();
-        }*/
+        CustomAssertion.assertThrown(()->track.movePlayer(2, game));
     }
 
     @Test

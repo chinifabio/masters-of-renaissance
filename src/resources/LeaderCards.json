@@ -307,7 +307,7 @@
     "type": "Leader",
     "cardID": "LC13",
     "effect": {
-      "type": "AddProduction",
+      "type": "AddExtraProduction",
       "prod": {
         "type": "UnknownProd",
         "required": [
@@ -355,7 +355,7 @@
     "type": "Leader",
     "cardID": "LC14",
     "effect": {
-      "type": "AddProduction",
+      "type": "AddExtraProduction",
       "prod": {
         "type": "UnknownProd",
         "required": [
@@ -403,7 +403,7 @@
     "type": "Leader",
     "cardID": "LC15",
     "effect": {
-      "type": "AddProduction",
+      "type": "AddExtraProduction",
       "prod": {
         "type": "UnknownProd",
         "required": [
@@ -451,7 +451,7 @@
     "type": "Leader",
     "cardID": "LC16",
     "effect": {
-      "type": "AddProduction",
+      "type": "AddExtraProduction",
       "prod": {
         "type": "UnknownProd",
         "required": [

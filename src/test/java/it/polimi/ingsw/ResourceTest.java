@@ -15,24 +15,31 @@ public class ResourceTest {
     public void createAndCheckType() {
         Resource coin = ResourceBuilder.buildCoin();
         assertTrue(coin.type() == ResourceType.COIN && coin.amount() == 1);
+        assertTrue(coin.isStorable());
 
         Resource stone = ResourceBuilder.buildStone();
         assertTrue(stone.type() == ResourceType.STONE && stone.amount() == 1);
+        assertTrue(stone.isStorable());
 
         Resource shield = ResourceBuilder.buildShield();
         assertTrue(shield.type() == ResourceType.SHIELD && shield.amount() == 1);
+        assertTrue(shield.isStorable());
 
         Resource servant = ResourceBuilder.buildServant();
         assertTrue(servant.type() == ResourceType.SERVANT && servant.amount() == 1);
+        assertTrue(servant.isStorable());
 
         Resource faithpoint = ResourceBuilder.buildFaithPoint();
         assertTrue(faithpoint.type() == ResourceType.FAITHPOINT && faithpoint.amount() == 1);
+        assertFalse(faithpoint.isStorable());
 
         Resource unknown = ResourceBuilder.buildUnknown();
         assertTrue(unknown.type() == ResourceType.UNKNOWN && unknown.amount() == 1);
+        assertFalse(unknown.isStorable());
 
         Resource empty = ResourceBuilder.buildEmpty();
         assertTrue(empty.type() == ResourceType.EMPTY && empty.amount() == 0);
+        assertFalse(empty.isStorable());
     }
 
     @Test
@@ -67,10 +74,21 @@ public class ResourceTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        assertFalse(unknown.isStorable());
     }
 
     @Test
-    public void buitdfromtrype() {
+    public void buildFromType() {
         assertEquals(ResourceBuilder.buildCoin(3), ResourceBuilder.buildFromType(ResourceType.COIN, 3));
+    }
+
+    @Test
+    public void testBuildNewOne() {
+        Resource res = ResourceBuilder.buildCoin();
+        assertEquals(res, res.buildNewOne());
+
+        res.merge(ResourceBuilder.buildCoin(2));
+        assertEquals(res, res.buildNewOne(3));
     }
 }

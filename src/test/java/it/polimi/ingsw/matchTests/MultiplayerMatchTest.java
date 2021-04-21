@@ -78,11 +78,7 @@ public class MultiplayerMatchTest {
     @RepeatedTest(5)
     public void endMatchByEndFaithTrack() {
         for(int i = 0; i < 24; i++ ) {
-            try {
-                order.get(0).obtainResource(MarbleBuilder.buildRed());
-            } catch (UnobtainableResourceException e) {
-                fail();
-            }
+            order.get(0).obtainResource(MarbleBuilder.buildRed().toResource());
         }
 
         assertDoesNotThrow(()->{

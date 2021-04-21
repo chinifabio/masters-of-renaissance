@@ -51,7 +51,7 @@ public class MarketTray {
 
     /**
      * the constructor read from a json file the size of the tray and instantiate the right amount and type of marble, saved in the json.
-     * then it shuffle the order of the marbles and inster them all in the tray
+     * then it shuffle the order of the marbles and insert them all in the tray
      */
     public MarketTray(){
         Random rand = new Random();
@@ -77,27 +77,15 @@ public class MarketTray {
             marbleBuilder = objectMapper.readValue(
                     new File("src/resources/Marble.json"),
                     new TypeReference<List<Marble>>(){});
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             System.out.println("The file to create the marbles list wasn't found");
-            //TODO LANCIARE UN'ECCEZIONE AL MODEL
+            // todo exception to model
         }
 
 
         row = dim.row;
         col = dim.col;
-
-        if (marbleBuilder.size() != (((row)*(col))+1)){
-            try {
-                throw new OutOfBoundMarketTrayException();
-            }catch (OutOfBoundMarketTrayException e){
-                //TODO Da completare
-            }
-        }
-
-        // TODO implementare un check che le biglie siano del giusto numero (guardando la dimensione del tray ROW*COL)
-
-        // TODO implementare un check che le biglie siano del giusto numero (guardando la dimensione del tray ROW*COL)
 
         marbles = new Marble[row][col];
 
@@ -120,7 +108,7 @@ public class MarketTray {
     public void pushCol(int shiftCol, PlayableCardReaction player) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException {
         if (boundCheck.test(this.col, shiftCol)) throw new OutOfBoundMarketTrayException();
 
-        for (int i = 0; i < row; i++) player.obtainResource(marbles[i][shiftCol]);
+        for (int i = 0; i < row; i++) player.obtainResource(marbles[i][shiftCol].toResource());
 
         Marble temp = marbles[0][shiftCol];
         for (int i = 0; i < (row - 1); i++) {
@@ -141,7 +129,7 @@ public class MarketTray {
     public void pushRow(int shiftRow, PlayableCardReaction player) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException {
         if (boundCheck.test(this.row, shiftRow)) throw new OutOfBoundMarketTrayException();
 
-        for (int i = 0; i < col; i++) player.obtainResource(marbles[shiftRow][i]);
+        for (int i = 0; i < col; i++) player.obtainResource(marbles[shiftRow][i].toResource());
 
         Marble temp = marbles[shiftRow][0];
         if (col - 1 >= 0) System.arraycopy(marbles[shiftRow], 1, marbles[shiftRow], 0, col - 1);

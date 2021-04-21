@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.cards.effects;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
@@ -18,7 +19,8 @@ import it.polimi.ingsw.model.player.PlayableCardReaction;
         @JsonSubTypes.Type(name = "AddProduction", value = AddProductionEffect.class),
         @JsonSubTypes.Type(name = "AddDepot", value = AddDepotEffect.class),
         @JsonSubTypes.Type(name = "AddDiscount", value = AddDiscountEffect.class),
-        @JsonSubTypes.Type(name = "WhiteMarble", value = WhiteMarbleEffect.class)
+        @JsonSubTypes.Type(name = "WhiteMarble", value = WhiteMarbleEffect.class),
+        @JsonSubTypes.Type(name = "AddExtraProduction", value = AddExtraProductionEffect.class)
 })
 public abstract class Effect {
 

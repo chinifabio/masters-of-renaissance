@@ -13,10 +13,12 @@ import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotExceptio
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.resource.Resource;
 
@@ -113,6 +115,23 @@ public class NoActionDonePlayerState extends PlayerState {
         }
         this.context.setState(new MainActionDonePlayerState(this.context));
         return true;
+    }
+
+    /**
+     * This method set the normal production of an unknown production
+     *
+     * @param normalProduction the input new normal production
+     * @param id the id of the unknown production
+     * @return the succeed of the operation
+     */
+    @Override
+    public boolean setNormalProduction(ProductionID id, NormalProduction normalProduction) {
+        try {
+            return this.context.personalBoard.setNormalProduction(id, normalProduction);
+        } catch (IllegalNormalProduction illegalNormalProduction) {
+            return false;
+            // todo error to player handler
+        }
     }
 
     /**

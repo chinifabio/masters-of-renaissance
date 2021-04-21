@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
@@ -125,7 +124,7 @@ public abstract class Match implements PlayerToMatch {
     /**
      * request to other player to flip the pope tile passed in the parameter
      *
-     * @param toCheck the vatian space to check
+     * @param toCheck the vatican space to check
      */
     @Override
     public void vaticanReport(VaticanSpace toCheck) {
@@ -207,7 +206,7 @@ public abstract class Match implements PlayerToMatch {
                 this.turn.getCurPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
                 return true;
             } catch (EmptyDeckException e) {
-                // todo dire al model che si è rotto il gioco
+                // todo exception to model
             }
         }
         return false;
@@ -237,7 +236,7 @@ public abstract class Match implements PlayerToMatch {
             gameOnAir = false;
             this.turn.countingPoints();
             return true;
-            // todo dire al model che il gioco è finito quindi lui chiamerà la funzione winner calculator
+            // todo tells to the worker to calculate the points
         }
     }
 
@@ -254,7 +253,7 @@ public abstract class Match implements PlayerToMatch {
             try {
                 ret.add(this.leaderCardDeck.draw());
             } catch (EmptyDeckException e) {
-                // todo finisco il gioco con uno stato di errore
+                // todo end the game with error state
             }
         }
         return ret;

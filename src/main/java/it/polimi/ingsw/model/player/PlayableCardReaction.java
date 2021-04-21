@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.CardReaction;
+import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.ExtraDiscountException;
@@ -20,6 +20,11 @@ public interface PlayableCardReaction extends CardReaction {
     void addProduction(Production newProd);
 
     /**
+     * This method adds an extra Production to the list of available productions
+     */
+    void addExtraProduction(Production prod);
+
+    /**
      * This method adds an extra Depot in the Warehouse
      * @param depot new depot to be added to Warehouse depots
      */
@@ -28,7 +33,7 @@ public interface PlayableCardReaction extends CardReaction {
     /**
      * This method gives a discount to the player when buying DevCards
      */
-    void addDiscount(Resource discount) throws ExtraDiscountException;
+    void addDiscount(Resource discount);
 
     /**
      * This method allow adding a marble conversion to the player
@@ -38,13 +43,13 @@ public interface PlayableCardReaction extends CardReaction {
 
     /**
      * This method insert the Resources obtained from the Market to the Depots
-     * @param marble the resource in form of marble
+     * @param obt the resource
      */
-    void obtainResource(Marble marble) throws UnobtainableResourceException, EndGameException;
+    void obtainResource(Resource obt);
 
     /**
      * This method moves the FaithMarker of the player when he gets FaithPoint
      * @param amount how many cells the marker moves
      */
-    void moveFaithMarker(int amount) throws EndGameException;
+    void moveFaithMarker(int amount);
 }

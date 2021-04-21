@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.cards.effects;
 
-import it.polimi.ingsw.model.exceptions.ExtraDiscountException;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
@@ -32,11 +31,6 @@ public class AddDiscountEffect extends Effect{
      */
     @Override
     public void use(CardReaction p) {
-        try {
-            ((PlayableCardReaction) p).addDiscount(ResourceBuilder.buildFromType(this.resource, 1));
-        } catch (ExtraDiscountException e) {
-            e.printStackTrace();
-            // todo portare su l'eccezione
-        }
+        ((PlayableCardReaction) p).addDiscount(ResourceBuilder.buildFromType(this.resource, 1));
     }
 }

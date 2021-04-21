@@ -14,6 +14,7 @@ import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotExceptio
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
@@ -60,6 +61,14 @@ public interface PlayerAction {
      * @return
      */
     boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, PlayerStateException;
+
+    /**
+     * This method set the normal production of an unknown production
+     * @param normalProduction the input new normal production
+     * @param id the id of the unknown production
+     * @return the succeed of the operation
+     */
+    boolean setNormalProduction(ProductionID id, NormalProduction normalProduction) throws PlayerStateException;
 
     /**
      * This method allows the player to move Resources between Depots

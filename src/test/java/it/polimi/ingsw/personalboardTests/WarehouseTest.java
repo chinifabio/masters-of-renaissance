@@ -296,10 +296,10 @@ public class WarehouseTest {
 
         warehouse.addProduction(ProductionID.LEFT, prod1);
 
-        warehouse.setNormalProduction(ProductionID.LEFT, new NormalProduction(
+        assertTrue(warehouse.setNormalProduction(ProductionID.LEFT, new NormalProduction(
                 Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildShield()),
                 Arrays.asList(ResourceBuilder.buildStone(10))
-        ));
+        )));
 
 
         warehouse.addProduction(ProductionID.CENTER, prod2);

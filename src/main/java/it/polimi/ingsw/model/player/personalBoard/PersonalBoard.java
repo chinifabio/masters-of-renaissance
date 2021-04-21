@@ -4,7 +4,9 @@ import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
+import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.exceptions.warehouse.*;
 import it.polimi.ingsw.model.cards.LevelDevCard;
@@ -19,6 +21,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.resource.Resource;
@@ -188,9 +191,18 @@ public class PersonalBoard {
     /**
      * This method add a new Production into the list of availableProductions
      * @param prod is the Production to add
+     * @param slotDestination the destination of the production
      */
-    public void addProduction(Production prod){
-        //TODO implementation
+    public void addProduction(Production prod, DevCardSlot slotDestination){
+        this.warehouse.addProduction(this.productionSlotMap.get(slotDestination), prod);
+    }
+
+    /**
+     * This method add a new Production into the list of availableProductions
+     * @param prod is the Production to add
+     */
+    public void addExtraProduction(Production prod) throws ExtraProductionException {
+        this.warehouse.addExtraProduction(prod);
     }
 
     /**
@@ -218,6 +230,17 @@ public class PersonalBoard {
      */
     public void activateProductions() throws UnobtainableResourceException, EndGameException {
         this.warehouse.activateProductions();
+    }
+
+    /**
+     * This method set the normal production of an unknown production
+     *
+     * @param normalProduction the input new normal production
+     * @param id the id of the unknown production
+     * @return the succeed of the operation
+     */
+    public boolean setNormalProduction(ProductionID id, NormalProduction normalProduction) throws IllegalNormalProduction {
+        return this.warehouse.setNormalProduction(id, normalProduction);
     }
 
     /**
@@ -272,12 +295,8 @@ public class PersonalBoard {
      * create a new depot in the warehouse
      * @param depot the new depot
      */
-    public void addDepot(Depot depot) {
-        try {
-            warehouse.addDepot(depot);
-        } catch (ExtraDepotsException e) {
-            e.printStackTrace();
-        }
+    public void addDepot(Depot depot) throws ExtraDepotsException {
+        warehouse.addDepot(depot);
     }
 
     /**
@@ -344,4 +363,14 @@ public class PersonalBoard {
     public FaithTrack getFT_forTest() {
         return this.faithTrack;
     }
+
+    // only for testing
+    public Map<DepotSlot, Depot> test_getDepots() {
+        return this.warehouse.test_getDepot();
+    }
+    // for testing
+    public Map<ProductionID, Production> test_getProduction() {
+        return this.warehouse.test_getProduction();
+    }
+
 }

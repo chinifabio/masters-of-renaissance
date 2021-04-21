@@ -34,6 +34,5 @@ public class AddDepotEffect extends Effect{
     @Override
     public void use(CardReaction p) {
         ((PlayableCardReaction) p).addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildFromType(res, 1)));
-        // todo extra depot exception da fare e da portare su
     }
 }

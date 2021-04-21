@@ -21,7 +21,7 @@ public class DevSetup {
      * This is the constructor of the devSetup class.
      */
     public DevSetup(){
-        // todo leggere e piazzare i vari deck
+        // todo build from json file
     }
 
     /**

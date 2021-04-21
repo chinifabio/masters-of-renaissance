@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse;
 
+import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.exceptions.warehouse.*;
@@ -22,12 +23,10 @@ import java.util.function.Predicate;
  */
 public class Warehouse {
 
-    //TODO DA METTERE UN METODO CHE CONTA TUTTE LE RISORSE NEI DEPOT POI DIVIDO PER 5
-
     /**
      * This attribute is the list of the available productions that the Player could activates
      */
-    private Map<ProductionID, Production> availableProductions;
+    private final Map<ProductionID, Production> availableProductions;
 
     /**
      * This attribute associates the Depot with its DepotSlot
@@ -37,18 +36,18 @@ public class Warehouse {
     /**
      * This attribute is a list of constraints that the Depots must respect
      */
-    private List<Predicate<MoveResource>> constraint;
+    private final List<Predicate<MoveResource>> constraint;
 
     /**
      * This attribute is a list of all the movements done to activate the Productions, it wil be used to restore the Depot
      * status if the Productions won't be activated
      */
-    private LinkedList<ProductionRecord> movesCache;
+    private final LinkedList<ProductionRecord> movesCache;
 
     /**
      * This attribute is the Player that use this Warehouse
      */
-    private PlayableCardReaction player;
+    private final PlayableCardReaction player;
 
     /**
      * This method is the constructor of the class
@@ -65,7 +64,6 @@ public class Warehouse {
         output.add(ResourceBuilder.buildUnknown());
         this.availableProductions = new EnumMap<>(ProductionID.class);
         availableProductions.put(ProductionID.BASIC, new UnknownProduction(req,output));
-
 
         this.movesCache = new LinkedList<>();
 
@@ -117,6 +115,14 @@ public class Warehouse {
             }
         }
         throw new ExtraDepotsException();
+
+        /*for (DepotSlot id : DepotSlot.special()){
+            Depot old = depots.putIfAbsent(id, newDepot);
+            if (old == null) {
+                return true;
+            }
+        }
+        throw new ExtraDepotsException();*/
     }
 
 
@@ -167,7 +173,7 @@ public class Warehouse {
             }
         }
         return false;
-        //TODO DA RICONTROLLARE
+        //TODO to check
 
 
     }
@@ -193,8 +199,8 @@ public class Warehouse {
             entry.getValue().reset();
         }
         return true;
-        //TODO Da ricontrollare
-        //Per ogni produzione selezionata prendo le risorse di output e le metto nello strongbox
+        //TODO to check
+        //for each resource to check, took it and move to buffer
     }
 
     /**
@@ -252,27 +258,37 @@ public class Warehouse {
         }
     }
 
-    public boolean setNormalProduction(ProductionID productionID, NormalProduction normalProduction) throws IllegalNormalProduction {
+    public boolean setNormalProduction(ProductionID id, NormalProduction normalProduction) throws IllegalNormalProduction {
         try {
-            availableProductions.get(productionID).setNormalProduction(normalProduction);
+            availableProductions.get(id).setNormalProduction(normalProduction);
             return true;
         } catch (IllegalNormalProduction e) {
             throw new IllegalNormalProduction(normalProduction, "The method to set this production to normal failed");
         }
     }
 
-    public boolean restoreProductions() {
+    public void restoreProductions() {
         for (ProductionRecord record : movesCache){
-            if(!insertInDepot(record.getFrom(), record.getResources())) return false;
+            insertInDepot(record.getFrom(), record.getResources());
         }
-        return true;
     }
 
 
     public void addProduction(ProductionID key, Production value){
-        if(this.availableProductions.putIfAbsent(key, value) != null){
+        /*if(this.availableProductions.putIfAbsent(key, value) != null){
             this.availableProductions.replace(key,value);
+        }*/
+        this.availableProductions.put(key, value);
+    }
+
+    public void addExtraProduction(Production prod) throws ExtraProductionException {
+        for (ProductionID id : ProductionID.special()){
+            if (availableProductions.get(id) == null) {
+                availableProductions.put(id, prod);
+                return;
+            }
         }
+        throw new ExtraProductionException();
     }
 
     public int countPointsWarehouse(){
@@ -296,5 +312,14 @@ public class Warehouse {
 
     public List<Resource> viewResourcesInBuffer(){
         return depots.get(DepotSlot.BUFFER).viewAllResources();
+    }
+
+    // for testing
+    public Map<DepotSlot, Depot> test_getDepot() {
+        return this.depots;
+    }
+    // for testing
+    public Map<ProductionID, Production> test_getProduction() {
+        return this.availableProductions;
     }
 }

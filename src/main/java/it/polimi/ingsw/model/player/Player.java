@@ -2,19 +2,17 @@ package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.cards.*;
-import it.polimi.ingsw.model.exceptions.ExtraDiscountException;
+import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.exceptions.warehouse.*;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
-import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
@@ -22,6 +20,7 @@ import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
@@ -144,7 +143,19 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     @Override
     public void addProduction(Production newProd) {
-        this.personalBoard.addProduction(newProd);
+        this.personalBoard.addProduction(newProd, this.slotDestination);
+    }
+
+    /**
+     * This method adds an extra Production to the list of available productions
+     */
+    @Override
+    public void addExtraProduction(Production prod) {
+        try {
+            this.personalBoard.addExtraProduction(prod);
+        } catch (ExtraProductionException e) {
+            // todo exception to player handler
+        }
     }
 
     /**
@@ -154,7 +165,11 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     @Override
     public void addDepot(Depot depot) {
-        this.personalBoard.addDepot(depot);
+        try {
+            this.personalBoard.addDepot(depot);
+        } catch (ExtraDepotsException e) {
+            // todo exception to player handler
+        }
     }
 
     /**
@@ -163,14 +178,9 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param discount the new discount
      */
     @Override
-    public void addDiscount(Resource discount) throws ExtraDiscountException {
-        if(this.marketDiscount.isEmpty() || this.marketDiscount.size() <2){
-            Resource temp = ResourceBuilder.buildFromType(discount.type(), 1);
-            this.marketDiscount.add(temp);
-        }
-        else {
-            throw new ExtraDiscountException();
-        }
+    public void addDiscount(Resource discount) {
+        Resource temp = ResourceBuilder.buildFromType(discount.type(), 1);
+        this.marketDiscount.add(temp);
     }
 
     /**
@@ -186,16 +196,17 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     /**
      * This method insert the Resources obtained from the Market to the Depots
      *
-     * @param marble the resource in form of marble
+     * @param obt the resource in form
      */
     @Override
-    public void obtainResource(Marble marble) throws UnobtainableResourceException {
-        Resource obt = marble.toResource(); // todo da spostare nel market tray e riceve risorsa come parametro
+    public void obtainResource(Resource obt) {
         try {
             obt.onObtain(this);
         } catch (EndGameException e) {
             // reached the end of faith track so tells to the match to start end game logic
             this.match.startEndGameLogic();
+        } catch (UnobtainableResourceException e) {
+            // todo exception to player handler
         }
         if(obt.isStorable()) this.personalBoard.obtainResource(obt);
     }
@@ -267,6 +278,23 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
             return this.playerState.activateProductions();
         } catch (PlayerStateException e) {
             System.out.println(TextColors.colorText(TextColors.RED_BRIGHT, "fail activating production"));
+            return false;
+        }
+    }
+
+    /**
+     * This method set the normal production of an unknown production
+     *
+     * @param normalProduction the input new normal production
+     * @param id the id of the unknown production
+     * @return the succeed of the operation
+     */
+    @Override
+    public boolean setNormalProduction(ProductionID id, NormalProduction normalProduction) {
+        try {
+            return this.playerState.setNormalProduction(id, normalProduction);
+        } catch (PlayerStateException e) {
+            System.out.println(TextColors.colorText(TextColors.RED_BRIGHT, "fail setting normal production"));
             return false;
         }
     }
@@ -389,19 +417,9 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         try {
             this.playerState.startTurn();
         } catch (PlayerStateException e) {
-            // todo dire al model e al player errore
+            // todo exception to player handler
         }
         return true;
-    }
-
-    // FOR TESTING
-    public FaithTrack getFT_forTest() {
-        return this.personalBoard.getFT_forTest();
-    }
-
-    // FOR TESTING
-    public void test_discardLeader() throws EmptyDeckException, PlayerStateException, MissingCardException {
-        this.discardLeader(this.personalBoard.viewLeaderCard().peekFirstCard().getCardID());
     }
 
     /**
@@ -414,8 +432,33 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         return this.nickname;
     }
 
+    // FOR TESTING
+    public FaithTrack getFT_forTest() {
+        return this.personalBoard.getFT_forTest();
+    }
+
+    // FOR TESTING
+    public void test_discardLeader() throws EmptyDeckException, PlayerStateException, MissingCardException {
+        this.discardLeader(this.personalBoard.viewLeaderCard().peekFirstCard().getCardID());
+    }
+
     // for testing
-    public PlayerState test_getState() {
-        return this.playerState;
+    public PersonalBoard test_getPB() {
+        return this.personalBoard;
+    }
+
+    // for testing
+    public void test_setDest(DevCardSlot slot) {
+        this.slotDestination = slot;
+    }
+
+    // for testing
+    public List<Resource> test_getDiscount() {
+        return this.marketDiscount;
+    }
+
+    // for testing
+    public List<Marble> test_getConv() {
+        return this.marbleConversions;
     }
 }
