@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.production;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.resource.Resource;
@@ -10,12 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class NormalProduction extends Production {
-    /**
-     * This Constructor is only for the JSON File, don't use it!
-     */
-    public NormalProduction() {
-        super();
-    }
 
     /**
      * This method is the constructor of the class
@@ -23,7 +19,8 @@ public class NormalProduction extends Production {
      * @param required required list of resource
      * @param output output list of resource
      */
-    public NormalProduction(List<Resource> required, List<Resource> output) throws IllegalTypeInProduction {
+    @JsonCreator
+    public NormalProduction(@JsonProperty("required") List<Resource> required,@JsonProperty("output") List<Resource> output) throws IllegalTypeInProduction {
         super(required, output, Arrays.asList(ResourceType.EMPTY, ResourceType.UNKNOWN));
     }
 

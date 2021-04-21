@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 
 
-import it.polimi.ingsw.model.match.match.Match;
-
 import it.polimi.ingsw.model.match.PlayerToMatch;
 
 /**
@@ -29,7 +27,7 @@ public class PopeSpace extends Cell {
     }
 
     /**
-     * This method activated the VaticanSpace report when the Player cross on this cell
+     * This method activates the VaticanSpace report when the Player cross on this cell
      * @param pm is the player that crossed the cell
      */
     @Override

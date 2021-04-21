@@ -3,12 +3,10 @@ package it.polimi.ingsw.personalboardTests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.cards.ColorDevCard;
-import it.polimi.ingsw.model.cards.DevCard;
-import it.polimi.ingsw.model.cards.LeaderCard;
-import it.polimi.ingsw.model.cards.LevelDevCard;
+import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.AddExtraProductionEffect;
 import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
+import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
@@ -18,21 +16,49 @@ import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * test collectors for PersonalBoard
  */
 public class PersonalBoardTest {
+
+    Match game;
+
+    Player player1;
+    Player player2;
+
+    @BeforeEach
+    public void initialization() {
+        game = new MultiplayerMatch();
+
+        assertDoesNotThrow(()->player1 = new Player("uno", game));
+        assertDoesNotThrow(()->player2 = new Player("due", game));
+
+        assertTrue(game.playerJoin(player1));
+        assertTrue(game.playerJoin(player2));
+
+        assertDoesNotThrow(()-> game.startGame());
+
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+    }
 
     /**
      * This test creates a PersonalBoard and add
@@ -357,21 +383,164 @@ public class PersonalBoardTest {
 
     }
 
-
-    /**
-     * This test checks the correct functioning of the popeTile
-     */
     @Test
-    void PopeTile(){
-    //    PersonalBoard personalBoard1 = new PersonalBoard();
-    //    PersonalBoard personalBoard2 = new PersonalBoard();
-//
-    //    Resource first = ResourceBuilder.buildFaithPoint(1);
-    //    Resource second = ResourceBuilder.buildFaithPoint(2);
-//
-    //    assertTrue(personalBoard1.moveFaithMarker(second.amount()));
-    //    if(personalBoard1.){}
-    //    assertTrue(personalBoard1.moveFaithMarker(second.amount()));
-    //    assertTrue(personalBoard1.moveFaithMarker(second.amount()));
+    public void countsDevCardsPoints() throws IllegalTypeInProduction, PlayerStateException {
+
+        PersonalBoard board = player1.test_getPB();
+        List<Player> orderList = new ArrayList<>();
+        orderList.add(player1);
+        orderList.add(player2);
+        Collections.rotate(orderList, -orderList.indexOf(game.test_getCurrPlayer()));
+
+        DevCard devCard1 = new DevCard("DC1", null, 3, LevelDevCard.LEVEL1, ColorDevCard.BLUE,null);
+        DevCard devCard2 = new DevCard("DC2", null, 5, LevelDevCard.LEVEL1, ColorDevCard.GREEN,null);
+        DevCard devCard3 = new DevCard("DC3", null, 2, LevelDevCard.LEVEL1, ColorDevCard.YELLOW,null);
+        DevCard devCard4 = new DevCard("DC4", null, 6, LevelDevCard.LEVEL2, ColorDevCard.BLUE,null);
+        DevCard devCard5 = new DevCard("DC5", null, 3, LevelDevCard.LEVEL2, ColorDevCard.GREEN,null);
+        DevCard devCard6 = new DevCard("DC6", null, 10, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,null);
+        DevCard devCard7 = new DevCard("DC7", null, 25, LevelDevCard.LEVEL3, ColorDevCard.GREEN,null);
+
+        DevCard nothing = new DevCard("DC8", null, 1, LevelDevCard.LEVEL3, ColorDevCard.BLUE,null);
+
+        assertTrue(board.addDevCard(DevCardSlot.LEFT,devCard1, game));
+        assertTrue(board.addDevCard(DevCardSlot.RIGHT,devCard2, game));
+
+        assertEquals(8,board.getVictoryPointsDevCards());
+
+        assertTrue(board.addDevCard(DevCardSlot.CENTER,devCard3, game));
+        assertEquals(10,board.getVictoryPointsDevCards());
+
+        assertTrue(board.addDevCard(DevCardSlot.CENTER, devCard4, game));
+        board.addDevCard(DevCardSlot.LEFT, devCard5, game);
+
+        assertEquals(19,board.getVictoryPointsDevCards());
+
+        assertTrue(board.addDevCard(DevCardSlot.RIGHT, devCard6, game));
+        assertEquals(29,board.getVictoryPointsDevCards());
+
+        //Obtaining the seventh card ends the turn of the Player and starts the EndGameLogic
+        assertTrue(board.addDevCard(DevCardSlot.LEFT, devCard7, game));
+        assertEquals(54, board.getVictoryPointsDevCards());
+
+        //Do nothing
+        assertFalse(board.addDevCard(DevCardSlot.CENTER, nothing, game));
+        assertEquals(54, board.getVictoryPointsDevCards());
+        //
+
+        orderList.get(1).endThisTurn();
+
+        assertFalse(game.test_getGameOnAir());
+
+    }
+
+    @Test
+    @RepeatedTest(10)
+    public void countingLeaderPoints() throws EmptyDeckException, MissingCardException, PlayerStateException {
+        PersonalBoard board = player1.test_getPB();
+
+        List<Player> orderList = new ArrayList<>();
+        orderList.add(player1);
+        orderList.add(player2);
+        Collections.rotate(orderList, -orderList.indexOf(game.test_getCurrPlayer()));
+
+        String ID1 = "";
+        String ID2 = "";
+        for (LeaderCard card : player1.test_getPB().viewLeaderCard().getCards()){
+            if (ID1.equals("")){
+                ID1 = card.getCardID();
+            } else {
+                ID2 = card.getCardID();
+            }
+        }
+
+        assertEquals(0, player1.test_getPB().getVictoryPointsLeaderCards());
+
+        player1.test_getPB().activateLeaderCard(ID1);
+
+        assertEquals(player1.test_getPB().viewLeaderCard().peekCard(ID1).getVictoryPoint(),
+                player1.test_getPB().getVictoryPointsLeaderCards()
+        );
+
+        player1.test_getPB().activateLeaderCard(ID2);
+
+        assertEquals(
+                player1.test_getPB().viewLeaderCard().peekCard(ID1).getVictoryPoint() +
+                player1.test_getPB().viewLeaderCard().peekCard(ID2).getVictoryPoint(),
+                player1.test_getPB().getVictoryPointsLeaderCards()
+        );
+
+        orderList.get(0).endThisTurn();
+        assertTrue(game.test_getGameOnAir());
+    }
+
+
+    @Test
+    @RepeatedTest(10)
+    public void countingTotalPoints() throws EndGameException, EmptyDeckException, MissingCardException {
+        Random rand = new Random();
+        int max = 24;
+        int randomNum = rand.nextInt(max);
+
+        PersonalBoard board = player1.test_getPB();
+
+        List<Player> orderList = new ArrayList<>();
+        orderList.add(player1);
+        orderList.add(player2);
+        Collections.rotate(orderList, -orderList.indexOf(game.test_getCurrPlayer()));
+
+        //Inserting resources into the warehouse
+        player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.MIDDLE, ResourceBuilder.buildStone(2));
+        player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildCoin(3));
+        player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildShield(10));
+        player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildServant(5));
+        player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildCoin(5));
+
+        assertEquals(5,player1.test_getPB().getWH_forTest().countPointsWarehouse());
+
+        //Moving the player into the FaithTrack
+        player1.getFT_forTest().movePlayer(randomNum,game);
+
+
+        //Activating LeaderCards
+        String ID1 = "";
+        String ID2 = "";
+        for (LeaderCard card : player1.test_getPB().viewLeaderCard().getCards()){
+            if (ID1.equals("")){
+                ID1 = card.getCardID();
+            } else {
+                ID2 = card.getCardID();
+            }
+        }
+
+        player1.test_getPB().activateLeaderCard(ID1);
+        player1.test_getPB().discardLeaderCard(ID2);
+
+        assertEquals(player1.test_getPB().viewLeaderCard().peekCard(ID1).getVictoryPoint(),
+                player1.test_getPB().getVictoryPointsLeaderCards());
+
+        //Adding DevCards
+        DevCard devCard1 = new DevCard("DC1", null, randomNum, LevelDevCard.LEVEL1, ColorDevCard.BLUE,null);
+        DevCard devCard2 = new DevCard("DC2", null, randomNum, LevelDevCard.LEVEL1, ColorDevCard.GREEN,null);
+        DevCard devCard3 = new DevCard("DC3", null, randomNum, LevelDevCard.LEVEL1, ColorDevCard.YELLOW,null);
+        DevCard devCard4 = new DevCard("DC4", null, randomNum, LevelDevCard.LEVEL2, ColorDevCard.BLUE,null);
+
+        board.addDevCard(DevCardSlot.LEFT, devCard1, game);
+        board.addDevCard(DevCardSlot.CENTER, devCard2, game);
+        board.addDevCard(DevCardSlot.RIGHT, devCard3, game);
+        board.addDevCard(DevCardSlot.LEFT, devCard4, game);
+
+        assertEquals(devCard1.getVictoryPoint() +
+                devCard2.getVictoryPoint() +
+                devCard3.getVictoryPoint() +
+                devCard4.getVictoryPoint()
+                ,player1.test_getPB().getVictoryPointsDevCards());
+
+        //Counting TotalVictoryPoints
+
+        assertEquals(player1.test_getPB().getWH_forTest().countPointsWarehouse()+
+                player1.getFT_forTest().countingFaithTrackVictoryPoints() +
+                player1.test_getPB().getVictoryPointsLeaderCards() +
+                player1.test_getPB().getVictoryPointsDevCards(), player1.test_getPB().getTotalVictoryPoints());
+
     }
 }

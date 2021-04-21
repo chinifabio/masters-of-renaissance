@@ -18,7 +18,7 @@ import java.util.*;
 public class FaithTrack {
 
     /**
-     * This attribute is the representation of the track, composed by several cells
+     * This attribute is the representation of the FaithTrack, composed by several cells
      */
     private List<Cell> track;
 
@@ -36,7 +36,7 @@ public class FaithTrack {
 
     /**
      * This method is the constructor of the class, it reads from a file the details of the track and creates a list of cells,
-     * also it initialize the Player and Lorenzo position to 0.
+     * also it initialize the Player position to 0.
      */
     public FaithTrack() {
 
@@ -73,22 +73,15 @@ public class FaithTrack {
     public void movePlayer(int points, PlayerToMatch pm) throws EndGameException {
         if(playerPosition >= (track.size()-1)) return;
         for (int i = 0; i< points; i++){
+            this.playerPosition++;
+            this.track.get(playerPosition).onPlayerCross(pm);
             if (this.playerPosition >= track.size()-1) {
                 throw new EndGameException();
-            } else {
-                this.playerPosition++;
-                this.track.get(playerPosition).onPlayerCross(pm);
             }
         }
     }
 
-    /**
-     * This method returns the value of the victoryPoint of the cell
-     * @return victoryPoint
-     */
-    public int victoryPointCellPlayer(){
-        return track.get(playerPosition).getVictoryPoint();
-    }
+
 
     /**
      * This method indicates in which vaticanSpace the cell is located
@@ -108,13 +101,11 @@ public class FaithTrack {
         }
     }
 
-
-
     /**
      * This method counts the victory points earned by the player
      * @return the value of the VictoryPoints
      */
-    public int countingCellPoint(){
+    public int countingFaithTrackVictoryPoints(){
         int points = 0;
         int position = getPlayerPosition();
 
@@ -136,16 +127,13 @@ public class FaithTrack {
     }
 
 
-    //TODO Includere nel metodo i punti vittoria dei PopeTile oppure fare un metodo a parte
-
-    //Only for testing
-    public Cell getTile(){
-        return this.track.get(playerPosition);
-    }
-
     //only for testing
     public boolean isFlipped(VaticanSpace vs){
         if(vs == VaticanSpace.NONE) return false;
         return this.popeTiles.get(vs).isFlipped();
+    }
+
+    public int victoryPointCellPlayer(){
+        return track.get(playerPosition).getVictoryPoint();
     }
 }

@@ -5,13 +5,14 @@ package it.polimi.ingsw.model.player.personalBoard.faithTrack;
  * the player is in the corresponding VaticanSpace when a VaticanReport is activated.
  */
 public class PopeTile {
+
     /**
      * This attribute is the victoryPoint that the Player could get if the tile is flipped
      */
     private int victoryPoint;
 
     /**
-     * This attribute indicates if the Tile is deactivated
+     * This attribute indicates if the Tile is flipped
      */
     private boolean flipped;
 
@@ -25,7 +26,7 @@ public class PopeTile {
     }
 
     /**
-     * This method deactivates the Tile
+     * This method flips the Tile
      */
     public void flipMe(){
         this.flipped = true;

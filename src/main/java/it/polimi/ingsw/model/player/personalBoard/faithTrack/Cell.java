@@ -38,7 +38,7 @@ public abstract class Cell {
    public abstract int getVictoryPoint();
 
    /**
-    * To be implemented
+    * This method activates the VaticanReport if the Player cross a PopeSpace or do nothing if the Player cross a normal cell
     */
    public abstract void onPlayerCross(PlayerToMatch pm);
 

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.player.personalBoard;
 
-import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
@@ -100,7 +99,10 @@ public class PersonalBoard {
     public boolean addDevCard(DevCardSlot slot, DevCard card, PlayerToMatch pm) {
         int sum = 0;
         for (DevCardSlot key : DevCardSlot.values()) sum += devDeck.get(key).getNumberOfCards();
-        if(sum >= 7) pm.startEndGameLogic();
+        if(sum >= 7) {
+            pm.startEndGameLogic();
+            return false;
+        }
 
         if (checkDevCard(slot, card)) {
             try {
@@ -359,9 +361,54 @@ public class PersonalBoard {
         this.warehouse.moveInProduction(from, dest, loot);
     }
 
+    /**
+     * This method counts all the victoryPoints that the Player has earned during the game
+     * @return the total value of all victoryPoints
+     */
+    public int getTotalVictoryPoints(){
+        int points = 0;
+        points = points + warehouse.countPointsWarehouse();
+        points = points + faithTrack.countingFaithTrackVictoryPoints();
+        points = points + this.getVictoryPointsDevCards();
+        points = points + this.getVictoryPointsLeaderCards();
+        return points;
+    }
+
+    /**
+     * This method counts the value of VictoryPoints of the DevCards in the PersonalBoard
+     * @return the total value of VictoryPoints of the DevCards
+     */
+    public int getVictoryPointsDevCards(){
+        int points = 0;
+        for (Map.Entry<DevCardSlot, Deck<DevCard>> entry : devDeck.entrySet()){
+            for (DevCard card : entry.getValue().getCards()){
+                points = points + card.getVictoryPoint();
+            }
+        }
+        return points;
+    }
+
+    /**
+     * This method counts the value of VictoryPoints of the LeaderCards activated by the Player
+     * @return the total value of VictoryPoints of the LeaderCards
+     */
+    public int getVictoryPointsLeaderCards(){
+        int points = 0;
+        for (LeaderCard card : leaderDeck.getCards()){
+            if (card.isActivated()){
+                points = points + card.getVictoryPoint();
+            }
+        }
+        return points;
+    }
+
     // only for testing
     public FaithTrack getFT_forTest() {
         return this.faithTrack;
+    }
+
+    public Warehouse getWH_forTest(){
+        return this.warehouse;
     }
 
     // only for testing

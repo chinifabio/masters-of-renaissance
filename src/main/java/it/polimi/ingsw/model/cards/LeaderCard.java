@@ -75,7 +75,8 @@ public class LeaderCard extends Card{
     @Override
     public String toString() {
         return "LeaderCard{" +
-                "VP=" + victoryPoint +
+                "CardID= " + this.getCardID() +
+                " VP=" + victoryPoint +
                 ", activate=" + activated +
                 ", requirements=" + getRequirements() +
                 '}';

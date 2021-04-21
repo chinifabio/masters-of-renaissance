@@ -79,13 +79,14 @@ public class DevCard extends Card{
         return cost;
     }
 
-    //@Override
-    //public String toString() {
-    //    return "DevCard{" +
-    //            "VP=" + victoryPoint +
-    //            ", lev=" + level +
-    //            ", color=" + color +
-    //            '}';
-    //}
+    @Override
+    public String toString() {
+        return "DevCard{" +
+                "CardID= " + this.getCardID() +
+                " VP=" + victoryPoint +
+                ", lev=" + level +
+                ", color=" + color +
+                '}';
+    }
 
 }

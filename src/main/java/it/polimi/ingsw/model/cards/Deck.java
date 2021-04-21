@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.cards;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
+import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -130,6 +131,8 @@ public class Deck<T extends Card>{
         if (this.cards.contains(card)) throw new AlreadyInDeckException(card);
         this.cards.add(0, card);
         this.updateNumberOfCards();
+
+
     }
 
     /**
@@ -176,6 +179,16 @@ public class Deck<T extends Card>{
                 ",\n cards=" + cards +
                 ",\n discardedCards=" + discardedCards +
                 '}';
+    }
+
+    /**
+     * This method returns the list of cards contained in the deck
+     * @return list of cards
+     */
+    public List<T> getCards(){
+        List<T> clone = new ArrayList<>(this.numberOfCards);
+        clone.addAll(this.cards);
+        return clone;
     }
 
     //for testing

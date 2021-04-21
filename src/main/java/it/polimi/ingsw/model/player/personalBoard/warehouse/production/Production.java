@@ -1,10 +1,8 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.production;
 
+import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -23,7 +21,7 @@ import java.util.*;
 })
 public abstract class Production{
 
-    public Production(){}
+
     /**
      * this list contains all the input resource not allowed in the production
      */
@@ -57,6 +55,7 @@ public abstract class Production{
     /**
      * This method is the constructor of the class
      */
+    @JsonCreator
     public Production(List<Resource> newRequired, List<Resource> newOutput, List<ResourceType> illegal) throws IllegalTypeInProduction {
 
         this.illegalType = illegal;

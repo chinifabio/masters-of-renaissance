@@ -2,6 +2,7 @@ package it.polimi.ingsw.personalboardTests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.CustomAssertion;
+import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FaithTrackTest {
@@ -77,6 +79,7 @@ public class FaithTrackTest {
         } catch (EndGameException e){
 
         }
+
         assertEquals(VaticanSpace.THIRD, track.vaticanSpaceCell());
         assertEquals(20, track.victoryPointCellPlayer());
 
@@ -174,4 +177,76 @@ public class FaithTrackTest {
 
     }
 
+    @Test
+    public void countingPoints() throws PlayerStateException {
+
+        //starting the game
+        List<Player> orderList = new ArrayList<>();
+        orderList.add(player1);
+        orderList.add(player2);
+        Collections.rotate(orderList, -orderList.indexOf(orderList.stream().filter(Player :: canDoStuff).findAny().get()));
+
+
+
+        assertEquals(0, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
+        game.test_getCurrPlayer().endThisTurn();
+        assertEquals(0, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
+        game.test_getCurrPlayer().endThisTurn();
+
+        game.test_getCurrPlayer().moveFaithMarker(4);
+        game.test_getCurrPlayer().endThisTurn();
+
+        game.test_getCurrPlayer().moveFaithMarker(2);
+        game.test_getCurrPlayer().endThisTurn();
+
+        assertEquals(1, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
+        game.test_getCurrPlayer().endThisTurn();
+        assertEquals(0, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
+        game.test_getCurrPlayer().endThisTurn();
+
+        game.test_getCurrPlayer().moveFaithMarker(3);
+        game.test_getCurrPlayer().endThisTurn();
+
+        game.test_getCurrPlayer().moveFaithMarker(4);
+        game.test_getCurrPlayer().endThisTurn();
+
+        assertEquals(2, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
+        game.test_getCurrPlayer().endThisTurn();
+        assertEquals(2, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
+        game.test_getCurrPlayer().endThisTurn();
+
+
+        game.test_getCurrPlayer().moveFaithMarker(2);
+        game.test_getCurrPlayer().endThisTurn();
+
+        game.test_getCurrPlayer().moveFaithMarker(1);
+        game.test_getCurrPlayer().endThisTurn();
+
+        assertEquals(4 + 2, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
+        game.test_getCurrPlayer().endThisTurn();
+        assertEquals(2 + 2, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
+        game.test_getCurrPlayer().endThisTurn();
+
+
+        game.test_getCurrPlayer().moveFaithMarker(10); //Player1: 19
+        game.test_getCurrPlayer().endThisTurn();
+        //When the first player reach the second PopeSpace, the second player is in the Cell 7 so he doesn't obtain the
+        //victoryPoints of the second PopeTile
+        game.test_getCurrPlayer().moveFaithMarker(10); //Player2: 17
+        game.test_getCurrPlayer().endThisTurn();
+
+        assertEquals(12 + 3 + 2, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
+        game.test_getCurrPlayer().endThisTurn();
+        assertEquals(9 + 2, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
+        game.test_getCurrPlayer().endThisTurn();
+
+        game.test_getCurrPlayer().moveFaithMarker(1);//Player1: 20
+        game.test_getCurrPlayer().endThisTurn();
+
+        game.test_getCurrPlayer().moveFaithMarker(8);//Player2: 24
+
+
+        assertEquals(12 + 4 + 3 + 2, orderList.get(0).getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
+        assertEquals(20 + 4 + 2, orderList.get(1).getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
+    }
 }
