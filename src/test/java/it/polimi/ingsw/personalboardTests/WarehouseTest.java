@@ -6,8 +6,6 @@ import it.polimi.ingsw.model.exceptions.warehouse.*;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
-import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayableCardReaction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder;
@@ -26,8 +24,7 @@ public class WarehouseTest {
      */
     @Test
     public void insertResources() throws IllegalTypeInProduction{
-        Player player = new Player("Dummy", null);
-        Warehouse test = new Warehouse(player);
+        Warehouse test = new Warehouse();
 
         //Testing the bottom depot
         assertTrue(test.insertInDepot(DepotSlot.BOTTOM,ResourceBuilder.buildCoin(2)));
@@ -54,8 +51,7 @@ public class WarehouseTest {
      */
     @Test
     public void viewResources() throws IllegalTypeInProduction{
-        Player player = new Player("Dummy", null);
-        Warehouse test = new Warehouse(player);
+        Warehouse test = new Warehouse();
 
         //Testing resources in BOTTOM Depot
         test.insertInDepot(DepotSlot.BOTTOM,ResourceBuilder.buildShield(2));
@@ -89,8 +85,7 @@ public class WarehouseTest {
      */
     @Test
     public void insertInStrongbox() throws IllegalTypeInProduction{
-        Player player = new Player("Dummy", null);
-        Warehouse test = new Warehouse(player);
+        Warehouse test = new Warehouse();
         List<Resource> list = new ArrayList<>();
 
         list.add(ResourceBuilder.buildCoin(2));
@@ -130,8 +125,7 @@ public class WarehouseTest {
      */
     @Test
     public void InsertInExtraDepots() throws ExtraDepotsException, IllegalTypeInProduction{
-        Player player = new Player("Dummy", null);
-        Warehouse test = new Warehouse(player);
+        Warehouse test = new Warehouse();
         boolean exc = false;
 
         //Add depot SPECIAL1
@@ -164,9 +158,8 @@ public class WarehouseTest {
 
 
     @Test
-    public void moveResourcesInDepots() throws NegativeResourcesDepotException, WrongDepotException, ExtraDepotsException, IllegalTypeInProduction, UnobtainableResourceException, EndGameException {
-        Player player = new Player("Dummy", null);
-        Warehouse warehouse = new Warehouse(player);
+    public void moveResourcesInDepots() throws NegativeResourcesDepotException, WrongDepotException, ExtraDepotsException, IllegalTypeInProduction, UnobtainableResourceException {
+        Warehouse warehouse = new Warehouse();
         warehouse.addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildStone()));
         warehouse.addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildShield()));
 
@@ -222,14 +215,12 @@ public class WarehouseTest {
 
     @Test
     public void activateProductions() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, EndGameException {
-
-        PlayableCardReaction player = new Player("Dummy", null);
-        Warehouse warehouse = new Warehouse(player);
+        Warehouse warehouse = new Warehouse();
         List<Resource> req = Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildShield());
-        List<Resource> out = Arrays.asList(ResourceBuilder.buildStone(10));
+        List<Resource> out = Collections.singletonList(ResourceBuilder.buildStone(10));
 
         List<Resource> req2 = Arrays.asList(ResourceBuilder.buildShield(2), ResourceBuilder.buildStone(2));
-        List<Resource> out2 = Arrays.asList(ResourceBuilder.buildServant(10));
+        List<Resource> out2 = Collections.singletonList(ResourceBuilder.buildServant(10));
 
         warehouse.insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildCoin(3));
         warehouse.insertInDepot(DepotSlot.MIDDLE, ResourceBuilder.buildShield(2));
@@ -239,7 +230,6 @@ public class WarehouseTest {
 
         Production prod1 = new NormalProduction(req, out);
         Production prod2 = new NormalProduction(req2, out2);
-        Production prod3 = new NormalProduction(req, out2); //Do nothing
 
         warehouse.addProduction(ProductionID.LEFT, prod1);
         warehouse.addProduction(ProductionID.CENTER, prod2);
@@ -273,14 +263,12 @@ public class WarehouseTest {
 
     @Test
     public void notEnoughResourceProduction() throws  NegativeResourcesDepotException, UnknownUnspecifiedException, IllegalTypeInProduction, IllegalNormalProduction, UnobtainableResourceException, EndGameException {
-
-        PlayableCardReaction player = new Player("Dummy", null);
-        Warehouse warehouse = new Warehouse(player);
+        Warehouse warehouse = new Warehouse();
         List<Resource> req = Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildUnknown());
-        List<Resource> out = Arrays.asList(ResourceBuilder.buildStone(10));
+        List<Resource> out = Collections.singletonList(ResourceBuilder.buildStone(10));
 
         List<Resource> req2 = Arrays.asList(ResourceBuilder.buildShield(2), ResourceBuilder.buildStone(2));
-        List<Resource> out2 = Arrays.asList(ResourceBuilder.buildServant(10));
+        List<Resource> out2 = Collections.singletonList(ResourceBuilder.buildServant(10));
 
         warehouse.insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildCoin(3));
         warehouse.insertInDepot(DepotSlot.MIDDLE, ResourceBuilder.buildShield(2));
@@ -298,7 +286,7 @@ public class WarehouseTest {
 
         assertTrue(warehouse.setNormalProduction(ProductionID.LEFT, new NormalProduction(
                 Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildShield()),
-                Arrays.asList(ResourceBuilder.buildStone(10))
+                Collections.singletonList(ResourceBuilder.buildStone(10))
         )));
 
 
@@ -354,10 +342,8 @@ public class WarehouseTest {
 
     @Test
     public void countTotalResources() throws IllegalTypeInProduction, ExtraDepotsException {
+        Warehouse warehouse = new Warehouse();
 
-        PlayableCardReaction player = new Player("name", null);
-
-        Warehouse warehouse = new Warehouse(player);
         warehouse.insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildShield(2));
         warehouse.insertInDepot(DepotSlot.MIDDLE, ResourceBuilder.buildCoin(2));
         warehouse.insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildStone(5));
@@ -381,9 +367,8 @@ public class WarehouseTest {
     }
 
     @Test
-    public void usingBuffer() throws IllegalTypeInProduction, UnobtainableResourceException, WrongDepotException, NegativeResourcesDepotException, ExtraDepotsException, EndGameException {
-        PlayableCardReaction player = new Player("Name", null);
-        Warehouse warehouse = new Warehouse(player);
+    public void usingBuffer() throws IllegalTypeInProduction, UnobtainableResourceException, WrongDepotException, NegativeResourcesDepotException, ExtraDepotsException {
+        Warehouse warehouse = new Warehouse();
 
         warehouse.insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildServant(3));
         warehouse.moveBetweenDepot(DepotSlot.BOTTOM, DepotSlot.BUFFER, ResourceBuilder.buildServant());

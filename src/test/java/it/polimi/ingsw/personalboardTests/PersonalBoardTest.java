@@ -1,12 +1,14 @@
 package it.polimi.ingsw.personalboardTests;
 
 
+import static it.polimi.ingsw.model.resource.ResourceBuilder.buildStone;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.AddExtraProductionEffect;
 import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
+import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
@@ -27,10 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * test collectors for PersonalBoard
@@ -69,8 +68,12 @@ public class PersonalBoardTest {
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
-        List<Resource> sample = new ArrayList<>();
         Production p = null;
+        try {
+            p = new NormalProduction(Collections.singletonList(buildStone()), Collections.singletonList(buildStone()));
+        } catch (IllegalTypeInProduction illegalTypeInProduction) {
+            fail();
+        }
 
         DevCard c1 = new DevCard("000", new AddProductionEffect(p), 2, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
         DevCard c2 = new DevCard("111", new AddProductionEffect(p), 4, LevelDevCard.LEVEL2, ColorDevCard.YELLOW, req);
@@ -79,7 +82,6 @@ public class PersonalBoardTest {
 
         DevCardSlot dcsLeft = DevCardSlot.LEFT;
         DevCardSlot dcsCenter = DevCardSlot.CENTER;
-        DevCardSlot dcsRight = DevCardSlot.RIGHT;
 
         Match match = new MultiplayerMatch();
 
@@ -100,13 +102,11 @@ public class PersonalBoardTest {
         PersonalBoard finalPersonalBoard = personalBoard;
         assertDoesNotThrow(()->{
             if (finalPersonalBoard.addDevCard(dcsLeft, c1, null)) {
-                assertTrue(c1.equals(finalPersonalBoard.viewDevCards().get(dcsLeft)));
-            } else {
-
+                assertEquals(c1, finalPersonalBoard.viewDevCards().get(dcsLeft));
             }
 
             if (finalPersonalBoard.addDevCard(dcsLeft, c2, null)) {
-                assertTrue(c2.equals(finalPersonalBoard.viewDevCards().get(dcsLeft)));
+                assertEquals(c2, finalPersonalBoard.viewDevCards().get(dcsLeft));
             } else {
                 fail();
             }
@@ -115,14 +115,12 @@ public class PersonalBoardTest {
                 fail();
             } else {
                 try {
-                    assertTrue(finalPersonalBoard.viewDevCards().get(dcsCenter).equals(null));
-                    fail();
-                } catch (NullPointerException e) {
-                }
+                    assertNull(finalPersonalBoard.viewDevCards().get(dcsCenter));
+                } catch (NullPointerException ignore) {}
             }
 
             if (finalPersonalBoard.addDevCard(dcsLeft, c3, null)){
-                assertTrue(c3.equals(finalPersonalBoard.viewDevCards().get(dcsLeft)));
+                assertEquals(c3, finalPersonalBoard.viewDevCards().get(dcsLeft));
             } else {
                 fail();
             }
@@ -131,13 +129,12 @@ public class PersonalBoardTest {
                 fail();
             } else {
                 try {
-                    assertTrue(finalPersonalBoard.viewDevCards().get(dcsCenter).equals(null));
-                    fail();
-                } catch (NullPointerException e) {}
+                    assertNull(finalPersonalBoard.viewDevCards().get(dcsCenter));
+                } catch (NullPointerException ignored) {}
             }
 
             if (finalPersonalBoard.addDevCard(dcsCenter, c1, null)){
-                assertTrue(c1.equals(finalPersonalBoard.viewDevCards().get(dcsCenter)));
+                assertEquals(c1, finalPersonalBoard.viewDevCards().get(dcsCenter));
             } else {
                 fail();
             }
@@ -145,13 +142,13 @@ public class PersonalBoardTest {
             if (finalPersonalBoard.addDevCard(dcsCenter, c3, null)){
                 fail();
             } else {
-                assertTrue(c1.equals(finalPersonalBoard.viewDevCards().get(dcsCenter)));
+                assertEquals(c1, finalPersonalBoard.viewDevCards().get(dcsCenter));
             }
 
             if (finalPersonalBoard.addDevCard(dcsLeft, c31, null)){
                 fail();
             } else {
-                assertTrue(c3.equals(finalPersonalBoard.viewDevCards().get(dcsLeft)));
+                assertEquals(c3, finalPersonalBoard.viewDevCards().get(dcsLeft));
             }
         });
 
@@ -161,7 +158,7 @@ public class PersonalBoardTest {
      * This test creates two LeaderCards, adds them to the deck and activate them.
      */
     @Test
-    void ActivateLeaderCard() throws MissingCardException, EndGameException {
+    void ActivateLeaderCard() throws MissingCardException, AlreadyInDeckException {
         String ID1="000", ID2="111";
         List<Resource> sample = new ArrayList<>();
 
@@ -200,12 +197,12 @@ public class PersonalBoardTest {
 
         personalBoard.addLeaderCard(c1);
         try {
-            assertTrue(personalBoard.viewLeaderCard().peekFirstCard().equals(c1));
+            assertEquals(personalBoard.viewLeaderCard().peekFirstCard(), c1);
         } catch (EmptyDeckException e) {
             fail();
         }
 
-        personalBoard.addLeaderCard(c1);
+        //personalBoard.addLeaderCard(c1);
 
         assertEquals(1,personalBoard.viewLeaderCard().getNumberOfCards());
 
@@ -237,18 +234,20 @@ public class PersonalBoardTest {
      * This test creates two LeaderCards and discard them one by one
      */
     @Test
-    void DiscardLeaderCard() throws EmptyDeckException, MissingCardException {
+    void DiscardLeaderCard() throws EmptyDeckException, MissingCardException, AlreadyInDeckException {
         String ID1="000", ID2="111";
-        List<Resource> sample = new ArrayList<>();
 
         Production p = null;
+        try {
+            p = new NormalProduction(Collections.singletonList(buildStone()), Collections.singletonList(buildStone()));
+        } catch (IllegalTypeInProduction illegalTypeInProduction) {
+            fail();
+        }
 
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
-
-
 
         LeaderCard c1 = new LeaderCard(ID1, new AddProductionEffect(p), 1, req);
         LeaderCard c2 = new LeaderCard(ID2, new AddProductionEffect(p), 2, req);
@@ -269,8 +268,10 @@ public class PersonalBoardTest {
             e2.printStackTrace();
         }
 
-        personalBoard.addLeaderCard(c1);
-        personalBoard.addLeaderCard(c2);
+        assertNotNull(personalBoard);
+        for (LeaderCard leaderCard : Arrays.asList(c1, c2)) {
+            personalBoard.addLeaderCard(leaderCard);
+        }
 
         assertEquals(2,personalBoard.viewLeaderCard().getNumberOfCards());
 
@@ -285,7 +286,7 @@ public class PersonalBoardTest {
             e.printStackTrace();
         }
 
-        // todo togliere i try quando ci sono le leader distribuite
+        // todo remove try when implemented leader cards
         try {
             personalBoard.discardLeaderCard(ID1);
         } catch (MissingCardException e) {
@@ -322,11 +323,10 @@ public class PersonalBoardTest {
             e1.printStackTrace();
         }
 
-        PersonalBoard personalBoard = null;
         try {
-            personalBoard = new PersonalBoard(player);
+            PersonalBoard personalBoard = new PersonalBoard(player);
         } catch (IllegalTypeInProduction e2) {
-           e2.printStackTrace();
+           fail();
         }
 
     }
@@ -335,7 +335,7 @@ public class PersonalBoardTest {
      * This test create a personalBoard and moves the player and Lorenzo on its faith track.
      */
     @Test
-    void FaithTrackMoves() throws EndGameException {
+    void FaithTrackMoves() {
         Resource first = ResourceBuilder.buildFaithPoint(1);
         Resource ten = ResourceBuilder.buildFaithPoint(10);
 
@@ -384,7 +384,7 @@ public class PersonalBoardTest {
     }
 
     @Test
-    public void countsDevCardsPoints() throws IllegalTypeInProduction, PlayerStateException {
+    public void countsDevCardsPoints() throws PlayerStateException {
 
         PersonalBoard board = player1.test_getPB();
         List<Player> orderList = new ArrayList<>();
@@ -433,7 +433,6 @@ public class PersonalBoardTest {
 
     }
 
-    @Test
     @RepeatedTest(10)
     public void countingLeaderPoints() throws EmptyDeckException, MissingCardException, PlayerStateException {
         PersonalBoard board = player1.test_getPB();
@@ -474,7 +473,6 @@ public class PersonalBoardTest {
     }
 
 
-    @Test
     @RepeatedTest(10)
     public void countingTotalPoints() throws EndGameException, EmptyDeckException, MissingCardException {
         Random rand = new Random();
@@ -489,7 +487,7 @@ public class PersonalBoardTest {
         Collections.rotate(orderList, -orderList.indexOf(game.test_getCurrPlayer()));
 
         //Inserting resources into the warehouse
-        player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.MIDDLE, ResourceBuilder.buildStone(2));
+        player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.MIDDLE, buildStone(2));
         player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildCoin(3));
         player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildShield(10));
         player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildServant(5));

@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
-import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
@@ -113,7 +112,7 @@ public class MainActionDonePlayerState extends PlayerState {
      *  @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
-     * @return
+     * @return the succeed of the operation
      */
     @Override
     public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws PlayerStateException {
@@ -160,7 +159,7 @@ public class MainActionDonePlayerState extends PlayerState {
      */
     @Override
     public boolean endThisTurn() throws PlayerStateException {
-        System.out.println(this.context.nickname + ": Turn ended");
+        this.context.personalBoard.flushBufferDepot(this.context.match);
         this.context.setState(new NotHisTurnPlayerState(this.context));
         return this.context.match.endMyTurn();
     }

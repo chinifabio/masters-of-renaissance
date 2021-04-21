@@ -139,7 +139,7 @@ public class NoActionDonePlayerState extends PlayerState {
      *  @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
-     * @return
+     * @return the succeed of the operation
      */
     @Override
     public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException {
@@ -187,6 +187,7 @@ public class NoActionDonePlayerState extends PlayerState {
      */
     @Override
     public boolean endThisTurn() throws PlayerStateException {
+        this.context.personalBoard.flushBufferDepot(this.context.match);
         this.context.setState(new NotHisTurnPlayerState(this.context));
         return this.context.match.endMyTurn();
     }

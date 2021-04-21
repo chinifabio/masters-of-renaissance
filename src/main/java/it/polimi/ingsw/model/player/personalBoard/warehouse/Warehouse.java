@@ -45,17 +45,9 @@ public class Warehouse {
     private final LinkedList<ProductionRecord> movesCache;
 
     /**
-     * This attribute is the Player that use this Warehouse
-     */
-    private final PlayableCardReaction player;
-
-    /**
      * This method is the constructor of the class
      */
-    public Warehouse(PlayableCardReaction player) throws IllegalTypeInProduction {
-
-        this.player = player;
-
+    public Warehouse() throws IllegalTypeInProduction {
         //Initializing Production
         List<Resource> req = new ArrayList<>();
         List<Resource> output = new ArrayList<>();
@@ -115,14 +107,6 @@ public class Warehouse {
             }
         }
         throw new ExtraDepotsException();
-
-        /*for (DepotSlot id : DepotSlot.special()){
-            Depot old = depots.putIfAbsent(id, newDepot);
-            if (old == null) {
-                return true;
-            }
-        }
-        throw new ExtraDepotsException();*/
     }
 
 
@@ -273,14 +257,20 @@ public class Warehouse {
         }
     }
 
-
+    /**
+     * This method set the new production of the develop cards
+     * @param key the id of the production
+     * @param value the new production
+     */
     public void addProduction(ProductionID key, Production value){
-        /*if(this.availableProductions.putIfAbsent(key, value) != null){
-            this.availableProductions.replace(key,value);
-        }*/
         this.availableProductions.put(key, value);
     }
 
+    /**
+     * This method add end extra production in the available production
+     * @param prod the new production
+     * @throws ExtraProductionException error thrown when an error occur during this operation
+     */
     public void addExtraProduction(Production prod) throws ExtraProductionException {
         for (ProductionID id : ProductionID.special()){
             if (availableProductions.get(id) == null) {
@@ -303,6 +293,13 @@ public class Warehouse {
         }
 
         return total/5;
+    }
+
+    /**
+     * This method flush the buffer depot by replacing it whit a new one empty
+     */
+    public void flushBufferDepot() {
+        depots.put(DepotSlot.BUFFER, DepotBuilder.buildStrongBoxDepot());
     }
 
     //maybe only for testing

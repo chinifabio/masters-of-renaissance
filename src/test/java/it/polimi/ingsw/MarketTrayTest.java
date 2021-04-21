@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
+import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
@@ -15,7 +16,10 @@ import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -24,6 +28,43 @@ import java.util.List;
 import java.util.Map;
 
 public class MarketTrayTest {
+
+    Match game = new MultiplayerMatch();
+
+    Player player1 = null;
+    Player player2 = null;
+
+    List<Player> order = new ArrayList<>();
+
+    @BeforeEach
+    public void init() {
+
+        assertDoesNotThrow(()->{
+            player1 = new Player("pino", game);
+            player2 = new Player("gino", game);
+        });
+
+        game.playerJoin(player1);
+        game.playerJoin(player2);
+
+        assertTrue(game.startGame());
+
+        if(player1.canDoStuff()){
+            order.add(player1);
+            order.add(player2);
+        } else {
+            order.add(player2);
+            order.add(player1);
+        }
+
+
+        assertDoesNotThrow(()->order.get(0).test_discardLeader());
+        assertDoesNotThrow(()->order.get(0).test_discardLeader());
+
+        assertDoesNotThrow(()->order.get(1).test_discardLeader());
+        assertDoesNotThrow(()->order.get(1).test_discardLeader());
+
+    }
 
     /**
      * test for each row of the tray if the pushCol works correctly.
@@ -202,40 +243,7 @@ public class MarketTrayTest {
     }
 
     @Test
-    public void outOfBound() throws PlayerStateException {
-        Match game = new MultiplayerMatch();
-        Player player1 = null;
-        Player player2 = null;
-
-        try {
-            player1 = new Player("pino", game);
-            player2 = new Player("gino", game);
-        } catch (IllegalTypeInProduction e) {
-            e.printStackTrace();
-            fail();
-        }
-
-        game.playerJoin(player1);
-        game.playerJoin(player2);
-
-        assertTrue(game.startGame());
-
-        List<Player> order = new ArrayList<>();
-
-        if(player1.canDoStuff()){
-            order.add(player1);
-            order.add(player2);
-        } else {
-            order.add(player2);
-            order.add(player1);
-        }
-
-
-        assertDoesNotThrow(()->order.get(0).test_discardLeader());
-        assertDoesNotThrow(()->order.get(0).test_discardLeader());
-
-        assertDoesNotThrow(()->order.get(1).test_discardLeader());
-        assertDoesNotThrow(()->order.get(1).test_discardLeader());
+    public void outOfBound() {
 
         for (int i = 0; i < 5; i++) {
             // player 1 turn
@@ -275,5 +283,21 @@ public class MarketTrayTest {
             } else fail();
         }
 
+    }
+
+    @Test
+    public void flushBufferTest() {
+        assertDoesNotThrow(()->game.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0));
+
+        List<Resource> list = this.game.test_getCurrPlayer().test_getPB().getWH_forTest().viewResourcesInBuffer();
+        int sum = 0;
+        for(Resource res : list) sum += res.amount();
+
+        assertDoesNotThrow(()->game.test_getCurrPlayer().endThisTurn());
+
+        assertEquals(sum, game.test_getCurrPlayer().test_getPB().getFT_forTest().getPlayerPosition());
+        assertDoesNotThrow(()->game.test_getCurrPlayer().endThisTurn());
+
+        assertEquals(ResourceBuilder.buildListOfStorable(), game.test_getCurrPlayer().test_getPB().getWH_forTest().viewResourcesInBuffer());
     }
 }

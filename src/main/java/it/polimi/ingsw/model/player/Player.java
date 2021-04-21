@@ -4,11 +4,11 @@ import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
+import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.*;
-import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
@@ -370,7 +370,11 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     @Override
     public void addLeader(LeaderCard leaderCard) {
-        this.personalBoard.addLeaderCard(leaderCard);
+        try {
+            this.personalBoard.addLeaderCard(leaderCard);
+        } catch (AlreadyInDeckException e) {
+            // todo error to player handler
+        }
     }
 
     /**

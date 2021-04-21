@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
+import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -34,7 +35,14 @@ public class LeaderSelectionPlayerState extends PlayerState {
      */
     protected LeaderSelectionPlayerState(Player context) {
         super(context);
-        for(LeaderCard ld : this.context.match.requestLeaderCard()) this.context.personalBoard.addLeaderCard(ld);
+        for(LeaderCard ld : this.context.match.requestLeaderCard()) {
+            try {
+                this.context.personalBoard.addLeaderCard(ld);
+            } catch (AlreadyInDeckException e) {
+                e.printStackTrace();
+                // todo error to player handler
+            }
+        }
     }
 
     /**

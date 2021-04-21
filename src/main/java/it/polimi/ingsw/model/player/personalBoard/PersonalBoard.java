@@ -86,7 +86,7 @@ public class PersonalBoard {
         productionSlotMap.put(DevCardSlot.CENTER, ProductionID.CENTER);
         productionSlotMap.put(DevCardSlot.RIGHT, ProductionID.RIGHT);
 
-        this.warehouse = new Warehouse(player);
+        this.warehouse = new Warehouse();
         this.faithTrack = new FaithTrack();
         this.player = player;
     }
@@ -156,12 +156,8 @@ public class PersonalBoard {
      * This method add the LeaderCard in the Player's PersonalBoard
      * @param card is the LeaderCard that the Player has chosen
      */
-    public void addLeaderCard(LeaderCard card){
-        try {
-            this.leaderDeck.insertCard(card);
-        } catch (AlreadyInDeckException e) {
-            // todo sistemare l'eccezione
-        }
+    public void addLeaderCard(LeaderCard card) throws AlreadyInDeckException {
+        this.leaderDeck.insertCard(card);
     }
 
     /**
@@ -209,7 +205,7 @@ public class PersonalBoard {
 
     /**
      * return all the available production
-     * @return list of produciton
+     * @return list of production
      */
     public List<Production> possibleProduction() {
         List<Production> temp = new ArrayList<>();
@@ -217,14 +213,6 @@ public class PersonalBoard {
             temp.add(this.availableProductions.get(productionID));
         }
         return temp;
-    }
-
-    /**
-     * This method select the production that the Player wants to activate
-     * @param productionID is the identifier of the Production that will be activated
-     */
-    public void selectProduction(ProductionID productionID){
-
     }
 
     /**
@@ -245,16 +233,6 @@ public class PersonalBoard {
         return this.warehouse.setNormalProduction(id, normalProduction);
     }
 
-    /**
-     * store the resource in the buffer depot, then it will be the player to move
-     * from buffer depot to a legal one
-     * @param resource the resource obtained
-     */
-    public void obtainResourcePBoard(Resource resource) {
-        this.warehouse.insertInDepot(DepotSlot.BUFFER, resource);
-    }
-
-
     //TODO not sure if needed.
     /**
      * return all the resources that the player has. It doesn't matter the depot in which they are stored
@@ -269,28 +247,11 @@ public class PersonalBoard {
                     temp.add(this.warehouse.viewResourcesInDepot(depotSlot));
                 }
                 catch (NullPointerException e){
-                    System.out.println("Il depot " + depotSlot + " non esiste.");
+                    System.out.println("Il depot " + depotSlot + " doesn't exist");
                 }
             }
         }
         return temp;
-    }
-
-    /**
-     * return the resources that the player has in the specified depot
-     * @return list of resources
-     */
-    //todo da eliminare
-    // anche se secondo me serve per i test
-    public List<Resource> askResource(DepotSlot depotSlot) {
-        if(depotSlot == DepotSlot.STRONGBOX){
-            return this.warehouse.viewResourcesInStrongbox();
-        }
-        else{
-            List<Resource> temp = new ArrayList<>();
-            temp.add(warehouse.viewResourcesInDepot(depotSlot));
-            return temp;
-        }
     }
 
     /**
@@ -316,7 +277,7 @@ public class PersonalBoard {
     /**
      * tells to the faith track to move amount times the player marker.
      * @param amount the amount to move.
-     * @return true if the move is allowed, false otherwhise.
+     * @return true if the move is allowed, else false.
      */
     public boolean moveFaithMarker(int amount, PlayerToMatch pm) {
         try {
@@ -349,6 +310,21 @@ public class PersonalBoard {
      * @param resource the resource obtained
      */
     public void obtainResource(Resource resource) {
+        this.warehouse.insertInDepot(DepotSlot.BUFFER, resource);
+    }
+
+    /**
+     * discard all the resources in the buffer depot and for all of them give faith point at
+     * all other players
+     */
+    public void flushBufferDepot(PlayerToMatch p2m) {
+        List<Resource> list = this.warehouse.viewResourcesInBuffer();
+        int fp = 0;
+        for (Resource resource : list) {
+            fp += resource.amount();
+        }
+        p2m.othersPlayersObtainFaithPoint(fp);
+        this.warehouse.flushBufferDepot();
     }
 
     /**
@@ -419,5 +395,4 @@ public class PersonalBoard {
     public Map<ProductionID, Production> test_getProduction() {
         return this.warehouse.test_getProduction();
     }
-
 }
