@@ -171,11 +171,11 @@ public class PersonalBoard {
     /**
      * This method activates the SpecialAbility of the LeaderCard after checking if the Player has the requisite to
      * activate the LeaderCard.
-     *
      * @param selected is the LeaderCard to activate
-     * @return true if the Leadercard has been activated
-     * @throws MissingCardException
-     * @throws EmptyDeckException
+     * @return true if the LeaderCard has been activated
+     * @throws MissingCardException if the card to activate isn't in the Deck of LeaderCard
+     * @throws EmptyDeckException if the Deck is empty
+     * @throws LootTypeException if a ResourceRequisite is compared to a CardRequisite
      */
     public boolean activateLeaderCard(String selected) throws MissingCardException, EmptyDeckException, LootTypeException {    //TODO implementation - effect
         LeaderCard card = this.leaderDeck.peekCard(selected);

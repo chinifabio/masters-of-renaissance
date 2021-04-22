@@ -1,6 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
+import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 
@@ -34,6 +35,20 @@ public class TextColors {
         colors.put(ColorDevCard.PURPLE, PURPLE);
         return colors.get(devCard) + devCard.name() + RESET;
     }
+
+
+    public static String colorMarbleType(MarbleColor marbleColor) {
+        Map<MarbleColor, String> colors = new EnumMap<>(MarbleColor.class);
+        colors.put(MarbleColor.BLUE, BLUE_BRIGHT);
+        colors.put(MarbleColor.PURPLE, PURPLE_BRIGHT);
+        colors.put(MarbleColor.RED, RED_BRIGHT);
+        colors.put(MarbleColor.WHITE, WHITE_BRIGHT);
+        colors.put(MarbleColor.YELLOW, YELLOW_BRIGHT);
+        colors.put(MarbleColor.GRAY, WHITE_BOLD);
+
+        return colors.get(marbleColor) + marbleColor.name() + RESET;
+    }
+
     // Reset
     public static final String RESET = "\033[0m";  // Text Reset
 
@@ -106,4 +121,5 @@ public class TextColors {
     public static final String PURPLE_BACKGROUND_BRIGHT = "\033[0;105m"; // PURPLE
     public static final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m";  // CYAN
     public static final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m";   // WHITE
+
 }

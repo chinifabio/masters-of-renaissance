@@ -290,28 +290,20 @@ public class PersonalBoardTest {
         try {
             personalBoard.viewLeaderCard().peekCard(ID1);
             fail();
-        } catch (MissingCardException e) {
-            e.printStackTrace();
-        }
+        } catch (MissingCardException ignored) { }
 
         // todo remove try when implemented leader cards
         try {
             personalBoard.discardLeaderCard(ID1);
-        } catch (MissingCardException e) {
-            e.printStackTrace();
-        }
+        } catch (MissingCardException ignored) { }
         try {
             personalBoard.discardLeaderCard(ID2);
-        } catch (MissingCardException e) {
-            e.printStackTrace();
-        }
+        } catch (MissingCardException ignored) { }
 
         try {
             personalBoard.viewLeaderCard().peekCard(ID1);
             fail();
-        } catch (MissingCardException e) {
-            e.printStackTrace();
-        }
+        } catch (MissingCardException ignored) { }
 
         assertEquals(0,personalBoard.viewLeaderCard().getNumberOfCards());
 
