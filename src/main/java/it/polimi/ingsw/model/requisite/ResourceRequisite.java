@@ -72,8 +72,8 @@ public class ResourceRequisite implements Requisite {
     @Override
     public String toString() {
         return "ResourceReq{" +
-                ", type=" + getType() +
-                ", amount=" + getAmount() +
+                ", type =" + getType() +
+                ", amount =" + getAmount() +
                 '}';
     }
 

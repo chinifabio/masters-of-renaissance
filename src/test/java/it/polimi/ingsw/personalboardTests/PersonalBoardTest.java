@@ -26,6 +26,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.requisite.CardRequisite;
+import it.polimi.ingsw.model.requisite.ColorCardRequisite;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
@@ -444,7 +445,7 @@ public class PersonalBoardTest {
         orderList.add(player1);
         orderList.add(player2);
         Collections.rotate(orderList, -orderList.indexOf(game.test_getCurrPlayer()));
-        Requisite cardReq1 = new CardRequisite(LevelDevCard.LEVEL1, ColorDevCard.GREEN, 2);
+        Requisite cardReq1 = new ColorCardRequisite(ColorDevCard.GREEN, 3);
         Requisite cardReq2 = new CardRequisite(LevelDevCard.LEVEL1, ColorDevCard.YELLOW, 1);
         Requisite cardReq3 = new CardRequisite(LevelDevCard.LEVEL2, ColorDevCard.BLUE, 1);
 
@@ -465,11 +466,14 @@ public class PersonalBoardTest {
         DevCard devCard2 = new DevCard("DC2", null, 1, LevelDevCard.LEVEL1, ColorDevCard.GREEN,null);
         DevCard devCard3 = new DevCard("DC3", null, 1, LevelDevCard.LEVEL1, ColorDevCard.YELLOW,null);
         DevCard devCard4 = new DevCard("DC4", null, 1, LevelDevCard.LEVEL2, ColorDevCard.BLUE,null);
+        DevCard devCard5 = new DevCard("DC5", null, 1, LevelDevCard.LEVEL2, ColorDevCard.GREEN,null);
 
         board.addDevCard(DevCardSlot.LEFT, devCard1, game);
         board.addDevCard(DevCardSlot.CENTER, devCard2, game);
         board.addDevCard(DevCardSlot.RIGHT, devCard3, game);
         board.addDevCard(DevCardSlot.LEFT, devCard4, game);
+        board.addDevCard(DevCardSlot.CENTER, devCard5, game);
+
 
         List<Requisite> requisites1 = new ArrayList<>();
         List<Requisite> requisites2 = new ArrayList<>();
@@ -509,7 +513,7 @@ public class PersonalBoardTest {
     }
 
 
-    @RepeatedTest(10)
+    @RepeatedTest(15)
     public void countingTotalPoints() throws EndGameException, EmptyDeckException, MissingCardException, LootTypeException {
         Random rand = new Random();
         int max = 24;

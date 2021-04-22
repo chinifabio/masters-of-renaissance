@@ -18,7 +18,8 @@ import it.polimi.ingsw.model.resource.ResourceType;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonSubTypes({
         @JsonSubTypes.Type(name = "ResourceReq", value = ResourceRequisite.class),
-        @JsonSubTypes.Type(name = "CardReq", value = CardRequisite.class)
+        @JsonSubTypes.Type(name = "CardReq", value = CardRequisite.class),
+        @JsonSubTypes.Type(name = "ColorCardReq", value = ColorCardRequisite.class)
 })
 public interface Requisite {
 

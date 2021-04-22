@@ -9,14 +9,12 @@
     "victoryPoint": 2,
     "requirements": [
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "YELLOW",
         "amount": 1
       },
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "GREEN",
         "amount": 1
       }
@@ -33,14 +31,12 @@
     "victoryPoint": 2,
     "requirements": [
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "BLUE",
         "amount": 1
       },
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "PURPLE",
         "amount": 1
       }
@@ -57,14 +53,12 @@
     "victoryPoint": 2,
     "requirements": [
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "GREEN",
         "amount": 1
       },
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "BLUE",
         "amount": 1
       }
@@ -81,14 +75,12 @@
     "victoryPoint": 2,
     "requirements": [
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "YELLOW",
         "amount": 1
       },
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "PURPLE",
         "amount": 1
       }
@@ -201,14 +193,12 @@
     "victoryPoint": 5,
     "requirements": [
       {
-      "type": "CardReq",
-      "level": "LEVEL1",
+        "type": "ColorCardReq",
       "color": "YELLOW",
         "amount": 2
       },
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "BLUE",
         "amount": 1
       }
@@ -229,14 +219,12 @@
     "victoryPoint": 5,
     "requirements": [
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "GREEN",
         "amount": 2
       },
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "PURPLE"
       }
     ],
@@ -256,14 +244,12 @@
     "victoryPoint": 5,
     "requirements": [
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "BLUE",
         "amount": 2
       },
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "YELLOW",
         "amount": 1
       }
@@ -284,14 +270,12 @@
     "victoryPoint": 5,
     "requirements": [
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "PURPLE",
         "amount": 2
       },
       {
-        "type": "CardReq",
-        "level": "LEVEL1",
+        "type": "ColorCardReq",
         "color": "GREEN",
         "amount": 1
       }

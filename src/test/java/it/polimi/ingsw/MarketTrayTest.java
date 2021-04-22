@@ -201,6 +201,7 @@ public class MarketTrayTest {
 
         for (Marble marble : marbles) {
             if (map.containsKey(marble.toResource().type())) {
+                System.out.println(marble);
                 int j = map.get(marble.toResource().type());
                 map.put(marble.toResource().type(), ++j);
             } else {

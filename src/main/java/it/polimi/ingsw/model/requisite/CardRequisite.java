@@ -27,10 +27,6 @@ public class CardRequisite implements Requisite {
      */
     private int amount;
 
-    /**
-     * exception thrown in case someone calls getType() method
-     */
-    private Exception LootTypeException;
 
     /**
      * constructor that need the level, color
@@ -59,7 +55,7 @@ public class CardRequisite implements Requisite {
      */
     @Override
     public LevelDevCard getLevel() {
-        return level;
+        return this.level;
     }
 
     /**
@@ -68,7 +64,7 @@ public class CardRequisite implements Requisite {
      */
     @Override
     public ColorDevCard getColor() {
-        return color;
+        return this.color;
     }
 
     /**
@@ -84,8 +80,9 @@ public class CardRequisite implements Requisite {
     @Override
     public String toString() {
         return "CardReq{" +
-                ", lev=" + level +
-                ", color=" + color +
+                ", lev =" + getLevel() +
+                ", color =" + getColor() +
+                ", amount = " + getAmount() +
                 '}';
     }
 

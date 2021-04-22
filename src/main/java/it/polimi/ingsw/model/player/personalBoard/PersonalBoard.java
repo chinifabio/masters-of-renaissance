@@ -186,15 +186,25 @@ public class PersonalBoard {
                     if (resource.equalsType(req) && resource.amount() < req.getAmount()) return false;
                 }
             } else if (req.getRequisiteType() == RequisiteType.CARD) {
-                int pbAmount = 0;
+                int pbAmountCard = 0;
                 for (Map.Entry<DevCardSlot, Deck<DevCard>> entry : devDeck.entrySet()) {
                     for (DevCard devCard : entry.getValue().getCards()) {
                         if (devCard.getColor().equals(req.getColor()) && devCard.getLevel().equals(req.getLevel())) {
-                            pbAmount++;
+                            pbAmountCard++;
                         }
                     }
                 }
-                if (pbAmount < req.getAmount()) return false;
+                if (pbAmountCard < req.getAmount()) return false;
+            } else if (req.getRequisiteType() == RequisiteType.COLOR){
+                int pbAmountColor = 0;
+                for (Map.Entry<DevCardSlot, Deck<DevCard>> entry : devDeck.entrySet()) {
+                    for (DevCard devCard : entry.getValue().getCards()) {
+                        if (devCard.getColor().equals(req.getColor())) {
+                            pbAmountColor++;
+                        }
+                    }
+                }
+                if (pbAmountColor < req.getAmount()) return false;
             }
         }
 
