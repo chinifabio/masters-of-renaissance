@@ -172,15 +172,6 @@ public class Deck<T extends Card>{
         return this.numberOfCards;
     }
 
-    @Override
-    public String toString() {
-        return "Deck{\n" +
-                "numberOfCards=" + numberOfCards +
-                ",\n cards=" + cards +
-                ",\n discardedCards=" + discardedCards +
-                '}';
-    }
-
     /**
      * This method returns the list of cards contained in the deck
      * @return list of cards

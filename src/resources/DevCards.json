@@ -1,5 +1,6 @@
 [
-  {
+  [
+    {
     "type": "Dev",
     "cardID" : "DC1",
     "effect": {
@@ -20,8 +21,7 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint",
-              "amount": 1
+              "type": "GivePoint"
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -30,6 +30,197 @@
       }
     },
     "victoryPoint": 1,
+    "level": "LEVEL1",
+    "color": "GREEN",
+    "cost": [
+      {
+        "type": "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 2
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC5",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 2,
+    "level": "LEVEL1",
+    "color": "GREEN",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 1
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 1
+        }
+      },
+      {
+        "type": "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 1
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC9",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 2
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 3,
+    "level": "LEVEL1",
+    "color": "GREEN",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 3
+        }}
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC13",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 2
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 4,
     "level": "LEVEL1",
     "color": "GREEN",
     "cost": [
@@ -43,12 +234,778 @@
           "type": "SHIELD",
           "amount": 2
         }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 2
+        }
+      }
+    ]
+  }
+  ],
+  [
+    {
+      "type": "Dev",
+      "cardID" : "DC2",
+      "effect": {
+        "type": "AddProduction",
+        "prod": {
+          "type": "NormalProd",
+          "required": [
+            {
+              "storable": true,
+              "strategy": {
+                "type": "DoNothing"
+              },
+              "type": "STONE",
+              "amount": 1
+            }
+          ],
+          "output": [
+            {
+              "storable": false,
+              "strategy": {
+                "type": "GivePoint"
+              },
+              "type": "FAITHPOINT",
+              "amount": 1
+            }
+          ]
+        }
+      },
+      "victoryPoint": 1,
+      "level": "LEVEL1",
+      "color": "PURPLE",
+      "cost": [
+        {
+          "type": "ResourceReq",
+          "resource": {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 2
+          }
+        }
+      ]
+    },
+    {
+    "type": "Dev",
+    "cardID" : "DC6",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 2,
+    "level": "LEVEL1",
+    "color": "PURPLE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 1
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 1
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 1
+        }
       }
     ]
   },
-  {
+    {
     "type": "Dev",
-    "cardID" : "DC2",
+    "cardID" : "DC10",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 2
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 3,
+    "level": "LEVEL1",
+    "color": "PURPLE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 3
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC14",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 2
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 4,
+    "level": "LEVEL1",
+    "color": "PURPLE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 2
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 2
+        }
+      }
+    ]
+  }
+  ],
+  [
+    {
+      "type": "Dev",
+      "cardID" : "DC3",
+      "effect": {
+        "type": "AddProduction",
+        "prod": {
+          "type": "NormalProd",
+          "required": [
+            {
+              "storable": true,
+              "strategy": {
+                "type": "DoNothing"
+              },
+              "type": "SHIELD",
+              "amount": 1
+            }
+          ],
+          "output": [
+            {
+              "storable": false,
+              "strategy": {
+                "type": "GivePoint"
+              },
+              "type": "FAITHPOINT",
+              "amount": 1
+            }
+          ]
+        }
+      },
+      "victoryPoint": 1,
+      "level": "LEVEL1",
+      "color": "BLUE",
+      "cost": [
+        {
+          "type" : "ResourceReq",
+          "resource": {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 2
+          }
+        }
+      ]
+    },
+    {
+    "type": "Dev",
+    "cardID" : "DC7",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 2,
+    "level": "LEVEL1",
+    "color": "BLUE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 1
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 1
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 1
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC11",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 2
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 3,
+    "level": "LEVEL1",
+    "color": "BLUE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 3
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC15",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 2
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 4,
+    "level": "LEVEL1",
+    "color": "BLUE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 2
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 2
+        }
+      }
+    ]
+  }
+  ],
+  [
+    {
+      "type": "Dev",
+      "cardID" : "DC4",
+      "effect": {
+        "type": "AddProduction",
+        "prod": {
+          "type": "NormalProd",
+          "required": [
+            {
+              "storable": true,
+              "strategy": {
+                "type": "DoNothing"
+              },
+              "type": "SERVANT",
+              "amount": 1
+            }
+          ],
+          "output": [
+            {
+              "storable": false,
+              "strategy": {
+                "type": "GivePoint"
+              },
+              "type": "FAITHPOINT",
+              "amount": 1
+            }
+          ]
+        }
+      },
+      "victoryPoint": 1,
+      "level": "LEVEL1",
+      "color": "YELLOW",
+      "cost": [
+        {
+          "type" : "ResourceReq",
+          "resource": {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 2
+          }
+        }
+      ]
+    },
+    {
+    "type": "Dev",
+    "cardID" : "DC8",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 2,
+    "level": "LEVEL1",
+    "color": "YELLOW",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 1
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 1
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 1
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC12",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 2
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 3,
+    "level": "LEVEL1",
+    "color": "YELLOW",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 3
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC16",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 2
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 4,
+    "level": "LEVEL1",
+    "color": "YELLOW",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 2
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 2
+        }
+      }
+    ]
+  }
+  ],
+  [
+    {
+    "type": "Dev",
+    "cardID" : "DC17",
     "effect": {
       "type": "AddProduction",
       "prod": {
@@ -67,19 +1024,83 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint",
-              "amount": 1
+              "type": "GivePoint"
             },
             "type": "FAITHPOINT",
-            "amount": 1
+            "amount": 2
           }
         ]
       }
     },
-    "victoryPoint": 1,
-    "level": "LEVEL1",
-    "color": "PURPLE",
+    "victoryPoint": 5,
+    "level": "LEVEL2",
+    "color": "GREEN",
     "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+        "storable": true,
+        "strategy": {
+          "type": "DoNothing"
+        },
+        "type": "SHIELD",
+        "amount": 4
+      }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC21",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 3
+          }
+        ]
+      }
+    },
+    "victoryPoint": 6,
+    "level": "LEVEL2",
+    "color": "GREEN",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 3
+        }
+      },
       {
         "type" : "ResourceReq",
         "resource": {
@@ -93,9 +1114,9 @@
       }
     ]
   },
-  {
+    {
     "type": "Dev",
-    "cardID" : "DC3",
+    "cardID" : "DC25",
     "effect": {
       "type": "AddProduction",
       "prod": {
@@ -106,16 +1127,77 @@
             "strategy": {
               "type": "DoNothing"
             },
-            "type": "SHIELD",
+            "type": "COIN",
+            "amount": 2
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 2
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 2
+          }
+        ]
+      }
+    },
+    "victoryPoint": 7,
+    "level": "LEVEL2",
+    "color": "GREEN",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 5
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC29",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
             "amount": 1
           }
         ],
         "output": [
           {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 2
+          },
+          {
             "storable": false,
             "strategy": {
-              "type": "GivePoint",
-              "amount": 1
+              "type": "GivePoint"
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -123,10 +1205,134 @@
         ]
       }
     },
-    "victoryPoint": 1,
-    "level": "LEVEL1",
-    "color": "BLUE",
+    "victoryPoint": 8,
+    "level": "LEVEL2",
+    "color": "GREEN",
     "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 3
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 3
+        }
+      }
+    ]
+  }
+  ],
+  [
+    {
+      "type": "Dev",
+      "cardID" : "DC18",
+      "effect": {
+        "type": "AddProduction",
+        "prod": {
+          "type": "NormalProd",
+          "required": [
+            {
+              "storable": true,
+              "strategy": {
+                "type": "DoNothing"
+              },
+              "type": "COIN",
+              "amount": 1
+            }
+          ],
+          "output": [
+            {
+              "storable": false,
+              "strategy": {
+                "type": "GivePoint"
+              },
+              "type": "FAITHPOINT",
+              "amount": 2
+            }
+          ]
+        }
+      },
+      "victoryPoint": 5,
+      "level": "LEVEL2",
+      "color": "PURPLE",
+      "cost": [
+        {
+          "type" : "ResourceReq",
+          "resource": {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 4
+          }
+        }
+      ]
+    },
+    {
+    "type": "Dev",
+    "cardID" : "DC22",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 3
+          }
+        ]
+      }
+    },
+    "victoryPoint": 6,
+    "level": "LEVEL2",
+    "color": "PURPLE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 3
+        }
+      },
       {
         "type" : "ResourceReq",
         "resource": {
@@ -140,9 +1346,295 @@
       }
     ]
   },
-  {
+    {
     "type": "Dev",
-    "cardID" : "DC4",
+    "cardID" : "DC26",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 2
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 2
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 2
+          }
+        ]
+      }
+    },
+    "victoryPoint": 7,
+    "level": "LEVEL2",
+    "color": "PURPLE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 5
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC30",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 2
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 8,
+    "level": "LEVEL2",
+    "color": "PURPLE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 3
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 3
+        }
+      }
+    ]
+  }
+  ],
+  [
+    {
+      "type": "Dev",
+      "cardID" : "DC19",
+      "effect": {
+        "type": "AddProduction",
+        "prod": {
+          "type": "NormalProd",
+          "required": [
+            {
+              "storable": true,
+              "strategy": {
+                "type": "DoNothing"
+              },
+              "type": "SERVANT",
+              "amount": 1
+            }
+          ],
+          "output": [
+            {
+              "storable": false,
+              "strategy": {
+                "type": "GivePoint"
+              },
+              "type": "FAITHPOINT",
+              "amount": 2
+            }
+          ]
+        }
+      },
+      "victoryPoint": 5,
+      "level": "LEVEL2",
+      "color": "BLUE",
+      "cost": [
+        {
+          "type" : "ResourceReq",
+          "resource": {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 4
+          }
+        }
+      ]
+    },
+    {
+    "type": "Dev",
+    "cardID" : "DC23",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 3
+          }
+        ]
+      }
+    },
+    "victoryPoint": 6,
+    "level": "LEVEL2",
+    "color": "BLUE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 3
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 2
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC27",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 2
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 2
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 2
+          }
+        ]
+      }
+    },
+    "victoryPoint": 7,
+    "level": "LEVEL2",
+    "color": "BLUE",
+    "cost": [
+      {
+        "type": "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 5
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC31",
     "effect": {
       "type": "AddProduction",
       "prod": {
@@ -159,10 +1651,17 @@
         ],
         "output": [
           {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 2
+          },
+          {
             "storable": false,
             "strategy": {
-              "type": "GivePoint",
-              "amount": 1
+              "type": "GivePoint"
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -170,10 +1669,902 @@
         ]
       }
     },
-    "victoryPoint": 1,
-    "level": "LEVEL1",
+    "victoryPoint": 8,
+    "level": "LEVEL2",
+    "color": "BLUE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 3
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 3
+        }
+      }
+    ]
+  }
+  ],
+  [
+    {
+      "type": "Dev",
+      "cardID" : "DC20",
+      "effect": {
+        "type": "AddProduction",
+        "prod": {
+          "type": "NormalProd",
+          "required": [
+            {
+              "storable": true,
+              "strategy": {
+                "type": "DoNothing"
+              },
+              "type": "SHIELD",
+              "amount": 1
+            }
+          ],
+          "output": [
+            {
+              "storable": false,
+              "strategy": {
+                "type": "GivePoint"
+              },
+              "type": "FAITHPOINT",
+              "amount": 2
+            }
+          ]
+        }
+      },
+      "victoryPoint": 5,
+      "level": "LEVEL2",
+      "color": "YELLOW",
+      "cost": [
+        {
+          "type" : "ResourceReq",
+          "resource": {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 4
+          }
+        }
+      ]
+    },
+    {
+    "type": "Dev",
+    "cardID" : "DC24",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 3
+          }
+        ]
+      }
+    },
+    "victoryPoint": 6,
+    "level": "LEVEL2",
     "color": "YELLOW",
     "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 3
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 2
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC28",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 2
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 2
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 2
+          }
+        ]
+      }
+    },
+    "victoryPoint": 7,
+    "level": "LEVEL2",
+    "color": "YELLOW",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 5
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC32",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 2
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 8,
+    "level": "LEVEL2",
+    "color": "YELLOW",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 3
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 3
+        }
+      }
+    ]
+  }
+  ],
+  [
+    {
+    "type": "Dev",
+    "cardID" : "DC33",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 2
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 3
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 2
+          }
+        ]
+      }
+    },
+    "victoryPoint": 9,
+    "level": "LEVEL3",
+    "color": "GREEN",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+        "storable": true,
+        "strategy": {
+          "type": "DoNothing"
+        },
+        "type": "SHIELD",
+        "amount": 6
+      }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC37",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 2
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 2
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 10,
+    "level": "LEVEL3",
+    "color": "GREEN",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 5
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 2
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC41",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 3
+          }
+        ]
+      }
+    },
+    "victoryPoint": 11,
+    "level": "LEVEL3",
+    "color": "GREEN",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 7
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC45",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "COIN",
+            "amount": 3
+          }
+        ]
+      }
+    },
+    "victoryPoint": 12,
+    "level": "LEVEL3",
+    "color": "GREEN",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 4
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 4
+        }
+      }
+    ]
+  }
+  ],
+  [
+    {
+      "type": "Dev",
+      "cardID" : "DC34",
+      "effect": {
+        "type": "AddProduction",
+        "prod": {
+          "type": "NormalProd",
+          "required": [
+            {
+              "storable": true,
+              "strategy": {
+                "type": "DoNothing"
+              },
+              "type": "STONE",
+              "amount": 2
+            }
+          ],
+          "output": [
+            {
+              "storable": true,
+              "strategy": {
+                "type": "DoNothing"
+              },
+              "type": "COIN",
+              "amount": 3
+            },
+            {
+              "storable": false,
+              "strategy": {
+                "type": "GivePoint"
+              },
+              "type": "FAITHPOINT",
+              "amount": 2
+            }
+          ]
+        }
+      },
+      "victoryPoint": 9,
+      "level": "LEVEL3",
+      "color": "PURPLE",
+      "cost": [
+        {
+          "type" : "ResourceReq",
+          "resource": {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 6
+          }
+        }
+      ]
+    },
+    {
+    "type": "Dev",
+    "cardID" : "DC38",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 2
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 2
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 10,
+    "level": "LEVEL3",
+    "color": "PURPLE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 5
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 2
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC42",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 3
+          }
+        ]
+      }
+    },
+    "victoryPoint": 11,
+    "level": "LEVEL3",
+    "color": "PURPLE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 7
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC46",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 3
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 12,
+    "level": "LEVEL3",
+    "color": "PURPLE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SHIELD",
+          "amount": 4
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 4
+        }
+      }
+    ]
+  }
+  ],
+  [
+    {
+      "type": "Dev",
+      "cardID" : "DC35",
+      "effect": {
+        "type": "AddProduction",
+        "prod": {
+          "type": "NormalProd",
+          "required": [
+            {
+              "storable": true,
+              "strategy": {
+                "type": "DoNothing"
+              },
+              "type": "SERVANT",
+              "amount": 2
+            }
+          ],
+          "output": [
+            {
+              "storable": true,
+              "strategy": {
+                "type": "DoNothing"
+              },
+              "type": "SHIELD",
+              "amount": 3
+            },
+            {
+              "storable": false,
+              "strategy": {
+                "type": "GivePoint"
+              },
+              "type": "FAITHPOINT",
+              "amount": 2
+            }
+          ]
+        }
+      },
+      "victoryPoint": 9,
+      "level": "LEVEL3",
+      "color": "BLUE",
+      "cost": [
+        {
+          "type" : "ResourceReq",
+          "resource": {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 6
+          }
+        }
+      ]
+    },
+    {
+    "type": "Dev",
+    "cardID" : "DC39",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 2
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 2
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 10,
+    "level": "LEVEL3",
+    "color": "BLUE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 5
+        }
+      },
       {
         "type" : "ResourceReq",
         "resource": {
@@ -186,5 +2577,381 @@
         }
       }
     ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC43",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 3
+          }
+        ]
+      }
+    },
+    "victoryPoint": 11,
+    "level": "LEVEL3",
+    "color": "BLUE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 7
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC47",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 3
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 12,
+    "level": "LEVEL3",
+    "color": "BLUE",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "COIN",
+          "amount": 4
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 4
+        }
+      }
+    ]
   }
+  ],
+  [
+    {
+      "type": "Dev",
+      "cardID" : "DC36",
+      "effect": {
+        "type": "AddProduction",
+        "prod": {
+          "type": "NormalProd",
+          "required": [
+            {
+              "storable": true,
+              "strategy": {
+                "type": "DoNothing"
+              },
+              "type": "SHIELD",
+              "amount": 2
+            }
+          ],
+          "output": [
+            {
+              "storable": true,
+              "strategy": {
+                "type": "DoNothing"
+              },
+              "type": "SERVANT",
+              "amount": 3
+            },
+            {
+              "storable": false,
+              "strategy": {
+                "type": "GivePoint"
+              },
+              "type": "FAITHPOINT",
+              "amount": 2
+            }
+          ]
+        }
+      },
+      "victoryPoint": 9,
+      "level": "LEVEL3",
+      "color": "YELLOW",
+      "cost": [
+        {
+          "type" : "ResourceReq",
+          "resource": {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 6
+          }
+        }
+      ]
+    },
+    {
+    "type": "Dev",
+    "cardID" : "DC40",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "COIN",
+            "amount": 2
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 2
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 1
+          }
+        ]
+      }
+    },
+    "victoryPoint": 10,
+    "level": "LEVEL3",
+    "color": "YELLOW",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 5
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 2
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC44",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 1
+          },
+          {
+            "storable": false,
+            "strategy": {
+              "type": "GivePoint"
+            },
+            "type": "FAITHPOINT",
+            "amount": 3
+          }
+        ]
+      }
+    },
+    "victoryPoint": 11,
+    "level": "LEVEL3",
+    "color": "YELLOW",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 7
+        }
+      }
+    ]
+  },
+    {
+    "type": "Dev",
+    "cardID" : "DC48",
+    "effect": {
+      "type": "AddProduction",
+      "prod": {
+        "type": "NormalProd",
+        "required": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SHIELD",
+            "amount": 1
+          }
+        ],
+        "output": [
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "STONE",
+            "amount": 1
+          },
+          {
+            "storable": true,
+            "strategy": {
+              "type": "DoNothing"
+            },
+            "type": "SERVANT",
+            "amount": 3
+          }
+        ]
+      }
+    },
+    "victoryPoint": 12,
+    "level": "LEVEL3",
+    "color": "YELLOW",
+    "cost": [
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "STONE",
+          "amount": 4
+        }
+      },
+      {
+        "type" : "ResourceReq",
+        "resource": {
+          "storable": true,
+          "strategy": {
+            "type": "DoNothing"
+          },
+          "type": "SERVANT",
+          "amount": 4
+        }
+      }
+    ]
+  }
+  ]
 ]

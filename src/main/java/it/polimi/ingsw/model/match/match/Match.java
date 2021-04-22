@@ -84,8 +84,6 @@ public abstract class Match implements PlayerToMatch {
 
         this.marketTray = new MarketTray();
 
-        this.devSetup = new DevSetup();
-
         List<LeaderCard> init = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -95,8 +93,12 @@ public abstract class Match implements PlayerToMatch {
         }catch (IOException e) {
             e.printStackTrace();
         }
+
         this.leaderCardDeck = new Deck<>(init);
         this.leaderCardDeck.shuffle();
+
+        this.devSetup = new DevSetup();
+
     }
 
     /**
@@ -182,9 +184,11 @@ public abstract class Match implements PlayerToMatch {
         for(ColorDevCard colorDevCard : ColorDevCard.values()){
             for(LevelDevCard levelDevCard : LevelDevCard.values()){
                 try {
-                    temp.add(this.devSetup.showDevDeck(levelDevCard,colorDevCard));
+                    temp.add(this.devSetup.showDevDeck(levelDevCard, colorDevCard));
+                } catch (IndexOutOfBoundsException e) {
+                    System.out.println("Non trovo il deck " + colorDevCard + " " + levelDevCard);
                 } catch (EmptyDeckException e) {
-                    // if there is no card skip to next deck
+                // if there is no card skip to next deck
                 }
             }
         }
@@ -209,6 +213,7 @@ public abstract class Match implements PlayerToMatch {
                 // todo exception to model
             }
         }
+
         return false;
     }
 

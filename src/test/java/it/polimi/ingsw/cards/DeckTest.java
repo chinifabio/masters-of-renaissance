@@ -36,7 +36,6 @@ public class DeckTest {
     @Test
     void cardIDCheck(){
         String ID = "105", ID1 = "120",ID2 = "145";
-        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> requisite = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -59,7 +58,6 @@ public class DeckTest {
     @Test
     void victoryPointDevCard(){
         int n = 7;
-        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -98,7 +96,6 @@ public class DeckTest {
     @Test
     void victoryPointLeaderCard(){
         int n = 12;
-        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -115,7 +112,6 @@ public class DeckTest {
      */
     @Test
     void activatedLeaderCard(){
-        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -132,12 +128,36 @@ public class DeckTest {
     }
 
     /**
+     * This test creates two cards and checks their requirements.
+     */
+    @Test
+    void CardCost(){
+        Production p = null;
+        List<Requisite> req1 = new ArrayList<>();
+        List<Requisite> req2 = new ArrayList<>();
+        Resource twoCoin = ResourceBuilder.buildCoin(2);
+        Resource oneCoin = ResourceBuilder.buildCoin(1);
+        ResourceRequisite rr1 = new ResourceRequisite(oneCoin);
+        ResourceRequisite rr2 = new ResourceRequisite(twoCoin);
+        req1.add(rr1);
+        req2.add(rr2);
+
+        LeaderCard c1 = new LeaderCard("010", new AddProductionEffect(p), 6, req1);
+        DevCard c2 = new DevCard("000", new AddProductionEffect(p),10, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req2);
+
+        assertEquals(req1,c1.getCost());
+        assertNotEquals(req2,c1.getCost());
+
+        assertEquals(req2,c2.getCost());
+        assertNotEquals(req1,c2.getCost());
+    }
+
+    /**
      * This test creates an empty deck and adds one card to it. It checks if the number of card is correct before and after adding the card.
      */
     @Test
     void insertCard() {
         Deck<DevCard> d = new Deck<>();
-        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -169,7 +189,6 @@ public class DeckTest {
     @Test
     void addListOfCards(){
         int n=2;
-        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -201,7 +220,6 @@ public class DeckTest {
     @Test
     void addOneInsertCard() {
         int n=3;
-        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -235,7 +253,6 @@ public class DeckTest {
      */
     @Test
     void drawFromDeck(){
-        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -282,7 +299,6 @@ public class DeckTest {
      */
     @Test
     void discardCards(){
-        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -327,7 +343,6 @@ public class DeckTest {
      */
     @Test
     void peekCardFromDeck(){
-        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -376,7 +391,6 @@ public class DeckTest {
      */
     @Test
     void shuffleDeck(){
-        List<Resource> sample = new ArrayList<>();
         Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -521,41 +535,13 @@ public class DeckTest {
     }
 
     @Test
-    public void cardsFromJSONTest() throws MissingCardException, LootTypeException {
-        Deck<DevCard> deckDev;
-        List<DevCard> init = new ArrayList<>();
+    public void cardsFromJSONTest() throws MissingCardException, LootTypeException, EmptyDeckException {
+        DevSetup devSetup = new DevSetup();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            init = objectMapper.readValue(
-                    new File("src/resources/DevCards.json"),
-                    new TypeReference<List<DevCard>>(){});
-        }catch (IOException e){
-            e.printStackTrace();
-            fail();
-        }
-        deckDev = new Deck<>(init);
-
-        assertEquals("DC1", deckDev.peekCard("DC1").getCardID());
-        assertEquals("DC2", deckDev.peekCard("DC2").getCardID());
-        assertEquals("DC3", deckDev.peekCard("DC3").getCardID());
-        assertEquals("DC4", deckDev.peekCard("DC4").getCardID());
-
-
-        deckDev.shuffle();
-        deckDev.shuffle();
-
-        assertEquals(SHIELD,deckDev.peekCard("DC1").getCost().get(0).getType());
-        assertEquals(2,deckDev.peekCard("DC1").getCost().get(0).getAmount());
-
-        assertEquals(SERVANT,deckDev.peekCard("DC2").getCost().get(0).getType());
-        assertEquals(2,deckDev.peekCard("DC2").getCost().get(0).getAmount());
-
-        assertEquals(COIN,deckDev.peekCard("DC3").getCost().get(0).getType());
-        assertEquals(2,deckDev.peekCard("DC3").getCost().get(0).getAmount());
-
-        assertEquals(STONE,deckDev.peekCard("DC4").getCost().get(0).getType());
-        assertEquals(2,deckDev.peekCard("DC4").getCost().get(0).getAmount());
+        assertEquals("DC1",devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.GREEN).getCardID());
+        assertEquals("DC2",devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.PURPLE).getCardID());
+        assertEquals("DC3",devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.BLUE).getCardID());
+        assertEquals("DC4",devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.YELLOW).getCardID());
     }
 
     @Test

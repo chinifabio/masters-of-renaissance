@@ -15,6 +15,9 @@ import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
+import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
+import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
@@ -22,10 +25,13 @@ import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.requisite.CardRequisite;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.UnknownProduction;
 import it.polimi.ingsw.model.requisite.ColorCardRequisite;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
@@ -70,92 +76,76 @@ public class PersonalBoardTest {
      * This test creates a PersonalBoard and add
      */
     @Test
-    void DevCards() {
+    void DevCards() throws IllegalTypeInProduction {
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
-        Production p = null;
-        try {
-            p = new NormalProduction(Collections.singletonList(buildStone()), Collections.singletonList(buildStone()));
-        } catch (IllegalTypeInProduction illegalTypeInProduction) {
-            fail();
-        }
+        Production p = new NormalProduction(Collections.singletonList(buildStone()), Collections.singletonList(buildStone()));
 
         DevCard c1 = new DevCard("000", new AddProductionEffect(p), 2, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
         DevCard c2 = new DevCard("111", new AddProductionEffect(p), 4, LevelDevCard.LEVEL2, ColorDevCard.YELLOW, req);
         DevCard c3 = new DevCard("222", new AddProductionEffect(p), 6, LevelDevCard.LEVEL3, ColorDevCard.BLUE, req);
         DevCard c31 = new DevCard("333", new AddProductionEffect(p), 0, LevelDevCard.LEVEL3, ColorDevCard.PURPLE, req);
 
-        DevCardSlot dcsLeft = DevCardSlot.LEFT;
-        DevCardSlot dcsCenter = DevCardSlot.CENTER;
+        DevCardSlot Left = DevCardSlot.LEFT;
+        DevCardSlot Center = DevCardSlot.CENTER;
 
         Match match = new MultiplayerMatch();
 
-        Player player = null;
-        try {
-            player = new Player("gino",match);
-        } catch (IllegalTypeInProduction e1) {
-            fail();
-        }
+        Player player =  new Player("gino",match);
 
-        PersonalBoard personalBoard = null;
-        try {
-            personalBoard = new PersonalBoard(player);
-        } catch (IllegalTypeInProduction e2) {
-            fail();
-        }
+        PersonalBoard finalPersonalBoard = new PersonalBoard(player);
 
-        PersonalBoard finalPersonalBoard = personalBoard;
         assertDoesNotThrow(()->{
-            if (finalPersonalBoard.addDevCard(dcsLeft, c1, null)) {
-                assertEquals(c1, finalPersonalBoard.viewDevCards().get(dcsLeft));
+            if (finalPersonalBoard.addDevCard(Left, c1, null)) {
+                assertEquals(c1, finalPersonalBoard.viewDevCards().get(Left));
             }
 
-            if (finalPersonalBoard.addDevCard(dcsLeft, c2, null)) {
-                assertEquals(c2, finalPersonalBoard.viewDevCards().get(dcsLeft));
+            if (finalPersonalBoard.addDevCard(Left, c2, null)) {
+                assertEquals(c2, finalPersonalBoard.viewDevCards().get(Left));
             } else {
                 fail();
             }
 
-            if (finalPersonalBoard.addDevCard(dcsCenter, c2, null)) {
+            if (finalPersonalBoard.addDevCard(Center, c2, null)) {
                 fail();
             } else {
                 try {
-                    assertNull(finalPersonalBoard.viewDevCards().get(dcsCenter));
+                    assertNull(finalPersonalBoard.viewDevCards().get(Center));
                 } catch (NullPointerException ignore) {}
             }
 
-            if (finalPersonalBoard.addDevCard(dcsLeft, c3, null)){
-                assertEquals(c3, finalPersonalBoard.viewDevCards().get(dcsLeft));
+            if (finalPersonalBoard.addDevCard(Left, c3, null)){
+                assertEquals(c3, finalPersonalBoard.viewDevCards().get(Left));
             } else {
                 fail();
             }
 
-            if (finalPersonalBoard.addDevCard(dcsCenter, c3, null)){
+            if (finalPersonalBoard.addDevCard(Center, c3, null)){
                 fail();
             } else {
                 try {
-                    assertNull(finalPersonalBoard.viewDevCards().get(dcsCenter));
+                    assertNull(finalPersonalBoard.viewDevCards().get(Center));
                 } catch (NullPointerException ignored) {}
             }
 
-            if (finalPersonalBoard.addDevCard(dcsCenter, c1, null)){
-                assertEquals(c1, finalPersonalBoard.viewDevCards().get(dcsCenter));
+            if (finalPersonalBoard.addDevCard(Center, c1, null)){
+                assertEquals(c1, finalPersonalBoard.viewDevCards().get(Center));
             } else {
                 fail();
             }
 
-            if (finalPersonalBoard.addDevCard(dcsCenter, c3, null)){
+            if (finalPersonalBoard.addDevCard(Center, c3, null)){
                 fail();
             } else {
-                assertEquals(c1, finalPersonalBoard.viewDevCards().get(dcsCenter));
+                assertEquals(c1, finalPersonalBoard.viewDevCards().get(Center));
             }
 
-            if (finalPersonalBoard.addDevCard(dcsLeft, c31, null)){
+            if (finalPersonalBoard.addDevCard(Left, c31, null)){
                 fail();
             } else {
-                assertEquals(c3, finalPersonalBoard.viewDevCards().get(dcsLeft));
+                assertEquals(c3, finalPersonalBoard.viewDevCards().get(Left));
             }
         });
 
@@ -165,17 +155,12 @@ public class PersonalBoardTest {
      * This test creates two LeaderCards, adds them to the deck and activate them.
      */
     @Test
-    void ActivateLeaderCard() throws MissingCardException, AlreadyInDeckException, IllegalTypeInProduction {
+    void ActivateLeaderCard() throws MissingCardException, AlreadyInDeckException, IllegalTypeInProduction, EmptyDeckException {
         String ID1="000", ID2="111";
         List<Resource> sample = new ArrayList<>();
         Warehouse warehouse = new Warehouse();
 
-        Production p = null;
-        try {
-            p = new NormalProduction( sample, sample);
-        } catch (IllegalTypeInProduction illegalTypeInProduction) {
-            fail();
-        }
+        Production p = new NormalProduction( sample, sample);
 
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -190,19 +175,9 @@ public class PersonalBoardTest {
 
         Match match = new MultiplayerMatch();
 
-        Player player = null;
-        try {
-            player = new Player("gino",match);
-        } catch (IllegalTypeInProduction e1) {
-            fail();
-        }
+        Player player = new Player("gino",match);
 
-        PersonalBoard personalBoard = null;
-        try {
-            personalBoard = new PersonalBoard(player);
-        } catch (IllegalTypeInProduction e2) {
-            fail();
-        }
+        PersonalBoard personalBoard =  new PersonalBoard(player);
 
         personalBoard.addLeaderCard(c1);
         try {
@@ -219,11 +194,7 @@ public class PersonalBoardTest {
 
         assertEquals(2,personalBoard.viewLeaderCard().getNumberOfCards());
 
-        try {
-            assertFalse(personalBoard.viewLeaderCard().peekCard(ID1).isActivated());
-        } catch (MissingCardException e) {
-           e.printStackTrace();
-        }
+        assertFalse(personalBoard.viewLeaderCard().peekCard(ID1).isActivated());
 
         try {
             personalBoard.activateLeaderCard(ID1);
@@ -231,27 +202,19 @@ public class PersonalBoardTest {
             fail();
         }
 
+        assertTrue(personalBoard.viewLeaderCard().peekCard(ID1).isActivated());
 
-        try {
-            assertTrue(personalBoard.viewLeaderCard().peekCard(ID1).isActivated());
-        } catch (MissingCardException e) {
-            fail();
-        }
     }
 
     /**
      * This test creates two LeaderCards and discard them one by one
      */
     @Test
-    void DiscardLeaderCard() throws EmptyDeckException, MissingCardException, AlreadyInDeckException {
+    void DiscardLeaderCard() throws EmptyDeckException, MissingCardException, AlreadyInDeckException, IllegalTypeInProduction {
         String ID1="000", ID2="111";
 
-        Production p = null;
-        try {
-            p = new NormalProduction(Collections.singletonList(buildStone()), Collections.singletonList(buildStone()));
-        } catch (IllegalTypeInProduction illegalTypeInProduction) {
-            fail();
-        }
+        Production p = new NormalProduction(Collections.singletonList(buildStone()), Collections.singletonList(buildStone()));
+
 
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
@@ -263,19 +226,10 @@ public class PersonalBoardTest {
 
         Match match = new MultiplayerMatch();
 
-        Player player = null;
-        try {
-            player = new Player("gino",match);
-        } catch (IllegalTypeInProduction e1) {
-            e1.printStackTrace();
-        }
+        Player player =  new Player("gino",match);
 
-        PersonalBoard personalBoard = null;
-        try {
-            personalBoard = new PersonalBoard(player);
-        } catch (IllegalTypeInProduction e2) {
-            e2.printStackTrace();
-        }
+
+        PersonalBoard personalBoard = new PersonalBoard(player);
 
         assertNotNull(personalBoard);
         for (LeaderCard leaderCard : Arrays.asList(c1, c2)) {
@@ -293,16 +247,16 @@ public class PersonalBoardTest {
             fail();
         } catch (MissingCardException ignored) { }
 
-        // todo remove try when implemented leader cards
         try {
             personalBoard.discardLeaderCard(ID1);
+            fail();
         } catch (MissingCardException ignored) { }
         try {
             personalBoard.discardLeaderCard(ID2);
         } catch (MissingCardException ignored) { }
 
         try {
-            personalBoard.viewLeaderCard().peekCard(ID1);
+            personalBoard.viewLeaderCard().peekCard(ID2);
             fail();
         } catch (MissingCardException ignored) { }
 
@@ -311,60 +265,100 @@ public class PersonalBoardTest {
     }
 
     /**
-     * This test
+     * This test insert some resources into depots and checks them.
      */
     @Test
-    void Resources(){
+    void Resources() throws IllegalTypeInProduction, NegativeResourcesDepotException, UnobtainableResourceException, WrongDepotException {
         Match match = new MultiplayerMatch();
 
-        Player player = null;
-        try {
-            player = new Player("gino",match);
-        } catch (IllegalTypeInProduction e1) {
-            e1.printStackTrace();
+        Player player = new Player("gino",match);
+
+        PersonalBoard personalBoard = new PersonalBoard(player);
+
+        Resource twoStone = ResourceBuilder.buildStone(2);
+        Resource oneStone = ResourceBuilder.buildStone(1);
+
+        personalBoard.obtainResource(twoStone);
+        personalBoard.moveResourceDepot(DepotSlot.BUFFER,DepotSlot.MIDDLE,twoStone);
+        assertEquals(twoStone,personalBoard.viewDepotResource(DepotSlot.MIDDLE));
+        assertNotEquals(oneStone,personalBoard.viewDepotResource(DepotSlot.MIDDLE));
+        assertNotEquals(twoStone,personalBoard.viewDepotResource(DepotSlot.TOP));
+    }
+
+
+    /**
+     * This test checks every method that involve production.
+     */
+    @Test
+    void Production() throws IllegalTypeInProduction, EndGameException, UnobtainableResourceException {
+        Match match = new MultiplayerMatch();
+        Player player = new Player("gino",match);
+        PersonalBoard personalBoard = new PersonalBoard(player);
+
+        List<Resource> unknownReq = new ArrayList<>();
+        List<Resource> unknownOutput = new ArrayList<>();
+        unknownReq.add(ResourceBuilder.buildUnknown());
+        unknownReq.add(ResourceBuilder.buildUnknown());
+        unknownOutput.add(ResourceBuilder.buildUnknown());
+
+        for(int i=0;i<5;i++){
+            assertNull(personalBoard.possibleProduction().get(i));
         }
 
-        try {
-            PersonalBoard personalBoard = new PersonalBoard(player);
-        } catch (IllegalTypeInProduction e2) {
-           fail();
-        }
+        List<Requisite> req = new ArrayList<>();
+        Resource twoCoin = ResourceBuilder.buildCoin(2);
+        Resource oneServant = ResourceBuilder.buildServant();
+        List<Resource> resourceList = new ArrayList<>();
+        resourceList.add(twoCoin);
+        resourceList.add(oneServant);
+        ResourceRequisite rr = new ResourceRequisite(twoCoin);
+        req.add(rr);
+        Production prod1 = new NormalProduction(resourceList, Collections.singletonList(buildStone()));
+
+        DevCard c1 = new DevCard("000", new AddProductionEffect(prod1), 2, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
+
+        personalBoard.addDevCard(DevCardSlot.RIGHT,c1,match);
+        personalBoard.addProduction(prod1,DevCardSlot.RIGHT);
+        assertEquals(prod1,personalBoard.possibleProduction().get(ProductionID.RIGHT));
+
+
+        Production prod2 = new NormalProduction(Collections.singletonList(ResourceBuilder.buildShield(2)),resourceList);
+        Production prod3 = new NormalProduction(Arrays.asList(ResourceBuilder.buildStone(),ResourceBuilder.buildCoin()),Collections.singletonList(ResourceBuilder.buildFaithPoint(3)));
+
+        DevCard c2 = new DevCard("111", new AddProductionEffect(prod2), 6, LevelDevCard.LEVEL1, ColorDevCard.BLUE, req);
+        DevCard c3 = new DevCard("222", new AddProductionEffect(prod3), 4, LevelDevCard.LEVEL2, ColorDevCard.GREEN, req);
+
+        personalBoard.addDevCard(DevCardSlot.CENTER,c2,match);
+        personalBoard.addDevCard(DevCardSlot.RIGHT,c3,match);
+        personalBoard.addProduction(prod2,DevCardSlot.CENTER);
+        assertEquals(prod2, personalBoard.possibleProduction().get(ProductionID.CENTER));
+
+        personalBoard.addProduction(prod3,DevCardSlot.RIGHT);
+        assertEquals(prod3, personalBoard.possibleProduction().get(ProductionID.RIGHT));
+
 
     }
 
     /**
-     * This test create a personalBoard and moves the player and Lorenzo on its faith track.
+     * This test create a personalBoard and moves the player on its faith track.
      */
     @Test
-    void FaithTrackMoves() {
+    void FaithTrackMoves() throws IllegalTypeInProduction {
         Resource first = ResourceBuilder.buildFaithPoint(1);
         Resource ten = ResourceBuilder.buildFaithPoint(10);
 
         Match match = new MultiplayerMatch();
 
-        Player player = null;
-        try {
-            player = new Player("gino",match);
-        } catch (IllegalTypeInProduction e1) {
-            fail();
-        }
-        Player player2 = null;
-        try {
-            player2 = new Player("Gino",match);
-        } catch (IllegalTypeInProduction e1) {
-            fail();
-        }
+        Player player1 = new Player("gino",match);
 
-        PersonalBoard personalBoard = null;
-        try {
-            personalBoard = new PersonalBoard(player);
-        } catch (IllegalTypeInProduction e2) {
-            fail();
-        }
+        PersonalBoard personalBoard = new PersonalBoard(player1);
+
+        Player player2 = new Player("gino",match);
+
 
         Match pm = new MultiplayerMatch();
         pm.playerJoin(player2);
-        pm.playerJoin(player);
+        pm.playerJoin(player1);
 
         assertEquals(0,personalBoard.FaithMarkerPosition());
         assertTrue(personalBoard.moveFaithMarker(first.amount(), pm));

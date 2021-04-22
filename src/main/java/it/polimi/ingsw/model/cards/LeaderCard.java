@@ -58,6 +58,14 @@ public class LeaderCard extends Card{
     }
 
     /**
+     * This method is used to get the List of Requisite which are the requirements to activate the LeaderCard.
+     * @return the requirements of the LeaderCard.
+     */
+    public List<Requisite> getCost() {
+        return requirements;
+    }
+
+    /**
      * This method is used to set the attribute activated to true.
      */
     public void activate(){  //potrebbe essere utile far chiamare un eccezione se chiamo activated su una carta già attiva
@@ -70,16 +78,6 @@ public class LeaderCard extends Card{
      */
     public boolean isActivated() {
         return activated;
-    }
-
-    @Override
-    public String toString() {
-        return "LeaderCard{" +
-                "CardID= " + this.getCardID() +
-                " VP=" + victoryPoint +
-                ", activate=" + activated +
-                ", requirements=" + getRequirements() +
-                '}';
     }
 
 }

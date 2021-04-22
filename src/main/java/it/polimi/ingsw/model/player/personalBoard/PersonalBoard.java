@@ -36,11 +36,6 @@ import java.util.*;
 public class PersonalBoard {
 
     /**
-     * This attribute is the list of the available productions that the Player could activates
-     */
-    private final Map<ProductionID, Production> availableProductions;
-
-    /**
      * This attribute is the Deck of the LeaderCards owned by the Player
      */
     private final Deck<LeaderCard> leaderDeck;
@@ -77,7 +72,6 @@ public class PersonalBoard {
      * @param player the player who own this personal board
      */
     public PersonalBoard(Player player) throws IllegalTypeInProduction {
-        this.availableProductions = new EnumMap<>(ProductionID.class);
         this.leaderDeck = new Deck<>();
 
         this.devDeck = new EnumMap<>(DevCardSlot.class);
@@ -112,6 +106,7 @@ public class PersonalBoard {
         if (checkDevCard(slot, card)) {
             try {
                 this.devDeck.get(slot).insertCard(card);
+
                 return true;
             } catch (AlreadyInDeckException e) {
                 e.printStackTrace();
@@ -247,17 +242,38 @@ public class PersonalBoard {
         this.warehouse.addExtraProduction(prod);
     }
 
+   // /**
+   //  * return all the available production
+   //  * @return list of production
+   //  */
+   // public List<Production> possibleProduction() {
+   //     List<Production> temp = new ArrayList<>();
+   //     for(ProductionID productionID : ProductionID.values()){
+   //         temp.add(this.warehouse.getProduction().get(productionID));
+   //     }
+   //     return temp;
+   // }
+
     /**
      * return all the available production
-     * @return list of production
+     * @return a map containing productions
      */
-    public List<Production> possibleProduction() {
-        List<Production> temp = new ArrayList<>();
-        for(ProductionID productionID : ProductionID.values()){
-            temp.add(this.availableProductions.get(productionID));
-        }
+    public Map<ProductionID, Production> possibleProduction(){
+        Map<ProductionID, Production> temp;
+        temp = this.warehouse.getProduction();
         return temp;
     }
+
+    /**
+     * This method moves a resource from a depot to a production
+     * @param from the source of the resource to move
+     * @param dest the destination of the resource to move
+     * @param loot the resource to move
+     */
+    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException {
+        this.warehouse.moveInProduction(from, dest, loot);
+    }
+
 
     /**
      * This method activate the productions selected by the Player
@@ -277,7 +293,16 @@ public class PersonalBoard {
         return this.warehouse.setNormalProduction(id, normalProduction);
     }
 
-    //TODO not sure if needed.
+    /**
+     * store the resource in the buffer depot, then it will be the player to move
+     * from buffer depot to a legal one
+     * @param resource the resource obtained
+     */
+    public void obtainResource(Resource resource) {
+        this.warehouse.insertInDepot(DepotSlot.BUFFER, resource);
+    }
+
+    //TODO da scrivere meglio
     /**
      * return all the resources that the player has. It doesn't matter the depot in which they are stored
      * @return list of resources
@@ -291,12 +316,17 @@ public class PersonalBoard {
                     temp.add(this.warehouse.viewResourcesInDepot(depotSlot));
                 }
                 catch (NullPointerException e){
-                    System.out.println("Il depot " + depotSlot + " doesn't exist");
+                    System.out.println("The depot " + depotSlot + " doesn't exist");
                 }
             }
         }
         return temp;
     }
+
+    public Resource viewDepotResource(DepotSlot slot){
+        return this.warehouse.viewResourcesInDepot(slot);
+    }
+
 
     /**
      * create a new depot in the warehouse
@@ -349,15 +379,6 @@ public class PersonalBoard {
     }
 
     /**
-     * store the resource in the buffer depot, then it will be the player to move
-     * from buffer depot to a legal one
-     * @param resource the resource obtained
-     */
-    public void obtainResource(Resource resource) {
-        this.warehouse.insertInDepot(DepotSlot.BUFFER, resource);
-    }
-
-    /**
      * discard all the resources in the buffer depot and for all of them give faith point at
      * all other players
      */
@@ -369,16 +390,6 @@ public class PersonalBoard {
         }
         p2m.othersPlayersObtainFaithPoint(fp);
         this.warehouse.flushBufferDepot();
-    }
-
-    /**
-     * This method moves a resource from a depot to a production
-     * @param from the source of the resource to move
-     * @param dest the destination of the resource to move
-     * @param loot the resource to move
-     */
-    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException {
-        this.warehouse.moveInProduction(from, dest, loot);
     }
 
     /**

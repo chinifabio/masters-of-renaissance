@@ -1,7 +1,12 @@
 package it.polimi.ingsw.model.cards;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +26,20 @@ public class DevSetup {
      * This is the constructor of the devSetup class.
      */
     public DevSetup(){
-        // todo build from json file
+        List<List<DevCard>> init = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            init = objectMapper.readValue(
+                    new File("src/resources/DevCards.json"),
+                    new TypeReference<List<List<DevCard>>>(){});
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.devDeckGrid = new ArrayList<>();
+        for(List<DevCard> deck : init){
+            Deck<DevCard> temp = new Deck<>(deck);
+            this.devDeckGrid.add(temp);
+        }
     }
 
     /**
@@ -50,7 +68,7 @@ public class DevSetup {
     }
 
     /**
-     * This method returns the deck  selected with level and color from the list of decks.
+     * This method returns the deck selected with level and color from the list of decks.
      * @param row is the level of the searched deck
      * @param col is the color of the searched deck
      * @return the top card of the deck which color and level matches the one of the parameters.
@@ -79,12 +97,4 @@ public class DevSetup {
             return tempDeck.get(0);
     }
 
-    /**
-     *
-     * @return
-     */
-    @Override
-    public String toString() {
-        return devDeckGrid.toString();
-    }
 }
