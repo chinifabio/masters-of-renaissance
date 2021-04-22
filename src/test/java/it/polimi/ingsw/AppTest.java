@@ -13,6 +13,7 @@ public class AppTest
      */
     @Test
     public void test(){
-        assertTrue(true);
+        App app = new App();
+        assertEquals(5, app.sample);
     }
 }

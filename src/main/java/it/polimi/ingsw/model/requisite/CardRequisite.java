@@ -23,6 +23,11 @@ public class CardRequisite implements Requisite {
     private ColorDevCard color;
 
     /**
+     * Number of the same type of card requested
+     */
+    private int amount;
+
+    /**
      * exception thrown in case someone calls getType() method
      */
     private Exception LootTypeException;
@@ -33,9 +38,10 @@ public class CardRequisite implements Requisite {
      * @param color of the card
      */
     @JsonCreator
-    public CardRequisite(@JsonProperty("level") LevelDevCard level, @JsonProperty("color") ColorDevCard color) {
+    public CardRequisite(@JsonProperty("level") LevelDevCard level, @JsonProperty("color") ColorDevCard color, @JsonProperty("amount") int amount) {
         this.level = level;
         this.color = color;
+        this.amount = amount;
     }
 
     /**
@@ -66,13 +72,13 @@ public class CardRequisite implements Requisite {
     }
 
     /**
-     * return the amount of card is always 1, in case of same card required there is multiple instance of Requisite
+     * return the amount of card that is always 1, in case of same card required there is multiple instance of Requisite
      *
      * @return number of loot
      */
     @Override
     public int getAmount() {
-        return 1;
+        return this.amount;
     }
 
     @Override
@@ -81,5 +87,10 @@ public class CardRequisite implements Requisite {
                 ", lev=" + level +
                 ", color=" + color +
                 '}';
+    }
+
+    @Override
+    public RequisiteType getRequisiteType() {
+        return RequisiteType.CARD;
     }
 }

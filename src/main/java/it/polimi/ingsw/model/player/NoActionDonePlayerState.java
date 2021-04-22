@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
 import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
@@ -165,7 +166,7 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param leaderId the string that identify the leader card
      */
     @Override
-    public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EmptyDeckException {
+    public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EmptyDeckException, LootTypeException {
         this.context.personalBoard.activateLeaderCard(leaderId);
     }
 

@@ -76,4 +76,9 @@ public class ResourceRequisite implements Requisite {
                 ", amount=" + getAmount() +
                 '}';
     }
+
+    @Override
+    public RequisiteType getRequisiteType() {
+        return RequisiteType.RESOURCE;
+    }
 }

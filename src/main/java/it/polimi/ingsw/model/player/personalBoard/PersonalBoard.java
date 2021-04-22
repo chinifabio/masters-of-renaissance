@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.exceptions.warehouse.*;
@@ -23,6 +24,8 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
+import it.polimi.ingsw.model.requisite.Requisite;
+import it.polimi.ingsw.model.requisite.RequisiteType;
 import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.*;
@@ -70,6 +73,7 @@ public class PersonalBoard {
 
     /**
      * This method is the constructor of the class
+     *
      * @param player the player who own this personal board
      */
     public PersonalBoard(Player player) throws IllegalTypeInProduction {
@@ -77,9 +81,9 @@ public class PersonalBoard {
         this.leaderDeck = new Deck<>();
 
         this.devDeck = new EnumMap<>(DevCardSlot.class);
-        devDeck.put(DevCardSlot.LEFT,new Deck<>());
-        devDeck.put(DevCardSlot.CENTER,new Deck<>());
-        devDeck.put(DevCardSlot.RIGHT,new Deck<>());
+        devDeck.put(DevCardSlot.LEFT, new Deck<>());
+        devDeck.put(DevCardSlot.CENTER, new Deck<>());
+        devDeck.put(DevCardSlot.RIGHT, new Deck<>());
 
         this.productionSlotMap = new EnumMap<>(DevCardSlot.class);
         productionSlotMap.put(DevCardSlot.LEFT, ProductionID.LEFT);
@@ -93,13 +97,14 @@ public class PersonalBoard {
 
     /**
      * This method add the DevCard bought by the Player into the DevCardSlot
+     *
      * @param slot is the slot where the DevCard is inserted
      * @param card is the DevCard bought by the Player
      */
     public boolean addDevCard(DevCardSlot slot, DevCard card, PlayerToMatch pm) {
         int sum = 0;
         for (DevCardSlot key : DevCardSlot.values()) sum += devDeck.get(key).getNumberOfCards();
-        if(sum >= 7) {
+        if (sum >= 7) {
             pm.startEndGameLogic();
             return false;
         }
@@ -117,6 +122,7 @@ public class PersonalBoard {
 
     /**
      * This method checks if a card can be inserted into a given position in the playerBoard.
+     *
      * @param slot where the card will be inserted.
      * @param card the card that will be inserted.
      * @return true if the card can be placed into that position.
@@ -124,7 +130,7 @@ public class PersonalBoard {
     private boolean checkDevCard(DevCardSlot slot, DevCard card) {
         boolean result = false;
         Deck<DevCard> temp = this.devDeck.get(slot);
-        if(temp == null) temp = new Deck<>();
+        if (temp == null) temp = new Deck<>();
 
         try {
             if (temp.peekFirstCard().getLevel().getLevelCard() == (card.getLevel().getLevelCard() - 1)) result = true;
@@ -137,13 +143,14 @@ public class PersonalBoard {
 
     /**
      * return a map of the top develop card placed in the player board decks
+     *
      * @return a map of devCardSlot - DevCard
      */
     public Map<DevCardSlot, DevCard> viewDevCards() {
         Map<DevCardSlot, DevCard> tempMap = new EnumMap<>(DevCardSlot.class);
-        for(DevCardSlot devCardSlot : DevCardSlot.values()){
+        for (DevCardSlot devCardSlot : DevCardSlot.values()) {
             try {
-                tempMap.put(devCardSlot,this.devDeck.get(devCardSlot).peekFirstCard());
+                tempMap.put(devCardSlot, this.devDeck.get(devCardSlot).peekFirstCard());
             } catch (EmptyDeckException e) {
                 e.printStackTrace();
             }
@@ -154,6 +161,7 @@ public class PersonalBoard {
 
     /**
      * This method add the LeaderCard in the Player's PersonalBoard
+     *
      * @param card is the LeaderCard that the Player has chosen
      */
     public void addLeaderCard(LeaderCard card) throws AlreadyInDeckException {
@@ -161,14 +169,40 @@ public class PersonalBoard {
     }
 
     /**
-     * This method activate the SpecialAbility of the LeaderCard
-     * @param selected is the LeaderCard
+     * This method activates the SpecialAbility of the LeaderCard after checking if the Player has the requisite to
+     * activate the LeaderCard.
+     *
+     * @param selected is the LeaderCard to activate
+     * @return true if the Leadercard has been activated
+     * @throws MissingCardException
+     * @throws EmptyDeckException
      */
-    public void activateLeaderCard(String selected) throws MissingCardException, EmptyDeckException {    //TODO implementation - effect
+    public boolean activateLeaderCard(String selected) throws MissingCardException, EmptyDeckException, LootTypeException {    //TODO implementation - effect
         LeaderCard card = this.leaderDeck.peekCard(selected);
+
+        for (Requisite req : card.getRequirements()) {
+            if (req.getRequisiteType() == RequisiteType.RESOURCE) {
+                for (Resource resource : warehouse.getTotalResources()) {
+                    if (resource.equalsType(req) && resource.amount() < req.getAmount()) return false;
+                }
+            } else if (req.getRequisiteType() == RequisiteType.CARD) {
+                int pbAmount = 0;
+                for (Map.Entry<DevCardSlot, Deck<DevCard>> entry : devDeck.entrySet()) {
+                    for (DevCard devCard : entry.getValue().getCards()) {
+                        if (devCard.getColor().equals(req.getColor()) && devCard.getLevel().equals(req.getLevel())) {
+                            pbAmount++;
+                        }
+                    }
+                }
+                if (pbAmount < req.getAmount()) return false;
+            }
+        }
+
         card.activate();
         card.useEffect(this.player);
+        return true;
     }
+
 
     /**
      * This method remove the LeaderCard from Player's PersonalBoard
@@ -383,6 +417,7 @@ public class PersonalBoard {
         return this.faithTrack;
     }
 
+    //only for testing
     public Warehouse getWH_forTest(){
         return this.warehouse;
     }

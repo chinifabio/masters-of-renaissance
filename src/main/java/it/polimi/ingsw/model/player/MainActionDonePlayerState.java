@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
+import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
@@ -137,7 +138,7 @@ public class MainActionDonePlayerState extends PlayerState {
      * @param leaderId the string that identify the leader card
      */
     @Override
-    public void activateLeaderCard(String leaderId) throws MissingCardException, EmptyDeckException {
+    public void activateLeaderCard(String leaderId) throws MissingCardException, EmptyDeckException, LootTypeException {
         this.context.personalBoard.activateLeaderCard(leaderId);
     }
 

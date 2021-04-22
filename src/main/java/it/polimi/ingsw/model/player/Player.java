@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
 import it.polimi.ingsw.model.exceptions.warehouse.*;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
@@ -337,7 +338,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException {
         try {
             this.playerState.activateLeaderCard(leaderId);
-        } catch (EmptyDeckException ignore) {
+        } catch (EmptyDeckException | LootTypeException ignore) {
             // there is no leader card
         }
     }

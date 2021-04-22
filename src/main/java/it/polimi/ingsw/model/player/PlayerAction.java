@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
+import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
@@ -58,7 +59,7 @@ public interface PlayerAction {
      * @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
-     * @return
+     * @return true if the resources are correctly moved in Production
      */
     boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, PlayerStateException;
 
@@ -81,7 +82,7 @@ public interface PlayerAction {
      * This method activates the special ability of the LeaderCard
      * @param leaderId the string that identify the leader card
      */
-    void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EmptyDeckException;
+    void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EmptyDeckException, LootTypeException;
 
     /**
      * This method removes a LeaderCard from the player

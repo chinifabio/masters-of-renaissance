@@ -87,6 +87,11 @@ public class LeaderTest {
         test.get().use(game.test_getCurrPlayer());
 
         assertTrue(game.test_getCurrPlayer().test_getPB().test_getProduction().containsKey(ProductionID.LEADER1));
+
+        test.get().use(game.test_getCurrPlayer());
+        assertTrue(game.test_getCurrPlayer().test_getPB().test_getProduction().containsKey(ProductionID.LEADER2));
+
+
     }
 
     @Test

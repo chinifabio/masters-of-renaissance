@@ -92,16 +92,6 @@ public class Warehouse {
         for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()) {
             //Find the first empty space to create extra Depot
             if (entry.getValue() == null) {
-                for (Map.Entry<DepotSlot, Depot> newEntry : depots.entrySet()) {
-                    //Check if there is already another ExtraDepot with the same resources
-                    if (newEntry.getValue() != null) {
-                        if(newEntry.getKey() != DepotSlot.BUFFER && newEntry.getKey() != DepotSlot.STRONGBOX && !newEntry.getValue().checkTypeDepot()){
-                            if (newEntry.getValue().viewResources().equalsType(newDepot.viewResources())){
-                                return false;
-                            }
-                        }
-                    }
-                }
                 entry.setValue(newDepot);
                 return true;
             }
@@ -157,9 +147,6 @@ public class Warehouse {
             }
         }
         return false;
-        //TODO to check
-
-
     }
 
     /**
@@ -183,8 +170,6 @@ public class Warehouse {
             entry.getValue().reset();
         }
         return true;
-        //TODO to check
-        //for each resource to check, took it and move to buffer
     }
 
     /**
@@ -281,6 +266,10 @@ public class Warehouse {
         throw new ExtraProductionException();
     }
 
+    /**
+     * This method counts the total number of resources inside the Warehouse and divides it to 5 to obtain the VictoryPoints
+     * @return the value of VictoryPoints of the Warehouse
+     */
     public int countPointsWarehouse(){
         int total = 0;
         for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()){
@@ -293,6 +282,30 @@ public class Warehouse {
         }
 
         return total/5;
+    }
+
+    /**
+     * This method counts the amount of each type of resources in the Warehouse
+     * @return a list with all resources and the corresponding amount
+     */
+    public List<Resource> getTotalResources(){
+        List<Resource> totalResource = ResourceBuilder.buildListOfStorable();
+        for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()){
+            if (!(entry.getValue() == null || entry.getKey() == DepotSlot.STRONGBOX || entry.getKey() == DepotSlot.BUFFER)){
+                for (Resource resource : totalResource){
+                    if (resource.equalsType(entry.getValue().viewResources())){
+                        resource.merge(entry.getValue().viewResources());
+                    }
+                }
+            }
+        }
+        for (Resource res : viewResourcesInStrongbox()){
+            for (Resource res2 : totalResource){
+                res2.merge(res);
+            }
+        }
+
+        return totalResource;
     }
 
     /**

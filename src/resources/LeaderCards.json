@@ -11,12 +11,14 @@
       {
         "type": "CardReq",
         "level": "LEVEL1",
-        "color": "YELLOW"
+        "color": "YELLOW",
+        "amount": 1
       },
       {
         "type": "CardReq",
         "level": "LEVEL1",
-        "color": "GREEN"
+        "color": "GREEN",
+        "amount": 1
       }
     ],
     "activated": false
@@ -33,12 +35,14 @@
       {
         "type": "CardReq",
         "level": "LEVEL1",
-        "color": "BLUE"
+        "color": "BLUE",
+        "amount": 1
       },
       {
         "type": "CardReq",
         "level": "LEVEL1",
-        "color": "PURPLE"
+        "color": "PURPLE",
+        "amount": 1
       }
     ],
     "activated": false
@@ -55,12 +59,14 @@
       {
         "type": "CardReq",
         "level": "LEVEL1",
-        "color": "GREEN"
+        "color": "GREEN",
+        "amount": 1
       },
       {
         "type": "CardReq",
         "level": "LEVEL1",
-        "color": "BLUE"
+        "color": "BLUE",
+        "amount": 1
       }
     ],
     "activated": false
@@ -77,12 +83,14 @@
       {
         "type": "CardReq",
         "level": "LEVEL1",
-        "color": "YELLOW"
+        "color": "YELLOW",
+        "amount": 1
       },
       {
         "type": "CardReq",
         "level": "LEVEL1",
-        "color": "PURPLE"
+        "color": "PURPLE",
+        "amount": 1
       }
     ],
     "activated": false
@@ -195,17 +203,14 @@
       {
       "type": "CardReq",
       "level": "LEVEL1",
-      "color": "YELLOW"
+      "color": "YELLOW",
+        "amount": 2
       },
       {
         "type": "CardReq",
         "level": "LEVEL1",
-        "color": "YELLOW"
-      },
-      {
-        "type": "CardReq",
-        "level": "LEVEL1",
-        "color": "BLUE"
+        "color": "BLUE",
+        "amount": 1
       }
     ],
     "activated": false
@@ -226,12 +231,8 @@
       {
         "type": "CardReq",
         "level": "LEVEL1",
-        "color": "GREEN"
-      },
-      {
-        "type": "CardReq",
-        "level": "LEVEL1",
-        "color": "GREEN"
+        "color": "GREEN",
+        "amount": 2
       },
       {
         "type": "CardReq",
@@ -257,17 +258,14 @@
       {
         "type": "CardReq",
         "level": "LEVEL1",
-        "color": "BLUE"
+        "color": "BLUE",
+        "amount": 2
       },
       {
         "type": "CardReq",
         "level": "LEVEL1",
-        "color": "BLUE"
-      },
-      {
-        "type": "CardReq",
-        "level": "LEVEL1",
-        "color": "YELLOW"
+        "color": "YELLOW",
+        "amount": 1
       }
     ],
     "activated": false
@@ -288,17 +286,14 @@
       {
         "type": "CardReq",
         "level": "LEVEL1",
-        "color": "PURPLE"
+        "color": "PURPLE",
+        "amount": 2
       },
       {
         "type": "CardReq",
         "level": "LEVEL1",
-        "color": "PURPLE"
-      },
-      {
-        "type": "CardReq",
-        "level": "LEVEL1",
-        "color": "GREEN"
+        "color": "GREEN",
+        "amount": 1
       }
     ],
     "activated": false
@@ -346,7 +341,8 @@
       {
         "type": "CardReq",
         "level": "LEVEL2",
-        "color": "YELLOW"
+        "color": "YELLOW",
+        "amount": 1
       }
     ],
     "activated": false
@@ -394,7 +390,8 @@
       {
         "type": "CardReq",
         "level": "LEVEL2",
-        "color": "BLUE"
+        "color": "BLUE",
+        "amount": 1
       }
     ],
     "activated": false
@@ -442,7 +439,8 @@
       {
         "type": "CardReq",
         "level": "LEVEL2",
-        "color": "PURPLE"
+        "color": "PURPLE",
+        "amount": 1
       }
     ],
     "activated": false
@@ -490,7 +488,8 @@
       {
         "type": "CardReq",
         "level": "LEVEL2",
-        "color": "GREEN"
+        "color": "GREEN",
+        "amount": 1
       }
     ],
     "activated": false

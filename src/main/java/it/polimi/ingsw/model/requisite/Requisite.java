@@ -48,4 +48,10 @@ public interface Requisite {
      * @throws LootTypeException wrong method called
      */
     ColorDevCard getColor() throws LootTypeException;
+
+    /**
+     * This method indicates the type of Requisite
+     * @return the type of requisite, so CARD or RESOURCE
+     */
+    RequisiteType getRequisiteType();
 }

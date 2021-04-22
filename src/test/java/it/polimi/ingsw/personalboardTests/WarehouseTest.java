@@ -1,6 +1,7 @@
 package it.polimi.ingsw.personalboardTests;
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.polimi.ingsw.CustomAssertion;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.*;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
@@ -138,7 +139,7 @@ public class WarehouseTest {
         test.insertInDepot(DepotSlot.SPECIAL1, ResourceBuilder.buildShield());
         assertEquals(ResourceBuilder.buildShield(2),test.viewResourcesInDepot(DepotSlot.SPECIAL1));
         //Add depot SPECIAL2
-        assertFalse(test.addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildShield())));
+
         test.addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildCoin()));
         assertEquals(ResourceBuilder.buildCoin(0),test.viewResourcesInDepot(DepotSlot.SPECIAL2));
         test.insertInDepot(DepotSlot.SPECIAL2, ResourceBuilder.buildStone());
@@ -211,6 +212,10 @@ public class WarehouseTest {
 
         warehouse.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildServant(1));
         assertFalse(warehouse.moveBetweenDepot(DepotSlot.STRONGBOX,DepotSlot.TOP,ResourceBuilder.buildServant(1)));
+
+        try{
+                warehouse.moveBetweenDepot(DepotSlot.MIDDLE, DepotSlot.BOTTOM, ResourceBuilder.buildServant());
+        } catch (WrongDepotException ignore){}
     }
 
     @Test
@@ -442,6 +447,45 @@ public class WarehouseTest {
 
         assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildStone(0)));
         assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildStone(3)));
+
+    }
+
+    @Test
+    public void totalResourcesTest() throws IllegalTypeInProduction, ExtraDepotsException {
+        Warehouse warehouse = new Warehouse();
+        Depot special1 = new SpecialDepot(ResourceBuilder.buildCoin());
+        Depot special2 = new SpecialDepot(ResourceBuilder.buildServant());
+
+        warehouse.insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildShield(2));
+        warehouse.insertInDepot(DepotSlot.MIDDLE, ResourceBuilder.buildCoin(2));
+        warehouse.insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildStone(5));
+        warehouse.insertInDepot(DepotSlot.TOP, ResourceBuilder.buildServant(1));
+        warehouse.insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildCoin(3));
+        warehouse.insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildShield(7));
+        warehouse.insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildServant(5));
+
+        warehouse.addDepot(special1);
+        warehouse.addDepot(special2);
+
+        warehouse.insertInDepot(DepotSlot.SPECIAL1, ResourceBuilder.buildCoin(1));
+        warehouse.insertInDepot(DepotSlot.SPECIAL2, ResourceBuilder.buildServant(2));
+
+        assertTrue(warehouse.getTotalResources().contains(ResourceBuilder.buildCoin(6)));
+        assertTrue(warehouse.getTotalResources().contains(ResourceBuilder.buildServant(8)));
+        assertTrue(warehouse.getTotalResources().contains(ResourceBuilder.buildShield(9)));
+        assertTrue(warehouse.getTotalResources().contains(ResourceBuilder.buildStone(5)));
+
+        //It doesn't change the resources inside the Depots
+        assertEquals(ResourceBuilder.buildShield(2), warehouse.viewResourcesInDepot(DepotSlot.BOTTOM));
+        assertEquals( ResourceBuilder.buildServant(1), warehouse.viewResourcesInDepot(DepotSlot.TOP));
+        assertEquals(ResourceBuilder.buildCoin(2), warehouse.viewResourcesInDepot(DepotSlot.MIDDLE));
+        assertEquals(ResourceBuilder.buildCoin(1), warehouse.viewResourcesInDepot(DepotSlot.SPECIAL1));
+        assertEquals(ResourceBuilder.buildServant(2), warehouse.viewResourcesInDepot(DepotSlot.SPECIAL2));
+
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildStone(5)));
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildCoin(3)));
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildShield(7)));
+        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildServant(5)));
 
     }
 }

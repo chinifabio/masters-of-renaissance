@@ -25,9 +25,7 @@ public class RequisiteTest {
         Resource res = ResourceBuilder.buildCoin(amount);
 
         Requisite test = new ResourceRequisite(res);
-        boolean result = false;
-
-        if (test.getAmount() == amount) result = true;
+        boolean result = test.getAmount() == amount;
 
         assertTrue(result);
     }
@@ -100,10 +98,8 @@ public class RequisiteTest {
         LevelDevCard lev = LevelDevCard.LEVEL1;
         ColorDevCard col = ColorDevCard.BLUE;
 
-        Requisite test = new CardRequisite(lev, col);
-        boolean result = false;
-
-        if (test.getAmount() == 1) result = true;
+        Requisite test = new CardRequisite(lev, col, 1);
+        boolean result = test.getAmount() == 1;
 
         assertTrue(result);
     }
@@ -116,7 +112,7 @@ public class RequisiteTest {
         LevelDevCard lev = LevelDevCard.LEVEL1;
         ColorDevCard col = ColorDevCard.BLUE;
 
-        Requisite test = new CardRequisite(lev, col);
+        Requisite test = new CardRequisite(lev, col,1);
         boolean result = false;
 
         try {
@@ -136,7 +132,7 @@ public class RequisiteTest {
         LevelDevCard lev = LevelDevCard.LEVEL1;
         ColorDevCard col = ColorDevCard.BLUE;
 
-        Requisite test = new CardRequisite(lev, col);
+        Requisite test = new CardRequisite(lev, col,1);
         boolean result = false;
 
         try {
@@ -156,7 +152,7 @@ public class RequisiteTest {
         LevelDevCard lev = LevelDevCard.LEVEL1;
         ColorDevCard col = ColorDevCard.BLUE;
 
-        Requisite test = new CardRequisite(lev, col);
+        Requisite test = new CardRequisite(lev, col,1);
         boolean result = false;
 
         try {

@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
+import it.polimi.ingsw.model.match.markettray.DimensionReader;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
@@ -81,6 +82,8 @@ public class MarketTrayTest {
 
         List<Marble> beforePush;
         Marble slide;
+
+        assertEquals(12,tray.showMarketTray().size());
 
         for(int shiftCol = 0; shiftCol < col; shiftCol++) {
             beforePush = tray.showMarketTray();
@@ -299,5 +302,12 @@ public class MarketTrayTest {
         assertDoesNotThrow(()->game.test_getCurrPlayer().endThisTurn());
 
         assertEquals(ResourceBuilder.buildListOfStorable(), game.test_getCurrPlayer().test_getPB().getWH_forTest().viewResourcesInBuffer());
+    }
+
+    @Test
+    public void readingDimensions(){
+        DimensionReader dimensionReader = new DimensionReader(4,5);
+        assertEquals(5, dimensionReader.col);
+        assertEquals(4, dimensionReader.row);
     }
 }
