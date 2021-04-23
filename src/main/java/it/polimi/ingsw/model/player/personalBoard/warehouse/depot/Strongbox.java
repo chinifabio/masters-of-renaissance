@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.depot;
 
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 
@@ -75,12 +76,12 @@ public class Strongbox implements Depot {
     }
 
     /**
-     * This methods return null because the Strongbox doesn't have only one type of resources
-     * @return null
+     * This method cannot be invoked because the Strongbox can have more types of resources
+     * @throws WrongDepotException if it's invoked
      */
     @Override
-    public Resource viewResources() {
-        return null;
+    public Resource viewResources() throws WrongDepotException {
+       throw new WrongDepotException();
     }
 
     /**

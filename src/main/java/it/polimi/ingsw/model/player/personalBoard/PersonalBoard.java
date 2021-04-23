@@ -172,7 +172,7 @@ public class PersonalBoard {
      * @throws EmptyDeckException if the Deck is empty
      * @throws LootTypeException if a ResourceRequisite is compared to a CardRequisite
      */
-    public boolean activateLeaderCard(String selected) throws MissingCardException, EmptyDeckException, LootTypeException {    //TODO implementation - effect
+    public boolean activateLeaderCard(String selected) throws MissingCardException, EmptyDeckException, LootTypeException, WrongDepotException {    //TODO implementation - effect
         LeaderCard card = this.leaderDeck.peekCard(selected);
 
         for (Requisite req : card.getRequirements()) {
@@ -270,7 +270,7 @@ public class PersonalBoard {
      * @param dest the destination of the resource to move
      * @param loot the resource to move
      */
-    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException {
+    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, WrongDepotException {
         this.warehouse.moveInProduction(from, dest, loot);
     }
 
@@ -278,7 +278,7 @@ public class PersonalBoard {
     /**
      * This method activate the productions selected by the Player
      */
-    public void activateProductions() throws UnobtainableResourceException, EndGameException {
+    public void activateProductions() throws UnobtainableResourceException, EndGameException, WrongDepotException {
         this.warehouse.activateProductions();
     }
 
@@ -298,35 +298,26 @@ public class PersonalBoard {
      * from buffer depot to a legal one
      * @param resource the resource obtained
      */
-    public void obtainResource(Resource resource) {
+    public void obtainResource(Resource resource) throws WrongDepotException {
         this.warehouse.insertInDepot(DepotSlot.BUFFER, resource);
     }
 
-    //TODO da scrivere meglio
     /**
-     * return all the resources that the player has. It doesn't matter the depot in which they are stored
-     * @return list of resources
+     * This method shows the resources inside a Depot
+     * @param slot is the Depot where the resources are stored
+     * @return the Resources inside the Depot
      */
-    public List<Resource> viewResources() {
-        List<Resource> temp;
-        temp = this.warehouse.viewResourcesInStrongbox();
-        for(DepotSlot depotSlot : DepotSlot.values()) {
-            if(!(depotSlot == DepotSlot.STRONGBOX) && !(depotSlot == DepotSlot.BUFFER)) {
-                try {
-                    temp.add(this.warehouse.viewResourcesInDepot(depotSlot));
-                }
-                catch (NullPointerException e){
-                    System.out.println("The depot " + depotSlot + " doesn't exist");
-                }
-            }
-        }
-        return temp;
-    }
-
-    public Resource viewDepotResource(DepotSlot slot){
+    public Resource viewDepotResource(DepotSlot slot) throws WrongDepotException {
         return this.warehouse.viewResourcesInDepot(slot);
     }
 
+    /**
+     * This method shows the resource inside the Strongbox
+     * @return a list of resources inside the Strongbox
+     */
+    public List<Resource> viewStrongboxResource() throws WrongDepotException {
+        return this.warehouse.viewResourcesInStrongbox();
+    }
 
     /**
      * create a new depot in the warehouse
@@ -382,7 +373,7 @@ public class PersonalBoard {
      * discard all the resources in the buffer depot and for all of them give faith point at
      * all other players
      */
-    public void flushBufferDepot(PlayerToMatch p2m) {
+    public void flushBufferDepot(PlayerToMatch p2m) throws WrongDepotException {
         List<Resource> list = this.warehouse.viewResourcesInBuffer();
         int fp = 0;
         for (Resource resource : list) {
@@ -396,7 +387,7 @@ public class PersonalBoard {
      * This method counts all the victoryPoints that the Player has earned during the game
      * @return the total value of all victoryPoints
      */
-    public int getTotalVictoryPoints(){
+    public int getTotalVictoryPoints() throws WrongDepotException {
         int points = 0;
         points = points + warehouse.countPointsWarehouse();
         points = points + faithTrack.countingFaithTrackVictoryPoints();
@@ -447,7 +438,8 @@ public class PersonalBoard {
     public Map<DepotSlot, Depot> test_getDepots() {
         return this.warehouse.test_getDepot();
     }
-    // for testing
+
+    // only for testing
     public Map<ProductionID, Production> test_getProduction() {
         return this.warehouse.test_getProduction();
     }

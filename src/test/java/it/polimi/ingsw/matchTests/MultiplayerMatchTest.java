@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -74,9 +75,8 @@ public class MultiplayerMatchTest {
         }
     }
 
-    @Test
     @RepeatedTest(5)
-    public void endMatchByEndFaithTrack() {
+    public void endMatchByEndFaithTrack() throws WrongDepotException {
         for(int i = 0; i < 24; i++ ) {
             order.get(0).obtainResource(MarbleBuilder.buildRed().toResource());
         }
@@ -96,7 +96,7 @@ public class MultiplayerMatchTest {
      * so you can know if the operation is succeed of failed.
      */
     @Test
-    public void buildMultiplayerTest() throws OutOfBoundMarketTrayException, UnobtainableResourceException, IllegalTypeInProduction, PlayerStateException {
+    public void buildMultiplayerTest() throws OutOfBoundMarketTrayException, UnobtainableResourceException,  PlayerStateException, WrongDepotException {
 
         assertTrue(multiplayer.test_getCurrPlayer().canDoStuff());
 

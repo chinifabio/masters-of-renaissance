@@ -24,7 +24,7 @@ public class WarehouseTest {
      * Testing if the resources are correctly inserted into the Depots with all the constraints
      */
     @Test
-    public void insertResources() throws IllegalTypeInProduction{
+    public void insertResources() throws IllegalTypeInProduction, WrongDepotException {
         Warehouse test = new Warehouse();
 
         //Testing the bottom depot
@@ -51,7 +51,7 @@ public class WarehouseTest {
      * Testing the warehouse returns the resources into the depots correctly
      */
     @Test
-    public void viewResources() throws IllegalTypeInProduction{
+    public void viewResources() throws IllegalTypeInProduction, WrongDepotException {
         Warehouse test = new Warehouse();
 
         //Testing resources in BOTTOM Depot
@@ -85,7 +85,7 @@ public class WarehouseTest {
      * Testing if the resources are correctly inserted into the warehouse
      */
     @Test
-    public void insertInStrongbox() throws IllegalTypeInProduction{
+    public void insertInStrongbox() throws IllegalTypeInProduction, WrongDepotException {
         Warehouse test = new Warehouse();
         List<Resource> list = new ArrayList<>();
 
@@ -125,7 +125,7 @@ public class WarehouseTest {
      * Testing if the extra Depots are correctly created
      */
     @Test
-    public void InsertInExtraDepots() throws ExtraDepotsException, IllegalTypeInProduction{
+    public void InsertInExtraDepots() throws ExtraDepotsException, IllegalTypeInProduction, WrongDepotException {
         Warehouse test = new Warehouse();
         boolean exc = false;
 
@@ -219,7 +219,7 @@ public class WarehouseTest {
     }
 
     @Test
-    public void activateProductions() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, EndGameException {
+    public void activateProductions() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, EndGameException, WrongDepotException {
         Warehouse warehouse = new Warehouse();
         List<Resource> req = Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildShield());
         List<Resource> out = Collections.singletonList(ResourceBuilder.buildStone(10));
@@ -267,7 +267,7 @@ public class WarehouseTest {
     }
 
     @Test
-    public void notEnoughResourceProduction() throws  NegativeResourcesDepotException, UnknownUnspecifiedException, IllegalTypeInProduction, IllegalNormalProduction, UnobtainableResourceException, EndGameException {
+    public void notEnoughResourceProduction() throws NegativeResourcesDepotException, UnknownUnspecifiedException, IllegalTypeInProduction, IllegalNormalProduction, UnobtainableResourceException, EndGameException, WrongDepotException {
         Warehouse warehouse = new Warehouse();
         List<Resource> req = Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildUnknown());
         List<Resource> out = Collections.singletonList(ResourceBuilder.buildStone(10));
@@ -346,7 +346,7 @@ public class WarehouseTest {
     }
 
     @Test
-    public void countTotalResources() throws IllegalTypeInProduction, ExtraDepotsException {
+    public void countTotalResources() throws IllegalTypeInProduction, ExtraDepotsException, WrongDepotException {
         Warehouse warehouse = new Warehouse();
 
         warehouse.insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildShield(2));
@@ -451,7 +451,7 @@ public class WarehouseTest {
     }
 
     @Test
-    public void totalResourcesTest() throws IllegalTypeInProduction, ExtraDepotsException {
+    public void totalResourcesTest() throws IllegalTypeInProduction, ExtraDepotsException, WrongDepotException {
         Warehouse warehouse = new Warehouse();
         Depot special1 = new SpecialDepot(ResourceBuilder.buildCoin());
         Depot special2 = new SpecialDepot(ResourceBuilder.buildServant());

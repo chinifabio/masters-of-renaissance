@@ -2,6 +2,7 @@ package it.polimi.ingsw.personalboardTests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder;
 import it.polimi.ingsw.model.resource.Resource;
@@ -17,7 +18,7 @@ public class DepotTest {
      * @throws NegativeResourcesDepotException if the depot doesn't have enough resources to be removed
      */
     @Test
-    public void removeResourcesFromNormalDepot() throws NegativeResourcesDepotException {
+    public void removeResourcesFromNormalDepot() throws NegativeResourcesDepotException, WrongDepotException {
         Depot depot = DepotBuilder.buildBottomDepot();
         Resource toRemove = ResourceBuilder.buildCoin();
         Resource notInDepot = ResourceBuilder.buildServant();
@@ -49,7 +50,7 @@ public class DepotTest {
      * @throws NegativeResourcesDepotException if the Strongbox doesn't have enough resources to be removed
      */
     @Test
-    public void removeFromStrongbox() throws NegativeResourcesDepotException{
+    public void removeFromStrongbox() throws NegativeResourcesDepotException, WrongDepotException {
         Depot depot = DepotBuilder.buildStrongBoxDepot();
         List<Resource> list = new ArrayList<>();
         boolean exc = false;
@@ -99,7 +100,7 @@ public class DepotTest {
     }
 
     @Test
-    public void removeFromSpecialDepot() throws NegativeResourcesDepotException{
+    public void removeFromSpecialDepot() throws NegativeResourcesDepotException, WrongDepotException {
         Depot special = DepotBuilder.buildSpecialDepot(ResourceBuilder.buildShield());
         boolean exc = false;
 

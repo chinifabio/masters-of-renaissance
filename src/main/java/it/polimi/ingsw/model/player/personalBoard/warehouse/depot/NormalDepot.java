@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.player.personalBoard.warehouse.depot;
 
 
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -96,13 +97,14 @@ public class NormalDepot implements Depot {
         return ResourceBuilder.buildFromType(resources.type(),resources.amount());
     }
 
+
     /**
-     * This method returns null because this Depot only contains one type of resources
-     * @return null
+     * This method cannot be invoked because the NormalDepot can have only one type of resources each time
+     * @throws WrongDepotException if it's invoked
      */
     @Override
-    public List<Resource> viewAllResources() {
-        return null;
+    public List<Resource> viewAllResources() throws WrongDepotException {
+        throw new WrongDepotException();
     }
 
 

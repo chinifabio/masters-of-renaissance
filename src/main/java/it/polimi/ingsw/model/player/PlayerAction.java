@@ -61,7 +61,7 @@ public interface PlayerAction {
      * @param loot the resource to move
      * @return true if the resources are correctly moved in Production
      */
-    boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, PlayerStateException;
+    boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, PlayerStateException, WrongDepotException;
 
     /**
      * This method set the normal production of an unknown production
@@ -82,7 +82,7 @@ public interface PlayerAction {
      * This method activates the special ability of the LeaderCard
      * @param leaderId the string that identify the leader card
      */
-    void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EmptyDeckException, LootTypeException;
+    void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EmptyDeckException, LootTypeException, WrongDepotException;
 
     /**
      * This method removes a LeaderCard from the player
@@ -94,6 +94,6 @@ public interface PlayerAction {
      * the player ends its turn
      * @return true if success, false otherwise
      */
-    boolean endThisTurn() throws PlayerStateException;
+    boolean endThisTurn() throws PlayerStateException, WrongDepotException;
 
 }

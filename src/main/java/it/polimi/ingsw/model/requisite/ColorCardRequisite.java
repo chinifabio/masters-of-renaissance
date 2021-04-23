@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 public class ColorCardRequisite implements Requisite{
+
     /**
      * color of devCard
      */

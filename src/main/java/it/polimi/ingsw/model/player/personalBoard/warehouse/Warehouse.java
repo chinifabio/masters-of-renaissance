@@ -135,7 +135,7 @@ public class Warehouse {
     }
 
 
-    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource resource) throws NegativeResourcesDepotException, UnknownUnspecifiedException {
+    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource resource) throws NegativeResourcesDepotException, UnknownUnspecifiedException, WrongDepotException {
         ProductionRecord temp = new ProductionRecord(from, dest, resource);
         if (removeFromDepot(from, resource)){
             if (availableProductions.get(dest).insertResource(resource)){
@@ -152,7 +152,7 @@ public class Warehouse {
     /**
      * This method activates the productions selected by the player
      */
-    public boolean activateProductions() throws UnobtainableResourceException, EndGameException {
+    public boolean activateProductions() throws UnobtainableResourceException, EndGameException, WrongDepotException {
 
         for (Map.Entry<ProductionID, Production> entry : availableProductions.entrySet()) {
             if (entry.getValue().isSelected() && !entry.getValue().activate()){
@@ -178,7 +178,7 @@ public class Warehouse {
      * @param resource is the resource to insert into the Depot
      * @return true if the resources are correctly inserted
      */
-    public boolean insertInDepot(DepotSlot type, Resource resource) {
+    public boolean insertInDepot(DepotSlot type, Resource resource) throws WrongDepotException {
         if (!depots.get(type).checkTypeDepot()) {
             return depots.get(type).insert(resource);
         }
@@ -208,7 +208,7 @@ public class Warehouse {
      * @param slot is the Depot from which the Resources are taken
      * @return the resources inside the Depot
      */
-    public Resource viewResourcesInDepot(DepotSlot slot) throws NullPointerException{
+    public Resource viewResourcesInDepot(DepotSlot slot) throws NullPointerException, WrongDepotException {
         return depots.get(slot).viewResources();
     }
 
@@ -216,11 +216,11 @@ public class Warehouse {
      * This methods returns a list of resources inside the Strongbox
      * @return the list of all the Resources inside the Strongbox
      */
-    public List<Resource> viewResourcesInStrongbox(){
+    public List<Resource> viewResourcesInStrongbox() throws WrongDepotException {
         return depots.get(DepotSlot.STRONGBOX).viewAllResources();
     }
 
-    public void clearProduction() {
+    public void clearProduction() throws WrongDepotException {
         restoreProductions();
         for (Map.Entry<ProductionID, Production> entry : availableProductions.entrySet()) {
             entry.getValue().reset();
@@ -236,7 +236,7 @@ public class Warehouse {
         }
     }
 
-    public void restoreProductions() {
+    public void restoreProductions() throws WrongDepotException {
         for (ProductionRecord record : movesCache){
             insertInDepot(record.getFrom(), record.getResources());
         }
@@ -270,7 +270,7 @@ public class Warehouse {
      * This method counts the total number of resources inside the Warehouse and divides it to 5 to obtain the VictoryPoints
      * @return the value of VictoryPoints of the Warehouse
      */
-    public int countPointsWarehouse(){
+    public int countPointsWarehouse() throws WrongDepotException {
         int total = 0;
         for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()){
             if (!(entry.getValue() == null || entry.getKey() == DepotSlot.STRONGBOX || entry.getKey()==DepotSlot.BUFFER)){
@@ -288,7 +288,7 @@ public class Warehouse {
      * This method counts the amount of each type of resources in the Warehouse
      * @return a list with all resources and the corresponding amount
      */
-    public List<Resource> getTotalResources(){
+    public List<Resource> getTotalResources() throws WrongDepotException {
         List<Resource> totalResource = ResourceBuilder.buildListOfStorable();
         for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()){
             if (!(entry.getValue() == null || entry.getKey() == DepotSlot.STRONGBOX || entry.getKey() == DepotSlot.BUFFER)){
@@ -320,7 +320,7 @@ public class Warehouse {
         return this.availableProductions;
     }
 
-    public List<Resource> viewResourcesInBuffer(){
+    public List<Resource> viewResourcesInBuffer() throws WrongDepotException {
         return depots.get(DepotSlot.BUFFER).viewAllResources();
     }
 

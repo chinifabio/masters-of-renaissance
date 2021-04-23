@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.ExtraDiscountException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
@@ -45,7 +46,7 @@ public interface PlayableCardReaction extends CardReaction {
      * This method insert the Resources obtained from the Market to the Depots
      * @param obt the resource
      */
-    void obtainResource(Resource obt);
+    void obtainResource(Resource obt) throws WrongDepotException;
 
     /**
      * This method moves the FaithMarker of the player when he gets FaithPoint

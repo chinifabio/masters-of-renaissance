@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import it.polimi.ingsw.CustomAssertion;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
@@ -76,9 +77,7 @@ public class FaithTrackTest {
         try {
             track.movePlayer(last.amount(), game);
             fail();
-        } catch (EndGameException e){
-
-        }
+        } catch (EndGameException ignore){}
 
         assertEquals(VaticanSpace.THIRD, track.vaticanSpaceCell());
         assertEquals(20, track.victoryPointCellPlayer());
@@ -178,7 +177,7 @@ public class FaithTrackTest {
     }
 
     @Test
-    public void countingPoints() throws PlayerStateException {
+    public void countingPoints() throws PlayerStateException, WrongDepotException {
 
         //starting the game
         List<Player> orderList = new ArrayList<>();

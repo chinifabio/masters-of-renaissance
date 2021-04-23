@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.depot;
 
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -32,13 +33,13 @@ public interface Depot{
      * This method returns the resources that are into the depot
      * @return Resources inside the Depot
      */
-    Resource viewResources();
+    Resource viewResources() throws WrongDepotException;
 
     /**
      * This method returns a list of all the resources inside the Depot if it can stores more types of Resources
      * @return a list of all the resources inside the Depot
      */
-    List<Resource> viewAllResources();
+    List<Resource> viewAllResources() throws WrongDepotException;
 
     /**
      * This method checks if this Depot must have a check on the type of the Resources on this Depot

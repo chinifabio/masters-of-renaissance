@@ -38,6 +38,7 @@ public class DevSetup {
         this.devDeckGrid = new ArrayList<>();
         for(List<DevCard> deck : init){
             Deck<DevCard> temp = new Deck<>(deck);
+            temp.shuffle();
             this.devDeckGrid.add(temp);
         }
     }

@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.match.match;
 
 import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 
 public class MultiplayerMatch extends Match{
     /**
@@ -24,7 +25,7 @@ public class MultiplayerMatch extends Match{
         this.turn.endGame();
         try {
             this.turn.getCurPlayer().endThisTurn();
-        } catch (PlayerStateException e) {
+        } catch (PlayerStateException | WrongDepotException e) {
             // todo lancia un eccezione al model
         }
         // -------------------------

@@ -11,6 +11,7 @@ import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.cards.DevSetup;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.MarketTray;
@@ -154,7 +155,7 @@ public abstract class Match implements PlayerToMatch {
      * @param index the index of the row or column of the tray
      */
     @Override
-    public void useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException {
+    public void useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException, WrongDepotException {
         switch (rc) {
             case COL: this.marketTray.pushCol(index, turn.getCurPlayer());
             case ROW: this.marketTray.pushRow(index, turn.getCurPlayer());

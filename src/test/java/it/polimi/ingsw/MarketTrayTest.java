@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.DimensionReader;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
@@ -290,7 +291,7 @@ public class MarketTrayTest {
     }
 
     @Test
-    public void flushBufferTest() {
+    public void flushBufferTest() throws WrongDepotException {
         assertDoesNotThrow(()->game.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0));
 
         List<Resource> list = this.game.test_getCurrPlayer().test_getPB().getWH_forTest().viewResourcesInBuffer();

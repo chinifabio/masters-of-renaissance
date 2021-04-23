@@ -155,7 +155,7 @@ public class PersonalBoardTest {
      * This test creates two LeaderCards, adds them to the deck and activate them.
      */
     @Test
-    void ActivateLeaderCard() throws MissingCardException, AlreadyInDeckException, IllegalTypeInProduction, EmptyDeckException {
+    void ActivateLeaderCard() throws MissingCardException, AlreadyInDeckException, IllegalTypeInProduction, WrongDepotException {
         String ID1="000", ID2="111";
         List<Resource> sample = new ArrayList<>();
         Warehouse warehouse = new Warehouse();
@@ -290,7 +290,7 @@ public class PersonalBoardTest {
      * This test checks every method that involve production.
      */
     @Test
-    void Production() throws IllegalTypeInProduction, EndGameException, UnobtainableResourceException {
+    void Production() throws IllegalTypeInProduction {
         Match match = new MultiplayerMatch();
         Player player = new Player("gino",match);
         PersonalBoard personalBoard = new PersonalBoard(player);
@@ -379,7 +379,7 @@ public class PersonalBoardTest {
     }
 
     @Test
-    public void countsDevCardsPoints() throws PlayerStateException {
+    public void countsDevCardsPoints() throws PlayerStateException, WrongDepotException {
 
         PersonalBoard board = player1.test_getPB();
         List<Player> orderList = new ArrayList<>();
@@ -429,7 +429,7 @@ public class PersonalBoardTest {
     }
 
     @Test
-    public void countingLeaderPoints() throws EmptyDeckException, MissingCardException, PlayerStateException, LootTypeException, AlreadyInDeckException {
+    public void countingLeaderPoints() throws EmptyDeckException, MissingCardException, PlayerStateException, LootTypeException, AlreadyInDeckException, WrongDepotException {
         PersonalBoard board = player1.test_getPB();
 
 
@@ -508,7 +508,7 @@ public class PersonalBoardTest {
 
 
     @RepeatedTest(15)
-    public void countingTotalPoints() throws EndGameException, EmptyDeckException, MissingCardException, LootTypeException {
+    public void countingTotalPoints() throws EndGameException, EmptyDeckException, MissingCardException, LootTypeException, WrongDepotException {
         Random rand = new Random();
         int max = 24;
         int randomNum = rand.nextInt(max);

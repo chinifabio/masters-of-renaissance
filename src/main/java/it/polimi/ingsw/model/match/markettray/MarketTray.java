@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.*;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
 
@@ -105,7 +106,7 @@ public class MarketTray {
      * @param player player that uses the tray
      * @throws OutOfBoundMarketTrayException launched when shiftCol is out of bound
      */
-    public void pushCol(int shiftCol, PlayableCardReaction player) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException {
+    public void pushCol(int shiftCol, PlayableCardReaction player) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException, WrongDepotException {
         if (boundCheck.test(this.col, shiftCol)) throw new OutOfBoundMarketTrayException();
 
         for (int i = 0; i < row; i++) player.obtainResource(marbles[i][shiftCol].toResource());
@@ -126,7 +127,7 @@ public class MarketTray {
      * @param player player that uses the tray
      * @throws OutOfBoundMarketTrayException launched when shiftRow is out of bound
      */
-    public void pushRow(int shiftRow, PlayableCardReaction player) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException {
+    public void pushRow(int shiftRow, PlayableCardReaction player) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException, WrongDepotException {
         if (boundCheck.test(this.row, shiftRow)) throw new OutOfBoundMarketTrayException();
 
         for (int i = 0; i < col; i++) player.obtainResource(marbles[shiftRow][i].toResource());

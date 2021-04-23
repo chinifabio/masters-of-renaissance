@@ -138,7 +138,7 @@ public class MainActionDonePlayerState extends PlayerState {
      * @param leaderId the string that identify the leader card
      */
     @Override
-    public void activateLeaderCard(String leaderId) throws MissingCardException, EmptyDeckException, LootTypeException {
+    public void activateLeaderCard(String leaderId) throws MissingCardException, EmptyDeckException, LootTypeException, WrongDepotException {
         this.context.personalBoard.activateLeaderCard(leaderId);
     }
 
@@ -159,7 +159,7 @@ public class MainActionDonePlayerState extends PlayerState {
      * @return true if success, false otherwise
      */
     @Override
-    public boolean endThisTurn() throws PlayerStateException {
+    public boolean endThisTurn() throws PlayerStateException, WrongDepotException {
         this.context.personalBoard.flushBufferDepot(this.context.match);
         this.context.setState(new NotHisTurnPlayerState(this.context));
         return this.context.match.endMyTurn();

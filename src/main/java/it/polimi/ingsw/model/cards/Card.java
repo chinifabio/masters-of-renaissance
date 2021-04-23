@@ -69,6 +69,6 @@ public abstract class Card{
 
     @Override
     public String toString() {
-        return this.cardID;
+        return getCardID();
     }
 }

@@ -14,6 +14,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Productio
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.*;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -534,14 +535,32 @@ public class DeckTest {
 
     }
 
-    @Test
+    @RepeatedTest(10)
     public void cardsFromJSONTest() throws MissingCardException, LootTypeException, EmptyDeckException {
         DevSetup devSetup = new DevSetup();
 
-        assertEquals("DC1",devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.GREEN).getCardID());
-        assertEquals("DC2",devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.PURPLE).getCardID());
-        assertEquals("DC3",devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.BLUE).getCardID());
-        assertEquals("DC4",devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.YELLOW).getCardID());
+        String Card1 = "";
+        String Card2 = "";
+        String Card3 = "";
+        String Card4 = "";
+
+        for(ColorDevCard color : ColorDevCard.values()){
+            DevCard card = devSetup.showDevDeck(LevelDevCard.LEVEL1,color);
+            if (Card1.equals("")) {
+                Card1 = card.getCardID();
+            } else if (Card2.equals("")) {
+                Card2 = card.getCardID();
+            } else if (Card3.equals("")) {
+                Card3 = card.getCardID();
+            } else if (Card4.equals("")) {
+                Card4 = card.getCardID();
+            }
+        }
+
+        assertEquals(Card1,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.GREEN).getCardID());
+        assertEquals(Card2,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.YELLOW).getCardID());
+        assertEquals(Card3,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.BLUE).getCardID());
+        assertEquals(Card4,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.PURPLE).getCardID());
     }
 
     @Test

@@ -200,7 +200,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param obt the resource in form
      */
     @Override
-    public void obtainResource(Resource obt) {
+    public void obtainResource(Resource obt) throws WrongDepotException {
         try {
             obt.onObtain(this);
         } catch (EndGameException e) {
@@ -311,7 +311,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException {
         try {
             return this.playerState.moveInProduction(from, dest, loot);
-        } catch (PlayerStateException e) {
+        } catch (PlayerStateException | WrongDepotException e) {
             System.out.println(TextColors.colorText(TextColors.RED_BRIGHT, "fail moving resources in production"));
             return false;
         }
@@ -338,7 +338,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException {
         try {
             this.playerState.activateLeaderCard(leaderId);
-        } catch (EmptyDeckException | LootTypeException ignore) {
+        } catch (EmptyDeckException | LootTypeException | WrongDepotException ignore) {
             // there is no leader card
         }
     }
@@ -358,7 +358,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @return true if success, false otherwise
      */
     @Override
-    public boolean endThisTurn() throws PlayerStateException {
+    public boolean endThisTurn() throws PlayerStateException, WrongDepotException {
         return this.playerState.endThisTurn();
     }
 

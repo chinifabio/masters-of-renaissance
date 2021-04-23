@@ -66,7 +66,7 @@ public class NoActionDonePlayerState extends PlayerState {
     public boolean useMarketTray(RowCol rc, int index) throws UnobtainableResourceException, OutOfBoundMarketTrayException {
         try {
             this.context.match.useMarketTray(rc, index);
-        } catch (EndGameException e) {
+        } catch (EndGameException | WrongDepotException e) {
             this.context.match.startEndGameLogic();
         }
         this.context.setState(new MainActionDonePlayerState(this.context));
@@ -111,7 +111,7 @@ public class NoActionDonePlayerState extends PlayerState {
     public boolean activateProductions() throws UnobtainableResourceException {
         try {
             this.context.personalBoard.activateProductions();
-        } catch (EndGameException e) {
+        } catch (EndGameException | WrongDepotException e) {
             this.context.match.startEndGameLogic();
         }
         this.context.setState(new MainActionDonePlayerState(this.context));
@@ -143,7 +143,7 @@ public class NoActionDonePlayerState extends PlayerState {
      * @return the succeed of the operation
      */
     @Override
-    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException {
+    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, WrongDepotException {
         this.context.personalBoard.moveInProduction(from, dest, loot);
         return true;
     }
@@ -166,7 +166,7 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param leaderId the string that identify the leader card
      */
     @Override
-    public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EmptyDeckException, LootTypeException {
+    public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EmptyDeckException, LootTypeException, WrongDepotException {
         this.context.personalBoard.activateLeaderCard(leaderId);
     }
 
@@ -187,7 +187,7 @@ public class NoActionDonePlayerState extends PlayerState {
      * @return true if success, false otherwise
      */
     @Override
-    public boolean endThisTurn() throws PlayerStateException {
+    public boolean endThisTurn() throws PlayerStateException, WrongDepotException {
         this.context.personalBoard.flushBufferDepot(this.context.match);
         this.context.setState(new NotHisTurnPlayerState(this.context));
         return this.context.match.endMyTurn();

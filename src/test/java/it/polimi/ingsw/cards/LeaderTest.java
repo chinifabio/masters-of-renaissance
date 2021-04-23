@@ -1,6 +1,7 @@
 package it.polimi.ingsw.cards;
 
 import it.polimi.ingsw.model.cards.effects.*;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
@@ -109,7 +110,7 @@ public class LeaderTest {
     }
 
     @Test
-    public void testAddConversion() {
+    public void testAddConversion() throws WrongDepotException {
         // find the first white marble
         List<Marble> list = game.viewMarketTray();
         System.out.println(list);
