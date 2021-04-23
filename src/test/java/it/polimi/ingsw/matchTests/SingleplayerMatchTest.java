@@ -60,7 +60,6 @@ public class SingleplayerMatchTest {
      * Then try to do some operation to the match and with assertion check if the return value of it is right,
      * so you can know if the operation is succeed of failed.
      */
-    @Test
     @RepeatedTest(10)
     public void simpleLifeCycleOfMatch() {
         this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().test_getLastDiscarded().getCardID());
@@ -105,9 +104,8 @@ public class SingleplayerMatchTest {
     public void endGameByLorenzo() {
         assertDoesNotThrow(()-> {
             while (singleplayer.test_getGameOnAir()) {
-                System.out.println(((SingleplayerMatch) singleplayer).test_getLorenzoPosition());
                 gino.endThisTurn();
-            };
+            }
         });
 
         assertTrue(((SingleplayerMatch) singleplayer).test_getLorenzoWinner());

@@ -75,7 +75,7 @@ public class DevSetup {
      * @throws IndexOutOfBoundsException if you are trying to get a card from an empty deck with the chosen colors.
      */
     private Deck<DevCard> takeOneDeck(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException{
-        List<Deck<DevCard>> tempDeck = devDeckGrid
+        return devDeckGrid
                 .stream()
                 .filter(c -> {
                     try {
@@ -92,9 +92,7 @@ public class DevSetup {
                         return false;
                     }
                 })
-                .collect(Collectors.toList());
-
-            return tempDeck.get(0);
+                .findAny().orElse(new Deck<>());
     }
 
 }

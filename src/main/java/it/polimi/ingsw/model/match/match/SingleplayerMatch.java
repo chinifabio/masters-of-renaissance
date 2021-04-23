@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.cards.*;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
@@ -66,7 +65,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     }
 
     /**
-     * This method move lorenzo by a certaian amount passed as parameter
+     * This method move lorenzo by a certain amount passed as parameter
      *
      * @param i the amount of cells to move Lorenzo
      */
@@ -96,37 +95,42 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      */
     @Override
     public void discardDevCard(ColorDevCard color) {
-        // todo da mettere nell'effect come amount
-        /*
         int toDiscard = 2;
         List<LevelDevCard> list = Arrays.asList(LevelDevCard.values());
 
         for(int i = 0; i < toDiscard; i++) {
-            Iterator levels = list.iterator();
+            Iterator<LevelDevCard> levels = list.iterator();
             boolean res = false;
 
-            LevelDevCard level = (LevelDevCard) levels.next();
+            LevelDevCard level = levels.next();
             while (!res) {
                 try {
                     this.discardedFromToken.insertCard(this.devSetup.drawFromDeck(level, color));
                     res = true;
                 } catch (EmptyDeckException e) {
-                    if(levels.hasNext()) level = (LevelDevCard) levels.next();
-                    else this.endGame();// logica di fine gioco al posto di throw new EndGameException();
+                    // discard another card but with a different level
+                    if(levels.hasNext())
+                        level = levels.next();
+
+                    // starts the end game logic because there is no card available
+                    else {
+                        this.lorenzoWinner = true;
+                        System.out.println("end of the game: Lorenzo discarded dev cards of a color");
+                        this.startEndGameLogic();
+                    }
+                } catch (AlreadyInDeckException e) {
+                    // todo error to controller
                 }
             }
         }
 
-        // logica di fine gioco al posto this.devSetup.showDevDeck(list.get(list.size()-1), color);
-        this.endGame();
-        // if exception is thrown then the end game logic need to be started
-        */
-
-        // todo temporaneo fino quando non sono state implementate tutte le dev card
         try {
-            this.discardedFromToken.insertCard(new DevCard(String.valueOf(System.nanoTime()), null, 0, null, null, null));
-            this.discardedFromToken.insertCard(new DevCard(String.valueOf(System.nanoTime()), null, 0, null, null, null));
-        } catch (Exception e){}
+            this.devSetup.showDevDeck(list.get(list.size() - 1), color);
+        } catch (EmptyDeckException e) {
+            this.lorenzoWinner = true;
+            System.out.println("end of the game: Lorenzo discarded dev cards of a color");
+            this.startEndGameLogic(); // start end game logic if there is no card to discard
+        }
     }
 
     /**
@@ -138,11 +142,10 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     public boolean endMyTurn() {
         try {
             SoloActionToken s = this.soloToken.useAndDiscard();
-            System.out.println(TextColors.colorText(TextColors.BLUE, "Lorenzo: ") + "drawn " + s);
             s.useEffect(this);
         } catch (EmptyDeckException e) {
-            // solo tocken stack è vuota
-            // todo finire la partita con uno stato di errore
+            // solo token stack is empty
+            // todo end the game with error
         }
         return super.endMyTurn();
     }
@@ -153,10 +156,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      */
     @Override
     public void winnerCalculator() {
-        // guardo il flag lorenzowinner che si attiva quando lorenzo arriva alla fine del tracciato
-        // oppure quando non ci sono più carte sviluppo
-
-        // altrimenti vince sempre il player e calcolo il punteggio
+        // todo look for lorenzo winning flag or calculate the player points
     }
 
     // for testing
