@@ -11,6 +11,7 @@ import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.*;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -109,7 +110,7 @@ public class MarketTray {
     public void pushCol(int shiftCol, PlayableCardReaction player) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException, WrongDepotException {
         if (boundCheck.test(this.col, shiftCol)) throw new OutOfBoundMarketTrayException();
 
-        for (int i = 0; i < row; i++) player.obtainResource(marbles[i][shiftCol].toResource());
+        for (int i = 0; i < row; i++) player.obtainResource(DepotSlot.BUFFER, marbles[i][shiftCol].toResource());
 
         Marble temp = marbles[0][shiftCol];
         for (int i = 0; i < (row - 1); i++) {
@@ -130,7 +131,7 @@ public class MarketTray {
     public void pushRow(int shiftRow, PlayableCardReaction player) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException, WrongDepotException {
         if (boundCheck.test(this.row, shiftRow)) throw new OutOfBoundMarketTrayException();
 
-        for (int i = 0; i < col; i++) player.obtainResource(marbles[shiftRow][i].toResource());
+        for (int i = 0; i < col; i++) player.obtainResource(DepotSlot.BUFFER, marbles[shiftRow][i].toResource());
 
         Marble temp = marbles[shiftRow][0];
         if (col - 1 >= 0) System.arraycopy(marbles[shiftRow], 1, marbles[shiftRow], 0, col - 1);

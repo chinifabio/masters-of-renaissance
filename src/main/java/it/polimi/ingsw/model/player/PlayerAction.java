@@ -19,6 +19,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalPro
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 public interface PlayerAction {
 
@@ -89,6 +90,12 @@ public interface PlayerAction {
      * @param leaderId the string that identify the leader card to be discarded
      */
     void discardLeader(String leaderId) throws PlayerStateException, EmptyDeckException, MissingCardException;
+
+    /**
+     * set a chosen resource attribute in player
+     * @param chosen the resource chosen
+     */
+    void chooseResource(ResourceType chosen) throws PlayerStateException, WrongDepotException;
 
     /**
      * the player ends its turn

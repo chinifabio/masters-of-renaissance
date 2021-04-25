@@ -9,8 +9,10 @@ import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.*;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
+import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,8 +41,13 @@ public class FaithTrackTest {
 
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
+
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(ResourceType.COIN));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(() -> assertTrue(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.STRONGBOX).viewAllResources().contains(ResourceBuilder.buildCoin())));
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
     }
 
     @Test

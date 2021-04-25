@@ -7,7 +7,6 @@ import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
-import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
@@ -22,7 +21,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.model.resource.ResourceType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -37,16 +35,16 @@ public class DeckTest {
     @Test
     void cardIDCheck(){
         String ID = "105", ID1 = "120",ID2 = "145";
-        Production p = null;
+
         List<Requisite> requisite = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         requisite.add(rr);
 
 
-        DevCard c1 = new DevCard(ID, new AddProductionEffect(p), 3, LevelDevCard.LEVEL3, ColorDevCard.BLUE,requisite);
-        LeaderCard c2 = new LeaderCard(ID1, new AddProductionEffect(p),6,requisite);
-        SoloActionToken token = new SoloActionToken(ID2, new AddProductionEffect(p));
+        DevCard c1 = new DevCard(ID, new AddProductionEffect(null), 3, LevelDevCard.LEVEL3, ColorDevCard.BLUE,requisite);
+        LeaderCard c2 = new LeaderCard(ID1, new AddProductionEffect(null),6,requisite);
+        SoloActionToken token = new SoloActionToken(ID2, new AddProductionEffect(null));
 
         assertEquals(ID,c1.getCardID());
         assertEquals(ID1,c2.getCardID());
@@ -59,13 +57,13 @@ public class DeckTest {
     @Test
     void victoryPointDevCard(){
         int n = 7;
-        Production p = null;
+
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        DevCard c1 = new DevCard("000", new AddProductionEffect(p), n, LevelDevCard.LEVEL3, ColorDevCard.BLUE,req);
+        DevCard c1 = new DevCard("000", new AddProductionEffect(null), n, LevelDevCard.LEVEL3, ColorDevCard.BLUE,req);
 
         assertEquals(n,c1.getVictoryPoint());
     }
@@ -82,10 +80,8 @@ public class DeckTest {
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        List<Resource> sample = new ArrayList<>();
-        Production p = null;
 
-        DevCard c1 = new DevCard("000", new AddProductionEffect(p), 2, lev, col,req);
+        DevCard c1 = new DevCard("000", new AddProductionEffect(null), 2, lev, col,req);
 
         assertEquals(lev,c1.getLevel());
         assertEquals(col,c1.getColor());
@@ -97,13 +93,12 @@ public class DeckTest {
     @Test
     void victoryPointLeaderCard(){
         int n = 12;
-        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        LeaderCard c = new LeaderCard("010", new AddProductionEffect(p), n, req);
+        LeaderCard c = new LeaderCard("010", new AddProductionEffect(null), n, req);
 
         assertEquals(n,c.getVictoryPoint());
     }
@@ -113,13 +108,12 @@ public class DeckTest {
      */
     @Test
     void activatedLeaderCard(){
-        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        LeaderCard c = new LeaderCard("010", new AddProductionEffect(p), 6, req);
+        LeaderCard c = new LeaderCard("010", new AddProductionEffect(null), 6, req);
 
         assertFalse(c.isActivated());
         c.activate();
@@ -133,7 +127,6 @@ public class DeckTest {
      */
     @Test
     void CardCost(){
-        Production p = null;
         List<Requisite> req1 = new ArrayList<>();
         List<Requisite> req2 = new ArrayList<>();
         Resource twoCoin = ResourceBuilder.buildCoin(2);
@@ -143,8 +136,8 @@ public class DeckTest {
         req1.add(rr1);
         req2.add(rr2);
 
-        LeaderCard c1 = new LeaderCard("010", new AddProductionEffect(p), 6, req1);
-        DevCard c2 = new DevCard("000", new AddProductionEffect(p),10, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req2);
+        LeaderCard c1 = new LeaderCard("010", new AddProductionEffect(null), 6, req1);
+        DevCard c2 = new DevCard("000", new AddProductionEffect(null),10, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req2);
 
         assertEquals(req1,c1.getCost());
         assertNotEquals(req2,c1.getCost());
@@ -159,7 +152,7 @@ public class DeckTest {
     @Test
     void insertCard() {
         Deck<DevCard> d = new Deck<>();
-        Production p = null;
+
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -167,19 +160,15 @@ public class DeckTest {
 
         assertEquals(0,d.getNumberOfCards());
 
-        DevCard c1 = new DevCard("000", new AddProductionEffect(p),10, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
-        DevCard c2 = new DevCard("000", new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.GREEN, req);
-        DevCard c3 = new DevCard("111", new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.GREEN, req);
+        DevCard c1 = new DevCard("000", new AddProductionEffect(null),10, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
+        DevCard c2 = new DevCard("000", new AddProductionEffect(null),5, LevelDevCard.LEVEL2, ColorDevCard.GREEN, req);
+        DevCard c3 = new DevCard("111", new AddProductionEffect(null),5, LevelDevCard.LEVEL2, ColorDevCard.GREEN, req);
 
-        try { d.insertCard(c1); } catch (AlreadyInDeckException e) {
-
-        }
-        try { d.insertCard(c2); } catch (AlreadyInDeckException e) {
-
-        }
-        try { d.insertCard(c3); } catch (AlreadyInDeckException e) {
-
-        }
+        assertDoesNotThrow(()->d.insertCard(c1));
+        try {
+            d.insertCard(c2);
+        } catch (AlreadyInDeckException ignore) {}
+        assertDoesNotThrow(()->d.insertCard(c3));
 
         assertEquals(2,d.getNumberOfCards());
     }
@@ -190,14 +179,14 @@ public class DeckTest {
     @Test
     void addListOfCards(){
         int n=2;
-        Production p = null;
+
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        Card c1 = new DevCard("000", new AddProductionEffect(p),10, LevelDevCard.LEVEL1, ColorDevCard.GREEN,req);
-        Card c2 = new DevCard("001", new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
+        Card c1 = new DevCard("000", new AddProductionEffect(null),10, LevelDevCard.LEVEL1, ColorDevCard.GREEN,req);
+        Card c2 = new DevCard("001", new AddProductionEffect(null),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
 
         List<Card> cards = new ArrayList<>();
         cards.add(c1);
@@ -205,11 +194,8 @@ public class DeckTest {
         Deck<Card> d = new Deck<>();
 
         for(int i=0;i<n;i++){
-            try {
-                d.insertCard(cards.get(i));
-            } catch (AlreadyInDeckException e) {
-
-            }
+            int finalI = i;
+            assertDoesNotThrow(()->d.insertCard(cards.get(finalI)));
         }
 
         assertEquals(n,d.getNumberOfCards());
@@ -221,15 +207,15 @@ public class DeckTest {
     @Test
     void addOneInsertCard() {
         int n=3;
-        Production p = null;
+
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        DevCard c1 = new DevCard("000", new AddProductionEffect(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
-        DevCard c2 = new DevCard("000",  new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
-        DevCard c3 = new DevCard("002",  new AddProductionEffect(p),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
+        DevCard c1 = new DevCard("000", new AddProductionEffect(null), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
+        DevCard c2 = new DevCard("000",  new AddProductionEffect(null),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
+        DevCard c3 = new DevCard("002",  new AddProductionEffect(null),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
 
         List<DevCard> cards = new ArrayList<>();
         cards.add(c2);
@@ -254,28 +240,26 @@ public class DeckTest {
      */
     @Test
     void drawFromDeck(){
-        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        DevCard c1 = new DevCard("000", new AddProductionEffect(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
-        DevCard c2 = new DevCard("001",  new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
-        DevCard c3 = new DevCard("002",  new AddProductionEffect(p),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
+        DevCard c1 = new DevCard("000", new AddProductionEffect(null), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
+        DevCard c2 = new DevCard("001",  new AddProductionEffect(null),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
+        DevCard c3 = new DevCard("002",  new AddProductionEffect(null),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
         List<DevCard> cards = new ArrayList<>();
         cards.add(c1);
         cards.add(c2);
         cards.add(c3);
         Deck<Card> d1 = new Deck<>();
         Deck<DevCard> d2 = new Deck<>();
-        for(int i=0;i<3;i++) {
-            try {
-                d2.insertCard(cards.get(i));
-            } catch (AlreadyInDeckException e) {
 
-            }
+        for(int i=0;i<3;i++) {
+            int finalI = i;
+            assertDoesNotThrow(()->d2.insertCard(cards.get(finalI)));
         }
+
         assertEquals(0,d1.getNumberOfCards());
         assertEquals(3,d2.getNumberOfCards());
         try {
@@ -300,15 +284,14 @@ public class DeckTest {
      */
     @Test
     void discardCards(){
-        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        DevCard c1 = new DevCard("100", new AddProductionEffect(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
-        DevCard c2 = new DevCard("001",  new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
-        DevCard c3 = new DevCard("002",  new AddProductionEffect(p),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
+        DevCard c1 = new DevCard("100", new AddProductionEffect(null), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
+        DevCard c2 = new DevCard("001",  new AddProductionEffect(null),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
+        DevCard c3 = new DevCard("002",  new AddProductionEffect(null),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
         List<DevCard> cards = new ArrayList<>();
         cards.add(c1);
         cards.add(c2);
@@ -316,11 +299,8 @@ public class DeckTest {
         Deck<Card> d1 = new Deck<>();
         Deck<DevCard> d2 = new Deck<>();
         for(int i=0;i<3;i++) {
-            try {
-                d2.insertCard(cards.get(i));
-            } catch (AlreadyInDeckException e) {
-
-            }
+            int finalI = i;
+            assertDoesNotThrow(()->d2.insertCard(cards.get(finalI)));
         }
         assertEquals(0,d1.getNumberOfCards());
         assertEquals(3,d2.getNumberOfCards());
@@ -344,16 +324,15 @@ public class DeckTest {
      */
     @Test
     void peekCardFromDeck(){
-        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
         String ID = "100", ID1 = "010",ID2 = "001";
 
-        DevCard c1 = new DevCard(ID, new AddProductionEffect(p), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
-        DevCard c2 = new DevCard(ID1, new AddProductionEffect(p),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
-        DevCard c3 = new DevCard(ID2, new AddProductionEffect(p),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
+        DevCard c1 = new DevCard(ID, new AddProductionEffect(null), 10, LevelDevCard.LEVEL3, ColorDevCard.GREEN,req);
+        DevCard c2 = new DevCard(ID1, new AddProductionEffect(null),5, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,req);
+        DevCard c3 = new DevCard(ID2, new AddProductionEffect(null),2, LevelDevCard.LEVEL1, ColorDevCard.PURPLE,req);
         List<DevCard> cards = new ArrayList<>();
         cards.add(c1);
         cards.add(c2);
@@ -361,30 +340,18 @@ public class DeckTest {
         Deck<DevCard> d = new Deck<>();
 
         for(int i=0;i<3;i++) {
-            try {
-                d.insertCard(cards.get(i));
-            } catch (AlreadyInDeckException e) {
-
-            }
+            int finalI = i;
+            assertDoesNotThrow(()->d.insertCard(cards.get(finalI)));
         }
 
-        try {
-            assertEquals(ID2,d.peekFirstCard().getCardID());
-        } catch (EmptyDeckException e) {
-            e.printStackTrace();
-        }
+        assertDoesNotThrow(()->assertEquals(ID2,d.peekFirstCard().getCardID()));
+
         try {
             d.peekCard("002");
             fail();
-        } catch (MissingCardException e) {
-            e.printStackTrace();
-        }
-        try {
-            assertEquals(LevelDevCard.LEVEL3,d.peekCard(ID).getLevel());
-        } catch (MissingCardException e) {
-            e.printStackTrace();
-            fail();
-        }
+        } catch (MissingCardException ignore) {}
+
+        assertDoesNotThrow(()->assertEquals(LevelDevCard.LEVEL3,d.peekCard(ID).getLevel()));
     }
 
     /**
@@ -392,19 +359,18 @@ public class DeckTest {
      */
     @Test
     void shuffleDeck(){
-        Production p = null;
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        LeaderCard c1 = new LeaderCard("111", new AddProductionEffect(p), 1, req);
-        LeaderCard c2 = new LeaderCard("222", new AddProductionEffect(p), 2, req);
-        LeaderCard c3 = new LeaderCard("333", new AddProductionEffect(p), 3, req);
-        LeaderCard c4 = new LeaderCard("444", new AddProductionEffect(p), 4, req);
-        LeaderCard c5 = new LeaderCard("555", new AddProductionEffect(p), 5, req);
-        LeaderCard c6 = new LeaderCard("666", new AddProductionEffect(p), 6, req);
-        LeaderCard c7 = new LeaderCard("777", new AddProductionEffect(p), 7, req);
+        LeaderCard c1 = new LeaderCard("111", new AddProductionEffect(null), 1, req);
+        LeaderCard c2 = new LeaderCard("222", new AddProductionEffect(null), 2, req);
+        LeaderCard c3 = new LeaderCard("333", new AddProductionEffect(null), 3, req);
+        LeaderCard c4 = new LeaderCard("444", new AddProductionEffect(null), 4, req);
+        LeaderCard c5 = new LeaderCard("555", new AddProductionEffect(null), 5, req);
+        LeaderCard c6 = new LeaderCard("666", new AddProductionEffect(null), 6, req);
+        LeaderCard c7 = new LeaderCard("777", new AddProductionEffect(null), 7, req);
         Deck<LeaderCard> d = new Deck<>(c1);
         List<LeaderCard> cards = new ArrayList<>();
         cards.add(c2);
@@ -414,10 +380,8 @@ public class DeckTest {
         cards.add(c6);
         cards.add(c7);
         for(int i=0;i<6;i++) {
-            try {
-                d.insertCard(cards.get(i));
-            } catch (AlreadyInDeckException e) {
-            }
+            int finalI = i;
+            assertDoesNotThrow(()->d.insertCard(cards.get(finalI)));
         }
 
         assertEquals(7,d.getNumberOfCards());
@@ -483,60 +447,35 @@ public class DeckTest {
         cards2.add(cy3);
 
         for(int i=0;i<3;i++) {
-            try {
-                greenDeck.insertCard(cards1.get(i));
-            } catch (AlreadyInDeckException e) {
-            }
+            int finalI = i;
+            assertDoesNotThrow(()->greenDeck.insertCard(cards1.get(finalI)));
         }
         for(int i=0;i<3;i++) {
-            try {
-                yellowDeck.insertCard(cards2.get(i));
-            } catch (AlreadyInDeckException e) {
-            }
+            int finalI = i;
+            assertDoesNotThrow(()->yellowDeck.insertCard(cards2.get(finalI)));
         }
+
         List<Deck<DevCard>> deckList = new ArrayList<>();
 
-        DevSetup vuota = new DevSetup(deckList);
+        DevSetup empty = new DevSetup(deckList);
 
         try {
-            vuota.showDevDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
-        } catch (IndexOutOfBoundsException e) {
-        } catch (EmptyDeckException e) {
-            e.printStackTrace();
-        }
+            empty.showDevDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
+        } catch (EmptyDeckException ignore) {}
 
         deckList.add(greenDeck);
         deckList.add(yellowDeck);
 
         DevSetup grid = new DevSetup(deckList);
 
-        try {
-            grid.showDevDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
-        } catch (EmptyDeckException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            grid.drawFromDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
-        } catch (EmptyDeckException e) {
-            e.printStackTrace();
-        }
-        try {
-            grid.drawFromDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
-        } catch (IndexOutOfBoundsException e) {
-           e.printStackTrace();
-        } catch (EmptyDeckException e) {
-            e.printStackTrace();
-        }
+        assertDoesNotThrow(()->grid.showDevDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN));
+        assertDoesNotThrow(()->grid.drawFromDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN));
+        assertDoesNotThrow(()->grid.drawFromDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN));
 
     }
 
     @RepeatedTest(10)
-    public void cardsFromJSONTest() throws MissingCardException, LootTypeException, EmptyDeckException {
+    public void cardsFromJSONTest() throws EmptyDeckException {
         DevSetup devSetup = new DevSetup();
 
         String Card1 = "";
@@ -582,7 +521,7 @@ public class DeckTest {
 
         int i = 1;
         for (int j = 0; j<init.size(); j++){
-            assertEquals("LC"+String.valueOf(i),deckLeader.peekCard("LC"+String.valueOf(i)).getCardID());
+            assertEquals("LC"+ i,deckLeader.peekCard("LC"+ i).getCardID());
             i++;
         }
     }

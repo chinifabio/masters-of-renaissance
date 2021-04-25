@@ -18,6 +18,7 @@ import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -51,6 +52,16 @@ public class MarketTrayTest {
 
         assertTrue(game.startGame());
 
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
+
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(ResourceType.COIN));
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(() -> assertTrue(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.STRONGBOX).viewAllResources().contains(ResourceBuilder.buildCoin())));
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
+
         if(player1.canDoStuff()){
             order.add(player1);
             order.add(player2);
@@ -58,14 +69,6 @@ public class MarketTrayTest {
             order.add(player2);
             order.add(player1);
         }
-
-
-        assertDoesNotThrow(()->order.get(0).test_discardLeader());
-        assertDoesNotThrow(()->order.get(0).test_discardLeader());
-
-        assertDoesNotThrow(()->order.get(1).test_discardLeader());
-        assertDoesNotThrow(()->order.get(1).test_discardLeader());
-
     }
 
     /**

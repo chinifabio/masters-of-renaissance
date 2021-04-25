@@ -52,6 +52,7 @@ public class SingleplayerMatchTest {
         // the player discard the first two leader card
         assertDoesNotThrow(()->gino.test_discardLeader());
         assertDoesNotThrow(()->gino.test_discardLeader());
+        assertDoesNotThrow(()->gino.endThisTurn());
         // once the second leader is discarded the turn end and match manage lorenzo automatically
     }
 

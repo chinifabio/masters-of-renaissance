@@ -298,8 +298,8 @@ public class PersonalBoard {
      * from buffer depot to a legal one
      * @param resource the resource obtained
      */
-    public void obtainResource(Resource resource) throws WrongDepotException {
-        this.warehouse.insertInDepot(DepotSlot.BUFFER, resource);
+    public void insertInDepot(DepotSlot slot, Resource resource) throws WrongDepotException {
+        this.warehouse.insertInDepot(slot, resource);
     }
 
     /**

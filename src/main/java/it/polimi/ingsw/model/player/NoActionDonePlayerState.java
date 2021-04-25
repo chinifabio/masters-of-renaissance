@@ -13,7 +13,6 @@ import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -31,7 +30,7 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param context        the context
      */
     protected NoActionDonePlayerState(Player context) {
-        super(context);
+        super(context, "");
     }
 
     /**
@@ -49,7 +48,7 @@ public class NoActionDonePlayerState extends PlayerState {
      */
     @Override
     public void startTurn() throws PlayerStateException {
-        this.context.setState(new LeaderSelectionPlayerState(this.context));
+        this.context.setState(new NotHisTurnPlayerState(this.context));
     }
 
 // -------------------------- PLAYER ACTION IMPLEMENTATIONS ---------------------------------
@@ -81,7 +80,7 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param marbleIndex      the index of chosen tray's marble to color
      */
     @Override
-    public void paintMarbleInTray(int conversionsIndex, int marbleIndex) throws UnpaintableMarbleException, PlayerStateException {
+    public void paintMarbleInTray(int conversionsIndex, int marbleIndex) throws UnpaintableMarbleException {
         this.context.match.paintMarbleInTray(this.context.marbleConversions.get(conversionsIndex).copy(), marbleIndex);
     }
 
@@ -156,7 +155,7 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param loot loot to move
      */
     @Override
-    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws UnobtainableResourceException, WrongPointsException, WrongDepotException, NegativeResourcesDepotException {
+    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws UnobtainableResourceException, WrongDepotException, NegativeResourcesDepotException {
         this.context.personalBoard.moveResourceDepot(from, to, loot);
     }
 

@@ -99,7 +99,6 @@ public abstract class Match implements PlayerToMatch {
         this.leaderCardDeck.shuffle();
 
         this.devSetup = new DevSetup();
-
     }
 
     /**
@@ -119,7 +118,8 @@ public abstract class Match implements PlayerToMatch {
      */
     public boolean startGame() {
         if(this.turn.playerInGame() < this.minimumPlayer || gameOnAir) return false;
-        turn.getInkwellPlayer().startHisTurn();
+        turn.randomizeInkwellPlayer();
+        this.turn.getCurPlayer().startHisTurn();
         gameOnAir = true;
         return true;
     }

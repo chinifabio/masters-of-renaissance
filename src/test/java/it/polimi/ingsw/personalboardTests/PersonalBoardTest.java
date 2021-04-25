@@ -25,13 +25,11 @@ import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.requisite.CardRequisite;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.production.UnknownProduction;
 import it.polimi.ingsw.model.requisite.ColorCardRequisite;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
@@ -68,8 +66,13 @@ public class PersonalBoardTest {
 
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
+
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(ResourceType.COIN));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(() -> assertTrue(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.STRONGBOX).viewAllResources().contains(ResourceBuilder.buildCoin())));
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
     }
 
     /**
@@ -278,7 +281,7 @@ public class PersonalBoardTest {
         Resource twoStone = ResourceBuilder.buildStone(2);
         Resource oneStone = ResourceBuilder.buildStone(1);
 
-        personalBoard.obtainResource(twoStone);
+        personalBoard.insertInDepot(DepotSlot.BUFFER, twoStone);
         personalBoard.moveResourceDepot(DepotSlot.BUFFER,DepotSlot.MIDDLE,twoStone);
         assertEquals(twoStone,personalBoard.viewDepotResource(DepotSlot.MIDDLE));
         assertNotEquals(oneStone,personalBoard.viewDepotResource(DepotSlot.MIDDLE));

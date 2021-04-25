@@ -12,6 +12,9 @@ import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
+import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -56,7 +59,38 @@ public class MultiplayerMatchTest {
         assertFalse(multiplayer.playerJoin(dino));
 
         assertDoesNotThrow(()->assertTrue(multiplayer.startGame()));
-        assertTrue(multiplayer.test_getTurn().getCurPlayer().canDoStuff());
+
+        // initializing player section
+        /*
+        1st - 0 resource to choose and 0 faith points
+        2nd - 1 resource to choose and 0 faith points
+        3rd - 1 resource to choose and 1 faith points
+        4th - 2 resource to choose and 1 faith points
+         */
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
+
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(ResourceType.COIN));
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(() -> assertTrue(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.STRONGBOX).viewAllResources().contains(ResourceBuilder.buildCoin())));
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
+
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(ResourceType.COIN));
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
+        assertEquals(1, multiplayer.test_getCurrPlayer().test_getPB().getFT_forTest().getPlayerPosition());
+        assertDoesNotThrow(() -> assertTrue(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.STRONGBOX).viewAllResources().contains(ResourceBuilder.buildCoin())));
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
+
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(ResourceType.COIN));
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(ResourceType.COIN));
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
+        assertEquals(1, multiplayer.test_getCurrPlayer().test_getPB().getFT_forTest().getPlayerPosition());
+        assertDoesNotThrow(() -> assertTrue(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.STRONGBOX).viewAllResources().contains(ResourceBuilder.buildCoin(2))));
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
 
         // creating a list of the players in order to have player(0) = inkwell player
 
@@ -66,19 +100,12 @@ public class MultiplayerMatchTest {
         order.add(mino);
 
         Collections.rotate(order, -order.indexOf(multiplayer.test_getTurn().getCurPlayer()));
-
-        // discarding the leader cards
-        for (int i = 0; i < order.size(); i++) {
-            int in = i;
-            assertDoesNotThrow(()->order.get(in).test_discardLeader());
-            assertDoesNotThrow(()->order.get(in).test_discardLeader());
-        }
     }
 
     @RepeatedTest(5)
     public void endMatchByEndFaithTrack() throws WrongDepotException {
         for(int i = 0; i < 24; i++ ) {
-            order.get(0).obtainResource(MarbleBuilder.buildRed().toResource());
+            order.get(0).obtainResource(DepotSlot.STRONGBOX, MarbleBuilder.buildRed().toResource());
         }
 
         assertDoesNotThrow(()->{
@@ -96,20 +123,15 @@ public class MultiplayerMatchTest {
      * so you can know if the operation is succeed of failed.
      */
     @Test
-    public void buildMultiplayerTest() throws OutOfBoundMarketTrayException, UnobtainableResourceException,  PlayerStateException, WrongDepotException {
+    public void buildMultiplayerTest() {
 
         assertTrue(multiplayer.test_getCurrPlayer().canDoStuff());
 
         for(int i = 0; i < this.multiplayer.test_getTurn().playerInGame(); i++){
-            assertTrue(multiplayer.test_getCurrPlayer().useMarketTray(RowCol.COL, 2));
-            assertFalse(multiplayer.test_getCurrPlayer().useMarketTray(RowCol.COL, 2));
-            assertTrue(multiplayer.test_getCurrPlayer().endThisTurn());
+            assertDoesNotThrow(()->assertTrue(multiplayer.test_getCurrPlayer().useMarketTray(RowCol.COL, 2)));
+            assertDoesNotThrow(()->assertFalse(multiplayer.test_getCurrPlayer().useMarketTray(RowCol.COL, 2)));
+            assertDoesNotThrow(()->assertTrue(multiplayer.test_getCurrPlayer().endThisTurn()));
         }
-
-    }
-
-    @Test
-    public void turnTest() {
 
     }
 }

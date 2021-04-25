@@ -30,6 +30,8 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
+import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.util.Pair;
 
 import java.util.*;
 
@@ -71,6 +73,13 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * destination where put a dev card obtained
      */
     DevCardSlot slotDestination;
+
+    /**
+     * This save the initial setup of a player when the game starts
+     * the first integer refer to the amount of resource to choose
+     * second one integer refer to the amount of fait point player initially receive
+     */
+    public Pair<Integer> initialSetup;
 
     /**
      * This method create a player by nickname and saving the match reference
@@ -200,7 +209,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param obt the resource in form
      */
     @Override
-    public void obtainResource(Resource obt) throws WrongDepotException {
+    public void obtainResource(DepotSlot slot, Resource obt) throws WrongDepotException {
         try {
             obt.onObtain(this);
         } catch (EndGameException e) {
@@ -209,7 +218,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         } catch (UnobtainableResourceException e) {
             // todo exception to player handler
         }
-        if(obt.isStorable()) this.personalBoard.obtainResource(obt);
+        if(obt.isStorable()) this.personalBoard.insertInDepot(slot, obt);
     }
 
     /**
@@ -362,6 +371,16 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         return this.playerState.endThisTurn();
     }
 
+    /**
+     * set a chosen resource attribute in player
+     *
+     * @param chosen the resource chosen
+     */
+    @Override
+    public void chooseResource(ResourceType chosen) throws PlayerStateException, WrongDepotException {
+        this.playerState.chooseResource(chosen);
+    }
+
     // match to player implementation
 
     /**
@@ -466,5 +485,4 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     public List<Marble> test_getConv() {
         return this.marbleConversions;
     }
-
 }
