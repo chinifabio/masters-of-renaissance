@@ -9,7 +9,6 @@ import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
-import it.polimi.ingsw.util.Pair;
 
 import java.util.Optional;
 
@@ -32,7 +31,7 @@ public class LeaderSelectionPlayerState extends PlayerState {
     /**
      * the amount of card that need to be discarded
      */
-    private int toDiscard = 2;
+    private final int toDiscard = 2;
 
     /**
      * the constructor take the two final attribute of the state that are the personal board and the context.
@@ -110,11 +109,11 @@ public class LeaderSelectionPlayerState extends PlayerState {
      * @param chosen the resource chosen
      */
     @Override
-    public void chooseResource(ResourceType chosen) throws PlayerStateException, WrongDepotException {
+    public void chooseResource(DepotSlot slot, ResourceType chosen) throws PlayerStateException, WrongDepotException {
         if (this.chosenResources < this.resourceToChoose) {
-            this.context.obtainResource(DepotSlot.STRONGBOX, ResourceBuilder.buildFromType(chosen, 1));
-            chosenResources ++;
-        } else throw new PlayerStateException("you already chose " + resourceToChoose + " resources");
+            if (this.context.obtainResource(slot, ResourceBuilder.buildFromType(chosen, 1))) chosenResources ++;
+        } else if (slot == DepotSlot.STRONGBOX || slot == DepotSlot.BUFFER) throw new PlayerStateException("illegal depot chosen");
+        else throw new PlayerStateException("you already chose " + resourceToChoose + " resources");
     }
 
     /**

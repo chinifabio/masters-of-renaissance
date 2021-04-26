@@ -183,7 +183,7 @@ public abstract class PlayerState implements PlayerAction {
      * @param chosen the resource chosen
      */
     @Override
-    public void chooseResource(ResourceType chosen) throws PlayerStateException, WrongDepotException {
+    public void chooseResource(DepotSlot slot, ResourceType chosen) throws PlayerStateException, WrongDepotException {
         throw new PlayerStateException(errorMessage);
     }
 }

@@ -43,10 +43,10 @@ public class FaithTrackTest {
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
 
-        assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(ResourceType.COIN));
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(() -> assertTrue(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.STRONGBOX).viewAllResources().contains(ResourceBuilder.buildCoin())));
+        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources(), ResourceBuilder.buildCoin()));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
     }
 
@@ -190,7 +190,7 @@ public class FaithTrackTest {
         List<Player> orderList = new ArrayList<>();
         orderList.add(player1);
         orderList.add(player2);
-        Collections.rotate(orderList, -orderList.indexOf(orderList.stream().filter(Player :: canDoStuff).findAny().get()));
+        Collections.rotate(orderList, -orderList.indexOf(game.test_getCurrPlayer()));
 
 
 

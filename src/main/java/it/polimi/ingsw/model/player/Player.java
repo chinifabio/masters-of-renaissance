@@ -207,9 +207,10 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * This method insert the Resources obtained from the Market to the Depots
      *
      * @param obt the resource in form
+     * @return the succeed of the operation
      */
     @Override
-    public void obtainResource(DepotSlot slot, Resource obt) throws WrongDepotException {
+    public boolean obtainResource(DepotSlot slot, Resource obt) throws WrongDepotException {
         try {
             obt.onObtain(this);
         } catch (EndGameException e) {
@@ -218,7 +219,8 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         } catch (UnobtainableResourceException e) {
             // todo exception to player handler
         }
-        if(obt.isStorable()) this.personalBoard.insertInDepot(slot, obt);
+        if(obt.isStorable()) return this.personalBoard.insertInDepot(slot, obt);
+        return false;
     }
 
     /**
@@ -377,8 +379,8 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param chosen the resource chosen
      */
     @Override
-    public void chooseResource(ResourceType chosen) throws PlayerStateException, WrongDepotException {
-        this.playerState.chooseResource(chosen);
+    public void chooseResource(DepotSlot slot, ResourceType chosen) throws PlayerStateException, WrongDepotException {
+        this.playerState.chooseResource(slot, chosen);
     }
 
     // match to player implementation

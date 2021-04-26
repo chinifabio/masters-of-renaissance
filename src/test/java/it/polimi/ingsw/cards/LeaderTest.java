@@ -17,6 +17,7 @@ import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -50,10 +51,10 @@ public class LeaderTest {
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
 
-        assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(ResourceType.COIN));
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(() -> assertTrue(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.STRONGBOX).viewAllResources().contains(ResourceBuilder.buildCoin())));
+        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources(), buildCoin()));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
     }
 
@@ -114,7 +115,7 @@ public class LeaderTest {
         assertTrue(game.test_getCurrPlayer().test_getDiscount().contains(buildServant()));
     }
 
-    @Test
+    @RepeatedTest(10)
     public void testAddConversion() throws WrongDepotException {
         // find the first white marble
         List<Marble> list = game.viewMarketTray();
@@ -138,13 +139,13 @@ public class LeaderTest {
         List<Resource> check = ResourceBuilder.buildListOfStorable();
         list = game.viewMarketTray();
 
-        for (int j = 4*(i/4); j < 4*(i/3)+4; j++) {
+        for (int j = 4*(i/4); j < 4*(i/4)+4; j++) { // counting only the marbles in the ROW of the white marble painted
             int finalJ = j;
             List<Marble> finalList = list;
             check.stream()
-                    .filter(x-> x.equalsType(finalList.get(finalJ).toResource()))
-                    .findAny().orElse(buildFaithPoint())
-                    .merge(list.get(finalJ).toResource());
+                    .filter(x-> x.equalsType(finalList.get(finalJ).toResource()))   // find resource that matches the marble resource
+                    .findAny().orElse(buildFaithPoint())                            // if the resource doesn't exits it means it is a faith point
+                    .merge(list.get(finalJ).toResource());                          // merging the .toResource of the marble whit the storable resource
         }
 
         assertDoesNotThrow(()->game.test_getCurrPlayer().useMarketTray(RowCol.ROW, finalI / 4));

@@ -68,10 +68,10 @@ public class PersonalBoardTest {
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
 
-        assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(ResourceType.COIN));
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(() -> assertTrue(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.STRONGBOX).viewAllResources().contains(ResourceBuilder.buildCoin())));
+        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources(), ResourceBuilder.buildCoin()));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
     }
 
@@ -298,16 +298,6 @@ public class PersonalBoardTest {
         Player player = new Player("gino",match);
         PersonalBoard personalBoard = new PersonalBoard(player);
 
-        List<Resource> unknownReq = new ArrayList<>();
-        List<Resource> unknownOutput = new ArrayList<>();
-        unknownReq.add(ResourceBuilder.buildUnknown());
-        unknownReq.add(ResourceBuilder.buildUnknown());
-        unknownOutput.add(ResourceBuilder.buildUnknown());
-
-        for(int i=0;i<5;i++){
-            assertNull(personalBoard.possibleProduction().get(i));
-        }
-
         List<Requisite> req = new ArrayList<>();
         Resource twoCoin = ResourceBuilder.buildCoin(2);
         Resource oneServant = ResourceBuilder.buildServant();
@@ -516,31 +506,31 @@ public class PersonalBoardTest {
         int max = 24;
         int randomNum = rand.nextInt(max);
 
-        PersonalBoard board = player1.test_getPB();
-
         List<Player> orderList = new ArrayList<>();
         orderList.add(player1);
         orderList.add(player2);
         Collections.rotate(orderList, -orderList.indexOf(game.test_getCurrPlayer()));
 
-        //Inserting resources into the warehouse
-        player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.MIDDLE, buildStone(2));
-        player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildCoin(3));
-        player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildShield(10));
-        player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildServant(10));
-        player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildCoin(10));
-        player1.test_getPB().getWH_forTest().insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildStone(10));
+        PersonalBoard board = orderList.get(0).test_getPB();
 
-        assertEquals(9,player1.test_getPB().getWH_forTest().countPointsWarehouse());
+        //Inserting resources into the warehouse
+        orderList.get(0).test_getPB().getWH_forTest().insertInDepot(DepotSlot.MIDDLE, buildStone(2));
+        orderList.get(0).test_getPB().getWH_forTest().insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildCoin(3));
+        orderList.get(0).test_getPB().getWH_forTest().insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildShield(10));
+        orderList.get(0).test_getPB().getWH_forTest().insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildServant(10));
+        orderList.get(0).test_getPB().getWH_forTest().insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildCoin(10));
+        orderList.get(0).test_getPB().getWH_forTest().insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildStone(10));
+
+        assertEquals(9,orderList.get(0).test_getPB().getWH_forTest().countPointsWarehouse());
 
         //Moving the player into the FaithTrack
-        player1.getFT_forTest().movePlayer(randomNum,game);
+        orderList.get(0).getFT_forTest().movePlayer(randomNum,game);
 
 
         //Activating LeaderCards
         String ID1 = "";
         String ID2 = "";
-        for (LeaderCard card : player1.test_getPB().viewLeaderCard().getCards()){
+        for (LeaderCard card : orderList.get(0).test_getPB().viewLeaderCard().getCards()){
             if (ID1.equals("")){
                 ID1 = card.getCardID();
             } else {
@@ -550,12 +540,12 @@ public class PersonalBoardTest {
 
         boolean activated;
 
-        activated = player1.test_getPB().activateLeaderCard(ID1);
-        player1.test_getPB().discardLeaderCard(ID2);
+        activated = orderList.get(0).test_getPB().activateLeaderCard(ID1);
+        orderList.get(0).test_getPB().discardLeaderCard(ID2);
 
         if (activated) {
-            assertEquals(player1.test_getPB().viewLeaderCard().peekCard(ID1).getVictoryPoint(),
-                    player1.test_getPB().getVictoryPointsLeaderCards());
+            assertEquals(orderList.get(0).test_getPB().viewLeaderCard().peekCard(ID1).getVictoryPoint(),
+                    orderList.get(0).test_getPB().getVictoryPointsLeaderCards());
         }
 
         //Adding DevCards
@@ -573,18 +563,18 @@ public class PersonalBoardTest {
                 devCard2.getVictoryPoint() +
                 devCard3.getVictoryPoint() +
                 devCard4.getVictoryPoint()
-                ,player1.test_getPB().getVictoryPointsDevCards());
+                ,orderList.get(0).test_getPB().getVictoryPointsDevCards());
 
         //Counting TotalVictoryPoints
         if (activated) {
-            assertEquals(player1.test_getPB().getWH_forTest().countPointsWarehouse() +
-                    player1.getFT_forTest().countingFaithTrackVictoryPoints() +
-                    player1.test_getPB().getVictoryPointsLeaderCards() +
-                    player1.test_getPB().getVictoryPointsDevCards(), player1.test_getPB().getTotalVictoryPoints());
+            assertEquals(orderList.get(0).test_getPB().getWH_forTest().countPointsWarehouse() +
+                    orderList.get(0).getFT_forTest().countingFaithTrackVictoryPoints() +
+                    orderList.get(0).test_getPB().getVictoryPointsLeaderCards() +
+                    orderList.get(0).test_getPB().getVictoryPointsDevCards(), orderList.get(0).test_getPB().getTotalVictoryPoints());
         } else {
-            assertEquals(player1.test_getPB().getWH_forTest().countPointsWarehouse() +
-                    player1.getFT_forTest().countingFaithTrackVictoryPoints() +
-                    player1.test_getPB().getVictoryPointsDevCards(), player1.test_getPB().getTotalVictoryPoints());
+            assertEquals(orderList.get(0).test_getPB().getWH_forTest().countPointsWarehouse() +
+                    orderList.get(0).getFT_forTest().countingFaithTrackVictoryPoints() +
+                    orderList.get(0).test_getPB().getVictoryPointsDevCards(), orderList.get(0).test_getPB().getTotalVictoryPoints());
         }
 
     }

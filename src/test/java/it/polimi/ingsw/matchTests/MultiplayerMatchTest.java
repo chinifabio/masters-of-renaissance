@@ -1,12 +1,6 @@
 package it.polimi.ingsw.matchTests;
 
-import it.polimi.ingsw.TextColors;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
-import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
-import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
-import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
@@ -71,25 +65,27 @@ public class MultiplayerMatchTest {
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
 
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(ResourceType.COIN));
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(() -> assertTrue(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.STRONGBOX).viewAllResources().contains(ResourceBuilder.buildCoin())));
+        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources(), ResourceBuilder.buildCoin()));
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
 
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(ResourceType.COIN));
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
         assertEquals(1, multiplayer.test_getCurrPlayer().test_getPB().getFT_forTest().getPlayerPosition());
-        assertDoesNotThrow(() -> assertTrue(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.STRONGBOX).viewAllResources().contains(ResourceBuilder.buildCoin())));
+        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources(), ResourceBuilder.buildCoin()));
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
 
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(ResourceType.COIN));
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(ResourceType.COIN));
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.STONE));
+        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(DepotSlot.MIDDLE, ResourceType.STONE));
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
         assertEquals(1, multiplayer.test_getCurrPlayer().test_getPB().getFT_forTest().getPlayerPosition());
-        assertDoesNotThrow(() -> assertTrue(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.STRONGBOX).viewAllResources().contains(ResourceBuilder.buildCoin(2))));
+        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources(), ResourceBuilder.buildCoin()));
+        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.MIDDLE).viewResources(), ResourceBuilder.buildStone()));
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
 
         // creating a list of the players in order to have player(0) = inkwell player

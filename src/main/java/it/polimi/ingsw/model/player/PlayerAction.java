@@ -95,7 +95,7 @@ public interface PlayerAction {
      * set a chosen resource attribute in player
      * @param chosen the resource chosen
      */
-    void chooseResource(ResourceType chosen) throws PlayerStateException, WrongDepotException;
+    void chooseResource(DepotSlot slot, ResourceType chosen) throws PlayerStateException, WrongDepotException;
 
     /**
      * the player ends its turn
