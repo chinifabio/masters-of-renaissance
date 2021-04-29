@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
 import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.model.requisite.Requisite;
@@ -29,7 +30,7 @@ public interface MatchToPlayer {
      * @param req the requisite
      * @return boolean indicating the succeed of the method
      */
-    boolean hasRequisite(List<Requisite> req, LevelDevCard row, ColorDevCard col) throws NoRequisiteException;
+    boolean hasRequisite(List<Requisite> req, LevelDevCard row, ColorDevCard col, DevCard card) throws NoRequisiteException, LootTypeException;
 
     /**
      * This method adds a DevCard to the player's personal board, using resources taken from the Warehouse

@@ -102,14 +102,12 @@ public class PersonalBoard {
             pm.startEndGameLogic();
             return false;
         }
-
         if (checkDevCard(slot, card)) {
             try {
                 this.devDeck.get(slot).insertCard(card);
-
                 return true;
             } catch (AlreadyInDeckException e) {
-                e.printStackTrace();
+                e.printStackTrace();    //should not be possible to enter here
             }
         }
         return false;
@@ -122,7 +120,7 @@ public class PersonalBoard {
      * @param card the card that will be inserted.
      * @return true if the card can be placed into that position.
      */
-    private boolean checkDevCard(DevCardSlot slot, DevCard card) {
+     public boolean checkDevCard(DevCardSlot slot, DevCard card) {
         boolean result = false;
         Deck<DevCard> temp = this.devDeck.get(slot);
         if (temp == null) temp = new Deck<>();
@@ -134,7 +132,6 @@ public class PersonalBoard {
         }
         return result;
     }
-
 
     /**
      * return a map of the top develop card placed in the player board decks
@@ -240,6 +237,8 @@ public class PersonalBoard {
      */
     public void addExtraProduction(Production prod) throws ExtraProductionException {
         this.warehouse.addExtraProduction(prod);
+        //if(!this.productionSlotMap.containsKey(DevCardSlot.LEADER1)) this.productionSlotMap.put(DevCardSlot.LEADER1,ProductionID.LEADER1);
+        //else this.productionSlotMap.put(DevCardSlot.LEADER2,ProductionID.LEADER2);
     }
 
    // /**
@@ -300,6 +299,19 @@ public class PersonalBoard {
      */
     public boolean insertInDepot(DepotSlot slot, Resource resource) throws WrongDepotException {
         return this.warehouse.insertInDepot(slot, resource);
+    }
+
+    public boolean removeResource(DepotSlot slot, Resource resource) throws NegativeResourcesDepotException {
+        return this.warehouse.removeFromDepot(slot,resource);
+    }
+
+    /**
+     * take the list of resources from the warehouse and returns it
+     * @return the list of resources in the buffer
+     * @throws WrongDepotException
+     */
+    public List<Resource> viewBufferResources() throws WrongDepotException {
+        return this.warehouse.viewResourcesInBuffer();
     }
 
     /**
@@ -380,6 +392,13 @@ public class PersonalBoard {
             fp += resource.amount();
         }
         p2m.othersPlayersObtainFaithPoint(fp);
+        this.warehouse.flushBufferDepot();
+    }
+
+    /**
+     *
+     */
+    public void flushBufferDevCard(){
         this.warehouse.flushBufferDepot();
     }
 

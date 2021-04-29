@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
 import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
@@ -205,8 +206,8 @@ public abstract class Match implements PlayerToMatch {
      * @return true if there where no issue, false instead
      */
     @Override
-    public boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws NoRequisiteException, PlayerStateException, EmptyDeckException {
-        if (this.turn.getCurPlayer().hasRequisite(this.devSetup.showDevDeck(row, col).getCost(),row,col)) {
+    public boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws NoRequisiteException, PlayerStateException, EmptyDeckException, LootTypeException {
+        if (this.turn.getCurPlayer().hasRequisite(this.devSetup.showDevDeck(row, col).getCost(),row,col,this.devSetup.showDevDeck(row,col))) {
             try {
                 this.turn.getCurPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
                 return true;
@@ -214,7 +215,6 @@ public abstract class Match implements PlayerToMatch {
                 // todo exception to model
             }
         }
-
         return false;
     }
 

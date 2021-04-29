@@ -28,6 +28,7 @@ import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.requisite.Requisite;
+import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -270,14 +271,16 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @return true if there where no issue, false instead
      */
     @Override
-    public boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NoRequisiteException, EmptyDeckException {
+    public boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NoRequisiteException, EmptyDeckException, LootTypeException {
         try {
+            this.slotDestination = destination;
             return this.playerState.buyDevCard(row, col, destination);
         } catch (PlayerStateException e) {
             System.out.println(TextColors.colorText(TextColors.RED_BRIGHT, "fail buying develop card"));
             return false;
         }
     }
+
 
     /**
      * This method takes the resources from the Depots and the Strongbox to
@@ -408,9 +411,40 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @return boolean indicating the succeed of the method
      */
     @Override
-    public boolean hasRequisite(List<Requisite> req, LevelDevCard row, ColorDevCard col) {
-        // TODO use checkDevCard before removing resources and adding it. use discount here!
-        return false;
+    public boolean hasRequisite(List<Requisite> req, LevelDevCard row, ColorDevCard col,DevCard card) throws LootTypeException {
+        if (!this.personalBoard.checkDevCard(slotDestination, card)) {
+            return false;
+        }
+        //discount
+        List<Requisite> tempList = req;
+        for (Resource resLoop : this.marketDiscount) {
+            for (int j = 0; j < req.size(); j++) {
+                try {
+                    if (req.get(j).getType().equals(resLoop.type())) {
+                        Resource tempRes = ResourceBuilder.buildFromType(req.get(j).getType(), req.get(j).getAmount() - 1);
+                        ResourceRequisite tempReq = new ResourceRequisite(tempRes);
+                        tempList.set(j,tempReq);
+                    }
+                } catch (LootTypeException e) {
+                }
+            }
+        }
+        //resource check
+        List<Resource> tempBufferRes = null;
+        try {
+            tempBufferRes = this.personalBoard.viewBufferResources();
+        } catch (WrongDepotException e) { return false; }
+
+        for (Requisite reqLoop : tempList) {
+            for (Resource tempListResLoop : tempBufferRes) {
+                if (tempListResLoop.type().equals(reqLoop.getType())) {
+                    if ( !(tempListResLoop.amount() == reqLoop.getAmount()) ) return false;
+                }
+            }
+        }
+        //resource removal
+        this.personalBoard.flushBufferDevCard();
+        return true;
     }
 
     /**

@@ -93,7 +93,7 @@ public class NoActionDonePlayerState extends PlayerState {
      * @return true if there where no issue, false instead
      */
     @Override
-    public boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NoRequisiteException, PlayerStateException, EmptyDeckException {
+    public boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NoRequisiteException, PlayerStateException, EmptyDeckException, LootTypeException {
         this.context.slotDestination = destination;
         boolean res = this.context.match.buyDevCard(row, col);
         if (res) this.context.setState(new MainActionDonePlayerState(this.context));

@@ -149,7 +149,7 @@ public class LeaderTest {
         }
 
         assertDoesNotThrow(()->game.test_getCurrPlayer().useMarketTray(RowCol.ROW, finalI / 4));
-
+        //TODO a volte dà errore
         assertArrayEquals(check.toArray(), game.test_getCurrPlayer().test_getPB().getWH_forTest().viewResourcesInBuffer().toArray());
 
     }

@@ -19,6 +19,7 @@ import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotExceptio
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
@@ -29,6 +30,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.UnknownProduction;
 import it.polimi.ingsw.model.requisite.CardRequisite;
 import it.polimi.ingsw.model.requisite.ColorCardRequisite;
 import it.polimi.ingsw.model.requisite.Requisite;
@@ -293,7 +295,7 @@ public class PersonalBoardTest {
      * This test checks every method that involve production.
      */
     @Test
-    void Production() throws IllegalTypeInProduction {
+    void Production() throws IllegalTypeInProduction, EndGameException, UnobtainableResourceException, WrongDepotException, NegativeResourcesDepotException, UnknownUnspecifiedException, AlreadyInDeckException, MissingCardException, EmptyDeckException, LootTypeException {
         Match match = new MultiplayerMatch();
         Player player = new Player("gino",match);
         PersonalBoard personalBoard = new PersonalBoard(player);
@@ -306,13 +308,13 @@ public class PersonalBoardTest {
         resourceList.add(oneServant);
         ResourceRequisite rr = new ResourceRequisite(twoCoin);
         req.add(rr);
-        Production prod1 = new NormalProduction(resourceList, Collections.singletonList(buildStone()));
+        Production prod1 = new NormalProduction(resourceList, Collections.singletonList(buildStone(5)));
 
         DevCard c1 = new DevCard("000", new AddProductionEffect(prod1), 2, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
 
-        personalBoard.addDevCard(DevCardSlot.RIGHT,c1,match);
-        personalBoard.addProduction(prod1,DevCardSlot.RIGHT);
-        assertEquals(prod1,personalBoard.possibleProduction().get(ProductionID.RIGHT));
+        player.test_getPB().addDevCard(DevCardSlot.RIGHT,c1,match);
+        player.test_getPB().addProduction(prod1,DevCardSlot.RIGHT);
+        assertEquals(prod1,player.test_getPB().possibleProduction().get(ProductionID.RIGHT));
 
 
         Production prod2 = new NormalProduction(Collections.singletonList(ResourceBuilder.buildShield(2)),resourceList);
@@ -320,17 +322,48 @@ public class PersonalBoardTest {
 
         DevCard c2 = new DevCard("111", new AddProductionEffect(prod2), 6, LevelDevCard.LEVEL1, ColorDevCard.BLUE, req);
         DevCard c3 = new DevCard("222", new AddProductionEffect(prod3), 4, LevelDevCard.LEVEL2, ColorDevCard.GREEN, req);
+        DevCard c4 = new DevCard("333", new AddProductionEffect(prod1), 3, LevelDevCard.LEVEL3, ColorDevCard.YELLOW, req);
 
-        personalBoard.addDevCard(DevCardSlot.CENTER,c2,match);
-        personalBoard.addDevCard(DevCardSlot.RIGHT,c3,match);
-        personalBoard.addProduction(prod2,DevCardSlot.CENTER);
-        assertEquals(prod2, personalBoard.possibleProduction().get(ProductionID.CENTER));
+        player.test_getPB().addDevCard(DevCardSlot.CENTER,c2,match);
+        player.test_getPB().addDevCard(DevCardSlot.RIGHT,c3,match);
+        player.test_getPB().addProduction(prod2,DevCardSlot.CENTER);
+        assertEquals(prod2, player.test_getPB().possibleProduction().get(ProductionID.CENTER));
 
-        personalBoard.addProduction(prod3,DevCardSlot.RIGHT);
-        assertEquals(prod3, personalBoard.possibleProduction().get(ProductionID.RIGHT));
+        player.test_getPB().addProduction(prod3,DevCardSlot.RIGHT);
+        assertEquals(prod3, player.test_getPB().possibleProduction().get(ProductionID.RIGHT));
+        player.test_getPB().insertInDepot(DepotSlot.BUFFER,ResourceBuilder.buildShield(2));
+        player.test_getPB().moveResourceDepot(DepotSlot.BUFFER,DepotSlot.BOTTOM,ResourceBuilder.buildShield(2));
+        player.test_getPB().moveInProduction(DepotSlot.BOTTOM,ProductionID.CENTER,ResourceBuilder.buildShield(2));
+        player.test_getPB().activateProductions();
+        List<Resource> check = new ArrayList<>(Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildStone(0), ResourceBuilder.buildShield(0), ResourceBuilder.buildServant(1)));
+        assertEquals(check,player.test_getPB().viewStrongboxResource());
+        try {
+            player.test_getPB().moveInProduction(DepotSlot.BOTTOM, ProductionID.CENTER, ResourceBuilder.buildShield(2));
+            fail();
+        } catch (NegativeResourcesDepotException e){ }
+        player.test_getPB().activateProductions();
+        assertEquals(check,player.test_getPB().viewStrongboxResource());
+
+        player.test_getPB().addDevCard(DevCardSlot.RIGHT,c4,match);
+        player.test_getPB().addProduction(prod1,DevCardSlot.RIGHT);
+        player.test_getPB().moveInProduction(DepotSlot.STRONGBOX,ProductionID.RIGHT,twoCoin);
+        player.test_getPB().moveInProduction(DepotSlot.STRONGBOX,ProductionID.RIGHT,oneServant);
+        player.test_getPB().insertInDepot(DepotSlot.BUFFER,ResourceBuilder.buildShield(2));
+        player.test_getPB().moveResourceDepot(DepotSlot.BUFFER,DepotSlot.MIDDLE,ResourceBuilder.buildShield(2));
+        player.test_getPB().moveInProduction(DepotSlot.MIDDLE,ProductionID.CENTER,ResourceBuilder.buildShield(2));
+        player.test_getPB().activateProductions();
+        List<Resource> check2 = new ArrayList<>(Arrays.asList(ResourceBuilder.buildCoin(2),ResourceBuilder.buildStone(5),ResourceBuilder.buildShield(0),ResourceBuilder.buildServant(1)));
+        assertEquals(check2,player.test_getPB().viewStrongboxResource());
+
+
+
+        List<Requisite> LCreq = new ArrayList<>(Arrays.asList(new ResourceRequisite(ResourceBuilder.buildCoin())));
+        Production extraProd = new UnknownProduction(Arrays.asList(ResourceBuilder.buildUnknown()),Arrays.asList(ResourceBuilder.buildUnknown(),ResourceBuilder.buildFaithPoint()));
+        LeaderCard card = new LeaderCard("175", new AddExtraProductionEffect(extraProd),5,LCreq);
 
 
     }
+
 
     /**
      * This test create a personalBoard and moves the player on its faith track.
@@ -347,7 +380,6 @@ public class PersonalBoardTest {
         PersonalBoard personalBoard = new PersonalBoard(player1);
 
         Player player2 = new Player("gino",match);
-
 
         Match pm = new MultiplayerMatch();
         pm.playerJoin(player2);

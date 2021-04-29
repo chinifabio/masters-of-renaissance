@@ -46,7 +46,7 @@ public interface PlayerAction {
      * @param destination the slot where put the dev card slot
      * @return true if there where no issue, false instead
      */
-    boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NoRequisiteException, PlayerStateException, EmptyDeckException;
+    boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NoRequisiteException, PlayerStateException, EmptyDeckException, LootTypeException;
 
     /**
      * This method takes the resources from the Depots and the Strongbox to

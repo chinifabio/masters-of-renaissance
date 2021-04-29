@@ -18,7 +18,6 @@ public class DestroyCardsEffect extends Effect {
      */
     private ColorDevCard color;
 
-
     /**
      * This is the constructor of the class. It needs a ColoDevCard that will be destroyed.
      * @param c color of the card that will be destroyed.
@@ -27,8 +26,6 @@ public class DestroyCardsEffect extends Effect {
     public DestroyCardsEffect(@JsonProperty("color") ColorDevCard c) {
         this.color = c;
     }
-
-
 
     /**
      * This method is used only during single player matches: it discard two cards of the same color, starting from level 1 to 3, from the devSetup.
