@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.model.cards.effects.CardReaction;
 import it.polimi.ingsw.model.cards.effects.Effect;
 import it.polimi.ingsw.model.requisite.Requisite;
 
@@ -69,7 +68,7 @@ public class LeaderCard extends Card{
     /**
      * This method is used to set the attribute activated to true.
      */
-    public void activate(){  //potrebbe essere utile far chiamare un eccezione se chiamo activated su una carta già attiva
+    public void activate(){  // can launch an exception if the leader is activated yet
         this.activated = true;
     }
 
