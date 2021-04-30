@@ -25,11 +25,11 @@ public class DepotTest {
         boolean exception = false;
 
         depot.insert(ResourceBuilder.buildCoin(2));
-        assertEquals(ResourceBuilder.buildCoin(2), depot.viewResources());
+        assertEquals(ResourceBuilder.buildCoin(2), depot.viewResources().get(0));
         depot.withdraw(toRemove);
-        assertEquals(ResourceBuilder.buildCoin(), depot.viewResources());
+        assertEquals(ResourceBuilder.buildCoin(), depot.viewResources().get(0));
         depot.withdraw(notInDepot);
-        assertEquals(ResourceBuilder.buildCoin(), depot.viewResources());
+        assertEquals(ResourceBuilder.buildCoin(), depot.viewResources().get(0));
         depot.withdraw(toRemove);
 
         try{
@@ -40,9 +40,9 @@ public class DepotTest {
         assertTrue(exception);
 
         depot.insert(ResourceBuilder.buildServant(3));
-        assertEquals(ResourceBuilder.buildServant(3),depot.viewResources());
+        assertEquals(ResourceBuilder.buildServant(3),depot.viewResources().get(0));
         depot.withdraw(ResourceBuilder.buildServant(2));
-        assertEquals(ResourceBuilder.buildServant(),depot.viewResources());
+        assertEquals(ResourceBuilder.buildServant(),depot.viewResources().get(0));
     }
 
     /**
@@ -64,17 +64,17 @@ public class DepotTest {
         depot.insert(ResourceBuilder.buildServant(2));
         depot.insert(ResourceBuilder.buildCoin(4));
         depot.insert(ResourceBuilder.buildShield(5));
-        assertArrayEquals(list.toArray(), depot.viewAllResources().toArray());
+        assertArrayEquals(list.toArray(), depot.viewResources().toArray());
 
 
         depot.withdraw(ResourceBuilder.buildCoin(3));
         list.set(0,ResourceBuilder.buildCoin(1));
-        assertArrayEquals(list.toArray(), depot.viewAllResources().toArray());
+        assertArrayEquals(list.toArray(), depot.viewResources().toArray());
 
 
         depot.withdraw(ResourceBuilder.buildCoin());
         list.set(0,ResourceBuilder.buildCoin(0));
-        assertArrayEquals(list.toArray(), depot.viewAllResources().toArray());
+        assertArrayEquals(list.toArray(), depot.viewResources().toArray());
 
 
 
@@ -82,13 +82,13 @@ public class DepotTest {
         depot.insert(ResourceBuilder.buildStone(2));
         list.set(3,ResourceBuilder.buildServant(4));
         list.set(1, ResourceBuilder.buildStone(2));
-        assertArrayEquals(list.toArray(), depot.viewAllResources().toArray());
+        assertArrayEquals(list.toArray(), depot.viewResources().toArray());
 
 
 
         depot.withdraw(ResourceBuilder.buildServant(4));
         list.set(3,ResourceBuilder.buildServant(0));
-        assertArrayEquals(list.toArray(), depot.viewAllResources().toArray());
+        assertArrayEquals(list.toArray(), depot.viewResources().toArray());
 
         try {
             depot.withdraw(ResourceBuilder.buildShield(20));
@@ -96,7 +96,7 @@ public class DepotTest {
             exc = true;
         }
         assertTrue(exc);
-        assertArrayEquals(list.toArray(), depot.viewAllResources().toArray());
+        assertArrayEquals(list.toArray(), depot.viewResources().toArray());
     }
 
     @Test
@@ -106,16 +106,16 @@ public class DepotTest {
 
         special.insert(ResourceBuilder.buildShield(2));
         special.withdraw(ResourceBuilder.buildShield());
-        assertEquals(ResourceBuilder.buildShield(),special.viewResources());
+        assertEquals(ResourceBuilder.buildShield(),special.viewResources().get(0));
 
         special.withdraw(ResourceBuilder.buildShield());
-        assertEquals(ResourceBuilder.buildShield(0),special.viewResources());
+        assertEquals(ResourceBuilder.buildShield(0),special.viewResources().get(0));
 
         special.insert(ResourceBuilder.buildStone(2));
-        assertEquals(ResourceBuilder.buildShield(0),special.viewResources());
+        assertEquals(ResourceBuilder.buildShield(0),special.viewResources().get(0));
 
         special.insert(ResourceBuilder.buildShield(1));
-        assertEquals(ResourceBuilder.buildShield(1),special.viewResources());
+        assertEquals(ResourceBuilder.buildShield(1),special.viewResources().get(0));
 
         try {
             special.withdraw(ResourceBuilder.buildShield(3));
@@ -123,7 +123,7 @@ public class DepotTest {
             exc = true;
         }
         assertTrue(exc);
-        assertEquals(ResourceBuilder.buildShield(1),special.viewResources());
+        assertEquals(ResourceBuilder.buildShield(1),special.viewResources().get(0));
 
 
     }

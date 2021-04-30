@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedE
 import it.polimi.ingsw.model.exceptions.warehouse.*;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
-import it.polimi.ingsw.model.player.PlayableCardReaction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.*;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.*;
@@ -118,7 +117,7 @@ public class Warehouse {
 
         if (testResult.get()) {
 
-            if ((from != DepotSlot.BUFFER && from != DepotSlot.STRONGBOX) && (viewResourcesInDepot(from).amount() == 0 || !viewResourcesInDepot(from).equalsType(resource))) {
+            if ((from != DepotSlot.BUFFER && from != DepotSlot.STRONGBOX) && (viewResourcesInDepot(from).get(0).amount() == 0 || !viewResourcesInDepot(from).get(0).equalsType(resource))) {
                 throw new WrongDepotException();
             }
 
@@ -184,7 +183,7 @@ public class Warehouse {
         }
         for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()) {
             if ((entry.getValue()) != null && (entry.getValue().checkTypeDepot())) {
-                if ((entry.getKey() != type) && entry.getValue().viewResources().equalsType(resource)) {
+                if ((entry.getKey() != type) && entry.getValue().viewResources().get(0).equalsType(resource)) {
                     return false;
                 }
             }
@@ -208,17 +207,10 @@ public class Warehouse {
      * @param slot is the Depot from which the Resources are taken
      * @return the resources inside the Depot
      */
-    public Resource viewResourcesInDepot(DepotSlot slot) throws NullPointerException, WrongDepotException {
+    public List<Resource> viewResourcesInDepot(DepotSlot slot) throws NullPointerException{
         return depots.get(slot).viewResources();
     }
 
-    /**
-     * This methods returns a list of resources inside the Strongbox
-     * @return the list of all the Resources inside the Strongbox
-     */
-    public List<Resource> viewResourcesInStrongbox() throws WrongDepotException {
-        return depots.get(DepotSlot.STRONGBOX).viewAllResources();
-    }
 
     public void clearProduction() throws WrongDepotException {
         restoreProductions();
@@ -274,10 +266,10 @@ public class Warehouse {
         int total = 0;
         for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()){
             if (!(entry.getValue() == null || entry.getKey() == DepotSlot.STRONGBOX || entry.getKey()==DepotSlot.BUFFER)){
-                total = total + entry.getValue().viewResources().amount();
+                total = total + entry.getValue().viewResources().get(0).amount();
             }
         }
-        for (Resource res : viewResourcesInStrongbox()){
+        for (Resource res : viewResourcesInDepot(DepotSlot.STRONGBOX)){
             total = total + res.amount();
         }
 
@@ -293,13 +285,13 @@ public class Warehouse {
         for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()){
             if (!(entry.getValue() == null || entry.getKey() == DepotSlot.STRONGBOX || entry.getKey() == DepotSlot.BUFFER)){
                 for (Resource resource : totalResource){
-                    if (resource.equalsType(entry.getValue().viewResources())){
-                        resource.merge(entry.getValue().viewResources());
+                    if (resource.equalsType(entry.getValue().viewResources().get(0))){
+                        resource.merge(entry.getValue().viewResources().get(0));
                     }
                 }
             }
         }
-        for (Resource res : viewResourcesInStrongbox()){
+        for (Resource res : viewResourcesInDepot(DepotSlot.STRONGBOX)){
             for (Resource res2 : totalResource){
                 res2.merge(res);
             }
@@ -321,7 +313,7 @@ public class Warehouse {
     }
 
     public List<Resource> viewResourcesInBuffer() throws WrongDepotException {
-        return depots.get(DepotSlot.BUFFER).viewAllResources();
+        return depots.get(DepotSlot.BUFFER).viewResources();
     }
 
     // for testing

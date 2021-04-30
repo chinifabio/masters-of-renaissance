@@ -319,16 +319,8 @@ public class PersonalBoard {
      * @param slot is the Depot where the resources are stored
      * @return the Resources inside the Depot
      */
-    public Resource viewDepotResource(DepotSlot slot) throws WrongDepotException {
+    public List<Resource> viewDepotResource(DepotSlot slot) throws WrongDepotException {
         return this.warehouse.viewResourcesInDepot(slot);
-    }
-
-    /**
-     * This method shows the resource inside the Strongbox
-     * @return a list of resources inside the Strongbox
-     */
-    public List<Resource> viewStrongboxResource() throws WrongDepotException {
-        return this.warehouse.viewResourcesInStrongbox();
     }
 
     /**

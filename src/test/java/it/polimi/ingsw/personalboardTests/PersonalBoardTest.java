@@ -73,7 +73,7 @@ public class PersonalBoardTest {
         assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources(), ResourceBuilder.buildCoin()));
+        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
     }
 
@@ -285,9 +285,9 @@ public class PersonalBoardTest {
 
         personalBoard.insertInDepot(DepotSlot.BUFFER, twoStone);
         personalBoard.moveResourceDepot(DepotSlot.BUFFER,DepotSlot.MIDDLE,twoStone);
-        assertEquals(twoStone,personalBoard.viewDepotResource(DepotSlot.MIDDLE));
-        assertNotEquals(oneStone,personalBoard.viewDepotResource(DepotSlot.MIDDLE));
-        assertNotEquals(twoStone,personalBoard.viewDepotResource(DepotSlot.TOP));
+        assertEquals(twoStone,personalBoard.viewDepotResource(DepotSlot.MIDDLE).get(0));
+        assertNotEquals(oneStone,personalBoard.viewDepotResource(DepotSlot.MIDDLE).get(0));
+        assertNotEquals(twoStone,personalBoard.viewDepotResource(DepotSlot.TOP).get(0));
     }
 
 
@@ -336,13 +336,13 @@ public class PersonalBoardTest {
         player.test_getPB().moveInProduction(DepotSlot.BOTTOM,ProductionID.CENTER,ResourceBuilder.buildShield(2));
         player.test_getPB().activateProductions();
         List<Resource> check = new ArrayList<>(Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildStone(0), ResourceBuilder.buildShield(0), ResourceBuilder.buildServant(1)));
-        assertEquals(check,player.test_getPB().viewStrongboxResource());
+        assertEquals(check,player.test_getPB().viewDepotResource(DepotSlot.STRONGBOX));
         try {
             player.test_getPB().moveInProduction(DepotSlot.BOTTOM, ProductionID.CENTER, ResourceBuilder.buildShield(2));
             fail();
         } catch (NegativeResourcesDepotException e){ }
         player.test_getPB().activateProductions();
-        assertEquals(check,player.test_getPB().viewStrongboxResource());
+        assertEquals(check,player.test_getPB().viewDepotResource(DepotSlot.STRONGBOX));
 
         player.test_getPB().addDevCard(DevCardSlot.RIGHT,c4,match);
         player.test_getPB().addProduction(prod1,DevCardSlot.RIGHT);
@@ -353,7 +353,7 @@ public class PersonalBoardTest {
         player.test_getPB().moveInProduction(DepotSlot.MIDDLE,ProductionID.CENTER,ResourceBuilder.buildShield(2));
         player.test_getPB().activateProductions();
         List<Resource> check2 = new ArrayList<>(Arrays.asList(ResourceBuilder.buildCoin(2),ResourceBuilder.buildStone(5),ResourceBuilder.buildShield(0),ResourceBuilder.buildServant(1)));
-        assertEquals(check2,player.test_getPB().viewStrongboxResource());
+        assertEquals(check2,player.test_getPB().viewDepotResource(DepotSlot.STRONGBOX));
 
 
 

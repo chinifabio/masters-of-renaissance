@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.player.personalBoard.warehouse.production;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
@@ -108,10 +109,10 @@ public class UnknownProduction extends Production{
         for(int i = 0; i < this.required.size(); i++) {
             tempSum = lnorm.get(i).amount() - lthis.get(i).amount();
             if(lthis.get(i).type() == ResourceType.UNKNOWN) tempSum = 0;
-            if(tempSum < 0) throw new IllegalNormalProduction(normalProduction, "There are too few requirements");
+            if(tempSum < 0) throw new IllegalNormalProduction(normalProduction, TextColors.colorText(TextColors.RED_BRIGHT,"There are too few requirements"));
             counter += tempSum;
         }
-        if(counter > this.unknownInRequired) throw new IllegalNormalProduction(normalProduction, "There are too many requirements");
+        if(counter > this.unknownInRequired) throw new IllegalNormalProduction(normalProduction, TextColors.colorText(TextColors.RED_BRIGHT,"There are too many requirements"));
 
         counter = 0;
         lnorm = ResourceBuilder.rearrangeResourceList(normalProduction.viewOutput());
@@ -122,7 +123,7 @@ public class UnknownProduction extends Production{
             if(tempSum < 0 && lthis.get(i).type() != ResourceType.UNKNOWN) throw new IllegalNormalProduction(normalProduction, "too low out");
             counter += tempSum;
         }
-        if(counter > this.unknownInOutput) throw new IllegalNormalProduction(normalProduction, "There are too many requirements");
+        if(counter > this.unknownInOutput) throw new IllegalNormalProduction(normalProduction, TextColors.colorText(TextColors.RED_BRIGHT,"There are too many requirements"));
 
         this.normal = Optional.of(normalProduction);
         return true;

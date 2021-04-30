@@ -84,22 +84,16 @@ public class SpecialDepot implements Depot {
         }
     }
 
-    /**
-     * This method returns the resources that are into the depot
-     * @return Resources inside the Depot
-     */
-    @Override
-    public Resource viewResources() {
-        return ResourceBuilder.buildFromType(resources.type(),resources.amount());
-    }
 
     /**
      * This method cannot be invoked because the SpecialDepot can have only one type of resources
      * @throws WrongDepotException if it's invoked
      */
     @Override
-    public List<Resource> viewAllResources() throws WrongDepotException {
-        throw new WrongDepotException();
+    public List<Resource> viewResources(){
+        List<Resource> temp = new ArrayList();
+        temp.add(ResourceBuilder.buildFromType(resources.type(),resources.amount()));
+        return temp;
     }
 
     /**

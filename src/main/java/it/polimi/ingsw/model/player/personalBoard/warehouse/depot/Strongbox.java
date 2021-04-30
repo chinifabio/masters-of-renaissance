@@ -76,19 +76,10 @@ public class Strongbox implements Depot {
     }
 
     /**
-     * This method cannot be invoked because the Strongbox can have more types of resources
-     * @throws WrongDepotException if it's invoked
-     */
-    @Override
-    public Resource viewResources() throws WrongDepotException {
-       throw new WrongDepotException();
-    }
-
-    /**
      * This method returns a list of all the resources inside the Strongbox
      * @return a list of all the resources inside the Strongbox
      */
-    public List<Resource> viewAllResources() {
+    public List<Resource> viewResources() {
         List<Resource> clone = new ArrayList<>(this.resources.size());
         clone.addAll(this.resources);
         return clone;

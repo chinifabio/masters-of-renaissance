@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.exceptions.game;
 
-import static it.polimi.ingsw.TextColors.RESET;
-import static it.polimi.ingsw.TextColors.YELLOW;
+import static it.polimi.ingsw.TextColors.*;
 
 public class GameTypeException extends GameException{
     /**
@@ -22,7 +21,7 @@ public class GameTypeException extends GameException{
      * @return string of the message
      */
     public String getMsg(){
-        return YELLOW + msg + RESET;
+        return RED_BRIGHT + msg + RESET;
     }
 
 }

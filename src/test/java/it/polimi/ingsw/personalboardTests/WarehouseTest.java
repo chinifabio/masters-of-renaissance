@@ -56,27 +56,27 @@ public class WarehouseTest {
 
         //Testing resources in BOTTOM Depot
         test.insertInDepot(DepotSlot.BOTTOM,ResourceBuilder.buildShield(2));
-        assertEquals(ResourceBuilder.buildShield(2), test.viewResourcesInDepot(DepotSlot.BOTTOM));
+        assertEquals(ResourceBuilder.buildShield(2), test.viewResourcesInDepot(DepotSlot.BOTTOM).get(0));
         test.insertInDepot(DepotSlot.BOTTOM,ResourceBuilder.buildShield(2)); //Should not add
-        assertEquals(ResourceBuilder.buildShield(2), test.viewResourcesInDepot(DepotSlot.BOTTOM));
+        assertEquals(ResourceBuilder.buildShield(2), test.viewResourcesInDepot(DepotSlot.BOTTOM).get(0));
         test.insertInDepot(DepotSlot.BOTTOM,ResourceBuilder.buildShield());
-        assertEquals(ResourceBuilder.buildShield(3), test.viewResourcesInDepot(DepotSlot.BOTTOM));
+        assertEquals(ResourceBuilder.buildShield(3), test.viewResourcesInDepot(DepotSlot.BOTTOM).get(0));
 
         //Testing resources in MIDDLE Depot
         test.insertInDepot(DepotSlot.MIDDLE,ResourceBuilder.buildStone(2));
-        assertEquals(ResourceBuilder.buildStone(2), test.viewResourcesInDepot(DepotSlot.MIDDLE));
+        assertEquals(ResourceBuilder.buildStone(2), test.viewResourcesInDepot(DepotSlot.MIDDLE).get(0));
         test.insertInDepot(DepotSlot.MIDDLE,ResourceBuilder.buildStone(2)); //Should not add
-        assertEquals(ResourceBuilder.buildStone(2), test.viewResourcesInDepot(DepotSlot.MIDDLE));
+        assertEquals(ResourceBuilder.buildStone(2), test.viewResourcesInDepot(DepotSlot.MIDDLE).get(0));
         test.insertInDepot(DepotSlot.MIDDLE,ResourceBuilder.buildShield());//Should not add
-        assertEquals(ResourceBuilder.buildStone(2), test.viewResourcesInDepot(DepotSlot.MIDDLE));
+        assertEquals(ResourceBuilder.buildStone(2), test.viewResourcesInDepot(DepotSlot.MIDDLE).get(0));
 
         //Testing resources in TOP Depot
         test.insertInDepot(DepotSlot.TOP,ResourceBuilder.buildShield(2));//Should not add
-        assertEquals(ResourceBuilder.buildEmpty(), test.viewResourcesInDepot(DepotSlot.TOP));
+        assertEquals(ResourceBuilder.buildEmpty(), test.viewResourcesInDepot(DepotSlot.TOP).get(0));
         test.insertInDepot(DepotSlot.TOP,ResourceBuilder.buildCoin(1));
-        assertEquals(ResourceBuilder.buildCoin(1), test.viewResourcesInDepot(DepotSlot.TOP));
+        assertEquals(ResourceBuilder.buildCoin(1), test.viewResourcesInDepot(DepotSlot.TOP).get(0));
         test.insertInDepot(DepotSlot.TOP,ResourceBuilder.buildCoin());//Should not add
-        assertEquals(ResourceBuilder.buildCoin(1), test.viewResourcesInDepot(DepotSlot.TOP));
+        assertEquals(ResourceBuilder.buildCoin(1), test.viewResourcesInDepot(DepotSlot.TOP).get(0));
 
 
     }
@@ -99,25 +99,25 @@ public class WarehouseTest {
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildCoin(2));
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildServant(3));
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildStone(3));
-        assertArrayEquals(list.toArray(), test.viewResourcesInStrongbox().toArray());
+        assertArrayEquals(list.toArray(), test.viewResourcesInDepot(DepotSlot.STRONGBOX).toArray());
 
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildCoin(2));
         list.set(0,ResourceBuilder.buildCoin(4));
-        assertArrayEquals(list.toArray(), test.viewResourcesInStrongbox().toArray());
+        assertArrayEquals(list.toArray(), test.viewResourcesInDepot(DepotSlot.STRONGBOX).toArray());
 
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildServant(3));
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildStone(3));
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildStone(3));
         list.set(3,ResourceBuilder.buildServant(6));
         list.set(1,ResourceBuilder.buildStone(9));
-        assertArrayEquals(list.toArray(), test.viewResourcesInStrongbox().toArray());
+        assertArrayEquals(list.toArray(), test.viewResourcesInDepot(DepotSlot.STRONGBOX).toArray());
 
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildShield(4));
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildShield(2));
         list.set(2,ResourceBuilder.buildShield(6));
-        assertArrayEquals(list.toArray(), test.viewResourcesInStrongbox().toArray());
+        assertArrayEquals(list.toArray(), test.viewResourcesInDepot(DepotSlot.STRONGBOX).toArray());
         test.insertInDepot(DepotSlot.STRONGBOX,ResourceBuilder.buildFaithPoint(4));
-        assertArrayEquals(list.toArray(), test.viewResourcesInStrongbox().toArray());
+        assertArrayEquals(list.toArray(), test.viewResourcesInDepot(DepotSlot.STRONGBOX).toArray());
 
     }
 
@@ -132,23 +132,23 @@ public class WarehouseTest {
         //Add depot SPECIAL1
         test.addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildShield()));
         test.insertInDepot(DepotSlot.SPECIAL1, ResourceBuilder.buildShield());
-        assertEquals(ResourceBuilder.buildShield(1),test.viewResourcesInDepot(DepotSlot.SPECIAL1));
+        assertEquals(ResourceBuilder.buildShield(1),test.viewResourcesInDepot(DepotSlot.SPECIAL1).get(0));
         test.insertInDepot(DepotSlot.SPECIAL1, ResourceBuilder.buildShield(3));
         test.insertInDepot(DepotSlot.SPECIAL1, ResourceBuilder.buildCoin());
-        assertEquals(ResourceBuilder.buildShield(1),test.viewResourcesInDepot(DepotSlot.SPECIAL1));
+        assertEquals(ResourceBuilder.buildShield(1),test.viewResourcesInDepot(DepotSlot.SPECIAL1).get(0));
         test.insertInDepot(DepotSlot.SPECIAL1, ResourceBuilder.buildShield());
-        assertEquals(ResourceBuilder.buildShield(2),test.viewResourcesInDepot(DepotSlot.SPECIAL1));
+        assertEquals(ResourceBuilder.buildShield(2),test.viewResourcesInDepot(DepotSlot.SPECIAL1).get(0));
         //Add depot SPECIAL2
 
         test.addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildCoin()));
-        assertEquals(ResourceBuilder.buildCoin(0),test.viewResourcesInDepot(DepotSlot.SPECIAL2));
+        assertEquals(ResourceBuilder.buildCoin(0),test.viewResourcesInDepot(DepotSlot.SPECIAL2).get(0));
         test.insertInDepot(DepotSlot.SPECIAL2, ResourceBuilder.buildStone());
-        assertEquals(ResourceBuilder.buildCoin(0),test.viewResourcesInDepot(DepotSlot.SPECIAL2));
+        assertEquals(ResourceBuilder.buildCoin(0),test.viewResourcesInDepot(DepotSlot.SPECIAL2).get(0));
         test.insertInDepot(DepotSlot.SPECIAL2, ResourceBuilder.buildCoin());
-        assertEquals(ResourceBuilder.buildCoin(),test.viewResourcesInDepot(DepotSlot.SPECIAL2));
+        assertEquals(ResourceBuilder.buildCoin(),test.viewResourcesInDepot(DepotSlot.SPECIAL2).get(0));
         test.insertInDepot(DepotSlot.SPECIAL2, ResourceBuilder.buildCoin());
         test.insertInDepot(DepotSlot.SPECIAL2, ResourceBuilder.buildCoin());
-        assertEquals(ResourceBuilder.buildCoin(2),test.viewResourcesInDepot(DepotSlot.SPECIAL2));
+        assertEquals(ResourceBuilder.buildCoin(2),test.viewResourcesInDepot(DepotSlot.SPECIAL2).get(0));
         try{
             test.addDepot(DepotBuilder.buildSpecialDepot(ResourceBuilder.buildStone()));
         } catch (ExtraDepotsException e){
@@ -170,43 +170,43 @@ public class WarehouseTest {
         warehouse.insertInDepot(DepotSlot.SPECIAL1, ResourceBuilder.buildStone(1));
 
         warehouse.moveBetweenDepot(DepotSlot.SPECIAL1,DepotSlot.BOTTOM,ResourceBuilder.buildStone());
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.BOTTOM),ResourceBuilder.buildStone(3));
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.SPECIAL1),ResourceBuilder.buildStone(0));
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.BOTTOM).get(0),ResourceBuilder.buildStone(3));
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.SPECIAL1).get(0),ResourceBuilder.buildStone(0));
 
         warehouse.insertInDepot(DepotSlot.TOP,ResourceBuilder.buildShield());
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.TOP),ResourceBuilder.buildShield(1));
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.TOP).get(0),ResourceBuilder.buildShield(1));
 
         warehouse.moveBetweenDepot(DepotSlot.TOP,DepotSlot.SPECIAL2,ResourceBuilder.buildShield());
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.TOP),ResourceBuilder.buildEmpty());
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.SPECIAL2),ResourceBuilder.buildShield(1));
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.TOP).get(0),ResourceBuilder.buildEmpty());
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.SPECIAL2).get(0),ResourceBuilder.buildShield(1));
 
         warehouse.moveBetweenDepot(DepotSlot.BOTTOM,DepotSlot.SPECIAL1,ResourceBuilder.buildStone(2));
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.BOTTOM),ResourceBuilder.buildStone(1));
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.SPECIAL1),ResourceBuilder.buildStone(2));
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.BOTTOM).get(0),ResourceBuilder.buildStone(1));
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.SPECIAL1).get(0),ResourceBuilder.buildStone(2));
 
         warehouse.moveBetweenDepot(DepotSlot.MIDDLE,DepotSlot.TOP,ResourceBuilder.buildCoin());
         warehouse.moveBetweenDepot(DepotSlot.SPECIAL2,DepotSlot.MIDDLE,ResourceBuilder.buildShield());
         warehouse.removeFromDepot(DepotSlot.BOTTOM,ResourceBuilder.buildStone(1));
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.TOP),ResourceBuilder.buildCoin(1));
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.MIDDLE),ResourceBuilder.buildShield(1));
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.BOTTOM),ResourceBuilder.buildEmpty());
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.SPECIAL2),ResourceBuilder.buildShield(0));
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.TOP).get(0),ResourceBuilder.buildCoin(1));
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.MIDDLE).get(0),ResourceBuilder.buildShield(1));
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.BOTTOM).get(0),ResourceBuilder.buildEmpty());
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.SPECIAL2).get(0),ResourceBuilder.buildShield(0));
 
         warehouse.moveBetweenDepot(DepotSlot.TOP,DepotSlot.BOTTOM,ResourceBuilder.buildCoin());
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.TOP),ResourceBuilder.buildEmpty());
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.BOTTOM),ResourceBuilder.buildCoin(1));
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.TOP).get(0),ResourceBuilder.buildEmpty());
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.BOTTOM).get(0),ResourceBuilder.buildCoin(1));
 
         warehouse.insertInDepot(DepotSlot.TOP,ResourceBuilder.buildCoin(1)); //Do nothing
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.TOP),ResourceBuilder.buildEmpty());
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.BOTTOM),ResourceBuilder.buildCoin(1));
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.TOP).get(0),ResourceBuilder.buildEmpty());
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.BOTTOM).get(0),ResourceBuilder.buildCoin(1));
 
         warehouse.insertInDepot(DepotSlot.SPECIAL2,ResourceBuilder.buildShield(2));
         warehouse.moveBetweenDepot(DepotSlot.SPECIAL2,DepotSlot.MIDDLE,ResourceBuilder.buildShield(1));
         warehouse.moveBetweenDepot(DepotSlot.SPECIAL2,DepotSlot.TOP,ResourceBuilder.buildShield(1)); //Do nothing
 
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.SPECIAL2),ResourceBuilder.buildShield(1));
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.MIDDLE),ResourceBuilder.buildShield(2));
-        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.TOP),ResourceBuilder.buildEmpty());
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.SPECIAL2).get(0),ResourceBuilder.buildShield(1));
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.MIDDLE).get(0),ResourceBuilder.buildShield(2));
+        assertEquals(warehouse.viewResourcesInDepot(DepotSlot.TOP).get(0),ResourceBuilder.buildEmpty());
 
         assertFalse(warehouse.moveBetweenDepot(DepotSlot.SPECIAL2,DepotSlot.SPECIAL1,ResourceBuilder.buildShield(1)));
 
@@ -260,8 +260,8 @@ public class WarehouseTest {
         //Activating the productions
         warehouse.activateProductions();
 
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildStone(28)));
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildServant(10)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildStone(28)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildServant(10)));
 
 
     }
@@ -315,13 +315,13 @@ public class WarehouseTest {
         assertTrue(warehouse.getProduction().get(ProductionID.CENTER).viewResourcesAdded().contains(ResourceBuilder.buildStone(2)));
 
 
-        assertEquals(ResourceBuilder.buildCoin(2),warehouse.viewResourcesInDepot(DepotSlot.BOTTOM));
-        assertEquals(ResourceBuilder.buildShield(),warehouse.viewResourcesInDepot(DepotSlot.MIDDLE));
-        assertEquals(ResourceBuilder.buildEmpty(),warehouse.viewResourcesInDepot(DepotSlot.TOP));
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildCoin(20)));
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildShield(18)));
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildStone(18)));
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildServant(0)));
+        assertEquals(ResourceBuilder.buildCoin(2),warehouse.viewResourcesInDepot(DepotSlot.BOTTOM).get(0));
+        assertEquals(ResourceBuilder.buildShield(),warehouse.viewResourcesInDepot(DepotSlot.MIDDLE).get(0));
+        assertEquals(ResourceBuilder.buildEmpty(),warehouse.viewResourcesInDepot(DepotSlot.TOP).get(0));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildCoin(20)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildShield(18)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildStone(18)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildServant(0)));
 
 
         //Activating the productions
@@ -329,19 +329,19 @@ public class WarehouseTest {
         //This production will failed so the resources will return to their original position
 
 
-        assertEquals(ResourceBuilder.buildCoin(3),warehouse.viewResourcesInDepot(DepotSlot.BOTTOM));
-        assertEquals(ResourceBuilder.buildShield(2),warehouse.viewResourcesInDepot(DepotSlot.MIDDLE));
-        assertEquals(ResourceBuilder.buildEmpty(),warehouse.viewResourcesInDepot(DepotSlot.TOP));
+        assertEquals(ResourceBuilder.buildCoin(3),warehouse.viewResourcesInDepot(DepotSlot.BOTTOM).get(0));
+        assertEquals(ResourceBuilder.buildShield(2),warehouse.viewResourcesInDepot(DepotSlot.MIDDLE).get(0));
+        assertEquals(ResourceBuilder.buildEmpty(),warehouse.viewResourcesInDepot(DepotSlot.TOP).get(0));
 
         //The strongbox will not receive the resources of the productions
-        assertFalse(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildStone(28)));
-        assertFalse(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildServant(10)));
+        assertFalse(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildStone(28)));
+        assertFalse(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildServant(10)));
 
         //The strongbox will receive only the resources taken to use the production
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildCoin(20)));
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildShield(20)));
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildStone(20)));
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildServant(0)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildCoin(20)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildShield(20)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildStone(20)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildServant(0)));
 
     }
 
@@ -392,13 +392,13 @@ public class WarehouseTest {
         } catch (NegativeResourcesDepotException e){
             e.printStackTrace();
         }
-        assertEquals(ResourceBuilder.buildServant(3), warehouse.viewResourcesInDepot(DepotSlot.BOTTOM));
+        assertEquals(ResourceBuilder.buildServant(3), warehouse.viewResourcesInDepot(DepotSlot.BOTTOM).get(0));
 
         //Dest depot doesn't have that type of resources:
         warehouse.insertInDepot(DepotSlot.BUFFER,ResourceBuilder.buildCoin(2));
 
         warehouse.removeFromDepot(DepotSlot.BOTTOM, ResourceBuilder.buildServant());
-        assertEquals(ResourceBuilder.buildServant(2), warehouse.viewResourcesInDepot(DepotSlot.BOTTOM));
+        assertEquals(ResourceBuilder.buildServant(2), warehouse.viewResourcesInDepot(DepotSlot.BOTTOM).get(0));
 
         assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildCoin(2)));
 
@@ -410,8 +410,8 @@ public class WarehouseTest {
         warehouse.moveBetweenDepot(DepotSlot.BUFFER, DepotSlot.BOTTOM, ResourceBuilder.buildCoin(2));
 
         assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildCoin(0)));
-        assertEquals(ResourceBuilder.buildCoin(2), warehouse.viewResourcesInDepot(DepotSlot.BOTTOM));
-        assertEquals(ResourceBuilder.buildServant(2), warehouse.viewResourcesInDepot(DepotSlot.MIDDLE));
+        assertEquals(ResourceBuilder.buildCoin(2), warehouse.viewResourcesInDepot(DepotSlot.BOTTOM).get(0));
+        assertEquals(ResourceBuilder.buildServant(2), warehouse.viewResourcesInDepot(DepotSlot.MIDDLE).get(0));
 
         //Moving resources from and to SpecialDepot
         warehouse.insertInDepot(DepotSlot.BUFFER, ResourceBuilder.buildStone(3));
@@ -422,31 +422,31 @@ public class WarehouseTest {
 
         warehouse.moveBetweenDepot(DepotSlot.BUFFER, DepotSlot.SPECIAL1, ResourceBuilder.buildShield(2));
 
-        assertEquals(ResourceBuilder.buildShield(2), warehouse.viewResourcesInDepot(DepotSlot.SPECIAL1));
+        assertEquals(ResourceBuilder.buildShield(2), warehouse.viewResourcesInDepot(DepotSlot.SPECIAL1).get(0));
         assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildShield(0)));
 
         warehouse.moveBetweenDepot(DepotSlot.SPECIAL1, DepotSlot.BUFFER, ResourceBuilder.buildShield(1));
 
-        assertEquals(ResourceBuilder.buildShield(1), warehouse.viewResourcesInDepot(DepotSlot.SPECIAL1));
+        assertEquals(ResourceBuilder.buildShield(1), warehouse.viewResourcesInDepot(DepotSlot.SPECIAL1).get(0));
         assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildShield(1)));
 
         //Moving resources from and to Strongbox
         warehouse.insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildCoin(3));
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildCoin(3)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildCoin(3)));
 
         warehouse.moveBetweenDepot(DepotSlot.STRONGBOX,DepotSlot.BOTTOM, ResourceBuilder.buildCoin());
 
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildCoin(3)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildCoin(3)));
 
         warehouse.moveBetweenDepot(DepotSlot.STRONGBOX, DepotSlot.BUFFER, ResourceBuilder.buildCoin(2));
 
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildCoin(1)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildCoin(1)));
         assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildCoin(2)));
 
         warehouse.moveBetweenDepot(DepotSlot.BUFFER, DepotSlot.STRONGBOX, ResourceBuilder.buildStone(3));
 
         assertTrue(warehouse.viewResourcesInBuffer().contains(ResourceBuilder.buildStone(0)));
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildStone(3)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildStone(3)));
 
     }
 
@@ -476,16 +476,16 @@ public class WarehouseTest {
         assertTrue(warehouse.getTotalResources().contains(ResourceBuilder.buildStone(5)));
 
         //It doesn't change the resources inside the Depots
-        assertEquals(ResourceBuilder.buildShield(2), warehouse.viewResourcesInDepot(DepotSlot.BOTTOM));
-        assertEquals( ResourceBuilder.buildServant(1), warehouse.viewResourcesInDepot(DepotSlot.TOP));
-        assertEquals(ResourceBuilder.buildCoin(2), warehouse.viewResourcesInDepot(DepotSlot.MIDDLE));
-        assertEquals(ResourceBuilder.buildCoin(1), warehouse.viewResourcesInDepot(DepotSlot.SPECIAL1));
-        assertEquals(ResourceBuilder.buildServant(2), warehouse.viewResourcesInDepot(DepotSlot.SPECIAL2));
+        assertEquals(ResourceBuilder.buildShield(2), warehouse.viewResourcesInDepot(DepotSlot.BOTTOM).get(0));
+        assertEquals( ResourceBuilder.buildServant(1), warehouse.viewResourcesInDepot(DepotSlot.TOP).get(0));
+        assertEquals(ResourceBuilder.buildCoin(2), warehouse.viewResourcesInDepot(DepotSlot.MIDDLE).get(0));
+        assertEquals(ResourceBuilder.buildCoin(1), warehouse.viewResourcesInDepot(DepotSlot.SPECIAL1).get(0));
+        assertEquals(ResourceBuilder.buildServant(2), warehouse.viewResourcesInDepot(DepotSlot.SPECIAL2).get(0));
 
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildStone(5)));
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildCoin(3)));
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildShield(7)));
-        assertTrue(warehouse.viewResourcesInStrongbox().contains(ResourceBuilder.buildServant(5)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildStone(5)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildCoin(3)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildShield(7)));
+        assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildServant(5)));
 
     }
 }

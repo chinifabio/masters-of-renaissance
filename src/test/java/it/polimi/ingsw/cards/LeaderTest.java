@@ -54,7 +54,7 @@ public class LeaderTest {
         assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources(), buildCoin()));
+        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), buildCoin()));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
     }
 
@@ -119,7 +119,6 @@ public class LeaderTest {
     public void testAddConversion() throws WrongDepotException {
         // find the first white marble
         List<Marble> list = game.viewMarketTray();
-        System.out.println(list);
         int i = 0;
         while(list.get(i).type() != MarbleColor.WHITE) i++;
         int finalI = i;

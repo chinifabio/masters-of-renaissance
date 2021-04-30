@@ -29,17 +29,12 @@ public interface Depot{
      */
     boolean withdraw(Resource output) throws NegativeResourcesDepotException;
 
-    /**
-     * This method returns the resources that are into the depot
-     * @return Resources inside the Depot
-     */
-    Resource viewResources() throws WrongDepotException;
 
     /**
      * This method returns a list of all the resources inside the Depot if it can stores more types of Resources
      * @return a list of all the resources inside the Depot
      */
-    List<Resource> viewAllResources() throws WrongDepotException;
+    List<Resource> viewResources();
 
     /**
      * This method checks if this Depot must have a check on the type of the Resources on this Depot

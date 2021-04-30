@@ -42,7 +42,6 @@ public class PaintableMarble extends Marble{
 
     @Override
     public void paint(Marble painted){
-        System.out.println("painted: " + painted);
         this.marble = Optional.of(painted);
     }
 

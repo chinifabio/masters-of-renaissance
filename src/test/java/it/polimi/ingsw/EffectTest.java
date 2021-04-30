@@ -85,7 +85,7 @@ public class EffectTest {
 
         c.useEffect(player);
         try {
-            assertNotNull(player.test_getPB().viewDepotResource(DepotSlot.SPECIAL1));
+            assertNotNull(player.test_getPB().viewDepotResource(DepotSlot.SPECIAL1).get(0));
         } catch (NullPointerException e) {
             fail();
         }
@@ -93,7 +93,7 @@ public class EffectTest {
 
         player.test_getPB().moveResourceDepot(DepotSlot.BUFFER,DepotSlot.SPECIAL1,ResourceBuilder.buildCoin());
 
-        assertEquals(ResourceType.COIN, player.test_getPB().viewDepotResource(DepotSlot.SPECIAL1).type());
+        assertEquals(ResourceType.COIN, player.test_getPB().viewDepotResource(DepotSlot.SPECIAL1).get(0).type());
     }
 
     /**

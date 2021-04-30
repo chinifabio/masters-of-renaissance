@@ -2,10 +2,8 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
-import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.DimensionReader;
@@ -59,7 +57,7 @@ public class MarketTrayTest {
         assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources(), ResourceBuilder.buildCoin()));
+        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
 
         if(player1.canDoStuff()){
@@ -205,7 +203,6 @@ public class MarketTrayTest {
 
         for (Marble marble : marbles) {
             if (map.containsKey(marble.toResource().type())) {
-                System.out.println(marble);
                 int j = map.get(marble.toResource().type());
                 map.put(marble.toResource().type(), ++j);
             } else {

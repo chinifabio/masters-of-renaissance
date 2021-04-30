@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.exceptions.game;
 
-import static it.polimi.ingsw.TextColors.RESET;
-import static it.polimi.ingsw.TextColors.YELLOW;
+import static it.polimi.ingsw.TextColors.*;
 
 public class GameException extends Exception{
     /**
@@ -18,10 +17,11 @@ public class GameException extends Exception{
     }
 
     /**
-     * return the message handled
-     * @return string of the message
+     * Prints this throwable and its backtrace to the
+     * standard error stream.
      */
-    public String getMsg(){
-        return YELLOW + msg + RESET;
+    @Override
+    public void printStackTrace() {
+        System.out.println((colorText(RED_BRIGHT, this.msg)));
     }
 }
