@@ -4,9 +4,6 @@ package it.polimi.ingsw.model.exceptions;
 import static it.polimi.ingsw.TextColors.*;
 import static it.polimi.ingsw.TextColors.RED_BRIGHT;
 
-/**
- * exception thrown when someone tries to add more than 2 discounts.
- */
 public class ExtraDiscountException extends Exception{
     /**
      * Constructs a new exception with {@code null} as its detail message.

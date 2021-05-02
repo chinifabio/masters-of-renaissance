@@ -6,7 +6,7 @@ import static it.polimi.ingsw.TextColors.*;
 
 public class IllegalNormalProduction extends Exception{
 
-    private NormalProduction err;
+    private final NormalProduction err;
 
     /**
      * Constructs a new exception with the specified detail message.  The

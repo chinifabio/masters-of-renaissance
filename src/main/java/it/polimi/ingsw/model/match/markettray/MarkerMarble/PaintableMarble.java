@@ -7,13 +7,16 @@ import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.Optional;
 
+/**
+ * This class represents the White Marble that can be painted
+ */
 public class PaintableMarble extends Marble{
 
     private Optional<Marble> marble;
 
     /**
      * build a new white marble which is paintable
-     * @param color
+     * @param color is EMPTY because initially the white marble isn't painted
      */
     @JsonCreator
     protected PaintableMarble(@JsonProperty("color") MarbleColor color) {
@@ -23,7 +26,7 @@ public class PaintableMarble extends Marble{
 
     /**
      * build a new white marble which is paintable
-     * @param color
+     * @param color is EMPTY because initially the white marble isn't painted
      * @param optional the marble painted
      */
     private PaintableMarble(MarbleColor color, Optional<Marble> optional) {
@@ -32,14 +35,18 @@ public class PaintableMarble extends Marble{
     }
 
     /**
-     * paint this marble
-     * @return true beacouse white marble is paintable
+     * paints this marble
+     * @return true because white marble is paintable
      */
     @Override
     public boolean isPaintable() {
         return true;
     }
 
+    /**
+     * This method paints the marble
+     * @param painted new marble color
+     */
     @Override
     public void paint(Marble painted){
         this.marble = Optional.of(painted);

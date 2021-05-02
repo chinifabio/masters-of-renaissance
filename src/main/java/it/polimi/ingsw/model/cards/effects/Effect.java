@@ -3,14 +3,10 @@ package it.polimi.ingsw.model.cards.effects;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import it.polimi.ingsw.model.exceptions.ExtraProductionException;
-import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
-import it.polimi.ingsw.model.player.PlayableCardReaction;
-
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+/**
+ * This class represents the generic effect of cards, all Effect Classes extend this Class
+ */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonSubTypes({
         @JsonSubTypes.Type(name = "DestroyCards", value = DestroyCardsEffect.class),

@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.resource;
 import it.polimi.ingsw.TextColors;
 
 /**
- * types for the resources
+ * This enumeration indicates all the different type of Resources
  */
 public enum ResourceType {
     COIN, STONE, SHIELD, SERVANT, FAITHPOINT, UNKNOWN, EMPTY;

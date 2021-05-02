@@ -4,6 +4,9 @@ import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 
+/**
+ * This class represents the MultiplayerMatch
+ */
 public class MultiplayerMatch extends Match{
     /**
      * build a multiplayer match.
@@ -13,7 +16,6 @@ public class MultiplayerMatch extends Match{
     public MultiplayerMatch() {
         super(4, 2);
     }
-
 
     /**
      * This method starts the end game logic

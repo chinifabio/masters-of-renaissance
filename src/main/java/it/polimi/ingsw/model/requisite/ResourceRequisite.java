@@ -16,7 +16,7 @@ public class ResourceRequisite implements Requisite {
     /**
      * resource type for the activation/buy
      */
-    private Resource resource;
+    private final Resource resource;
 
     /**
      * constructor need the resource type and
@@ -76,7 +76,10 @@ public class ResourceRequisite implements Requisite {
                 ", amount =" + getAmount() +
                 '}';
     }
-
+    /**
+     * This method indicates if the Requisite is a Card, Color or Resource
+     * @return the RequisiteType RESOURCE
+     */
     @Override
     public RequisiteType getRequisiteType() {
         return RequisiteType.RESOURCE;

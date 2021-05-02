@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
@@ -37,6 +36,9 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      */
     private final Deck<DevCard> discardedFromToken;
 
+    /**
+     * This attribute indicates if Lorenzo is the winner of the Match
+     */
     private boolean lorenzoWinner = false;
 
     /**

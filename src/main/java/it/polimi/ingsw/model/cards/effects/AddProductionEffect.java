@@ -22,7 +22,7 @@ public class AddProductionEffect extends Effect{
     /**
      * This attribute is the production of the Card.
      */
-    private Production prod;
+    private final Production prod;
 
 
     /**

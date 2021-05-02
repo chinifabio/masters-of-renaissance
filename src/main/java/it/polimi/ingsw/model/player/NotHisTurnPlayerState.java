@@ -1,15 +1,10 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.model.cards.ColorDevCard;
-import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
-import it.polimi.ingsw.model.match.markettray.RowCol;
-import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
-import it.polimi.ingsw.model.resource.Resource;
 
+/**
+ * This class is the State where the Player waits for his turn
+ */
 public class NotHisTurnPlayerState extends PlayerState {
 
     /**
@@ -23,17 +18,18 @@ public class NotHisTurnPlayerState extends PlayerState {
     }
 
     /**
-     * can the player do staff?
+     * can the player do stuff?
      *
      * @return true yes, false no
      */
     @Override
-    public boolean doStaff() {
+    public boolean doStuff() {
         return false;
     }
 
     /**
-     * this method start the turn of the player
+     * This method starts the turn of the player
+     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public void startTurn() throws PlayerStateException {

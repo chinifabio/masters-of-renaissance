@@ -6,6 +6,9 @@ import it.polimi.ingsw.model.resource.Resource;
 import java.util.List;
 import java.util.function.BiPredicate;
 
+/**
+ * This interface is the representation of the Warehouse Depots that can be NormalDepot, SpecialDepot and Strongbox
+ */
 public interface Depot{
 
     /**
@@ -31,7 +34,7 @@ public interface Depot{
 
 
     /**
-     * This method returns a list of all the resources inside the Depot if it can stores more types of Resources
+     * This method returns a list of all the resources inside the Depot
      * @return a list of all the resources inside the Depot
      */
     List<Resource> viewResources();

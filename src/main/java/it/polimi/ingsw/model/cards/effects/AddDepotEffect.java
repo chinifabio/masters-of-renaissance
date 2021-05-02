@@ -25,7 +25,7 @@ public class AddDepotEffect extends Effect{
     /**
      * This attribute saves the type of resource that can be stored in the depot.
      */
-    private ResourceType res;
+    private final ResourceType res;
 
     /**
      * This method is activated by a LeaderCard, it adds a depot that contains up to two resources.

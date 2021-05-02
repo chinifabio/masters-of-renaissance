@@ -2,10 +2,12 @@ package it.polimi.ingsw.model.cards.effects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 
+/**
+ * This class is a part of the strategy pattern, it implements the interface Effect.
+ */
 public class AddExtraProductionEffect extends Effect{
 
     /**
@@ -20,7 +22,7 @@ public class AddExtraProductionEffect extends Effect{
     /**
      * This attribute is the production of the Card.
      */
-    private Production prod;
+    private final Production prod;
 
 
     /**

@@ -45,6 +45,7 @@ public class Warehouse {
 
     /**
      * This method is the constructor of the class
+     * @throws IllegalTypeInProduction if the Basic Production has IllegalResources
      */
     public Warehouse() throws IllegalTypeInProduction {
         //Initializing Production
@@ -76,6 +77,10 @@ public class Warehouse {
 
     }
 
+    /**
+     * This method add the Constraint for the Depots when the Player wants to move resources between Depots
+     * @param constraint is the constraint added to Depots
+     */
     public void addConstraint(Predicate<MoveResource> constraint){
         this.constraint.add(constraint);
     }
@@ -133,7 +138,16 @@ public class Warehouse {
         return false;
     }
 
-
+    /**
+     * This method moves resources to the Production
+     * @param from is the DepotSlot where the Resources are taken from
+     * @param dest is the Production that will uses the resources
+     * @param resource is the resources to move
+     * @return true if the resources are correctly moved
+     * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
+     * @throws UnknownUnspecifiedException if the Production is unspecified
+     * @throws WrongDepotException is the Player can't take resources from that Depot
+     */
     public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource resource) throws NegativeResourcesDepotException, UnknownUnspecifiedException, WrongDepotException {
         ProductionRecord temp = new ProductionRecord(from, dest, resource);
         if (removeFromDepot(from, resource)){
@@ -149,7 +163,11 @@ public class Warehouse {
     }
 
     /**
-     * This method activates the productions selected by the player
+     * This method activates the Productions selected by the Player
+     * @return true if the resources are correctly activated
+     * @throws UnobtainableResourceException if the Player can't obtain that resources
+     * @throws EndGameException if the Player can't do this action
+     * @throws WrongDepotException if the Resources can't be stored when a production is activated
      */
     public boolean activateProductions() throws UnobtainableResourceException, EndGameException, WrongDepotException {
 
@@ -176,6 +194,7 @@ public class Warehouse {
      * @param type is the type of Depot
      * @param resource is the resource to insert into the Depot
      * @return true if the resources are correctly inserted
+     * @throws WrongDepotException if the Resources can't be stored in that Depot
      */
     public boolean insertInDepot(DepotSlot type, Resource resource) throws WrongDepotException {
         if (!depots.get(type).checkTypeDepot()) {
@@ -212,13 +231,27 @@ public class Warehouse {
     }
 
 
-    public void clearProduction() throws WrongDepotException {
-        restoreProductions();
+    /**
+     * This method reset the Productions
+     */
+    public void clearProduction(){
+        try {
+            restoreProductions();
+        } catch (WrongDepotException e) {
+            e.printStackTrace();
+        }
         for (Map.Entry<ProductionID, Production> entry : availableProductions.entrySet()) {
             entry.getValue().reset();
         }
     }
 
+    /**
+     * This method set the UnknownProduction to a NormalProduction
+     * @param id is the Production to convert
+     * @param normalProduction is the new Normal Production
+     * @return true if the Production is correctly converted
+     * @throws IllegalNormalProduction if the production isn't an UnknownProduction
+     */
     public boolean setNormalProduction(ProductionID id, NormalProduction normalProduction) throws IllegalNormalProduction {
         try {
             availableProductions.get(id).setNormalProduction(normalProduction);
@@ -228,6 +261,10 @@ public class Warehouse {
         }
     }
 
+    /**
+     * This method restore the Resources taken to activate the Production if it failed
+     * @throws WrongDepotException if the Resources can be restored
+     */
     public void restoreProductions() throws WrongDepotException {
         for (ProductionRecord record : movesCache){
             insertInDepot(record.getFrom(), record.getResources());
@@ -262,7 +299,7 @@ public class Warehouse {
      * This method counts the total number of resources inside the Warehouse and divides it to 5 to obtain the VictoryPoints
      * @return the value of VictoryPoints of the Warehouse
      */
-    public int countPointsWarehouse() throws WrongDepotException {
+    public int countPointsWarehouse(){
         int total = 0;
         for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()){
             if (!(entry.getValue() == null || entry.getKey() == DepotSlot.STRONGBOX || entry.getKey()==DepotSlot.BUFFER)){
@@ -280,7 +317,7 @@ public class Warehouse {
      * This method counts the amount of each type of resources in the Warehouse
      * @return a list with all resources and the corresponding amount
      */
-    public List<Resource> getTotalResources() throws WrongDepotException {
+    public List<Resource> getTotalResources(){
         List<Resource> totalResource = ResourceBuilder.buildListOfStorable();
         for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()){
             if (!(entry.getValue() == null || entry.getKey() == DepotSlot.STRONGBOX || entry.getKey() == DepotSlot.BUFFER)){
@@ -307,13 +344,14 @@ public class Warehouse {
         depots.put(DepotSlot.BUFFER, DepotBuilder.buildStrongBoxDepot());
     }
 
-    //maybe only for testing
+    /**
+     * This method return the Map of possible production that the Player could activates
+     * @return the Map of ProductionID - Production
+     */
     public Map<ProductionID, Production> getProduction(){
-        return this.availableProductions;
-    }
-
-    public List<Resource> viewResourcesInBuffer() throws WrongDepotException {
-        return depots.get(DepotSlot.BUFFER).viewResources();
+        Map<ProductionID, Production> temp = new EnumMap<ProductionID, Production>(ProductionID.class);
+        temp.putAll(this.availableProductions);
+        return temp;
     }
 
     // for testing

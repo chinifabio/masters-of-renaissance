@@ -8,8 +8,6 @@ import it.polimi.ingsw.model.match.PlayerToMatch;
  */
 public class PopeSpace extends Cell {
 
-    //TODO Salvare un riferimento a Match e chiamare match.vaticanReport(VaticanSpace)
-
     /**
      * * This method is the constructor of the class, it is empty because it takes parameters from Json File
      */

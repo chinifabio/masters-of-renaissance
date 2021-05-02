@@ -9,7 +9,7 @@ public class IllegalTypeInProduction extends Exception{
     /**
      * the required resource list of wrong production
      */
-    private Resource illegal;
+    private final Resource illegal;
 
     /**
      * Constructs a new exception with {@code null} as its detail message.

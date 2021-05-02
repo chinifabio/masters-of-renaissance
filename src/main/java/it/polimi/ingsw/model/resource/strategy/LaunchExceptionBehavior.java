@@ -9,6 +9,9 @@ import it.polimi.ingsw.model.player.PlayableCardReaction;
  */
 public class LaunchExceptionBehavior implements ObtainStrategy{
 
+    /**
+     * This method is the constructor of the class
+     */
     @JsonCreator
     public LaunchExceptionBehavior() {}
 

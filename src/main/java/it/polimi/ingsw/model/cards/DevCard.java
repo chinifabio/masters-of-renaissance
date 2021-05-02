@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.cards.effects.Effect;
 import it.polimi.ingsw.model.requisite.Requisite;
-import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.List;
 
+/**
+ * This class is the representation of the DevCard
+ */
 public class DevCard extends Card{
 
     /**
@@ -30,22 +32,22 @@ public class DevCard extends Card{
     /**
      * This attribute is the victory point of the card.
      */
-    private int victoryPoint;
+    private final int victoryPoint;
 
     /**
      * This attribute uses the enumeration LevelDeckCard to represent the level of the DevCard.
      */
-    private LevelDevCard level;
+    private final LevelDevCard level;
 
     /**
      * This attribute uses the enumeration ColorDeckCard to represent the color of the DevCard.
      */
-    private ColorDevCard color;
+    private final ColorDevCard color;
 
     /**
      * This attribute is the list of Requisite that the DevCard requires to be bought.
      */
-    private List<Requisite> cost;
+    private final List<Requisite> cost;
 
     /**
      * This method is used to get the value of victoryPoint of the Card.

@@ -12,12 +12,12 @@ public class ColorCardRequisite implements Requisite{
     /**
      * color of devCard
      */
-    private ColorDevCard color;
+    private final ColorDevCard color;
 
     /**
      * Number of the same type of card requested
      */
-    private int amount;
+    private final int amount;
 
     /**
      * This method is the constructor of the class
@@ -31,9 +31,9 @@ public class ColorCardRequisite implements Requisite{
     }
 
     /**
-     * return the amount of loot contained
+     * return the amount of the same type of card requested
      *
-     * @return number of loot
+     * @return number of cards
      */
     @Override
     public int getAmount() {
@@ -41,10 +41,9 @@ public class ColorCardRequisite implements Requisite{
     }
 
     /**
-     * if implemented by ResourceLoot returns the resource type, else throw a LootTypeException
-     *
-     * @return resource type
-     * @throws LootTypeException wrong method called
+     * This method can't be invoked by this class
+     * @return nothing
+     * @throws LootTypeException if this method is invoked by this class
      */
     @Override
     public ResourceType getType() throws LootTypeException {
@@ -52,10 +51,9 @@ public class ColorCardRequisite implements Requisite{
     }
 
     /**
-     * if implemented by CardLoot returns the devCard level, else throw a LootTypeException
-     *
-     * @return level of the card
-     * @throws LootTypeException wrong method called
+     * This method can't be invoked by this class
+     * @return nothing
+     * @throws LootTypeException if this method is invoked by this class
      */
     @Override
     public LevelDevCard getLevel() throws LootTypeException {
@@ -63,8 +61,7 @@ public class ColorCardRequisite implements Requisite{
     }
 
     /**
-     * if implemented by CardLoot returns the devCard color, else throw a LootTypeException
-     *
+     * Return the color of the devCard
      * @return color of the card
      */
     @Override
@@ -73,9 +70,8 @@ public class ColorCardRequisite implements Requisite{
     }
 
     /**
-     * This method indicates the type of Requisite
-     *
-     * @return the type of requisite, so CARD or RESOURCE
+     * This method indicates if the Requisite is a Card, Color or Resource
+     * @return the RequisiteType COLOR
      */
     @Override
     public RequisiteType getRequisiteType() {

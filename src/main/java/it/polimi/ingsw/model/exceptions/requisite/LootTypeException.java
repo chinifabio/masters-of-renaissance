@@ -3,9 +3,6 @@ package it.polimi.ingsw.model.exceptions.requisite;
 import static it.polimi.ingsw.TextColors.*;
 import static it.polimi.ingsw.TextColors.RED_BRIGHT;
 
-/**
- * exception thrown when wrong method is invoked in a subclass of Loot
- */
 public class LootTypeException extends Exception {
     /**
      * Constructs a new exception with {@code null} as its detail message.

@@ -8,16 +8,17 @@ import it.polimi.ingsw.model.cards.effects.Effect;
 import it.polimi.ingsw.model.requisite.Requisite;
 
 /**
- * This class implements the LeaderCard
+ * This class represents the LeaderCard
  */
 public class LeaderCard extends Card{
 
     /**
      * This method is the constructor of the LeaderCard class. The attribute activated is initially set to false.
-     * @param victoryPoint of the card.
-     * @param requirements of the card.
+     * @param cardID is the identifier of the Card
+     * @param effect is the effect of the LeaderCard that is activated by the Player
+     * @param victoryPoint is the number of victoryPoints of the card
+     * @param requirements is the requirements to activate the LeaderCard
      */
-
     @JsonCreator
     public LeaderCard(@JsonProperty("cardID") String cardID, @JsonProperty("effect") Effect effect, @JsonProperty("victoryPoint") int victoryPoint, @JsonProperty("requirements") List<Requisite> requirements ) {
         super(cardID, effect);
@@ -29,12 +30,12 @@ public class LeaderCard extends Card{
     /**
      * This attribute is the victory point of the card.
      */
-    private int victoryPoint;
+    private final int victoryPoint;
 
     /**
      * This attribute is the list of Loot that the LeaderCard requires to be activated.
      */
-    private List<Requisite> requirements;
+    private final List<Requisite> requirements;
 
     /**
      * This attribute determine whether a card is already activated or not.

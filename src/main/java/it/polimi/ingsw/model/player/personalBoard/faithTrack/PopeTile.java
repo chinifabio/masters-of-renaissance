@@ -9,7 +9,7 @@ public class PopeTile {
     /**
      * This attribute is the victoryPoint that the Player could get if the tile is flipped
      */
-    private int victoryPoint;
+    private final int victoryPoint;
 
     /**
      * This attribute indicates if the Tile is flipped
@@ -42,6 +42,7 @@ public class PopeTile {
 
     /**
      * This method returns the value of the victoryPoints
+     * @return the number of VictoryPoints of this Tile
      */
     public int getVictoryPoint(){
         return this.victoryPoint;

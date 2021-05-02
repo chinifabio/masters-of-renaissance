@@ -82,7 +82,6 @@ public class FaithTrack {
     }
 
 
-
     /**
      * This method indicates in which vaticanSpace the cell is located
      * @return VaticanSpace
@@ -133,6 +132,7 @@ public class FaithTrack {
         return this.popeTiles.get(vs).isFlipped();
     }
 
+    //Only for testing
     public int victoryPointCellPlayer(){
         return track.get(playerPosition).getVictoryPoint();
     }

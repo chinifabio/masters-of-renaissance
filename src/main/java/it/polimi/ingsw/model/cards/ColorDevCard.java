@@ -2,9 +2,9 @@ package it.polimi.ingsw.model.cards;
 
 import it.polimi.ingsw.TextColors;
 
-import java.util.EnumMap;
-import java.util.Map;
-
+/**
+ * This enumeration indicates the colors of the DevCards
+ */
 public enum ColorDevCard {
     GREEN, YELLOW, BLUE, PURPLE;
 

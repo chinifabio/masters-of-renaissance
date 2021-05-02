@@ -2,9 +2,6 @@ package it.polimi.ingsw.model.exceptions.card;
 
 import static it.polimi.ingsw.TextColors.*;
 
-/**
- * exception thrown when someone tries to draw or discard a card from an empty deck
- */
 public class EmptyDeckException extends Exception{
     /**
      * Constructs a new exception with {@code null} as its detail message.

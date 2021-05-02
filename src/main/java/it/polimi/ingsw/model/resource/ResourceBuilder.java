@@ -1,17 +1,12 @@
 package it.polimi.ingsw.model.resource;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.model.player.personalBoard.faithTrack.Cell;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.resource.strategy.DoNothingBehavior;
 import it.polimi.ingsw.model.resource.strategy.GiveFaithPointBehavior;
 import it.polimi.ingsw.model.resource.strategy.LaunchExceptionBehavior;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * class that contains all the builders for all the resource types
@@ -121,13 +116,13 @@ public class ResourceBuilder {
 
     /**
      * build a new resource starting from a passed resource type
-     * @param type type of the new resource
-     * @return the new resource
+     * @param type type of the new Resource
+     * @param amount number of Resource to create
+     * @return  the new Resource
      */
     public static Resource buildFromType(ResourceType type, int amount){
         // create each type of resource
         List<Resource> allTypes = new ArrayList<>();
-        //TODO guardare se con jackson io posso fare questa cosa in automatico
         allTypes.add(buildStone());
         allTypes.add(buildServant());
         allTypes.add(buildShield());
@@ -137,12 +132,10 @@ public class ResourceBuilder {
         allTypes.add(buildFaithPoint());
 
 
-        Resource newOne = allTypes.stream().reduce(buildEmpty(), (r, res) -> {
+        return allTypes.stream().reduce(buildEmpty(), (r, res) -> {
             if(res.type() == type) return res.buildNewOne(amount);
             else return r;
         });
-
-        return newOne;
     }
 
     /**
@@ -175,7 +168,7 @@ public class ResourceBuilder {
      */
     public static List<Resource> rearrangeResourceList(List<Resource> raw) {
         List<Resource> arranged = ResourceBuilder.buildListOfResource();
-        for(Resource res : raw) arranged.stream().filter(x-> x.equalsType(res)).findAny().orElse(null).merge(res);
+        for(Resource res : raw) Objects.requireNonNull(arranged.stream().filter(x -> x.equalsType(res)).findAny().orElse(null)).merge(res);
         return arranged;
     }
 }

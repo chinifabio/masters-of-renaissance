@@ -6,33 +6,31 @@ import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+
+/**
+ * Interface that contains the method to handle marbles obtained from the marketTray
+ */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonSubTypes({
         @JsonSubTypes.Type(name = "Normal", value = Marble.class),
         @JsonSubTypes.Type(name = "White", value = PaintableMarble.class)
 })
-/**
- * interface that contains the method to handle marbles obtained from the marketTray
- */
 public class Marble {
     /**
-     * the color of the marble
+     * The color of the marble
      */
     @JsonProperty("color")
     protected MarbleColor color;
+
     /**
-     * the resource associated to the color
+     * The resource associated to the color
      */
     protected ResourceType toResource;
 
-    /**
-     * for jackson
-     */
-    public Marble(){}
 
     /**
-     * the constructor take the color and the resource mapped
+     * The constructor take the color and the resource mapped
      * @param color color of the marble
      * @param toResource resourceType to build the resource when someone request it
      */
@@ -63,7 +61,7 @@ public class Marble {
     }
 
     /**
-     * copy the marble in a new instance
+     * Copy the marble in a new instance
      * @return new instance equals this
      */
     public Marble copy(){
@@ -71,7 +69,7 @@ public class Marble {
     }
 
     /**
-     * paint the marble
+     * Paint the marble
      * @param painted new marble color
      * @throws UnpaintableMarbleException this class is not paintable
      */
@@ -80,9 +78,9 @@ public class Marble {
     }
 
     /**
-     * two marble are equals if they are the same type
+     * Two marble are equals if they are of the same type
      * @param obj another marble
-     * @return true if the two marbles are the same type
+     * @return true if the two marbles are of the same type
      */
     @Override
     public boolean equals(Object obj) {

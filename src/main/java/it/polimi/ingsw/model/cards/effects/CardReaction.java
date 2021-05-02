@@ -6,5 +6,4 @@ package it.polimi.ingsw.model.cards.effects;
  * To specify which interface it need to be casted before use it to view the method
  * of the interface
  */
-public interface CardReaction {
-}
+public interface CardReaction {}

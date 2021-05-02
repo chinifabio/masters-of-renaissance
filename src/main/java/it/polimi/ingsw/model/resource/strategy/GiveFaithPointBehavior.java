@@ -15,8 +15,6 @@ public class GiveFaithPointBehavior implements ObtainStrategy{
      */
     int amount;
 
-
-
     /**
      * the constructor receive the amount of faithpoint
      * @param amount amount of the resource

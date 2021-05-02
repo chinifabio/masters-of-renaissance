@@ -27,7 +27,11 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents the Match
+ */
 public abstract class Match implements PlayerToMatch {
+
     /**
      * the number of possible players in the game
      */
@@ -69,7 +73,9 @@ public abstract class Match implements PlayerToMatch {
     protected Map<VaticanSpace, Boolean> vaticanSpaceCheck;
 
     /**
-     * initialize the match
+     * This method is the constructor of the class
+     * @param gameSize indicates the number of players that can play this match
+     * @param min indicates the minimum number of players to start this match
      */
     protected Match(int gameSize, int min) {
         this.gameSize = gameSize;
@@ -188,7 +194,7 @@ public abstract class Match implements PlayerToMatch {
                 try {
                     temp.add(this.devSetup.showDevDeck(levelDevCard, colorDevCard));
                 } catch (IndexOutOfBoundsException e) {
-                    System.out.println("Non trovo il deck " + colorDevCard + " " + levelDevCard);
+                    System.out.println("Failed to find the Deck: " + colorDevCard + " " + levelDevCard);
                 } catch (EmptyDeckException e) {
                 // if there is no card skip to next deck
                 }

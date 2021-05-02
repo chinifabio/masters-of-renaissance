@@ -3,9 +3,6 @@ package it.polimi.ingsw.model.cards.effects;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.cards.ColorDevCard;
-import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.match.SoloTokenReaction;
 
 
@@ -16,7 +13,7 @@ public class DestroyCardsEffect extends Effect {
     /**
      * This attribute saves the color of the card that will be destroyed.
      */
-    private ColorDevCard color;
+    private final ColorDevCard color;
 
     /**
      * This is the constructor of the class. It needs a ColoDevCard that will be destroyed.

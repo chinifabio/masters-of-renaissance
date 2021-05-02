@@ -11,11 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class represents the NormalProduction that the Player can activate
+ */
 public class NormalProduction extends Production {
 
     /**
      * This method is the constructor of the class
-     *
      * @param required required list of resource
      * @param output output list of resource
      */
@@ -24,13 +26,20 @@ public class NormalProduction extends Production {
         super(required, output, Arrays.asList(ResourceType.EMPTY, ResourceType.UNKNOWN));
     }
 
+    /**
+     * This method activates the production
+     * @return true if the Production is correctly activated
+     */
     @Override
     public boolean activate() {
         if (this.activated) return false;
 
         boolean result = true;
         for(int i = 0; i < required.size(); i++) {
-            if(!required.get(i).equals(addedResource.get(i))) result = false;
+            if (!required.get(i).equals(addedResource.get(i))) {
+                result = false;
+                break;
+            }
         }
         this.activated = result;
         return result;
@@ -38,7 +47,6 @@ public class NormalProduction extends Production {
 
     /**
      * This method is used to insert resources in the production
-     *
      * @param input the resource to insert
      * @return the succeed of the operation
      */
@@ -67,9 +75,9 @@ public class NormalProduction extends Production {
 
     /**
      * This method allow to set the normal production in case of unknown resource
-     *
      * @param normalProduction the production to set as normal production in case of unknown resource
      * @return the succeed of the operation
+     * @throws IllegalNormalProduction because the Production is already a NormalProduction
      */
     @Override
     public boolean setNormalProduction(NormalProduction normalProduction) throws IllegalNormalProduction {
@@ -87,7 +95,10 @@ public class NormalProduction extends Production {
         return clone;
     }
 
-    //TODO ONLY FOR TESTING
+    /**
+     * This method return the list of the Resources added by the Player
+     * @return the list of resources
+     */
     public List<Resource> viewResourcesAdded(){
         return addedResource;
     }

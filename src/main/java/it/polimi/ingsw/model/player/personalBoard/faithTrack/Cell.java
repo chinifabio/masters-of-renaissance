@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.match.PlayerToMatch;
 /**
  * This interface represents the cells from which the FaithTrack is composed
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonSubTypes({
         @JsonSubTypes.Type(name = "Normal", value = Normal.class),
@@ -29,7 +29,6 @@ public abstract class Cell {
     */
    @JsonCreator
    public Cell() {}
-
 
    /**
     * This method returns the victoryPoint of the cell

@@ -1,17 +1,12 @@
 package it.polimi.ingsw.model.exceptions.card;
 
-import it.polimi.ingsw.model.cards.Card;
-
 import static it.polimi.ingsw.TextColors.*;
 
-/**
- * exception thrown when someone tries to peek a card from a deck where the card is missing
- */
 public class MissingCardException extends Exception{
     /**
      * the required resource list of wrong production
      */
-    private String missed;
+    private final String missed;
 
     /**
      * Constructs a new exception with {@code null} as its detail message.

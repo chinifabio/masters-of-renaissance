@@ -1,9 +1,5 @@
 package it.polimi.ingsw.model.exceptions.warehouse;
 
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.NormalDepot;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.SpecialDepot;
-
 import static it.polimi.ingsw.TextColors.*;
 import static it.polimi.ingsw.TextColors.RED_BRIGHT;
 

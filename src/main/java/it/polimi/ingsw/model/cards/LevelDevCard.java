@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.cards;
 
+/**
+ * This enumeration is the Level of the DevCard
+ */
 public enum LevelDevCard {
     LEVEL1 (1), LEVEL2 (2), LEVEL3 (3);
 

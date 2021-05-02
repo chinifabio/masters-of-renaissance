@@ -3,14 +3,11 @@ package it.polimi.ingsw.model.cards;
 import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.model.cards.effects.CardReaction;
 import it.polimi.ingsw.model.cards.effects.Effect;
-import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 
 /**
  * This abstract class generalize the concept of Card, every Card has a cardID and an effect.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonSubTypes({
         @JsonSubTypes.Type(name = "Dev", value = DevCard.class),
@@ -33,12 +30,12 @@ public abstract class Card{
     /**
      * This attribute is the ID of the card. Every card has a different cardID.
      */
-    private String cardID;
+    private final String cardID;
 
     /**
      * This attribute is the effect of the card. The effect is highly tied with the card type.
      */
-    private Effect effect;
+    private final Effect effect;
 
     /**
      * This method returns the cardID of the card.

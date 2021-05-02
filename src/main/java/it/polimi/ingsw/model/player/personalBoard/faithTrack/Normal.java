@@ -7,7 +7,6 @@ import it.polimi.ingsw.model.match.PlayerToMatch;
  */
 public class Normal extends Cell {
 
-
     /**
      * This attribute is the constructor of the class, it is empty because it takes parameters from Json File
      */

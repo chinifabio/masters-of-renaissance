@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.cards.effects.Effect;
 
-
+/**
+ * This class represents the Tokens used in the SinglePlayer mode of the game.
+ */
 public class SoloActionToken extends Card{
 
     /**

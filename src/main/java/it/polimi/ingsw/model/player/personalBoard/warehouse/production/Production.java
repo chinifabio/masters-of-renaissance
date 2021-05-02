@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.production;
 
 import com.fasterxml.jackson.annotation.*;
-import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
@@ -14,7 +13,7 @@ import java.util.*;
 /**
  * This class represents the production where some resources are inserted as input to receive other resources in output.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonSubTypes({
         @JsonSubTypes.Type(name = "NormalProd", value = NormalProduction.class),
@@ -55,6 +54,10 @@ public abstract class Production{
 
     /**
      * This method is the constructor of the class
+     * @param newRequired is the Resources required to activate the production
+     * @param newOutput is the Resources obtained after that the production is activated
+     * @param illegal if the Resource can't be used
+     * @throws IllegalTypeInProduction if an IllegalResource is used for the Production
      */
     @JsonCreator
     public Production(List<Resource> newRequired, List<Resource> newOutput, List<ResourceType> illegal) throws IllegalTypeInProduction {
@@ -75,11 +78,11 @@ public abstract class Production{
 
         this.required = ResourceBuilder.buildListOfResource();
         for (Resource res : newRequired)
-            required.stream().filter(x->x.equalsType(res)).findAny().orElse(null).merge(res);
+            Objects.requireNonNull(required.stream().filter(x -> x.equalsType(res)).findAny().orElse(null)).merge(res);
 
         this.output = ResourceBuilder.buildListOfResource();
         for (Resource res : newOutput)
-            output.stream().filter(x->x.equalsType(res)).findAny().orElse(null).merge(res);
+            Objects.requireNonNull(output.stream().filter(x -> x.equalsType(res)).findAny().orElse(null)).merge(res);
 
         this.addedResource = ResourceBuilder.buildListOfResource();
 
@@ -153,7 +156,9 @@ public abstract class Production{
      */
     @Override
     public String toString() {
-        return "PROD: req > " + this.required + "; out > " + this.output + "; illegal types: {" + this.illegalType + "}";
+        return "PROD: Requisite -> " + this.required +
+                "\n Output -> " + this.output +
+                "\nIllegal types: {" + this.illegalType + "}";
     }
 
     /**
@@ -164,7 +169,10 @@ public abstract class Production{
         return this.selected;
     }
 
-
+    /**
+     * This method return the list of the Resources added by the Player
+     * @return the list of resources
+     */
     public List<Resource> viewResourcesAdded(){
         return ResourceBuilder.rearrangeResourceList(addedResource);
     }

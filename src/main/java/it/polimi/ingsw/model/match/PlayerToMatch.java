@@ -47,9 +47,13 @@ public interface PlayerToMatch {
 
     /**
      * player ask to buy the first card of the deck in position passed as parameter
-     * @param col the column of the card required
-     * @param row the row of the card required
+     * @param row the column of the card required
+     * @param col the row of the card required
      * @return true if there where no issue, false instead
+     * @throws NoRequisiteException if the card has no requisite
+     * @throws PlayerStateException if the Player can't do this action
+     * @throws EmptyDeckException if the Player tries to buy a DevCard of an empty deck
+     * @throws LootTypeException if the type of the requirements are wrong
      */
     boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws NoRequisiteException, PlayerStateException, EmptyDeckException, LootTypeException;
 
@@ -60,15 +64,15 @@ public interface PlayerToMatch {
     void othersPlayersObtainFaithPoint(int amount);
 
     /**
-     * paint a marble in market tray
-     * @param newColor the new marble color
-     * @param marbleIndex
+     * paint a Marble in market tray
+     * @param newColor the new Marble color
+     * @param marbleIndex indicates the position of the Marble
      */
     void paintMarbleInTray(Marble newColor, int marbleIndex) throws UnpaintableMarbleException;
 
     /**
      * Tells to the match the end of the player turn;
-     * @return
+     * @return true if the player ended is turn
      */
     boolean endMyTurn() throws PlayerStateException;
 

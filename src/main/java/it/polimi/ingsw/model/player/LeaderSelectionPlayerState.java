@@ -12,7 +12,11 @@ import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.Optional;
 
+/**
+ * This class is the State where the LeaderCard are selected by the Player
+ */
 public class LeaderSelectionPlayerState extends PlayerState {
+
     /**
      * The number of resource to choose before end the turn
      */
@@ -58,17 +62,17 @@ public class LeaderSelectionPlayerState extends PlayerState {
     }
 
     /**
-     * can the player do staff?
-     *
+     * can the player do stuff?
      * @return true yes, false no
      */
     @Override
-    public boolean doStaff() {
+    public boolean doStuff() {
         return true;
     }
 
     /**
-     * this method start the turn of the player
+     * this method starts the turn of the player
+     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public void startTurn() throws PlayerStateException {
@@ -79,8 +83,10 @@ public class LeaderSelectionPlayerState extends PlayerState {
 
     /**
      * This method removes a LeaderCard from the player
-     *
      * @param leaderId the string that identify the leader card to be discarded
+     * @throws PlayerStateException if the Player can't do this action
+     * @throws EmptyDeckException if the Deck of the LeaderCard is empty
+     * @throws MissingCardException if the Card to discard isn't in the Deck
      */
     @Override
     public void discardLeader(String leaderId) throws PlayerStateException, EmptyDeckException, MissingCardException {
@@ -90,13 +96,14 @@ public class LeaderSelectionPlayerState extends PlayerState {
         } else throw new PlayerStateException("you already discarded " + toDiscard + " cards");
     }
 
+
     /**
-     * the player ends its turn
-     *
+     * The player ends its turn
      * @return true if success, false otherwise
+     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
-    public boolean endThisTurn() throws PlayerStateException, WrongDepotException {
+    public boolean endThisTurn() throws PlayerStateException {
         if (chosenResources == resourceToChoose && discarded == toDiscard) {
             this.context.setState(new NotHisTurnPlayerState(this.context));
             return this.context.match.endMyTurn();
@@ -105,8 +112,10 @@ public class LeaderSelectionPlayerState extends PlayerState {
 
     /**
      * set a chosen resource attribute in player
-     *
+     * @param slot the Depot where the Resources are taken from
      * @param chosen the resource chosen
+     * @throws PlayerStateException if the Player can't do this action
+     * @throws WrongDepotException if the Resources can't be taken from the Depot
      */
     @Override
     public void chooseResource(DepotSlot slot, ResourceType chosen) throws PlayerStateException, WrongDepotException {

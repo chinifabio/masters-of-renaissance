@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.player;
 
+/**
+ * This class is the State where the Player is waiting for Match to start
+ */
 public class PendingMatchStartPlayerState extends PlayerState {
 
     /**
@@ -13,17 +16,17 @@ public class PendingMatchStartPlayerState extends PlayerState {
     }
 
     /**
-     * can the player do staff?
+     * can the player do stuff?
      *
      * @return true yes, false no
      */
     @Override
-    public boolean doStaff() {
+    public boolean doStuff() {
         return false;
     }
 
     /**
-     * this method start the turn of the player
+     * This method start the turn of the player
      */
     @Override
     public void startTurn() {
@@ -35,7 +38,6 @@ public class PendingMatchStartPlayerState extends PlayerState {
 
     /**
      * Returns a string representation of the object.
-     *
      * @return a string representation of the object.
      */
     @Override

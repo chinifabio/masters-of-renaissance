@@ -26,6 +26,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
  * abstract class that need to have basics of concrete player states
  */
 public abstract class PlayerState implements PlayerAction {
+
     /**
      * the context to refer for changing the current state of the player
      */
@@ -34,13 +35,14 @@ public abstract class PlayerState implements PlayerAction {
     /**
      * This attribute is set by a subclasses to put a message in the player state exception
      */
-    private String errorMessage;
+    private final String errorMessage;
 
 
     /**
      * the constructor take the two final attribute of the state that are the personal board and the context.
      * the player holdings are passed to not share it out of the player states and do information hiding
-     * @param context the context
+     * @param context is the context
+     * @param emsg is the error message
      */
     protected PlayerState(Player context, String emsg) {
         this.context = context;
@@ -48,10 +50,10 @@ public abstract class PlayerState implements PlayerAction {
     }
 
     /**
-     * can the player do staff?
+     * can the player do stuff?
      * @return true yes, false no
      */
-    public abstract boolean doStaff();
+    public abstract boolean doStuff();
 
     /**
      * this method start the turn of the player
@@ -62,12 +64,15 @@ public abstract class PlayerState implements PlayerAction {
 // ----- player state action as default launch an exception -------
 // ----------------------------------------------------------------
 
+
     /**
      * Use the market tray
-     *
-     * @param rc    enum to identify if I am pushing row or col
+     * @param rc enum to identify if I am pushing row or col
      * @param index the index of the row or column of the tray
      * @return the result of the operation
+     * @throws OutOfBoundMarketTrayException if the MarketTray is out of bound
+     * @throws PlayerStateException if the Player can't do this action
+     * @throws UnobtainableResourceException if the Player can't obtain the Resource
      */
     @Override
     public boolean useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, PlayerStateException, UnobtainableResourceException {
@@ -77,9 +82,10 @@ public abstract class PlayerState implements PlayerAction {
     /**
      * This method allows the player to select which Resources to get when he activates two LeaderCards with the same
      * SpecialAbility that converts white marbles in resources
-     *
-     * @param conversionsIndex the index of the marble conversions available
-     * @param marbleIndex      the index of chosen tray's marble to color
+     * @param conversionsIndex the index of chosen tray's marble to color
+     * @param marbleIndex the index of the marble conversions available
+     * @throws UnpaintableMarbleException if the Marble can't be painted
+     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public void paintMarbleInTray(int conversionsIndex, int marbleIndex) throws UnpaintableMarbleException, PlayerStateException {
@@ -87,12 +93,15 @@ public abstract class PlayerState implements PlayerAction {
     }
 
     /**
-     * player ask to buy the first card of the deck in position passed as parameter
-     *
-     * @param row         the row of the card required
-     * @param col         the column of the card required
+     * Player asks to buy the first card of the deck in position passed as parameter
+     * @param row the row of the card required
+     * @param col the column of the card required
      * @param destination the slot where put the dev card slot
      * @return true if there where no issue, false instead
+     * @throws NoRequisiteException if the Card has no Requisite
+     * @throws PlayerStateException if the Player can't do this action
+     * @throws EmptyDeckException if the Deck is empty
+     * @throws LootTypeException if the attribute cannot be obtained from this Requisite
      */
     @Override
     public boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NoRequisiteException, PlayerStateException, EmptyDeckException, LootTypeException {
@@ -102,8 +111,10 @@ public abstract class PlayerState implements PlayerAction {
     /**
      * This method takes the resources from the Depots and the Strongbox to
      * activate the productions and insert the Resources obtained into the Strongbox
-     *
      * @return the result of the operation
+     * @throws PlayerStateException if the Player can't do this action
+     * @throws UnobtainableResourceException if the Player can't obtain the Resource
+     * @throws WrongPointsException if the Player can't obtain the FaithPoints
      */
     @Override
     public boolean activateProductions() throws PlayerStateException, UnobtainableResourceException, WrongPointsException {
@@ -112,11 +123,14 @@ public abstract class PlayerState implements PlayerAction {
 
     /**
      * This method moves a resource from a depot to a production
-     *
      * @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
      * @return true if the resources are correctly moved in Production
+     * @throws UnknownUnspecifiedException if the Production is unspecified
+     * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
+     * @throws PlayerStateException if the Player can't do this action
+     * @throws WrongDepotException if the Depot cannot be used
      */
     @Override
     public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, PlayerStateException, WrongDepotException {
@@ -125,10 +139,10 @@ public abstract class PlayerState implements PlayerAction {
 
     /**
      * This method set the normal production of an unknown production
-     *
-     * @param id               the id of the unknown production
+     * @param id the id of the unknown production
      * @param normalProduction the input new normal production
      * @return the succeed of the operation
+     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public boolean setNormalProduction(ProductionID id, NormalProduction normalProduction) throws PlayerStateException {
@@ -137,10 +151,13 @@ public abstract class PlayerState implements PlayerAction {
 
     /**
      * This method allows the player to move Resources between Depots
-     *
      * @param from depot from which withdraw resource
-     * @param to   depot where insert withdrawn resource
-     * @param loot resource to move
+     * @param to depot where insert withdrawn resource
+     * @param loot is the Resource to move
+     * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
+     * @throws PlayerStateException if the Player can't do this action
+     * @throws UnobtainableResourceException if the Player can't obtain the Resource
+     * @throws WrongDepotException if the Depot can't be used
      */
     @Override
     public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws NegativeResourcesDepotException, PlayerStateException, UnobtainableResourceException, WrongDepotException {
@@ -149,8 +166,12 @@ public abstract class PlayerState implements PlayerAction {
 
     /**
      * This method activates the special ability of the LeaderCard
-     *
      * @param leaderId the string that identify the leader card
+     * @throws MissingCardException if the Card isn't in the Deck
+     * @throws PlayerStateException if the Player can't do this action
+     * @throws EmptyDeckException if the Deck is empty
+     * @throws LootTypeException if the attribute cannot be obtained from this Requisite
+     * @throws WrongDepotException if the Depot cannot be used
      */
     @Override
     public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EmptyDeckException, LootTypeException, WrongDepotException {
@@ -159,8 +180,10 @@ public abstract class PlayerState implements PlayerAction {
 
     /**
      * This method removes a LeaderCard from the player
-     *
      * @param leaderId the string that identify the leader card to be discarded
+     * @throws PlayerStateException if the Player can't do this action
+     * @throws EmptyDeckException if the Deck is empty
+     * @throws MissingCardException if the card isn't in the Deck
      */
     @Override
     public void discardLeader(String leaderId) throws PlayerStateException, EmptyDeckException, MissingCardException {
@@ -168,9 +191,10 @@ public abstract class PlayerState implements PlayerAction {
     }
 
     /**
-     * the player ends its turn
-     *
+     * The Player ends its turn
      * @return true if success, false otherwise
+     * @throws PlayerStateException if the Player can't do this action
+     * @throws WrongDepotException if the Depot can't be used
      */
     @Override
     public boolean endThisTurn() throws PlayerStateException, WrongDepotException {
@@ -178,9 +202,11 @@ public abstract class PlayerState implements PlayerAction {
     }
 
     /**
-     * set a chosen resource attribute in player
-     *
+     * Set a chosen resource attribute in player
+     * @param slot the Depot where the Resource is taken from
      * @param chosen the resource chosen
+     * @throws PlayerStateException if the Player can't do this action
+     * @throws WrongDepotException if the Depot can't be used
      */
     @Override
     public void chooseResource(DepotSlot slot, ResourceType chosen) throws PlayerStateException, WrongDepotException {

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.depot;
 
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -11,6 +10,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiPredicate;
 
+/**
+ * This class is the SpecialDepot into the warehouse where the resources will be stored, it is created
+ * after that a LeaderCard is activated
+ */
 public class SpecialDepot implements Depot {
 
     /**
@@ -86,19 +89,17 @@ public class SpecialDepot implements Depot {
 
 
     /**
-     * This method cannot be invoked because the SpecialDepot can have only one type of resources
-     * @throws WrongDepotException if it's invoked
+     * This method cannot be invoked because the SpecialDepot can have only one type of resource
      */
     @Override
     public List<Resource> viewResources(){
-        List<Resource> temp = new ArrayList();
+        List<Resource> temp = new ArrayList<>();
         temp.add(ResourceBuilder.buildFromType(resources.type(),resources.amount()));
         return temp;
     }
 
     /**
      * This method checks if this Depot must have a control on the type of the Resources on this Depot
-     *
      * @return false
      */
     @Override

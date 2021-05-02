@@ -12,24 +12,24 @@ import it.polimi.ingsw.model.resource.strategy.ObtainStrategy;
 
 public class Resource{
 
-    public Resource(){
-    }
-
     /**
      * flag to check before store a resource
      */
     @JsonProperty("storable")
     private boolean storable;
+
     /**
      * the type of the resource
      */
     @JsonProperty("type")
     private ResourceType type;
+
     /**
      * the strategy for differentiate behaviours when the player obtain the resource
      */
     @JsonProperty("strategy")
     private ObtainStrategy os;
+
     /**
      * the amount of the resource
      */
@@ -38,8 +38,10 @@ public class Resource{
 
     /**
      * constructor with amount > 1
+     * @param storable true if the resource is storable
      * @param type the type of the resource
-     * @param os strategy
+     * @param os is the ObtainStrategy
+     * @param amount is the number of Resources
      */
     protected Resource(boolean storable, ResourceType type, ObtainStrategy os, int amount){
         this.type = type;
@@ -50,14 +52,21 @@ public class Resource{
 
     /**
      * constructor for a default amount = 1
+     * @param storable true if the resource is storable
      * @param type the type of the resource
-     * @param os strategy
+     * @param os is the ObtainStrategy
      */
     protected Resource(boolean storable, ResourceType type, ObtainStrategy os) {
         this.os = os;
         this.amount = 1;
         this.storable = storable;
         this.type = type;
+    }
+
+    /**
+     * This method is the constructor of the class to use for Jackson
+     */
+    public Resource(){
     }
 
     /**
@@ -101,9 +110,10 @@ public class Resource{
     }
 
     /**
-     * when the player obtain the resource it is called the obtain method of the strategy passed in the constructor
-     * @param player the player that obtain the resource
-     * @throws UnobtainableResourceException if the resource is not obtainable
+     * When the player obtain the resource it is called the obtain method of the strategy passed in the constructor
+     * @param player  the player that obtain the resource
+     * @throws UnobtainableResourceException if the Resource can't be obtained
+     * @throws EndGameException if the EndGameLogic is activated
      */
     public void onObtain(PlayableCardReaction player) throws UnobtainableResourceException, EndGameException {
         os.obtain(player);

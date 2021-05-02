@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.resource.strategy;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
 
 /**
- * strategy for ObtainStategy that do nothing when player obtaint the resource
+ * strategy for ObtainStrategy that do nothing when player obtain the resource
  */
 public class DoNothingBehavior implements ObtainStrategy{
     public DoNothingBehavior() {}

@@ -294,7 +294,7 @@ public class MarketTrayTest {
     public void flushBufferTest() throws WrongDepotException {
         assertDoesNotThrow(()->game.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0));
 
-        List<Resource> list = this.game.test_getCurrPlayer().test_getPB().getWH_forTest().viewResourcesInBuffer();
+        List<Resource> list = this.game.test_getCurrPlayer().test_getPB().getWH_forTest().viewResourcesInDepot(DepotSlot.BUFFER);
         int sum = 0;
         for(Resource res : list) sum += res.amount();
 
@@ -303,7 +303,7 @@ public class MarketTrayTest {
         assertEquals(sum, game.test_getCurrPlayer().test_getPB().getFT_forTest().getPlayerPosition());
         assertDoesNotThrow(()->game.test_getCurrPlayer().endThisTurn());
 
-        assertEquals(ResourceBuilder.buildListOfStorable(), game.test_getCurrPlayer().test_getPB().getWH_forTest().viewResourcesInBuffer());
+        assertEquals(ResourceBuilder.buildListOfStorable(), game.test_getCurrPlayer().test_getPB().getWH_forTest().viewResourcesInDepot(DepotSlot.BUFFER));
     }
 
     @Test

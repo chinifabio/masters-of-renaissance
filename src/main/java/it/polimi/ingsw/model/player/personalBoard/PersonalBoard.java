@@ -68,7 +68,6 @@ public class PersonalBoard {
 
     /**
      * This method is the constructor of the class
-     *
      * @param player the player who own this personal board
      */
     public PersonalBoard(Player player) throws IllegalTypeInProduction {
@@ -90,10 +89,11 @@ public class PersonalBoard {
     }
 
     /**
-     * This method add the DevCard bought by the Player into the DevCardSlot
-     *
+     * This method adds the DevCard bought by the Player into the DevCardSlot
      * @param slot is the slot where the DevCard is inserted
      * @param card is the DevCard bought by the Player
+     * @param pm is the Player that do this action
+     * @return true if the card is correctly added
      */
     public boolean addDevCard(DevCardSlot slot, DevCard card, PlayerToMatch pm) {
         int sum = 0;
@@ -115,7 +115,6 @@ public class PersonalBoard {
 
     /**
      * This method checks if a card can be inserted into a given position in the playerBoard.
-     *
      * @param slot where the card will be inserted.
      * @param card the card that will be inserted.
      * @return true if the card can be placed into that position.
@@ -135,7 +134,6 @@ public class PersonalBoard {
 
     /**
      * return a map of the top develop card placed in the player board decks
-     *
      * @return a map of devCardSlot - DevCard
      */
     public Map<DevCardSlot, DevCard> viewDevCards() {
@@ -153,7 +151,6 @@ public class PersonalBoard {
 
     /**
      * This method add the LeaderCard in the Player's PersonalBoard
-     *
      * @param card is the LeaderCard that the Player has chosen
      */
     public void addLeaderCard(LeaderCard card) throws AlreadyInDeckException {
@@ -199,7 +196,6 @@ public class PersonalBoard {
                 if (pbAmountColor < req.getAmount()) return false;
             }
         }
-
         card.activate();
         card.useEffect(this.player);
         return true;
@@ -209,6 +205,8 @@ public class PersonalBoard {
     /**
      * This method remove the LeaderCard from Player's PersonalBoard
      * @param card is the card to be removed
+     * @throws EmptyDeckException if the Deck of the LeaderCard is empty
+     * @throws MissingCardException if the LeaderCard to discard isn't in the Deck
      */
     public void discardLeaderCard(String card) throws EmptyDeckException, MissingCardException {
         this.leaderDeck.discard(card);
@@ -234,32 +232,19 @@ public class PersonalBoard {
     /**
      * This method add a new Production into the list of availableProductions
      * @param prod is the Production to add
+     * @throws ExtraProductionException if the Player can't obtain other productions
      */
     public void addExtraProduction(Production prod) throws ExtraProductionException {
         this.warehouse.addExtraProduction(prod);
-        //if(!this.productionSlotMap.containsKey(DevCardSlot.LEADER1)) this.productionSlotMap.put(DevCardSlot.LEADER1,ProductionID.LEADER1);
-        //else this.productionSlotMap.put(DevCardSlot.LEADER2,ProductionID.LEADER2);
     }
-
-   // /**
-   //  * return all the available production
-   //  * @return list of production
-   //  */
-   // public List<Production> possibleProduction() {
-   //     List<Production> temp = new ArrayList<>();
-   //     for(ProductionID productionID : ProductionID.values()){
-   //         temp.add(this.warehouse.getProduction().get(productionID));
-   //     }
-   //     return temp;
-   // }
 
     /**
      * return all the available production
      * @return a map containing productions
      */
     public Map<ProductionID, Production> possibleProduction(){
-        Map<ProductionID, Production> temp;
-        temp = this.warehouse.getProduction();
+        Map<ProductionID, Production> temp = new EnumMap<>(ProductionID.class);
+        temp.putAll(this.warehouse.getProduction());
         return temp;
     }
 
@@ -268,14 +253,21 @@ public class PersonalBoard {
      * @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
+     * @return true if the Resources are correctly moved in Production
+     * @throws UnknownUnspecifiedException if the Production is Unspecified
+     * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
+     * @throws WrongDepotException if the Player can't take Resources from that Depot
      */
-    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, WrongDepotException {
-        this.warehouse.moveInProduction(from, dest, loot);
+    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, WrongDepotException {
+        return this.warehouse.moveInProduction(from, dest, loot);
     }
 
 
     /**
      * This method activate the productions selected by the Player
+     * @throws UnobtainableResourceException if the Player can't obtain that Resources
+     * @throws EndGameException if the Player can't do this action
+     * @throws WrongDepotException if the Player can't insert Resources in that Depot
      */
     public void activateProductions() throws UnobtainableResourceException, EndGameException, WrongDepotException {
         this.warehouse.activateProductions();
@@ -283,35 +275,25 @@ public class PersonalBoard {
 
     /**
      * This method set the normal production of an unknown production
-     *
-     * @param normalProduction the input new normal production
      * @param id the id of the unknown production
+     * @param normalProduction the input new normal production
      * @return the succeed of the operation
+     * @throws IllegalNormalProduction if the Production is already a NormalProduction
      */
     public boolean setNormalProduction(ProductionID id, NormalProduction normalProduction) throws IllegalNormalProduction {
         return this.warehouse.setNormalProduction(id, normalProduction);
     }
 
     /**
-     * store the resource in the buffer depot, then it will be the player to move
+     * This method stores the resource in the buffer depot, then it will be the player to move
      * from buffer depot to a legal one
-     * @param resource the resource obtained
+     * @param slot is the DepotSlot where the Resource will be inserted
+     * @param resource is the resource obtained
+     * @return true if the Resource is correctly inserted
+     * @throws WrongDepotException if the Player can't insert the Resources in that Depot
      */
     public boolean insertInDepot(DepotSlot slot, Resource resource) throws WrongDepotException {
         return this.warehouse.insertInDepot(slot, resource);
-    }
-
-    public boolean removeResource(DepotSlot slot, Resource resource) throws NegativeResourcesDepotException {
-        return this.warehouse.removeFromDepot(slot,resource);
-    }
-
-    /**
-     * take the list of resources from the warehouse and returns it
-     * @return the list of resources in the buffer
-     * @throws WrongDepotException
-     */
-    public List<Resource> viewBufferResources() throws WrongDepotException {
-        return this.warehouse.viewResourcesInBuffer();
     }
 
     /**
@@ -319,13 +301,14 @@ public class PersonalBoard {
      * @param slot is the Depot where the resources are stored
      * @return the Resources inside the Depot
      */
-    public List<Resource> viewDepotResource(DepotSlot slot) throws WrongDepotException {
+    public List<Resource> viewDepotResource(DepotSlot slot){
         return this.warehouse.viewResourcesInDepot(slot);
     }
 
     /**
-     * create a new depot in the warehouse
-     * @param depot the new depot
+     * Create a new depot in the warehouse
+     * @param depot is the new Depot
+     * @throws ExtraDepotsException if the Player can't add more Depots
      */
     public void addDepot(Depot depot) throws ExtraDepotsException {
         warehouse.addDepot(depot);
@@ -336,8 +319,9 @@ public class PersonalBoard {
      * @param from is the Depot where the resources are taken from
      * @param to is the Depot where the resources will be stored
      * @param resource is the resource to move
-     * @throws NegativeResourcesDepotException if the Depot "from" hasn't enough resources to move
      * @throws WrongDepotException if the Depot "from" is empty or doesn't have the same type of resources of "resource"
+     * @throws NegativeResourcesDepotException if the Depot "from" hasn't enough resources to move
+     * @throws UnobtainableResourceException if the Player can't receive that Resource
      */
     public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource resource) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException {
         warehouse.moveBetweenDepot(from,to, resource);
@@ -346,6 +330,7 @@ public class PersonalBoard {
     /**
      * tells to the faith track to move amount times the player marker.
      * @param amount the amount to move.
+     * @param pm is the Player that own the FaithMarker
      * @return true if the move is allowed, else false.
      */
     public boolean moveFaithMarker(int amount, PlayerToMatch pm) {
@@ -374,11 +359,11 @@ public class PersonalBoard {
     }
 
     /**
-     * discard all the resources in the buffer depot and for all of them give faith point at
-     * all other players
+     * Discard all the resources in the buffer depot and for all of them give faith point at all other player
+     * @param p2m is the Player that will receives the FaithPoints
      */
-    public void flushBufferDepot(PlayerToMatch p2m) throws WrongDepotException {
-        List<Resource> list = this.warehouse.viewResourcesInBuffer();
+    public void flushBufferDepot(PlayerToMatch p2m){
+        List<Resource> list = this.warehouse.viewResourcesInDepot(DepotSlot.BUFFER);
         int fp = 0;
         for (Resource resource : list) {
             fp += resource.amount();
@@ -388,7 +373,7 @@ public class PersonalBoard {
     }
 
     /**
-     *
+     * ? Non si può usare la funzione sopra ^ ?
      */
     public void flushBufferDevCard(){
         this.warehouse.flushBufferDepot();
@@ -398,7 +383,7 @@ public class PersonalBoard {
      * This method counts all the victoryPoints that the Player has earned during the game
      * @return the total value of all victoryPoints
      */
-    public int getTotalVictoryPoints() throws WrongDepotException {
+    public int getTotalVictoryPoints(){
         int points = 0;
         points = points + warehouse.countPointsWarehouse();
         points = points + faithTrack.countingFaithTrackVictoryPoints();

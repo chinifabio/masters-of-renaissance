@@ -11,7 +11,7 @@ import it.polimi.ingsw.model.player.PlayableCardReaction;
 public class WhiteMarbleEffect extends Effect{
 
     /**
-     * This is the constructor of the method. It needs a ResourceType which is the one that white marbles will be converted to during the Market phase.
+     * This is the constructor of the class. It needs a ResourceType which is the one that white marbles will be converted to during the Market phase.
      * @param conv that defines the resource the player will get from white marbles.
      */
     @JsonCreator
@@ -22,7 +22,7 @@ public class WhiteMarbleEffect extends Effect{
     /**
      * This attribute saves the ResourceType of the white marbles.
      */
-    private Marble conv;
+    private final Marble conv;
 
     /**
      * This method is activated by a LeaderCard, it gives the opportunity to convert every White Marble into a specific resource.

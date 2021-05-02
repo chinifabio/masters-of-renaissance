@@ -3,12 +3,11 @@ package it.polimi.ingsw.model.cards;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
-import it.polimi.ingsw.model.resource.Resource;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.lang.Math;
+
 
 /**
  * This class contains every method to manage a deck of cards. Generics are useful to use methods inside the Card sublcasses.
@@ -48,12 +47,12 @@ public class Deck<T extends Card>{
     /**
      * This attribute is a list of Card, the deck.
      */
-    private List<T> cards = new ArrayList<>();
+    private final List<T> cards = new ArrayList<>();
 
     /**
      * This attribute is a list of Card, the discarded ones. Used on single player matches, to shuffle every SoloActionToken.
      */
-    private List<T> discardedCards = new ArrayList<>();
+    private final List<T> discardedCards = new ArrayList<>();
 
     /**
      * This method shuffles the deck. DevCards, LeaderCards and SoloActionToken's deck are shuffled at the start of the game.

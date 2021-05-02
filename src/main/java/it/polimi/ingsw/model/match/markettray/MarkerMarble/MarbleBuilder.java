@@ -3,11 +3,11 @@ package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 /**
- * build all the available type of marbles
+ * Build all the available type of marbles
  */
 public class MarbleBuilder {
     /**
-     * build a blue marble
+     * Build a blue marble
      * @return blue marble
      */
     public static Marble buildBlue() {
@@ -15,7 +15,7 @@ public class MarbleBuilder {
     }
 
     /**
-     * build a yellow marble
+     * Build a yellow marble
      * @return yellow marble
      */
     public static Marble buildYellow() {
@@ -23,7 +23,7 @@ public class MarbleBuilder {
     }
 
     /**
-     * build a gray marble
+     * Build a gray marble
      * @return gray marble
      */
     public static Marble buildGray() {
@@ -31,7 +31,7 @@ public class MarbleBuilder {
     }
 
     /**
-     * build a purple marble
+     * Build a purple marble
      * @return purble marble
      */
     public static Marble buildPurple() {
@@ -39,7 +39,7 @@ public class MarbleBuilder {
     }
 
     /**
-     * build a white marble
+     * Build a white marble
      * @return white marble
      */
     public static Marble buildWhite() {
@@ -47,7 +47,7 @@ public class MarbleBuilder {
     }
 
     /**
-     * build a red marble
+     * Build a red marble
      * @return red marble
      */
     public static Marble buildRed() {

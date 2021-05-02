@@ -16,22 +16,23 @@ public class CardRequisite implements Requisite {
     /**
      * level of devCard
      */
-    private LevelDevCard level;
+    private final LevelDevCard level;
     /**
      * color of devCard
      */
-    private ColorDevCard color;
+    private final ColorDevCard color;
 
     /**
      * Number of the same type of card requested
      */
-    private int amount;
+    private final int amount;
 
 
     /**
-     * constructor that need the level, color
-     * @param level of the card
-     * @param color of the card
+     * This method is the constructor of the class
+     * @param level is the level of the card
+     * @param color is the color of the card
+     * @param amount is the number of card of the same type
      */
     @JsonCreator
     public CardRequisite(@JsonProperty("level") LevelDevCard level, @JsonProperty("color") ColorDevCard color, @JsonProperty("amount") int amount) {
@@ -41,8 +42,9 @@ public class CardRequisite implements Requisite {
     }
 
     /**
-     * if this method is invoked there is en error
-     * @throws LootTypeException wrong method called
+     * This method can't be invoked by this class
+     * @return nothing
+     * @throws LootTypeException if this method is invoked by this class
      */
     @Override
     public ResourceType getType() throws LootTypeException {
@@ -50,7 +52,7 @@ public class CardRequisite implements Requisite {
     }
 
     /**
-     * return the level of the devCard
+     * Return the level of the devCard
      * @return level of the card
      */
     @Override
@@ -59,7 +61,7 @@ public class CardRequisite implements Requisite {
     }
 
     /**
-     * return the color of the devCard
+     * Return the color of the devCard
      * @return color of the card
      */
     @Override
@@ -68,9 +70,8 @@ public class CardRequisite implements Requisite {
     }
 
     /**
-     * return the amount of card that is always 1, in case of same card required there is multiple instance of Requisite
-     *
-     * @return number of loot
+     * Return the amount of card of the same type that are required
+     * @return number of cards
      */
     @Override
     public int getAmount() {
@@ -86,6 +87,10 @@ public class CardRequisite implements Requisite {
                 '}';
     }
 
+    /**
+     * This method indicates if the Requisite is a Card o a Resource
+     * @return the RequisiteType CARD
+     */
     @Override
     public RequisiteType getRequisiteType() {
         return RequisiteType.CARD;

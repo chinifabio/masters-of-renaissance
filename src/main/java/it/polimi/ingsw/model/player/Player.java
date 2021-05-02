@@ -37,7 +37,7 @@ import it.polimi.ingsw.util.Pair;
 import java.util.*;
 
 /**
- * This class identify the Player
+ * This class identifies the Player
  */
 public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer {
     /**
@@ -84,8 +84,9 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * This method create a player by nickname and saving the match reference
-     * @param nickname that identify the player
+     * @param nickname identifies the player
      * @param matchReference used to reference the match which i am playing
+     * @throws IllegalTypeInProduction if the Basic Production of the PersonalBoard has IllegalResources
      */
     public Player(String nickname, PlayerToMatch matchReference) throws IllegalTypeInProduction {
 
@@ -112,7 +113,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @return true if positive answer, false instead
      */
     public boolean canDoStuff() {
-        return this.playerState.doStaff();
+        return this.playerState.doStuff();
     }
 
     /**
@@ -145,8 +146,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         this.playerState = newPlayerState;
     }
 
-    // player react effect implementations
-
     /**
      * This method adds a Production to the list of available productions
      *
@@ -159,6 +158,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * This method adds an extra Production to the list of available productions
+     * @param prod is the production to add
      */
     @Override
     public void addExtraProduction(Production prod) {
@@ -171,7 +171,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * This method adds an extra Depot in the Warehouse
-     *
      * @param depot new depot to be added to Warehouse depots
      */
     @Override
@@ -185,7 +184,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * This method gives a discount to the player when buying DevCards
-     *
      * @param discount the new discount
      */
     @Override
@@ -196,7 +194,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * This method allow adding a marble conversion to the player
-     *
      * @param newConversion the resource type to transform white marbles
      */
     @Override
@@ -206,9 +203,10 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * This method insert the Resources obtained from the Market to the Depots
-     *
-     * @param obt the resource in form
+     * @param slot is the Depot where the Resources will be inserted
+     * @param obt the resource obtained
      * @return the succeed of the operation
+     * @throws WrongDepotException if the Depot can't be used
      */
     @Override
     public boolean obtainResource(DepotSlot slot, Resource obt) throws WrongDepotException {
@@ -226,7 +224,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * This method moves the FaithMarker of the player when he gets FaithPoint
-     *
      * @param amount how many cells the marker moves
      */
     @Override
@@ -234,13 +231,12 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         this.personalBoard.moveFaithMarker(amount, this.match);
     }
 
-    // player action implementations
 
     /**
      * Use the market tray
      *  @param rc enum to identify if I am pushing row or col
      * @param index the index of the row or column of the tray
-     * @return true
+     * @return true if the MarketTray is correctly used
      */
     @Override
     public boolean useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, UnobtainableResourceException {
@@ -255,8 +251,10 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     /**
      * This method allows the player to select which Resources to get when he activates two LeaderCards with the same
      * SpecialAbility that converts white marbles in resources
-     * @param marbleIndex the index of chosen tray's marble to color
      * @param conversionsIndex the index of the marble conversions available
+     * @param marbleIndex the index of chosen tray's marble to color
+     * @throws UnpaintableMarbleException if the Marble can't be painted
+     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public void paintMarbleInTray(int conversionsIndex, int marbleIndex) throws UnpaintableMarbleException, PlayerStateException {
@@ -264,11 +262,14 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     }
 
     /**
-     * player ask to buy the first card of the deck in position passed as parameter
-     *
+     * Player asks to buy the first card of the deck in position passed as parameter
      * @param row the row of the card required
      * @param col the column of the card required
+     * @param destination the slot where put the dev card slot
      * @return true if there where no issue, false instead
+     * @throws NoRequisiteException if the Card has no requisite
+     * @throws EmptyDeckException if the Deck is empty
+     * @throws LootTypeException if the attribute can't be obtained from this Requisite
      */
     @Override
     public boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NoRequisiteException, EmptyDeckException, LootTypeException {
@@ -281,11 +282,12 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         }
     }
 
-
     /**
      * This method takes the resources from the Depots and the Strongbox to
      * activate the productions and insert the Resources obtained into the Strongbox
      * @return true if success
+     * @throws UnobtainableResourceException if the Resource can't be obtained
+     * @throws WrongPointsException if the Player can't obtain the points
      */
     @Override
     public boolean activateProductions() throws UnobtainableResourceException, WrongPointsException {
@@ -319,7 +321,9 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
-     * @return th succeed of the operation
+     * @return the succeed of the operation
+     * @throws UnknownUnspecifiedException if the Production is unspecified
+     * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
      */
     @Override
     public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException {
@@ -331,12 +335,17 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         }
     }
 
+
     /**
      * This method allows the player to move Resources between Depots
-     *
      * @param from depot from which withdraw resource
-     * @param to   depot where insert withdrawn resource
+     * @param to depot where insert withdrawn resource
      * @param loot the resource to move
+     * @throws WrongDepotException if the Depot cannot be used
+     * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
+     * @throws UnobtainableResourceException if the Resources cannot be obtained
+     * @throws WrongPointsException if the Player cannot obtain the FaithPoint
+     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException, WrongPointsException, PlayerStateException {
@@ -345,8 +354,9 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * This method activates the special ability of the LeaderCard
-     *
      * @param leaderId the string that identify the leader card
+     * @throws MissingCardException if the Card isn't in the Deck
+     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException {
@@ -357,10 +367,13 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         }
     }
 
+
     /**
      * This method removes a LeaderCard from the player
-     *
      * @param leaderId the string that identify the leader card to be discarded
+     * @throws PlayerStateException if the Player cannot do this action
+     * @throws EmptyDeckException if the deck is empty
+     * @throws MissingCardException if the card isn't in the deck
      */
     @Override
     public void discardLeader(String leaderId) throws PlayerStateException, EmptyDeckException, MissingCardException {
@@ -368,8 +381,10 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     }
 
     /**
-     * the player ends its turn
+     * The player ends its turn
      * @return true if success, false otherwise
+     * @throws PlayerStateException if the Player can't do this action
+     * @throws WrongDepotException if the Depot cannot be used
      */
     @Override
     public boolean endThisTurn() throws PlayerStateException, WrongDepotException {
@@ -377,9 +392,11 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     }
 
     /**
-     * set a chosen resource attribute in player
-     *
+     * Set a chosen resource attribute in player
+     * @param slot is the Depot where the Resource is located
      * @param chosen the resource chosen
+     * @throws PlayerStateException if the Player can't do this action
+     * @throws WrongDepotException if the Depot cannot be used
      */
     @Override
     public void chooseResource(DepotSlot slot, ResourceType chosen) throws PlayerStateException, WrongDepotException {
@@ -404,11 +421,12 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * this method check if the player has requisite
-     * If it return true then the warehouse has eliminate the requisites yet
-     * If it return false then the player has not the requisite;
-     *
-     * @param req the requisite
-     * @return boolean indicating the succeed of the method
+     * @param req is the list of requisite needed
+     * @param row is the row of the DevSetup where the DevCard is located
+     * @param col is the column of the DevSetup where the DevCard is located
+     * @param card is the DevCard
+     * @return true when the warehouse has eliminate the requisites yet, else the player has not the requisite;
+     * @throws LootTypeException if the attribute cannot be obtained from the requisite
      */
     @Override
     public boolean hasRequisite(List<Requisite> req, LevelDevCard row, ColorDevCard col,DevCard card) throws LootTypeException {
@@ -416,26 +434,22 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
             return false;
         }
         //discount
-        List<Requisite> tempList = req;
         for (Resource resLoop : this.marketDiscount) {
             for (int j = 0; j < req.size(); j++) {
                 try {
                     if (req.get(j).getType().equals(resLoop.type())) {
                         Resource tempRes = ResourceBuilder.buildFromType(req.get(j).getType(), req.get(j).getAmount() - 1);
                         ResourceRequisite tempReq = new ResourceRequisite(tempRes);
-                        tempList.set(j,tempReq);
+                        req.set(j,tempReq);
                     }
-                } catch (LootTypeException e) {
+                } catch (LootTypeException ignored) {
                 }
             }
         }
         //resource check
-        List<Resource> tempBufferRes = null;
-        try {
-            tempBufferRes = this.personalBoard.viewBufferResources();
-        } catch (WrongDepotException e) { return false; }
-
-        for (Requisite reqLoop : tempList) {
+        List<Resource> tempBufferRes;
+        tempBufferRes = this.personalBoard.viewDepotResource(DepotSlot.BUFFER);
+        for (Requisite reqLoop : req) {
             for (Resource tempListResLoop : tempBufferRes) {
                 if (tempListResLoop.type().equals(reqLoop.getType())) {
                     if ( !(tempListResLoop.amount() == reqLoop.getAmount()) ) return false;
@@ -449,7 +463,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * This method adds a DevCard to the player's personal board, using resources taken from the Warehouse
-     *
      * @param newDevCard the dev card received that need to be stored in the personal board
      */
     @Override
@@ -459,7 +472,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * This method flips the PopeTile when the Player is in a Vatican Space or passed the relative PopeSpace
-     *
      * @param popeTile the tile to check if it need to be flipped
      */
     @Override
@@ -469,7 +481,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * starts the turn of the player;
-     *
      * @return true if success, false otherwise
      */
     @Override
@@ -484,7 +495,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * Returns a string representation of the object.
-     *
      * @return a string representation of the object.
      */
     @Override

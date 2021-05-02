@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.depot;
 
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 
@@ -9,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 
+/**
+ * This class is the Strongbox into the warehouse where several type of resources can be stored
+ */
 public class Strongbox implements Depot {
 
     /**
@@ -17,28 +19,20 @@ public class Strongbox implements Depot {
     private final List<Resource> resources;
 
     /**
-     * This attribute is a constraint that verifies that the resources within the depot are of the same type
-     */
-    private final List<BiPredicate<Resource, Resource>> constraints;
-
-    /**
      * This method is the constructor of the class
      */
     public Strongbox() {
         this.resources = ResourceBuilder.buildListOfStorable();
-
-        this.constraints = new ArrayList<>();
     }
 
     /**
      * This method accept a lambda function predicate with two parameters: first one is always referred to the input resource,
      * second one is the resource already contained in the depot
+     * The Strongbox doesn't have constraints
      * @param constraint is the constraint that the depot checks before adding resources
      */
     @Override
-    public void addConstraint(BiPredicate<Resource, Resource> constraint) {
-        constraints.add(constraint);
-    }
+    public void addConstraint(BiPredicate<Resource, Resource> constraint) {}
 
     /**
      * This method inserts the resources inside the Strongbox, it merges the resources with the ones inside the Strongbox
@@ -87,7 +81,6 @@ public class Strongbox implements Depot {
 
     /**
      * This method checks if this Depot must have a control on the type of the Resources on this Depot
-     *
      * @return false
      */
     @Override

@@ -6,15 +6,13 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
-import it.polimi.ingsw.model.player.personalBoard.faithTrack.Normal;
-import it.polimi.ingsw.model.player.personalBoard.faithTrack.PopeSpace;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 /**
  * This class is used to store a group of resources that can be DevCards or Resources.
  *
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonSubTypes({
         @JsonSubTypes.Type(name = "ResourceReq", value = ResourceRequisite.class),

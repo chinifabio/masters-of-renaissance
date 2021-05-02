@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This class contains a List of Deck of DevCards. It contains the 12 decks of DevCards divided by level and color.
@@ -46,7 +45,7 @@ public class DevSetup {
     /**
      * This attribute is the list of decks.
      */
-    private List<Deck<DevCard>> devDeckGrid;
+    private final List<Deck<DevCard>> devDeckGrid;
 
     /**
      * This method returns the first card of a single deck of DevCards. It needs the level and the color of the Deck.
