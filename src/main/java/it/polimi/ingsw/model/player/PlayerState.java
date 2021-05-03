@@ -1,19 +1,11 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
+import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.card.MissingCardException;
-import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
-import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
-import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
-import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
-import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
-import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
@@ -44,9 +36,9 @@ public abstract class PlayerState implements PlayerAction {
      * @param context is the context
      * @param emsg is the error message
      */
-    protected PlayerState(Player context, String emsg) {
+    protected PlayerState(Player context, String eMsg) {
         this.context = context;
-        this.errorMessage = emsg;
+        this.errorMessage = eMsg;
     }
 
     /**
@@ -58,7 +50,7 @@ public abstract class PlayerState implements PlayerAction {
     /**
      * this method start the turn of the player
      */
-    public abstract void startTurn() throws PlayerStateException;
+    public void startTurn() {}
 
 // ----------------------------------------------------------------
 // ----- player state action as default launch an exception -------
@@ -75,8 +67,8 @@ public abstract class PlayerState implements PlayerAction {
      * @throws UnobtainableResourceException if the Player can't obtain the Resource
      */
     @Override
-    public boolean useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, PlayerStateException, UnobtainableResourceException {
-        throw new PlayerStateException(errorMessage);
+    public Packet useMarketTray(RowCol rc, int index) {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 
     /**
@@ -88,8 +80,8 @@ public abstract class PlayerState implements PlayerAction {
      * @throws PlayerStateException if the Player can't do this action
      */
     @Override
-    public void paintMarbleInTray(int conversionsIndex, int marbleIndex) throws UnpaintableMarbleException, PlayerStateException {
-        throw new PlayerStateException(errorMessage);
+    public Packet paintMarbleInTray(int conversionsIndex, int marbleIndex) {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 
     /**
@@ -104,8 +96,8 @@ public abstract class PlayerState implements PlayerAction {
      * @throws LootTypeException if the attribute cannot be obtained from this Requisite
      */
     @Override
-    public boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NoRequisiteException, PlayerStateException, EmptyDeckException, LootTypeException {
-        throw new PlayerStateException(errorMessage);
+    public Packet buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 
     /**
@@ -117,8 +109,8 @@ public abstract class PlayerState implements PlayerAction {
      * @throws WrongPointsException if the Player can't obtain the FaithPoints
      */
     @Override
-    public boolean activateProductions() throws PlayerStateException, UnobtainableResourceException, WrongPointsException {
-        throw new PlayerStateException(errorMessage);
+    public Packet activateProductions() {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 
     /**
@@ -133,8 +125,8 @@ public abstract class PlayerState implements PlayerAction {
      * @throws WrongDepotException if the Depot cannot be used
      */
     @Override
-    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, PlayerStateException, WrongDepotException {
-        throw new PlayerStateException(errorMessage);
+    public Packet moveInProduction(DepotSlot from, ProductionID dest, Resource loot) {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 
     /**
@@ -145,8 +137,8 @@ public abstract class PlayerState implements PlayerAction {
      * @throws PlayerStateException if the Player can't do this action
      */
     @Override
-    public boolean setNormalProduction(ProductionID id, NormalProduction normalProduction) throws PlayerStateException {
-        throw new PlayerStateException(errorMessage);
+    public Packet setNormalProduction(ProductionID id, NormalProduction normalProduction)  {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 
     /**
@@ -160,8 +152,8 @@ public abstract class PlayerState implements PlayerAction {
      * @throws WrongDepotException if the Depot can't be used
      */
     @Override
-    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws NegativeResourcesDepotException, PlayerStateException, UnobtainableResourceException, WrongDepotException {
-        throw new PlayerStateException(errorMessage);
+    public Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 
     /**
@@ -174,8 +166,8 @@ public abstract class PlayerState implements PlayerAction {
      * @throws WrongDepotException if the Depot cannot be used
      */
     @Override
-    public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EmptyDeckException, LootTypeException, WrongDepotException {
-        throw new PlayerStateException(errorMessage);
+    public Packet activateLeaderCard(String leaderId) {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 
     /**
@@ -186,8 +178,8 @@ public abstract class PlayerState implements PlayerAction {
      * @throws MissingCardException if the card isn't in the Deck
      */
     @Override
-    public void discardLeader(String leaderId) throws PlayerStateException, EmptyDeckException, MissingCardException {
-        throw new PlayerStateException(errorMessage);
+    public Packet discardLeader(String leaderId) {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 
     /**
@@ -197,8 +189,8 @@ public abstract class PlayerState implements PlayerAction {
      * @throws WrongDepotException if the Depot can't be used
      */
     @Override
-    public boolean endThisTurn() throws PlayerStateException, WrongDepotException {
-        throw new PlayerStateException(errorMessage);
+    public Packet endThisTurn() {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 
     /**
@@ -209,7 +201,18 @@ public abstract class PlayerState implements PlayerAction {
      * @throws WrongDepotException if the Depot can't be used
      */
     @Override
-    public void chooseResource(DepotSlot slot, ResourceType chosen) throws PlayerStateException, WrongDepotException {
-        throw new PlayerStateException(errorMessage);
+    public Packet chooseResource(DepotSlot slot, ResourceType chosen) {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    }
+
+    /**
+     * Create a game with the passed number of player
+     *
+     * @param number the number of player of the match to be create
+     * @return the succeed of the operation
+     */
+    @Override
+    public Packet setPlayerNumber(int number) {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 }

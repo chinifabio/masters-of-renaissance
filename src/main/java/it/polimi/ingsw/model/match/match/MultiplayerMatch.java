@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.match.match;
 
 import it.polimi.ingsw.TextColors;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 
 /**
  * This class represents the MultiplayerMatch
@@ -12,9 +10,10 @@ public class MultiplayerMatch extends Match{
      * build a multiplayer match.
      * A multiplayer match has a game size of 4 players
      * and require at least 2 player to be started
+     * @param number the game size of the match
      */
-    public MultiplayerMatch() {
-        super(4, 2);
+    public MultiplayerMatch(int number) {
+        super(number, 2);
     }
 
     /**
@@ -24,13 +23,13 @@ public class MultiplayerMatch extends Match{
     public void startEndGameLogic() {
 
         // ----- END GAME ZONE -----
-        this.turn.endGame();
+        this.turn.endGame();/*
         try {
             this.turn.getCurPlayer().endThisTurn();
         } catch (PlayerStateException | WrongDepotException e) {
             // todo lancia un eccezione al model
         }
-        // -------------------------
+        // -------------------------*/
 
     }
 

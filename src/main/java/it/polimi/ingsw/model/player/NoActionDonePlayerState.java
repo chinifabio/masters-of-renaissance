@@ -1,20 +1,13 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
+import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
-import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
-import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
-import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
-import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
-import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
@@ -50,7 +43,7 @@ public class NoActionDonePlayerState extends PlayerState {
      * @throws PlayerStateException if the Player can't do this action
      */
     @Override
-    public void startTurn() throws PlayerStateException {
+    public void startTurn() {
         this.context.setState(new NotHisTurnPlayerState(this.context));
     }
 
@@ -67,14 +60,23 @@ public class NoActionDonePlayerState extends PlayerState {
      * @throws OutOfBoundMarketTrayException if the MarketTray is out of bound
      */
     @Override
-    public boolean useMarketTray(RowCol rc, int index) throws UnobtainableResourceException, OutOfBoundMarketTrayException {
+    public Packet useMarketTray(RowCol rc, int index) {
         try {
-            this.context.match.useMarketTray(rc, index);
-        } catch (EndGameException | WrongDepotException e) {
-            this.context.match.startEndGameLogic();
+            // using market tray
+            this.context.model.getMatch().useMarketTray(rc, index);
+
+        } catch (EndGameException e) {
+
+            this.context.model.getMatch().startEndGameLogic();                                      // stop the game when the last player end his turn
+            this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
+            return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
+
+        } catch (Exception e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
+
         this.context.setState(new MainActionDonePlayerState(this.context));
-        return true;
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
     }
 
     /**
@@ -85,8 +87,14 @@ public class NoActionDonePlayerState extends PlayerState {
      * @throws UnpaintableMarbleException if the Marble can't be painted
      */
     @Override
-    public void paintMarbleInTray(int conversionsIndex, int marbleIndex) throws UnpaintableMarbleException {
-        this.context.match.paintMarbleInTray(this.context.marbleConversions.get(conversionsIndex).copy(), marbleIndex);
+    public Packet paintMarbleInTray(int conversionsIndex, int marbleIndex) {
+        try {
+            this.context.model.getMatch().paintMarbleInTray(this.context.marbleConversions.get(conversionsIndex).copy(), marbleIndex);
+        } catch (UnpaintableMarbleException e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+        }
+
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
     }
 
     /**
@@ -101,11 +109,19 @@ public class NoActionDonePlayerState extends PlayerState {
      * @throws LootTypeException if this attribute cannot be obtained from this Requisite
      */
     @Override
-    public boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NoRequisiteException, PlayerStateException, EmptyDeckException, LootTypeException {
+    public Packet buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
         this.context.slotDestination = destination;
-        boolean res = this.context.match.buyDevCard(row, col);
+        boolean res = false;
+        try {
+            res = this.context.model.getMatch().buyDevCard(row, col);
+        } catch (Exception e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+        }
+
         if (res) this.context.setState(new MainActionDonePlayerState(this.context));
-        return res;
+        return res ?
+                new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "you have no requisite to buy this card"):
+                new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
     }
 
     /**
@@ -115,14 +131,21 @@ public class NoActionDonePlayerState extends PlayerState {
      * @throws UnobtainableResourceException if the Resource can't be obtained by the Player
      */
     @Override
-    public boolean activateProductions() throws UnobtainableResourceException {
+    public Packet activateProductions() {
         try {
             this.context.personalBoard.activateProductions();
-        } catch (EndGameException | WrongDepotException e) {
-            this.context.match.startEndGameLogic();
+        } catch (EndGameException e) {
+
+            this.context.model.getMatch().startEndGameLogic();                                      // stop the game when the last player end his turn
+            this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
+            return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
+
+        } catch (Exception e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
+
         this.context.setState(new MainActionDonePlayerState(this.context));
-        return true;
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
     }
 
     /**
@@ -133,13 +156,14 @@ public class NoActionDonePlayerState extends PlayerState {
      * @return the succeed of the operation
      */
     @Override
-    public boolean setNormalProduction(ProductionID id, NormalProduction normalProduction) {
+    public Packet setNormalProduction(ProductionID id, NormalProduction normalProduction) {
         try {
-            return this.context.personalBoard.setNormalProduction(id, normalProduction);
-        } catch (IllegalNormalProduction illegalNormalProduction) {
-            return false;
-            // todo error to player handler
+            this.context.personalBoard.setNormalProduction(id, normalProduction);
+        } catch (IllegalNormalProduction e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
+
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
     }
 
     /**
@@ -153,8 +177,14 @@ public class NoActionDonePlayerState extends PlayerState {
      * @throws WrongDepotException if the Player can't use the Depot
      */
     @Override
-    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, WrongDepotException {
-        return this.context.personalBoard.moveInProduction(from, dest, loot);
+    public Packet moveInProduction(DepotSlot from, ProductionID dest, Resource loot) {
+        try {
+            this.context.personalBoard.moveInProduction(from, dest, loot);
+        } catch (Exception e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+        }
+
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
     }
 
     /**
@@ -167,8 +197,14 @@ public class NoActionDonePlayerState extends PlayerState {
      * @throws NegativeResourcesDepotException if the Depot doesn't have enough resources
      */
     @Override
-    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws UnobtainableResourceException, WrongDepotException, NegativeResourcesDepotException {
-        this.context.personalBoard.moveResourceDepot(from, to, loot);
+    public Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
+        try {
+            this.context.personalBoard.moveResourceDepot(from, to, loot);
+        } catch (Exception e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+        }
+
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
     }
 
     /**
@@ -181,8 +217,14 @@ public class NoActionDonePlayerState extends PlayerState {
      * @throws WrongDepotException if the Depot can't be used
      */
     @Override
-    public void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EmptyDeckException, LootTypeException, WrongDepotException {
-        this.context.personalBoard.activateLeaderCard(leaderId);
+    public Packet activateLeaderCard(String leaderId) {
+        try {
+            this.context.personalBoard.activateLeaderCard(leaderId);
+        } catch (Exception e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+        }
+
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
     }
 
     /**
@@ -193,9 +235,24 @@ public class NoActionDonePlayerState extends PlayerState {
      * @throws MissingCardException if the Card isn't in the Deck
      */
     @Override
-    public void discardLeader(String leaderId) throws PlayerStateException, EmptyDeckException, MissingCardException {
-        this.context.personalBoard.discardLeaderCard(leaderId);
-        this.context.personalBoard.moveFaithMarker(1, this.context.match);
+    public Packet discardLeader(String leaderId) {
+        try {
+            this.context.personalBoard.discardLeaderCard(leaderId);
+        } catch (Exception e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+        }
+
+        try {
+            this.context.personalBoard.moveFaithMarker(1, this.context.model.getMatch());
+        } catch (EndGameException e) {
+
+            this.context.model.getMatch().startEndGameLogic();                                      // stop the game when the last player end his turn
+            this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
+            return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
+
+        }
+
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
     }
 
     /**
@@ -205,9 +262,10 @@ public class NoActionDonePlayerState extends PlayerState {
      * @throws WrongDepotException if the Depot cannot be used
      */
     @Override
-    public boolean endThisTurn() throws PlayerStateException, WrongDepotException {
-        this.context.personalBoard.flushBufferDepot(this.context.match);
+    public Packet endThisTurn() {
+        this.context.personalBoard.flushBufferDepot(this.context.model.getMatch());
         this.context.setState(new NotHisTurnPlayerState(this.context));
-        return this.context.match.endMyTurn();
+        this.context.model.getMatch().endMyTurn();
+        return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "your turn is ended");
     }
 }

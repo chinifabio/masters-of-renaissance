@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.match;
 
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
+import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
@@ -55,7 +56,7 @@ public interface PlayerToMatch {
      * @throws EmptyDeckException if the Player tries to buy a DevCard of an empty deck
      * @throws LootTypeException if the type of the requirements are wrong
      */
-    boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws NoRequisiteException, PlayerStateException, EmptyDeckException, LootTypeException;
+    boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws NoRequisiteException, PlayerStateException, EmptyDeckException, LootTypeException, AlreadyInDeckException, EndGameException;
 
     /**
      * Method called when player do action such that other players obtain faith point
@@ -74,7 +75,7 @@ public interface PlayerToMatch {
      * Tells to the match the end of the player turn;
      * @return true if the player ended is turn
      */
-    boolean endMyTurn() throws PlayerStateException;
+    void endMyTurn() throws PlayerStateException;
 
     /**
      * This method return a Leader Card Deck

@@ -1,18 +1,7 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.cards.*;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.card.MissingCardException;
-import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
-import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
-import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
-import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
-import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
-import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
@@ -35,7 +24,7 @@ public interface PlayerAction {
      * @throws PlayerStateException if the Player can't do this action
      * @throws UnobtainableResourceException if the Player can't obtain that Resource
      */
-    boolean useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, PlayerStateException, UnobtainableResourceException;
+    Packet useMarketTray(RowCol rc, int index);
 
     /**
      * This method allows the player to select which Resources to get when he activates two LeaderCards with the same
@@ -45,7 +34,7 @@ public interface PlayerAction {
      * @throws UnpaintableMarbleException if the Marble can't be painted
      * @throws PlayerStateException if the Player can't do this action
      */
-    void paintMarbleInTray(int conversionsIndex, int marbleIndex) throws UnpaintableMarbleException, PlayerStateException;
+    Packet paintMarbleInTray(int conversionsIndex, int marbleIndex);
 
     /**
      * player ask to buy the first card of the deck in position passed as parameter
@@ -58,7 +47,7 @@ public interface PlayerAction {
      * @throws EmptyDeckException if the Deck is empty
      * @throws LootTypeException if the attribute cannot be obtained from this Requisite
      */
-    boolean buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) throws NoRequisiteException, PlayerStateException, EmptyDeckException, LootTypeException;
+    Packet buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination);
 
     /**
      * This method takes the resources from the Depots and the Strongbox to
@@ -68,7 +57,7 @@ public interface PlayerAction {
      * @throws UnobtainableResourceException if the Player can't obtain the Resource
      * @throws WrongPointsException if the Player can't obtain the FaithPoints
      */
-    boolean activateProductions() throws PlayerStateException, UnobtainableResourceException, WrongPointsException;
+    Packet activateProductions();
 
     /**
      * This method moves a resource from a depot to a production
@@ -81,7 +70,7 @@ public interface PlayerAction {
      * @throws PlayerStateException if the Player can't do this action
      * @throws WrongDepotException if the Depot cannot be used
      */
-    boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, PlayerStateException, WrongDepotException;
+    Packet moveInProduction(DepotSlot from, ProductionID dest, Resource loot);
 
     /**
      * This method set the normal production of an unknown production
@@ -90,7 +79,7 @@ public interface PlayerAction {
      * @return the succeed of the operation
      * @throws PlayerStateException if the Player can't do this action
      */
-    boolean setNormalProduction(ProductionID id, NormalProduction normalProduction) throws PlayerStateException;
+    Packet setNormalProduction(ProductionID id, NormalProduction normalProduction);
 
     /**
      * This method allows the player to move Resources between Depots
@@ -103,7 +92,7 @@ public interface PlayerAction {
      * @throws WrongPointsException if the Player can't obtain the FaithPoint
      * @throws WrongDepotException if the Depot cannot be used
      */
-    void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws NegativeResourcesDepotException, PlayerStateException, UnobtainableResourceException, WrongPointsException, WrongDepotException;
+    Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot);
 
     /**
      * This method activates the special ability of the LeaderCard
@@ -114,7 +103,7 @@ public interface PlayerAction {
      * @throws LootTypeException if the attribute cannot be obtained from this Requisite
      * @throws WrongDepotException if the Depot cannot be used
      */
-    void activateLeaderCard(String leaderId) throws MissingCardException, PlayerStateException, EmptyDeckException, LootTypeException, WrongDepotException;
+    Packet activateLeaderCard(String leaderId);
 
     /**
      * This method removes a LeaderCard from the player
@@ -123,7 +112,7 @@ public interface PlayerAction {
      * @throws EmptyDeckException if the Deck is empty
      * @throws MissingCardException if the card isn't in the Deck
      */
-    void discardLeader(String leaderId) throws PlayerStateException, EmptyDeckException, MissingCardException;
+    Packet discardLeader(String leaderId);
 
     /**
      * set a chosen resource attribute in player
@@ -132,7 +121,7 @@ public interface PlayerAction {
      * @throws PlayerStateException if the Player can't do this action
      * @throws WrongDepotException if the Depot cannot be used
      */
-    void chooseResource(DepotSlot slot, ResourceType chosen) throws PlayerStateException, WrongDepotException;
+    Packet chooseResource(DepotSlot slot, ResourceType chosen);
 
     /**
      * The player ends his turn
@@ -140,6 +129,12 @@ public interface PlayerAction {
      * @throws PlayerStateException if the Player can't do this action
      * @throws WrongDepotException if the Depot can't be used
      */
-    boolean endThisTurn() throws PlayerStateException, WrongDepotException;
+    Packet endThisTurn();
 
+    /**
+     * Create a game with the passed number of player
+     * @param number the number of player of the match to be create
+     * @return the succeed of the operation
+     */
+    Packet setPlayerNumber(int number);
 }

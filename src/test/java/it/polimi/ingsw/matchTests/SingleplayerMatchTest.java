@@ -4,17 +4,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
+import it.polimi.ingsw.communication.packet.commands.Command;
+import it.polimi.ingsw.communication.packet.commands.SetNumberCommand;
+import it.polimi.ingsw.communication.server.ClientController;
+import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.SoloActionToken;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
-import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
-import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
-import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -26,33 +29,27 @@ import java.util.List;
 
 public class SingleplayerMatchTest {
 
+    private Model model;
     private Match singleplayer;
 
-    private Player gino;
-    private Player lino;
+    private ClientController gino = new ClientController(null, "gino");
 
     int oldLorenzoPos = 0;
     int oldNumDiscarded = 0;
 
     @BeforeEach
     public void initializeMatch() {
-        assertDoesNotThrow(()->singleplayer = new SingleplayerMatch());
-        assertDoesNotThrow(()->gino = new Player("gino", this.singleplayer));
-        assertDoesNotThrow(()->lino = new Player("lino", this.singleplayer));
+        this.model = new Model();
+        assertDoesNotThrow(()->this.model.start(gino));
+        this.model.handleClientCommand(gino, new SetNumberCommand(1));
 
-        assertDoesNotThrow(()->assertFalse(singleplayer.startGame()));
-
-        assertTrue(singleplayer.playerJoin(gino));
-        assertFalse(singleplayer.playerJoin(lino));
-
-        assertDoesNotThrow(()->assertTrue(singleplayer.startGame()));
-
-        assertFalse(singleplayer.playerJoin(lino));
+        assertNotNull(model.getMatch());
+        singleplayer = model.getMatch();
 
         // the player discard the first two leader card
-        assertDoesNotThrow(()->gino.test_discardLeader());
-        assertDoesNotThrow(()->gino.test_discardLeader());
-        assertDoesNotThrow(()->gino.endThisTurn());
+        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().endThisTurn());
         // once the second leader is discarded the turn end and match manage lorenzo automatically
     }
 
@@ -65,18 +62,18 @@ public class SingleplayerMatchTest {
     public void simpleLifeCycleOfMatch() {
         this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().test_getLastDiscarded().getCardID());
 
-        assertTrue(gino.canDoStuff());
+        assertTrue(singleplayer.test_getCurrPlayer().canDoStuff());
 
-        assertDoesNotThrow(()->assertTrue(gino.useMarketTray(RowCol.ROW, 0)));
-        assertDoesNotThrow(()->assertFalse(gino.useMarketTray(RowCol.ROW, 0)));
+        assertDoesNotThrow(()-> assertEquals(singleplayer.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.OK));
+        assertDoesNotThrow(()-> assertEquals(singleplayer.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.INVALID));
 
-        assertDoesNotThrow(()->gino.endThisTurn());
+        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().endThisTurn());
         this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().test_getLastDiscarded().getCardID());
 
-        assertDoesNotThrow(()->assertTrue(gino.useMarketTray(RowCol.ROW, 0)));
-        assertDoesNotThrow(()->assertFalse(gino.useMarketTray(RowCol.ROW, 0)));
+        assertDoesNotThrow(()-> assertEquals(singleplayer.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.OK));
+        assertDoesNotThrow(()-> assertEquals(singleplayer.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.INVALID));
 
-        assertDoesNotThrow(()->gino.endThisTurn());
+        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().endThisTurn());
         this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().test_getLastDiscarded().getCardID());
     }
 
@@ -105,7 +102,7 @@ public class SingleplayerMatchTest {
     public void endGameByLorenzo() {
         assertDoesNotThrow(()-> {
             while (singleplayer.test_getGameOnAir()) {
-                gino.endThisTurn();
+                singleplayer.test_getCurrPlayer().endThisTurn();
             }
         });
 
@@ -131,7 +128,7 @@ public class SingleplayerMatchTest {
                 this.oldLorenzoPos += 1;
                 break;
             default: fail();
-            // non posso avere ST7 perchè svuota la pila degli scarti
+            // st7 makes the discarded token stack empty
         }
     }
 }

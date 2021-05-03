@@ -66,18 +66,20 @@ public class Turn {
         for (int i = 0; i < playerOrder.size(); i++) {
             playerOrder.get(i).initialSetup = initialResourcesSetup.get(i);
         }
+        this.curPlayer = 0;
+        this.playerOrder.get(curPlayer).startHisTurn();
     }
 
     /**
      * set the new current player and return its instance
      * @return succeed of the operation
      */
-    public boolean nextPlayer() throws EndGameException {
+    public void nextPlayer() throws EndGameException {
         // if the cur player is the right player of inkwell player the match ends
         if (endGameLogic && curPlayer == (playerOrder.size() - 1)) throw new EndGameException();
 
         curPlayer = (curPlayer + 1) % playerOrder.size();
-        return playerOrder.get(curPlayer).startHisTurn();
+        playerOrder.get(curPlayer).startHisTurn();
     }
 
     /**
@@ -86,7 +88,7 @@ public class Turn {
      * @return true if success, otherwise return false
      */
     public boolean joinPlayer(Player player) {
-        if(this.playerOrder.contains(player) && playerOrder.size() > 4) return false;
+        if(this.playerOrder.contains(player) || playerOrder.size() > 4) return false;
         playerOrder.add(player);
         return true;
     }

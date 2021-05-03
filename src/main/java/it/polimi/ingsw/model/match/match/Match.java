@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
+import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
-import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
@@ -114,8 +114,14 @@ public abstract class Match implements PlayerToMatch {
      * @return true if success, false instead
      */
     public boolean playerJoin(Player joined) {
-        if( turn.playerInGame() < this.gameSize && !gameOnAir) return turn.joinPlayer(joined);
-        else return false;
+        if (this.turn.playerInGame() > gameSize) return false;
+        if (gameOnAir) return false;
+        if (!turn.joinPlayer(joined)) return false;
+        if (this.turn.playerInGame() == gameSize) {
+            this.turn.randomizeInkwellPlayer();
+            this.gameOnAir = true;
+        }
+        return true;
     }
 
 
@@ -125,9 +131,7 @@ public abstract class Match implements PlayerToMatch {
      */
     public boolean startGame() {
         if(this.turn.playerInGame() < this.minimumPlayer || gameOnAir) return false;
-        turn.randomizeInkwellPlayer();
-        this.turn.getCurPlayer().startHisTurn();
-        gameOnAir = true;
+        // todo delete when test is passed for new start match strategy
         return true;
     }
 
@@ -212,14 +216,11 @@ public abstract class Match implements PlayerToMatch {
      * @return true if there where no issue, false instead
      */
     @Override
-    public boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws NoRequisiteException, PlayerStateException, EmptyDeckException, LootTypeException {
+    public boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws PlayerStateException, EmptyDeckException, LootTypeException, AlreadyInDeckException, EndGameException {
+        // todo check if non current players actually can't buy a card
         if (this.turn.getCurPlayer().hasRequisite(this.devSetup.showDevDeck(row, col).getCost(),row,col,this.devSetup.showDevDeck(row,col))) {
-            try {
-                this.turn.getCurPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
-                return true;
-            } catch (EmptyDeckException e) {
-                // todo exception to model
-            }
+            this.turn.getCurPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
+            return true;
         }
         return false;
     }
@@ -231,23 +232,27 @@ public abstract class Match implements PlayerToMatch {
      */
     @Override
     public void othersPlayersObtainFaithPoint(int amount) {
-        for (Player x : turn.getOtherPlayer()) x.moveFaithMarker(amount);
+        for (Player x : turn.getOtherPlayer()) {
+            try {
+                x.moveFaithMarker(amount);
+            } catch (EndGameException e) {
+                this.startEndGameLogic();
+            }
+        }
     }
 
 
     /**
      * Tells to the match the end of the player turn;
-     * @return true if success
      */
     @Override
-    public boolean endMyTurn() {
+    public void endMyTurn() {
         this.marketTray.unPaint();
         try {
-            return this.turn.nextPlayer();
+            this.turn.nextPlayer();
         } catch (EndGameException e) {
             gameOnAir = false;
             this.turn.countingPoints();
-            return true;
             // todo tells to the worker to calculate the points
         }
     }

@@ -65,7 +65,7 @@ public class ResourceTest {
     @Test
     public void nonObtainable() throws IllegalTypeInProduction {
         Resource unknown = ResourceBuilder.buildUnknown();
-        PlayableCardReaction player = new Player("dummy", null);
+        PlayableCardReaction player = new Player("dummy", false);
         boolean result = false;
 
         try {

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
-
 /**
  * This class is the State where are counted the VictoryPoints of the Player
  */
@@ -22,15 +20,6 @@ public class CountingPointsPlayerState extends PlayerState {
     @Override
     public boolean doStuff() {
         return false;
-    }
-
-    /**
-     * This method starts the turn of the player
-     * @throws PlayerStateException if the player can't do this action
-     */
-    @Override
-    public void startTurn() throws PlayerStateException {
-        throw new PlayerStateException("match ended, can't start the turn");
     }
 
 // --------------------- PLAYER ACTION IMPLEMENTATIONS ---------------------------

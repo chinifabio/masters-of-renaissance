@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
+import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
 import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
@@ -43,7 +44,7 @@ public interface MatchToPlayer {
      * @throws PlayerStateException if the Player can't do this action
      * @throws EndGameException if the EndGameLogic is activated
      */
-    void receiveDevCard(DevCard newDevCard) throws PlayerStateException, EndGameException;
+    void receiveDevCard(DevCard newDevCard) throws PlayerStateException, EndGameException, AlreadyInDeckException;
 
     /**
      * This method flips the PopeTile when the Player is in a Vatican Space or passed the relative PopeSpace

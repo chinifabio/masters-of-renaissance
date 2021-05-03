@@ -1,14 +1,16 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
+import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.cards.LeaderCard;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.card.MissingCardException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.util.Pair;
 
 import java.util.Optional;
 
@@ -46,12 +48,11 @@ public class LeaderSelectionPlayerState extends PlayerState {
     public LeaderSelectionPlayerState(Player context) {
         super(context, "you need to discard leader card");
 
-        Optional.of(context.initialSetup).ifPresent( x -> {
-            this.context.moveFaithMarker(x.two);
-            this.resourceToChoose = x.one;
-        });
+        Pair<Integer> initRes = Optional.of(context.initialSetup).orElse(new Pair<>(0,0));
+        try { this.context.moveFaithMarker(initRes.two); } catch (EndGameException ignore) {}
+        this.resourceToChoose = initRes.one;
 
-        for(LeaderCard ld : this.context.match.requestLeaderCard()) {
+        for(LeaderCard ld : this.context.model.getMatch().requestLeaderCard()) {
             try {
                 this.context.personalBoard.addLeaderCard(ld);
             } catch (AlreadyInDeckException e) {
@@ -70,15 +71,6 @@ public class LeaderSelectionPlayerState extends PlayerState {
         return true;
     }
 
-    /**
-     * this method starts the turn of the player
-     * @throws PlayerStateException if the Player can't do this action
-     */
-    @Override
-    public void startTurn() throws PlayerStateException {
-        throw new PlayerStateException("turn already started");
-    }
-
 // -------------------- PLAYER STATE IMPLEMENTATIONS -----------------------------------
 
     /**
@@ -89,11 +81,16 @@ public class LeaderSelectionPlayerState extends PlayerState {
      * @throws MissingCardException if the Card to discard isn't in the Deck
      */
     @Override
-    public void discardLeader(String leaderId) throws PlayerStateException, EmptyDeckException, MissingCardException {
+    public Packet discardLeader(String leaderId) {
         if (discarded < toDiscard) {
-            this.context.personalBoard.discardLeaderCard(leaderId);
-            discarded ++;
-        } else throw new PlayerStateException("you already discarded " + toDiscard + " cards");
+            try {
+                this.context.personalBoard.discardLeaderCard(leaderId);
+                discarded ++;
+                return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
+            } catch (Exception e) {
+                return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            }
+        } else return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "you already discarded " + toDiscard + " cards");
     }
 
 
@@ -103,11 +100,15 @@ public class LeaderSelectionPlayerState extends PlayerState {
      * @throws PlayerStateException if the Player can't do this action
      */
     @Override
-    public boolean endThisTurn() throws PlayerStateException {
+    public Packet endThisTurn() {
         if (chosenResources == resourceToChoose && discarded == toDiscard) {
+
             this.context.setState(new NotHisTurnPlayerState(this.context));
-            return this.context.match.endMyTurn();
-        } else throw new PlayerStateException("can't end the turn, complete your job {leader " + discarded + "/" + toDiscard+"} {resources " + chosenResources + "/" + resourceToChoose);
+            this.context.model.getMatch().endMyTurn();
+            return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "your turn is ended");
+
+        } else
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "can't end the turn, complete your job {leader " + discarded + "/" + toDiscard+"} {resources " + chosenResources + "/" + resourceToChoose+"}");
     }
 
     /**
@@ -118,11 +119,21 @@ public class LeaderSelectionPlayerState extends PlayerState {
      * @throws WrongDepotException if the Resources can't be taken from the Depot
      */
     @Override
-    public void chooseResource(DepotSlot slot, ResourceType chosen) throws PlayerStateException, WrongDepotException {
+    public Packet chooseResource(DepotSlot slot, ResourceType chosen) {
+        if (slot == DepotSlot.STRONGBOX || slot == DepotSlot.BUFFER)
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "invalid destination");
         if (this.chosenResources < this.resourceToChoose) {
-            if (this.context.obtainResource(slot, ResourceBuilder.buildFromType(chosen, 1))) chosenResources ++;
-        } else if (slot == DepotSlot.STRONGBOX || slot == DepotSlot.BUFFER) throw new PlayerStateException("illegal depot chosen");
-        else throw new PlayerStateException("you already chose " + resourceToChoose + " resources");
+            try {
+                if (this.context.obtainResource(slot, ResourceBuilder.buildFromType(chosen, 1))) {
+                    chosenResources++;
+                    return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
+                } else
+                    return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "can't override resource");
+
+            } catch (Exception e) {
+                return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            }
+        } else return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "you already chose " + resourceToChoose + " resources");
     }
 
     /**

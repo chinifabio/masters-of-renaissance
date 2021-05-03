@@ -2,9 +2,12 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
+import it.polimi.ingsw.communication.packet.commands.Command;
+import it.polimi.ingsw.communication.packet.commands.SetNumberCommand;
+import it.polimi.ingsw.communication.server.ClientController;
+import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.DimensionReader;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
@@ -13,9 +16,9 @@ import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.match.markettray.MarketTray;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
-import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
+import it.polimi.ingsw.model.player.PlayerAction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -23,32 +26,24 @@ import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 public class MarketTrayTest {
 
-    Match game = new MultiplayerMatch();
+    Model model = new Model();
+    Match game;
 
-    Player player1 = null;
-    Player player2 = null;
-
-    List<Player> order = new ArrayList<>();
+    ClientController player1 = new ClientController(null, "lino");
+    ClientController player2 = new ClientController(null, "gino");
 
     @BeforeEach
-    public void init() {
-
-        assertDoesNotThrow(()->{
-            player1 = new Player("pino", game);
-            player2 = new Player("gino", game);
-        });
-
-        game.playerJoin(player1);
-        game.playerJoin(player2);
-
-        assertTrue(game.startGame());
+    public void initialization() {
+        assertDoesNotThrow(()->model.start(player1));
+        model.handleClientCommand(player1, new SetNumberCommand(2));
+        assertTrue(model.connectController(player2));
+        game = model.getMatch();
 
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
@@ -60,13 +55,6 @@ public class MarketTrayTest {
         assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
 
-        if(player1.canDoStuff()){
-            order.add(player1);
-            order.add(player2);
-        } else {
-            order.add(player2);
-            order.add(player1);
-        }
     }
 
     /**
@@ -75,40 +63,39 @@ public class MarketTrayTest {
      * if the tray contains the same marbles order of the modified configuration.
      */
     @Test
-    public void pushCol() throws IllegalTypeInProduction {
+    public void pushCol() {
         int row = 3;
         int col = 4;
 
         MarketTray tray = new MarketTray();
-        PlayableCardReaction player = new Player("dummy", null);
 
         List<Marble> beforePush;
         Marble slide;
 
         assertEquals(12,tray.showMarketTray().size());
 
-        for(int shiftCol = 0; shiftCol < col; shiftCol++) {
-            beforePush = tray.showMarketTray();
-            slide = tray.showSlideMarble();
+        beforePush = tray.showMarketTray();
+        slide = tray.showSlideMarble();
 
-            try {
-                tray.pushCol(shiftCol, player);
-            } catch (Exception e) {
-                e.printStackTrace();
-                fail();
-            }
+        int shiftCol = 1;
 
-            Marble temp = slide;
-
-            slide = beforePush.get(shiftCol);
-            for(int i = shiftCol; i < shiftCol+(row-1)*col; i += col) {
-                beforePush.set(i, beforePush.get(i+col));
-            }
-            beforePush.set(shiftCol+(row-1)*col, temp);
-
-            assertArrayEquals(beforePush.toArray(), tray.showMarketTray().toArray());
-            assertEquals(slide,tray.showSlideMarble());
+        try {
+            tray.pushCol(shiftCol, this.game.test_getCurrPlayer());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
         }
+
+        Marble temp = slide;
+
+        slide = beforePush.get(shiftCol);
+        for(int i = shiftCol; i < shiftCol+(row-1)*col; i += col) {
+            beforePush.set(i, beforePush.get(i+col));
+        }
+        beforePush.set(shiftCol+(row-1)*col, temp);
+
+        assertArrayEquals(beforePush.toArray(), tray.showMarketTray().toArray());
+        assertEquals(slide,tray.showSlideMarble());
     }
 
     /**
@@ -117,39 +104,38 @@ public class MarketTrayTest {
      * if the tray contains the same marbles order of the modified configuration.
      */
     @Test
-    public void pushRow() throws IllegalTypeInProduction {
+    public void pushRow() {
         int row = 3;
         int col = 4;
 
         MarketTray tray = new MarketTray();
-        PlayableCardReaction player = new Player("dummy", null);
 
         List<Marble> beforePush;
         Marble slide;
 
-        for(int shiftRow = 0; shiftRow < row; shiftRow++) {
-            beforePush = tray.showMarketTray();
-            slide = tray.showSlideMarble();
+        beforePush = tray.showMarketTray();
+        slide = tray.showSlideMarble();
 
-            try{
-                tray.pushRow(shiftRow, player);
-            } catch (Exception e) {
-                e.printStackTrace();
-                fail();
-            }
+        int shiftRow = 1;
 
-            Marble temp = slide;
-            int startPos = shiftRow*col;
-
-            slide = beforePush.get(startPos);
-            for (int i = 0; i < col - 1; i++) {
-                beforePush.set(startPos+i,(beforePush.get(startPos+i+1)));
-            }
-            beforePush.set(startPos+col-1, temp);
-
-            assertArrayEquals(beforePush.toArray(), tray.showMarketTray().toArray());
-            assertEquals(slide, tray.showSlideMarble());
+        try{
+            tray.pushRow(shiftRow, this.game.test_getCurrPlayer());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
         }
+
+        Marble temp = slide;
+        int startPos = shiftRow*col;
+
+        slide = beforePush.get(startPos);
+        for (int i = 0; i < col - 1; i++) {
+            beforePush.set(startPos+i,(beforePush.get(startPos+i+1)));
+        }
+        beforePush.set(startPos+col-1, temp);
+
+        assertArrayEquals(beforePush.toArray(), tray.showMarketTray().toArray());
+        assertEquals(slide, tray.showSlideMarble());
     }
 
     /**
@@ -251,47 +237,13 @@ public class MarketTrayTest {
     public void outOfBound() {
 
         for (int i = 0; i < 5; i++) {
-            // player 1 turn
-            if (order.get(0).canDoStuff()) {
-                try {
-                    order.get(0).useMarketTray(RowCol.COL, 5);
-                    fail();
-                } catch (OutOfBoundMarketTrayException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    fail();
-                }
-                try {
-                    order.get(0).endThisTurn();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    fail();
-                }
-                // player 2 turn
-            } else if (order.get(1).canDoStuff()) {
-                try {
-                    order.get(1).useMarketTray(RowCol.COL, 1);
-                } catch (OutOfBoundMarketTrayException e) {
-                    e.printStackTrace();
-                    fail();
-                } catch (Exception e) {
-                    fail();
-                    e.printStackTrace();
-                }
-                try {
-                    order.get(1).endThisTurn();
-                }  catch (Exception e) {
-                    e.printStackTrace();
-                    fail();
-                }
-            } else fail();
+            assertEquals(HeaderTypes.INVALID, game.test_getCurrPlayer().useMarketTray(RowCol.COL, 6).header);
         }
 
     }
 
     @Test
-    public void flushBufferTest() throws WrongDepotException {
+    public void flushBufferTest() {
         assertDoesNotThrow(()->game.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0));
 
         List<Resource> list = this.game.test_getCurrPlayer().test_getPB().getWH_forTest().viewResourcesInDepot(DepotSlot.BUFFER);

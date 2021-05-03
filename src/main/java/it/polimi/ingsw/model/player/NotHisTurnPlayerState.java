@@ -32,7 +32,7 @@ public class NotHisTurnPlayerState extends PlayerState {
      * @throws PlayerStateException if the Player can't do this action
      */
     @Override
-    public void startTurn() throws PlayerStateException {
+    public void startTurn() {
         this.context.setState(new NoActionDonePlayerState(this.context));
     }
 

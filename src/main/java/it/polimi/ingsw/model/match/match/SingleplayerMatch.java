@@ -138,10 +138,9 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     /**
      * Tells to the match the end of the player turn;
      *
-     * @return true if success
      */
     @Override
-    public boolean endMyTurn() {
+    public void endMyTurn() {
         try {
             SoloActionToken s = this.soloToken.useAndDiscard();
             s.useEffect(this);
@@ -149,7 +148,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
             // solo token stack is empty
             // todo end the game with error
         }
-        return super.endMyTurn();
+        super.endMyTurn();
     }
 
     /**

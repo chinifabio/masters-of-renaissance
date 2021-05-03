@@ -95,20 +95,13 @@ public class PersonalBoard {
      * @param pm is the Player that do this action
      * @return true if the card is correctly added
      */
-    public boolean addDevCard(DevCardSlot slot, DevCard card, PlayerToMatch pm) {
+    public boolean addDevCard(DevCardSlot slot, DevCard card) throws EndGameException, AlreadyInDeckException {
         int sum = 0;
         for (DevCardSlot key : DevCardSlot.values()) sum += devDeck.get(key).getNumberOfCards();
-        if (sum >= 7) {
-            pm.startEndGameLogic();
-            return false;
-        }
+        if (sum >= 7) throw new EndGameException();
         if (checkDevCard(slot, card)) {
-            try {
-                this.devDeck.get(slot).insertCard(card);
-                return true;
-            } catch (AlreadyInDeckException e) {
-                e.printStackTrace();    //should not be possible to enter here
-            }
+            this.devDeck.get(slot).insertCard(card);
+            return true;
         }
         return false;
     }
@@ -333,13 +326,8 @@ public class PersonalBoard {
      * @param pm is the Player that own the FaithMarker
      * @return true if the move is allowed, else false.
      */
-    public boolean moveFaithMarker(int amount, PlayerToMatch pm) {
-        try {
-            this.faithTrack.movePlayer(amount, pm);
-        } catch (EndGameException e) {
-            pm.startEndGameLogic();
-        }
-        return true;
+    public void moveFaithMarker(int amount, PlayerToMatch pm) throws EndGameException {
+        this.faithTrack.movePlayer(amount, pm);
     }
 
     /**

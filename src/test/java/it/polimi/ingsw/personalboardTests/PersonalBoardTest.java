@@ -4,12 +4,15 @@ package it.polimi.ingsw.personalboardTests;
 import static it.polimi.ingsw.model.resource.ResourceBuilder.buildStone;
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.polimi.ingsw.communication.packet.commands.Command;
+import it.polimi.ingsw.communication.packet.commands.SetNumberCommand;
+import it.polimi.ingsw.communication.server.ClientController;
+import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.AddDepotEffect;
 import it.polimi.ingsw.model.cards.effects.AddExtraProductionEffect;
 import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
 import it.polimi.ingsw.model.cards.effects.Effect;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
@@ -19,10 +22,9 @@ import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotExceptio
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
-import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.match.match.Match;
-import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.PlayerAction;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
@@ -49,22 +51,18 @@ import java.util.*;
  */
 public class PersonalBoardTest {
 
+    Model model = new Model();
     Match game;
 
-    Player player1;
-    Player player2;
+    ClientController player1 = new ClientController(null, "lino");
+    ClientController player2 = new ClientController(null, "gino");
 
     @BeforeEach
     public void initialization() {
-        game = new MultiplayerMatch();
-
-        assertDoesNotThrow(()->player1 = new Player("uno", game));
-        assertDoesNotThrow(()->player2 = new Player("due", game));
-
-        assertTrue(game.playerJoin(player1));
-        assertTrue(game.playerJoin(player2));
-
-        assertDoesNotThrow(()-> game.startGame());
+        assertDoesNotThrow(()->model.start(player1));
+        model.handleClientCommand(player1, new SetNumberCommand(2));
+        assertTrue(model.connectController(player2));
+        game = model.getMatch();
 
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
@@ -96,24 +94,22 @@ public class PersonalBoardTest {
         DevCardSlot Left = DevCardSlot.LEFT;
         DevCardSlot Center = DevCardSlot.CENTER;
 
-        Match match = new MultiplayerMatch();
-
-        Player player =  new Player("gino",match);
+        Player player =  new Player("gino",false);
 
         PersonalBoard finalPersonalBoard = new PersonalBoard(player);
 
         assertDoesNotThrow(()->{
-            if (finalPersonalBoard.addDevCard(Left, c1, null)) {
+            if (finalPersonalBoard.addDevCard(Left, c1)) {
                 assertEquals(c1, finalPersonalBoard.viewDevCards().get(Left));
             }
 
-            if (finalPersonalBoard.addDevCard(Left, c2, null)) {
+            if (finalPersonalBoard.addDevCard(Left, c2)) {
                 assertEquals(c2, finalPersonalBoard.viewDevCards().get(Left));
             } else {
                 fail();
             }
 
-            if (finalPersonalBoard.addDevCard(Center, c2, null)) {
+            if (finalPersonalBoard.addDevCard(Center, c2)) {
                 fail();
             } else {
                 try {
@@ -121,13 +117,13 @@ public class PersonalBoardTest {
                 } catch (NullPointerException ignore) {}
             }
 
-            if (finalPersonalBoard.addDevCard(Left, c3, null)){
+            if (finalPersonalBoard.addDevCard(Left, c3)){
                 assertEquals(c3, finalPersonalBoard.viewDevCards().get(Left));
             } else {
                 fail();
             }
 
-            if (finalPersonalBoard.addDevCard(Center, c3, null)){
+            if (finalPersonalBoard.addDevCard(Center, c3)){
                 fail();
             } else {
                 try {
@@ -135,19 +131,19 @@ public class PersonalBoardTest {
                 } catch (NullPointerException ignored) {}
             }
 
-            if (finalPersonalBoard.addDevCard(Center, c1, null)){
+            if (finalPersonalBoard.addDevCard(Center, c1)){
                 assertEquals(c1, finalPersonalBoard.viewDevCards().get(Center));
             } else {
                 fail();
             }
 
-            if (finalPersonalBoard.addDevCard(Center, c3, null)){
+            if (finalPersonalBoard.addDevCard(Center, c3)){
                 fail();
             } else {
                 assertEquals(c1, finalPersonalBoard.viewDevCards().get(Center));
             }
 
-            if (finalPersonalBoard.addDevCard(Left, c31, null)){
+            if (finalPersonalBoard.addDevCard(Left, c31)){
                 fail();
             } else {
                 assertEquals(c3, finalPersonalBoard.viewDevCards().get(Left));
@@ -178,9 +174,7 @@ public class PersonalBoardTest {
         LeaderCard c1 = new LeaderCard(ID1, new AddExtraProductionEffect(p), 1, req);
         LeaderCard c2 = new LeaderCard(ID2, new AddExtraProductionEffect(p), 2, req);
 
-        Match match = new MultiplayerMatch();
-
-        Player player = new Player("gino",match);
+        Player player = new Player("gino", false);
 
         PersonalBoard personalBoard =  new PersonalBoard(player);
 
@@ -229,9 +223,7 @@ public class PersonalBoardTest {
         LeaderCard c1 = new LeaderCard(ID1, new AddProductionEffect(p), 1, req);
         LeaderCard c2 = new LeaderCard(ID2, new AddProductionEffect(p), 2, req);
 
-        Match match = new MultiplayerMatch();
-
-        Player player =  new Player("gino",match);
+        Player player = new Player("gino", false);
 
 
         PersonalBoard personalBoard = new PersonalBoard(player);
@@ -274,9 +266,8 @@ public class PersonalBoardTest {
      */
     @Test
     void Resources() throws IllegalTypeInProduction, NegativeResourcesDepotException, UnobtainableResourceException, WrongDepotException {
-        Match match = new MultiplayerMatch();
 
-        Player player = new Player("gino",match);
+        Player player = new Player("gino", false);
 
         PersonalBoard personalBoard = new PersonalBoard(player);
 
@@ -295,122 +286,84 @@ public class PersonalBoardTest {
      * This test checks every method that involve production.
      */
     @Test
-    void Production() throws IllegalTypeInProduction, EndGameException, UnobtainableResourceException, WrongDepotException, NegativeResourcesDepotException, UnknownUnspecifiedException, AlreadyInDeckException, MissingCardException, EmptyDeckException, LootTypeException {
-        Match match = new MultiplayerMatch();
-        Player player = new Player("gino",match);
-        PersonalBoard personalBoard = new PersonalBoard(player);
+    void Production() {
+        assertDoesNotThrow(()->{
+            Player player = new Player("gino", false);
+            PersonalBoard personalBoard = new PersonalBoard(player);
 
-        List<Requisite> req = new ArrayList<>();
-        Resource twoCoin = ResourceBuilder.buildCoin(2);
-        Resource oneServant = ResourceBuilder.buildServant();
-        List<Resource> resourceList = new ArrayList<>();
-        resourceList.add(twoCoin);
-        resourceList.add(oneServant);
-        ResourceRequisite rr = new ResourceRequisite(twoCoin);
-        req.add(rr);
-        Production prod1 = new NormalProduction(resourceList, Collections.singletonList(buildStone(5)));
+            List<Requisite> req = new ArrayList<>();
+            Resource twoCoin = ResourceBuilder.buildCoin(2);
+            Resource oneServant = ResourceBuilder.buildServant();
+            List<Resource> resourceList = new ArrayList<>();
+            resourceList.add(twoCoin);
+            resourceList.add(oneServant);
+            ResourceRequisite rr = new ResourceRequisite(twoCoin);
+            req.add(rr);
+            Production prod1 = new NormalProduction(resourceList, Collections.singletonList(buildStone(5)));
 
-        DevCard c1 = new DevCard("000", new AddProductionEffect(prod1), 2, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
+            DevCard c1 = new DevCard("000", new AddProductionEffect(prod1), 2, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
 
-        player.test_getPB().addDevCard(DevCardSlot.RIGHT,c1,match);
-        player.test_getPB().addProduction(prod1,DevCardSlot.RIGHT);
-        assertEquals(prod1,player.test_getPB().possibleProduction().get(ProductionID.RIGHT));
+            player.test_getPB().addDevCard(DevCardSlot.RIGHT, c1);
+            player.test_getPB().addProduction(prod1, DevCardSlot.RIGHT);
+            assertEquals(prod1, player.test_getPB().possibleProduction().get(ProductionID.RIGHT));
 
 
-        Production prod2 = new NormalProduction(Collections.singletonList(ResourceBuilder.buildShield(2)),resourceList);
-        Production prod3 = new NormalProduction(Arrays.asList(ResourceBuilder.buildStone(),ResourceBuilder.buildCoin()),Collections.singletonList(ResourceBuilder.buildFaithPoint(3)));
+            Production prod2 = new NormalProduction(Collections.singletonList(ResourceBuilder.buildShield(2)), resourceList);
+            Production prod3 = new NormalProduction(Arrays.asList(ResourceBuilder.buildStone(), ResourceBuilder.buildCoin()), Collections.singletonList(ResourceBuilder.buildFaithPoint(3)));
 
-        DevCard c2 = new DevCard("111", new AddProductionEffect(prod2), 6, LevelDevCard.LEVEL1, ColorDevCard.BLUE, req);
-        DevCard c3 = new DevCard("222", new AddProductionEffect(prod3), 4, LevelDevCard.LEVEL2, ColorDevCard.GREEN, req);
-        DevCard c4 = new DevCard("333", new AddProductionEffect(prod1), 3, LevelDevCard.LEVEL3, ColorDevCard.YELLOW, req);
+            DevCard c2 = new DevCard("111", new AddProductionEffect(prod2), 6, LevelDevCard.LEVEL1, ColorDevCard.BLUE, req);
+            DevCard c3 = new DevCard("222", new AddProductionEffect(prod3), 4, LevelDevCard.LEVEL2, ColorDevCard.GREEN, req);
+            DevCard c4 = new DevCard("333", new AddProductionEffect(prod1), 3, LevelDevCard.LEVEL3, ColorDevCard.YELLOW, req);
 
-        player.test_getPB().addDevCard(DevCardSlot.CENTER,c2,match);
-        player.test_getPB().addDevCard(DevCardSlot.RIGHT,c3,match);
-        player.test_getPB().addProduction(prod2,DevCardSlot.CENTER);
-        assertEquals(prod2, player.test_getPB().possibleProduction().get(ProductionID.CENTER));
+            player.test_getPB().addDevCard(DevCardSlot.CENTER, c2);
+            player.test_getPB().addDevCard(DevCardSlot.RIGHT, c3);
+            player.test_getPB().addProduction(prod2, DevCardSlot.CENTER);
+            assertEquals(prod2, player.test_getPB().possibleProduction().get(ProductionID.CENTER));
 
-        player.test_getPB().addProduction(prod3,DevCardSlot.RIGHT);
-        assertEquals(prod3, player.test_getPB().possibleProduction().get(ProductionID.RIGHT));
-        player.test_getPB().insertInDepot(DepotSlot.BUFFER,ResourceBuilder.buildShield(2));
-        player.test_getPB().moveResourceDepot(DepotSlot.BUFFER,DepotSlot.BOTTOM,ResourceBuilder.buildShield(2));
-        player.test_getPB().moveInProduction(DepotSlot.BOTTOM,ProductionID.CENTER,ResourceBuilder.buildShield(2));
-        player.test_getPB().activateProductions();
-        List<Resource> check = new ArrayList<>(Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildStone(0), ResourceBuilder.buildShield(0), ResourceBuilder.buildServant(1)));
-        assertEquals(check,player.test_getPB().viewDepotResource(DepotSlot.STRONGBOX));
-        try {
+            player.test_getPB().addProduction(prod3, DevCardSlot.RIGHT);
+            assertEquals(prod3, player.test_getPB().possibleProduction().get(ProductionID.RIGHT));
+            player.test_getPB().insertInDepot(DepotSlot.BUFFER, ResourceBuilder.buildShield(2));
+            player.test_getPB().moveResourceDepot(DepotSlot.BUFFER, DepotSlot.BOTTOM, ResourceBuilder.buildShield(2));
             player.test_getPB().moveInProduction(DepotSlot.BOTTOM, ProductionID.CENTER, ResourceBuilder.buildShield(2));
+            player.test_getPB().activateProductions();
+            List<Resource> check = new ArrayList<>(Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildStone(0), ResourceBuilder.buildShield(0), ResourceBuilder.buildServant(1)));
+            assertEquals(check, player.test_getPB().viewDepotResource(DepotSlot.STRONGBOX));
+            try {
+                player.test_getPB().moveInProduction(DepotSlot.BOTTOM, ProductionID.CENTER, ResourceBuilder.buildShield(2));
+                fail();
+            } catch (NegativeResourcesDepotException e) {
+            }
+            player.test_getPB().activateProductions();
+            assertEquals(check, player.test_getPB().viewDepotResource(DepotSlot.STRONGBOX));
+
+            player.test_getPB().addDevCard(DevCardSlot.RIGHT, c4);
+            player.test_getPB().addProduction(prod1, DevCardSlot.RIGHT);
+            player.test_getPB().moveInProduction(DepotSlot.STRONGBOX, ProductionID.RIGHT, twoCoin);
+            player.test_getPB().moveInProduction(DepotSlot.STRONGBOX, ProductionID.RIGHT, oneServant);
+            player.test_getPB().insertInDepot(DepotSlot.BUFFER, ResourceBuilder.buildShield(2));
+            player.test_getPB().moveResourceDepot(DepotSlot.BUFFER, DepotSlot.MIDDLE, ResourceBuilder.buildShield(2));
+            player.test_getPB().moveInProduction(DepotSlot.MIDDLE, ProductionID.CENTER, ResourceBuilder.buildShield(2));
+            player.test_getPB().activateProductions();
+            List<Resource> check2 = new ArrayList<>(Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildStone(5), ResourceBuilder.buildShield(0), ResourceBuilder.buildServant(1)));
+            assertEquals(check2, player.test_getPB().viewDepotResource(DepotSlot.STRONGBOX));
+
+
+            List<Requisite> LCreq = new ArrayList<>(Arrays.asList(new ResourceRequisite(ResourceBuilder.buildCoin())));
+            Production extraProd = new UnknownProduction(Arrays.asList(ResourceBuilder.buildUnknown()), Arrays.asList(ResourceBuilder.buildUnknown(), ResourceBuilder.buildFaithPoint()));
+            LeaderCard card = new LeaderCard("175", new AddExtraProductionEffect(extraProd), 5, LCreq);
+        });
+    }
+
+    @Test
+    public void countsDevCardsPoints() {
+
+        //PersonalBoard board = game.test_getCurrPlayer().test_getPB();
+        PersonalBoard board = null;
+        try {
+            board = new PersonalBoard(new Player("aaa", false));
+        } catch (IllegalTypeInProduction illegalTypeInProduction) {
             fail();
-        } catch (NegativeResourcesDepotException e){ }
-        player.test_getPB().activateProductions();
-        assertEquals(check,player.test_getPB().viewDepotResource(DepotSlot.STRONGBOX));
-
-        player.test_getPB().addDevCard(DevCardSlot.RIGHT,c4,match);
-        player.test_getPB().addProduction(prod1,DevCardSlot.RIGHT);
-        player.test_getPB().moveInProduction(DepotSlot.STRONGBOX,ProductionID.RIGHT,twoCoin);
-        player.test_getPB().moveInProduction(DepotSlot.STRONGBOX,ProductionID.RIGHT,oneServant);
-        player.test_getPB().insertInDepot(DepotSlot.BUFFER,ResourceBuilder.buildShield(2));
-        player.test_getPB().moveResourceDepot(DepotSlot.BUFFER,DepotSlot.MIDDLE,ResourceBuilder.buildShield(2));
-        player.test_getPB().moveInProduction(DepotSlot.MIDDLE,ProductionID.CENTER,ResourceBuilder.buildShield(2));
-        player.test_getPB().activateProductions();
-        List<Resource> check2 = new ArrayList<>(Arrays.asList(ResourceBuilder.buildCoin(2),ResourceBuilder.buildStone(5),ResourceBuilder.buildShield(0),ResourceBuilder.buildServant(1)));
-        assertEquals(check2,player.test_getPB().viewDepotResource(DepotSlot.STRONGBOX));
-
-
-
-        List<Requisite> LCreq = new ArrayList<>(Arrays.asList(new ResourceRequisite(ResourceBuilder.buildCoin())));
-        Production extraProd = new UnknownProduction(Arrays.asList(ResourceBuilder.buildUnknown()),Arrays.asList(ResourceBuilder.buildUnknown(),ResourceBuilder.buildFaithPoint()));
-        LeaderCard card = new LeaderCard("175", new AddExtraProductionEffect(extraProd),5,LCreq);
-
-
-    }
-
-
-    /**
-     * This test create a personalBoard and moves the player on its faith track.
-     */
-    @Test
-    void FaithTrackMoves() throws IllegalTypeInProduction {
-        Resource first = ResourceBuilder.buildFaithPoint(1);
-        Resource ten = ResourceBuilder.buildFaithPoint(10);
-
-        Match match = new MultiplayerMatch();
-
-        Player player1 = new Player("gino",match);
-
-        PersonalBoard personalBoard = new PersonalBoard(player1);
-
-        Player player2 = new Player("gino",match);
-
-        Match pm = new MultiplayerMatch();
-        pm.playerJoin(player2);
-        pm.playerJoin(player1);
-
-        assertEquals(0,personalBoard.FaithMarkerPosition());
-        assertTrue(personalBoard.moveFaithMarker(first.amount(), pm));
-
-        assertEquals(1,personalBoard.FaithMarkerPosition());
-        assertTrue(personalBoard.moveFaithMarker(first.amount(), pm));
-
-        assertEquals(2,personalBoard.FaithMarkerPosition());
-        assertTrue(personalBoard.moveFaithMarker(ten.amount(), pm));
-
-        assertEquals(12,personalBoard.FaithMarkerPosition());
-        assertTrue(personalBoard.moveFaithMarker(ten.amount(), pm));
-
-        assertEquals(22,personalBoard.FaithMarkerPosition());
-
-        personalBoard.moveFaithMarker(ten.amount(), pm);
-
-    }
-
-    @Test
-    public void countsDevCardsPoints() throws PlayerStateException, WrongDepotException {
-
-        PersonalBoard board = player1.test_getPB();
-        List<Player> orderList = new ArrayList<>();
-        orderList.add(player1);
-        orderList.add(player2);
-        Collections.rotate(orderList, -orderList.indexOf(game.test_getCurrPlayer()));
+        }
 
         DevCard devCard1 = new DevCard("DC1", null, 3, LevelDevCard.LEVEL1, ColorDevCard.BLUE,null);
         DevCard devCard2 = new DevCard("DC2", null, 5, LevelDevCard.LEVEL1, ColorDevCard.GREEN,null);
@@ -422,113 +375,115 @@ public class PersonalBoardTest {
 
         DevCard nothing = new DevCard("DC8", null, 1, LevelDevCard.LEVEL3, ColorDevCard.BLUE,null);
 
-        assertTrue(board.addDevCard(DevCardSlot.LEFT,devCard1, game));
-        assertTrue(board.addDevCard(DevCardSlot.RIGHT,devCard2, game));
+        PersonalBoard finalBoard = board;
+        assertDoesNotThrow(()->{
+            assertTrue(finalBoard.addDevCard(DevCardSlot.LEFT, devCard1));
+            assertTrue(finalBoard.addDevCard(DevCardSlot.RIGHT, devCard2));
 
-        assertEquals(8,board.getVictoryPointsDevCards());
+            assertEquals(8, finalBoard.getVictoryPointsDevCards());
 
-        assertTrue(board.addDevCard(DevCardSlot.CENTER,devCard3, game));
-        assertEquals(10,board.getVictoryPointsDevCards());
+            assertTrue(finalBoard.addDevCard(DevCardSlot.CENTER, devCard3));
+            assertEquals(10, finalBoard.getVictoryPointsDevCards());
 
-        assertTrue(board.addDevCard(DevCardSlot.CENTER, devCard4, game));
-        board.addDevCard(DevCardSlot.LEFT, devCard5, game);
+            assertTrue(finalBoard.addDevCard(DevCardSlot.CENTER, devCard4));
+            finalBoard.addDevCard(DevCardSlot.LEFT, devCard5);
 
-        assertEquals(19,board.getVictoryPointsDevCards());
+            assertEquals(19, finalBoard.getVictoryPointsDevCards());
 
-        assertTrue(board.addDevCard(DevCardSlot.RIGHT, devCard6, game));
-        assertEquals(29,board.getVictoryPointsDevCards());
+            assertTrue(finalBoard.addDevCard(DevCardSlot.RIGHT, devCard6));
+            assertEquals(29, finalBoard.getVictoryPointsDevCards());
 
-        //Obtaining the seventh card ends the turn of the Player and starts the EndGameLogic
-        assertTrue(board.addDevCard(DevCardSlot.LEFT, devCard7, game));
-        assertEquals(54, board.getVictoryPointsDevCards());
+            //Obtaining the seventh card ends the turn of the Player and starts the EndGameLogic
+            try {
+                assertTrue(finalBoard.addDevCard(DevCardSlot.LEFT, devCard7));
+            } catch (EndGameException ignore) {}
+            assertEquals(54, finalBoard.getVictoryPointsDevCards());
 
-        //Do nothing
-        assertFalse(board.addDevCard(DevCardSlot.CENTER, nothing, game));
-        assertEquals(54, board.getVictoryPointsDevCards());
-        //
-
-        orderList.get(1).endThisTurn();
-
-        assertFalse(game.test_getGameOnAir());
-
+            //Do nothing
+            try {
+                assertTrue(finalBoard.addDevCard(DevCardSlot.LEFT, nothing));
+            } catch (EndGameException ignore) {}
+            assertEquals(54, finalBoard.getVictoryPointsDevCards());
+        });
     }
 
     @Test
-    public void countingLeaderPoints() throws EmptyDeckException, MissingCardException, PlayerStateException, LootTypeException, AlreadyInDeckException, WrongDepotException {
-        PersonalBoard board = player1.test_getPB();
+    public void countingLeaderPoints()  {
 
-
-        Effect effect = new AddDepotEffect(ResourceType.STONE);
-
-        List<Player> orderList = new ArrayList<>();
-        orderList.add(player1);
-        orderList.add(player2);
-        Collections.rotate(orderList, -orderList.indexOf(game.test_getCurrPlayer()));
-        Requisite cardReq1 = new ColorCardRequisite(ColorDevCard.GREEN, 3);
-        Requisite cardReq2 = new CardRequisite(LevelDevCard.LEVEL1, ColorDevCard.YELLOW, 1);
-        Requisite cardReq3 = new CardRequisite(LevelDevCard.LEVEL2, ColorDevCard.BLUE, 1);
-
-        String ID1 = "";
-        String ID2 = "";
-        for (LeaderCard card : player1.test_getPB().viewLeaderCard().getCards()){
-            if (ID1.equals("")){
-                ID1 = card.getCardID();
-            } else {
-                ID2 = card.getCardID();
+        assertDoesNotThrow(()->{
+            PersonalBoard board = null;
+            try {
+                board = new PersonalBoard(new Player("adfadfad", false));
+            } catch (IllegalTypeInProduction illegalTypeInProduction) {
+                fail();
             }
-        }
-        player1.test_getPB().discardLeaderCard(ID1);
-        player1.test_getPB().discardLeaderCard(ID2);
-
-        //Adding the DevCards to activate LeaderCards
-        DevCard devCard1 = new DevCard("DC1", null, 1, LevelDevCard.LEVEL1, ColorDevCard.GREEN,null);
-        DevCard devCard2 = new DevCard("DC2", null, 1, LevelDevCard.LEVEL1, ColorDevCard.GREEN,null);
-        DevCard devCard3 = new DevCard("DC3", null, 1, LevelDevCard.LEVEL1, ColorDevCard.YELLOW,null);
-        DevCard devCard4 = new DevCard("DC4", null, 1, LevelDevCard.LEVEL2, ColorDevCard.BLUE,null);
-        DevCard devCard5 = new DevCard("DC5", null, 1, LevelDevCard.LEVEL2, ColorDevCard.GREEN,null);
-
-        board.addDevCard(DevCardSlot.LEFT, devCard1, game);
-        board.addDevCard(DevCardSlot.CENTER, devCard2, game);
-        board.addDevCard(DevCardSlot.RIGHT, devCard3, game);
-        board.addDevCard(DevCardSlot.LEFT, devCard4, game);
-        board.addDevCard(DevCardSlot.CENTER, devCard5, game);
 
 
-        List<Requisite> requisites1 = new ArrayList<>();
-        List<Requisite> requisites2 = new ArrayList<>();
+            Effect effect = new AddDepotEffect(ResourceType.STONE);
 
-        requisites1.add(cardReq1);
+            Requisite cardReq1 = new ColorCardRequisite(ColorDevCard.GREEN, 3);
+            Requisite cardReq2 = new CardRequisite(LevelDevCard.LEVEL1, ColorDevCard.YELLOW, 1);
+            Requisite cardReq3 = new CardRequisite(LevelDevCard.LEVEL2, ColorDevCard.BLUE, 1);
 
-        requisites2.add(cardReq2);
-        requisites2.add(cardReq3);
+            String ID1 = "";
+            String ID2 = "";
+            for (LeaderCard card : board.viewLeaderCard().getCards()) {
+                if (ID1.equals("")) {
+                    ID1 = card.getCardID();
+                } else {
+                    ID2 = card.getCardID();
+                }
+            }
 
-        LeaderCard l1 = new LeaderCard("LC1",effect, 5, requisites1);
-        LeaderCard l2 = new LeaderCard("LC2", effect, 5, requisites2);
-
-        player1.test_getPB().addLeaderCard(l1);
-        player1.test_getPB().addLeaderCard(l2);
-
-
-        assertEquals(0, player1.test_getPB().getVictoryPointsLeaderCards());
-
-
-        player1.test_getPB().activateLeaderCard("LC1");
-
-
-        assertEquals(player1.test_getPB().viewLeaderCard().peekCard("LC1").getVictoryPoint(),
-                    player1.test_getPB().getVictoryPointsLeaderCards());
+            //Adding the DevCards to activate LeaderCards
+            DevCard devCard1 = new DevCard("DC1", null, 1, LevelDevCard.LEVEL1, ColorDevCard.GREEN, null);
+            DevCard devCard2 = new DevCard("DC2", null, 1, LevelDevCard.LEVEL1, ColorDevCard.GREEN, null);
+            DevCard devCard3 = new DevCard("DC3", null, 1, LevelDevCard.LEVEL1, ColorDevCard.YELLOW, null);
+            DevCard devCard4 = new DevCard("DC4", null, 1, LevelDevCard.LEVEL2, ColorDevCard.BLUE, null);
+            DevCard devCard5 = new DevCard("DC5", null, 1, LevelDevCard.LEVEL2, ColorDevCard.GREEN, null);
 
 
-        player1.test_getPB().activateLeaderCard("LC2");
+            board.addDevCard(DevCardSlot.LEFT, devCard1);
+            board.addDevCard(DevCardSlot.CENTER, devCard2);
+            board.addDevCard(DevCardSlot.RIGHT, devCard3);
+            board.addDevCard(DevCardSlot.LEFT, devCard4);
+            board.addDevCard(DevCardSlot.CENTER, devCard5);
 
-        assertEquals(
-                player1.test_getPB().viewLeaderCard().peekCard("LC1").getVictoryPoint() +
-                player1.test_getPB().viewLeaderCard().peekCard("LC2").getVictoryPoint(),
-                player1.test_getPB().getVictoryPointsLeaderCards()
-        );
 
-        orderList.get(0).endThisTurn();
-        assertTrue(game.test_getGameOnAir());
+            List<Requisite> requisites1 = new ArrayList<>();
+            List<Requisite> requisites2 = new ArrayList<>();
+
+            requisites1.add(cardReq1);
+
+            requisites2.add(cardReq2);
+            requisites2.add(cardReq3);
+
+            LeaderCard l1 = new LeaderCard("LC1", effect, 5, requisites1);
+            LeaderCard l2 = new LeaderCard("LC2", effect, 5, requisites2);
+
+            board.addLeaderCard(l1);
+            board.addLeaderCard(l2);
+
+
+            assertEquals(0, board.getVictoryPointsLeaderCards());
+
+
+            board.activateLeaderCard("LC1");
+
+
+            assertEquals(board.viewLeaderCard().peekCard("LC1").getVictoryPoint(),
+                    board.getVictoryPointsLeaderCards());
+
+
+            board.activateLeaderCard("LC2");
+
+            assertEquals(
+                    board.viewLeaderCard().peekCard("LC1").getVictoryPoint() +
+                            board.viewLeaderCard().peekCard("LC2").getVictoryPoint(),
+                    board.getVictoryPointsLeaderCards()
+            );
+        });
+
     }
 
 
@@ -539,8 +494,7 @@ public class PersonalBoardTest {
         int randomNum = rand.nextInt(max);
 
         List<Player> orderList = new ArrayList<>();
-        orderList.add(player1);
-        orderList.add(player2);
+        orderList.add(game.test_getCurrPlayer());
         Collections.rotate(orderList, -orderList.indexOf(game.test_getCurrPlayer()));
 
         PersonalBoard board = orderList.get(0).test_getPB();
@@ -586,10 +540,12 @@ public class PersonalBoardTest {
         DevCard devCard3 = new DevCard("DC3", null, randomNum, LevelDevCard.LEVEL1, ColorDevCard.YELLOW,null);
         DevCard devCard4 = new DevCard("DC4", null, randomNum, LevelDevCard.LEVEL2, ColorDevCard.BLUE,null);
 
-        board.addDevCard(DevCardSlot.LEFT, devCard1, game);
-        board.addDevCard(DevCardSlot.CENTER, devCard2, game);
-        board.addDevCard(DevCardSlot.RIGHT, devCard3, game);
-        board.addDevCard(DevCardSlot.LEFT, devCard4, game);
+        assertDoesNotThrow(()->{
+            board.addDevCard(DevCardSlot.LEFT, devCard1);
+            board.addDevCard(DevCardSlot.CENTER, devCard2);
+            board.addDevCard(DevCardSlot.RIGHT, devCard3);
+            board.addDevCard(DevCardSlot.LEFT, devCard4);
+        });
 
         assertEquals(devCard1.getVictoryPoint() +
                 devCard2.getVictoryPoint() +

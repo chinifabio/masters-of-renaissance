@@ -1,12 +1,9 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.card.MissingCardException;
-import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
-import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
+import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
+import it.polimi.ingsw.communication.packet.Packet;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
 
@@ -35,15 +32,6 @@ public class MainActionDonePlayerState extends PlayerState {
         return true;
     }
 
-    /**
-     * This method starts the turn of the player
-     * @throws PlayerStateException if the Player can't do this action
-     */
-    @Override
-    public void startTurn() throws PlayerStateException {
-        throw new PlayerStateException("can't start turn");
-    }
-
 // ------------------- PLAYER ACTION IMPLEMENTATIONS -----------------------
 
     /**
@@ -57,8 +45,14 @@ public class MainActionDonePlayerState extends PlayerState {
      * @throws PlayerStateException if the Player can't do this action
      */
     @Override
-    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) throws NegativeResourcesDepotException, UnobtainableResourceException, PlayerStateException, WrongDepotException {
-        this.context.personalBoard.moveResourceDepot(from, to, loot);
+    public Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
+        try {
+            this.context.personalBoard.moveResourceDepot(from, to, loot);
+        } catch (Exception e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+        }
+
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
     }
 
     /**
@@ -70,8 +64,14 @@ public class MainActionDonePlayerState extends PlayerState {
      * @throws WrongDepotException if the Resource can't be taken from the Depot
      */
     @Override
-    public void activateLeaderCard(String leaderId) throws MissingCardException, EmptyDeckException, LootTypeException, WrongDepotException {
-        this.context.personalBoard.activateLeaderCard(leaderId);
+    public Packet activateLeaderCard(String leaderId) {
+        try {
+            this.context.personalBoard.activateLeaderCard(leaderId);
+        } catch (Exception e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+        }
+
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
     }
 
     /**
@@ -81,9 +81,24 @@ public class MainActionDonePlayerState extends PlayerState {
      * @throws MissingCardException if the Card isn't in the Deck
      */
     @Override
-    public void discardLeader(String leaderId) throws EmptyDeckException, MissingCardException {
-        this.context.personalBoard.discardLeaderCard(leaderId);
-        this.context.personalBoard.moveFaithMarker(1, this.context.match);
+    public Packet discardLeader(String leaderId) {
+        try {
+            this.context.personalBoard.discardLeaderCard(leaderId);
+        } catch (Exception e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+        }
+
+        try {
+            this.context.personalBoard.moveFaithMarker(1, this.context.model.getMatch());
+        } catch (EndGameException e) {
+
+            this.context.model.getMatch().startEndGameLogic();                                      // stop the game when the last player end his turn
+            this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
+            return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
+
+        }
+
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
     }
 
     /**
@@ -92,9 +107,10 @@ public class MainActionDonePlayerState extends PlayerState {
      * @throws PlayerStateException if the Player can't do this action
      */
     @Override
-    public boolean endThisTurn() throws PlayerStateException {
-        this.context.personalBoard.flushBufferDepot(this.context.match);
+    public Packet endThisTurn() {
+        this.context.personalBoard.flushBufferDepot(this.context.model.getMatch());
         this.context.setState(new NotHisTurnPlayerState(this.context));
-        return this.context.match.endMyTurn();
+        this.context.model.getMatch().endMyTurn();
+        return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "your turn is ended");
     }
 }

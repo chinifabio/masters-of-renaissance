@@ -45,19 +45,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void DevCard() throws IllegalTypeInProduction, NoRequisiteException, EmptyDeckException, LootTypeException {
-        Match match = new MultiplayerMatch();
-        Player player1 = new Player("gino",match);
-        Player player2 = new Player("pino",match);
-        match.playerJoin(player1);
-        match.playerJoin(player2);
-        assertTrue(match.startGame());
-
-
-        //TODO il metodo del buydevcard è da sistemare
-        player1.buyDevCard(LevelDevCard.LEVEL1, ColorDevCard.BLUE, DevCardSlot.CENTER);
-
-
-
+    public void DevCard()  {
+        // todo
     }
 }
