@@ -1,6 +1,7 @@
 package it.polimi.ingsw.communication.packet.commands;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
@@ -12,7 +13,7 @@ import it.polimi.ingsw.model.player.PlayerAction;
 /**
  * This class represent a command instance for the player that use the market tray
  */
-public class UseMarketTrayCommand implements Command{
+public class UseMarketTrayCommand extends Command{
     /**
      * the row or col
      */
@@ -42,5 +43,15 @@ public class UseMarketTrayCommand implements Command{
     @Override
     public Packet execute(PlayerAction player) {
         return player.useMarketTray(this.rc, this.index);
+    }
+
+    @JsonGetter("rc")
+    public RowCol getRc() {
+        return rc;
+    }
+
+    @JsonGetter("index")
+    public int getIndex() {
+        return index;
     }
 }

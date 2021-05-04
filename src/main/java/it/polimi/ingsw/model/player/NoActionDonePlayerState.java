@@ -40,7 +40,6 @@ public class NoActionDonePlayerState extends PlayerState {
 
     /**
      * This method starts the turn of the player
-     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public void startTurn() {
@@ -56,8 +55,6 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param rc    enum to identify if I am pushing row or col
      * @param index the index of the row or column of the tray
      * @return true if the MarketTray is correctly used
-     * @throws UnobtainableResourceException if the Player can't obtain that Resources
-     * @throws OutOfBoundMarketTrayException if the MarketTray is out of bound
      */
     @Override
     public Packet useMarketTray(RowCol rc, int index) {
@@ -84,7 +81,6 @@ public class NoActionDonePlayerState extends PlayerState {
      * SpecialAbility that converts white marbles in resources
      * @param conversionsIndex the index of the marble conversions available
      * @param marbleIndex      the index of chosen tray's marble to color
-     * @throws UnpaintableMarbleException if the Marble can't be painted
      */
     @Override
     public Packet paintMarbleInTray(int conversionsIndex, int marbleIndex) {
@@ -103,15 +99,11 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param col         the column of the card required
      * @param destination the slot where put the dev card slot
      * @return true if there where no issue, false instead
-     * @throws NoRequisiteException if the Card doesn't have requisite
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws EmptyDeckException if the Deck is empty
-     * @throws LootTypeException if this attribute cannot be obtained from this Requisite
      */
     @Override
     public Packet buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
         this.context.slotDestination = destination;
-        boolean res = false;
+        boolean res;
         try {
             res = this.context.model.getMatch().buyDevCard(row, col);
         } catch (Exception e) {
@@ -128,7 +120,6 @@ public class NoActionDonePlayerState extends PlayerState {
      * This method takes the resources from the Depots and the Strongbox to
      * activate the productions and insert the Resources obtained into the Strongbox
      * @return the result of the operation
-     * @throws UnobtainableResourceException if the Resource can't be obtained by the Player
      */
     @Override
     public Packet activateProductions() {
@@ -172,9 +163,6 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param dest the destination of the resource to move
      * @param loot the resource to move
      * @return the succeed of the operation
-     * @throws UnknownUnspecifiedException if the Production is unspecified
-     * @throws NegativeResourcesDepotException if the Depot doesn't have enough resources
-     * @throws WrongDepotException if the Player can't use the Depot
      */
     @Override
     public Packet moveInProduction(DepotSlot from, ProductionID dest, Resource loot) {
@@ -192,9 +180,6 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param from depot from which withdraw resource
      * @param to   depot where insert withdrawn resource
      * @param loot resource to move
-     * @throws UnobtainableResourceException if the Player can't obtain the Resource
-     * @throws WrongDepotException if the Depot can't be used
-     * @throws NegativeResourcesDepotException if the Depot doesn't have enough resources
      */
     @Override
     public Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
@@ -210,11 +195,6 @@ public class NoActionDonePlayerState extends PlayerState {
     /**
      * This method activates the special ability of the LeaderCard
      * @param leaderId the string that identify the leader card
-     * @throws MissingCardException if the Card isn't in the Deck
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws EmptyDeckException if the Deck is empty
-     * @throws LootTypeException if the attribute cannot be obtained from this requisite
-     * @throws WrongDepotException if the Depot can't be used
      */
     @Override
     public Packet activateLeaderCard(String leaderId) {
@@ -230,19 +210,11 @@ public class NoActionDonePlayerState extends PlayerState {
     /**
      * This method removes a LeaderCard from the player
      * @param leaderId the string that identify the leader card to be discarded
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws EmptyDeckException if the Deck is empty
-     * @throws MissingCardException if the Card isn't in the Deck
      */
     @Override
     public Packet discardLeader(String leaderId) {
         try {
             this.context.personalBoard.discardLeaderCard(leaderId);
-        } catch (Exception e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
-        }
-
-        try {
             this.context.personalBoard.moveFaithMarker(1, this.context.model.getMatch());
         } catch (EndGameException e) {
 
@@ -250,6 +222,8 @@ public class NoActionDonePlayerState extends PlayerState {
             this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
             return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
 
+        } catch (Exception e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
 
         return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
@@ -258,8 +232,6 @@ public class NoActionDonePlayerState extends PlayerState {
     /**
      * The player ends its turn
      * @return true if success, false otherwise
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws WrongDepotException if the Depot cannot be used
      */
     @Override
     public Packet endThisTurn() {

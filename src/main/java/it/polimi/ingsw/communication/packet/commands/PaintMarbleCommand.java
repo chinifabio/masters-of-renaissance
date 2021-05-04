@@ -1,14 +1,13 @@
 package it.polimi.ingsw.communication.packet.commands;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
-import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
 import it.polimi.ingsw.model.player.PlayerAction;
 
 /**
  * This command allow the player to paint a marble in the tray whit one of his conversion
  */
-public class PaintMarbleCommand implements Command {
+public class PaintMarbleCommand extends Command {
     /**
      * The index of the conversion
      */

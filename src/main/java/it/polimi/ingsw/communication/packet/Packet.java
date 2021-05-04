@@ -12,23 +12,30 @@ public class Packet {
      * The header of the packet
      */
     public final HeaderTypes header;
+
     /**
      * The channel on which the packet is sent
      */
     public final ChannelTypes channel;
+
     /**
-     * The Object that is transported
+     * The message associated
      */
-    public final Object body;
+    public final String body;
 
     /**
      * Build a packet from new header, channel and body
      * @param header the header of the packet
      * @param channel the channel of the packet
-     * @param body the body of the packet
+     * @param body the message transported by the packet
      */
+    // todo implements all the possible types of packet as classes that implements the inteface Packet
     @JsonCreator
-    public Packet(@JsonProperty("Header") HeaderTypes header, @JsonProperty("Channel") ChannelTypes channel, @JsonProperty("Body") Object body) {
+    public Packet(
+            @JsonProperty("Header") HeaderTypes header,
+            @JsonProperty("Channel") ChannelTypes channel,
+            @JsonProperty("Body") String body) {
+
         this.header = header;
         this.channel = channel;
         this.body = body;
@@ -47,7 +54,7 @@ public class Packet {
     }
 
     @JsonGetter("Body")
-    public Object getBody() {
+    public String getBody() {
         return body;
     }
 }

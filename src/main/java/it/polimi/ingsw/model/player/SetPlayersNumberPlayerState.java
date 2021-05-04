@@ -5,10 +5,6 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 
 public class SetPlayersNumberPlayerState extends PlayerState {
-    /**
-     * This attribute flag the player choice of number
-     */
-    private boolean flag = false;
 
     /**
      * the constructor take the two final attribute of the state that are the personal board and the context.

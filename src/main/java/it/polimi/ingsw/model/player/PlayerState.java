@@ -5,7 +5,6 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
@@ -34,7 +33,7 @@ public abstract class PlayerState implements PlayerAction {
      * the constructor take the two final attribute of the state that are the personal board and the context.
      * the player holdings are passed to not share it out of the player states and do information hiding
      * @param context is the context
-     * @param emsg is the error message
+     * @param eMsg is the error message
      */
     protected PlayerState(Player context, String eMsg) {
         this.context = context;
@@ -62,9 +61,6 @@ public abstract class PlayerState implements PlayerAction {
      * @param rc enum to identify if I am pushing row or col
      * @param index the index of the row or column of the tray
      * @return the result of the operation
-     * @throws OutOfBoundMarketTrayException if the MarketTray is out of bound
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws UnobtainableResourceException if the Player can't obtain the Resource
      */
     @Override
     public Packet useMarketTray(RowCol rc, int index) {
@@ -76,8 +72,6 @@ public abstract class PlayerState implements PlayerAction {
      * SpecialAbility that converts white marbles in resources
      * @param conversionsIndex the index of chosen tray's marble to color
      * @param marbleIndex the index of the marble conversions available
-     * @throws UnpaintableMarbleException if the Marble can't be painted
-     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public Packet paintMarbleInTray(int conversionsIndex, int marbleIndex) {
@@ -90,10 +84,6 @@ public abstract class PlayerState implements PlayerAction {
      * @param col the column of the card required
      * @param destination the slot where put the dev card slot
      * @return true if there where no issue, false instead
-     * @throws NoRequisiteException if the Card has no Requisite
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws EmptyDeckException if the Deck is empty
-     * @throws LootTypeException if the attribute cannot be obtained from this Requisite
      */
     @Override
     public Packet buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
@@ -104,9 +94,6 @@ public abstract class PlayerState implements PlayerAction {
      * This method takes the resources from the Depots and the Strongbox to
      * activate the productions and insert the Resources obtained into the Strongbox
      * @return the result of the operation
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws UnobtainableResourceException if the Player can't obtain the Resource
-     * @throws WrongPointsException if the Player can't obtain the FaithPoints
      */
     @Override
     public Packet activateProductions() {
@@ -119,10 +106,6 @@ public abstract class PlayerState implements PlayerAction {
      * @param dest the destination of the resource to move
      * @param loot the resource to move
      * @return true if the resources are correctly moved in Production
-     * @throws UnknownUnspecifiedException if the Production is unspecified
-     * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws WrongDepotException if the Depot cannot be used
      */
     @Override
     public Packet moveInProduction(DepotSlot from, ProductionID dest, Resource loot) {
@@ -134,7 +117,6 @@ public abstract class PlayerState implements PlayerAction {
      * @param id the id of the unknown production
      * @param normalProduction the input new normal production
      * @return the succeed of the operation
-     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public Packet setNormalProduction(ProductionID id, NormalProduction normalProduction)  {
@@ -146,10 +128,6 @@ public abstract class PlayerState implements PlayerAction {
      * @param from depot from which withdraw resource
      * @param to depot where insert withdrawn resource
      * @param loot is the Resource to move
-     * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws UnobtainableResourceException if the Player can't obtain the Resource
-     * @throws WrongDepotException if the Depot can't be used
      */
     @Override
     public Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
@@ -159,11 +137,6 @@ public abstract class PlayerState implements PlayerAction {
     /**
      * This method activates the special ability of the LeaderCard
      * @param leaderId the string that identify the leader card
-     * @throws MissingCardException if the Card isn't in the Deck
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws EmptyDeckException if the Deck is empty
-     * @throws LootTypeException if the attribute cannot be obtained from this Requisite
-     * @throws WrongDepotException if the Depot cannot be used
      */
     @Override
     public Packet activateLeaderCard(String leaderId) {
@@ -173,9 +146,6 @@ public abstract class PlayerState implements PlayerAction {
     /**
      * This method removes a LeaderCard from the player
      * @param leaderId the string that identify the leader card to be discarded
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws EmptyDeckException if the Deck is empty
-     * @throws MissingCardException if the card isn't in the Deck
      */
     @Override
     public Packet discardLeader(String leaderId) {
@@ -185,8 +155,6 @@ public abstract class PlayerState implements PlayerAction {
     /**
      * The Player ends its turn
      * @return true if success, false otherwise
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws WrongDepotException if the Depot can't be used
      */
     @Override
     public Packet endThisTurn() {
@@ -197,8 +165,6 @@ public abstract class PlayerState implements PlayerAction {
      * Set a chosen resource attribute in player
      * @param slot the Depot where the Resource is taken from
      * @param chosen the resource chosen
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws WrongDepotException if the Depot can't be used
      */
     @Override
     public Packet chooseResource(DepotSlot slot, ResourceType chosen) {

@@ -9,15 +9,18 @@ import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.jar.JarOutputStream;
 
 /**
  * The model class, contains all the data and logic of the game
  */
 public class Model {
+    /**
+     * The size of the match -> -1 implies that no player set the number
+     */
+    private int size = -1;
+
     /**
      * The instance of the game in the model
      */
@@ -106,6 +109,7 @@ public class Model {
 
         // flag the start of the model
         this.startedFlag = true;
+        this.size = number;
     }
 
     /**
@@ -114,5 +118,21 @@ public class Model {
      */
     public Match getMatch() {
         return this.match;
+    }
+
+    /**
+     * return the size of the model
+     * @return the size. -1 implies that no player set the number
+     */
+    public int getSize() {
+        return size;
+    }
+
+    /**
+     * Return the available seat in the game. -1 implies that no player set the match size
+     * @return the available seat in the game
+     */
+    public int availableSeats() {
+        return this.startedFlag ? size - this.match.playerInGame() : -1;
     }
 }

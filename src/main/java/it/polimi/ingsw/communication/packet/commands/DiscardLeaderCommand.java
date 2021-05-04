@@ -1,17 +1,15 @@
 package it.polimi.ingsw.communication.packet.commands;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.player.PlayerAction;
 
 /**
  * This command discard a leader card owned by the player
  */
-public class DiscardLeaderCommand implements Command {
+public class DiscardLeaderCommand extends Command {
     /**
      * The id of the leader to discard
      */
@@ -34,5 +32,10 @@ public class DiscardLeaderCommand implements Command {
     @Override
     public Packet execute(PlayerAction player) {
         return player.discardLeader(this.leaderID);
+    }
+
+    @JsonGetter("leaderID")
+    public String getLeaderID() {
+        return leaderID;
     }
 }

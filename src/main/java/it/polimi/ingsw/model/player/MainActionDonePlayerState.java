@@ -39,10 +39,6 @@ public class MainActionDonePlayerState extends PlayerState {
      * @param from depot from which withdraw resource
      * @param to   depot where insert withdrawn resource
      * @param loot resource to move
-     * @throws WrongDepotException if the Resource can't be moved in this Depots
-     * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
-     * @throws UnobtainableResourceException if the Player can't obtain that Resource
-     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
@@ -58,10 +54,6 @@ public class MainActionDonePlayerState extends PlayerState {
     /**
      * This method activates the special ability of the LeaderCard
      * @param leaderId the string that identify the leader card
-     * @throws MissingCardException if the LeaderCard isn't in the Deck
-     * @throws EmptyDeckException if the Deck of LeaderCard is empty
-     * @throws LootTypeException if this attribute cannot be obtained from this Requisite
-     * @throws WrongDepotException if the Resource can't be taken from the Depot
      */
     @Override
     public Packet activateLeaderCard(String leaderId) {
@@ -77,8 +69,6 @@ public class MainActionDonePlayerState extends PlayerState {
     /**
      * This method removes a LeaderCard from the player
      * @param leaderId the string that identify the leader card to be discarded
-     * @throws EmptyDeckException if the Deck of LeaderCard is empty
-     * @throws MissingCardException if the Card isn't in the Deck
      */
     @Override
     public Packet discardLeader(String leaderId) {

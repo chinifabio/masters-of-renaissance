@@ -5,17 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
-import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
 import it.polimi.ingsw.model.player.PlayerAction;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 
 /**
  * This command allow the player to buy a dev card in the dev setup
  */
-public class BuyDevCardCommand implements Command {
+public class BuyDevCardCommand extends Command {
     private final LevelDevCard row;
     private final ColorDevCard col;
     private final DevCardSlot destination;

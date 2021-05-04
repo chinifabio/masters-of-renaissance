@@ -285,6 +285,14 @@ public abstract class Match implements PlayerToMatch {
     }
 
     /**
+     * Return the number of player in the game
+     * @return the number of player
+     */
+    public int playerInGame() {
+        return this.turn.playerInGame();
+    }
+
+    /**
      * This method is used to calculate and notify the winner of the match.
      * On each player is call the method to calculate the points obtained and the higher one wins
      */

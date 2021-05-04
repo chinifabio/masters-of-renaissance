@@ -6,23 +6,40 @@ import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * This virtual socket class sorts received packet in channels as packet queue
+ */
 public class VirtualSocket implements Runnable{
+    /**
+     * The real socket on which sort packets in channels
+     */
     private final Socket socket;
 
+    /**
+     * All the queue in which save packets received
+     */
     private final Map<ChannelTypes, Queue<Packet>> channelsQueue = new EnumMap<>(ChannelTypes.class);
 
-    private final List<ChannelTypes> channelList = new ArrayList<>(Arrays.asList(ChannelTypes.values()));
+    /**
+     * All the object to lock and wait
+     */
+    // Object must not be modified
+    private final Map<ChannelTypes, Object> waitingZone = new EnumMap<>(ChannelTypes.class);
 
+    /**
+     * Create a virtual socket to sort received packet in channels
+     * @param socket the real socket
+     */
     public VirtualSocket(Socket socket) {
         this.socket = socket;
 
         for (ChannelTypes ch : ChannelTypes.values()) {
             this.channelsQueue.put(ch, new LinkedList<>());
+            this.waitingZone.put(ch, new Object());
         }
     }
 
@@ -31,7 +48,7 @@ public class VirtualSocket implements Runnable{
      */
     @Override
     public void run() {
-        Scanner in = null;
+        Scanner in;
         try {
             in = new Scanner(socket.getInputStream());
         } catch (IOException e) {
@@ -40,51 +57,74 @@ public class VirtualSocket implements Runnable{
         }
 
         while(true) {
-            Packet packet = null;
+            String serializedPacket = in.nextLine();
             try {
-                packet = new ObjectMapper()
+                Packet packet = new ObjectMapper()
                         .readerFor(Packet.class)
-                        .readValue(in.nextLine());
-                this.channelsQueue.get(packet.channel).add(packet);
-                packet.channel.notifyAll();
+                        .readValue(serializedPacket);
+
+                Object lock = waitingZone.get(packet.channel);
+                synchronized (lock) {
+                    this.channelsQueue.get(packet.channel).add(packet);
+                    lock.notifyAll();
+                }
             } catch (JsonProcessingException e) {
+                e.printStackTrace();
                 System.out.println("invalid packet received");
             }
         }
     }
 
     /**
-     * return all the possible channel type to get in queue for new packets
-     * @return a new list of channel available
+     * Send the paket passed
+     * @param packet the packet to send
      */
-    public List<ChannelTypes> getChannelsList() {
-        List<ChannelTypes> clone = new ArrayList<>();
-        for(ChannelTypes ch : channelList) clone.add(ch);
-        return clone;
-    }
-
     public synchronized void send(Packet packet) {
-        String serialized = null;
+        PrintStream out;
         try {
-            serialized = new ObjectMapper().writeValueAsString(packet);
-        } catch (JsonProcessingException e) {
-            System.out.println("serialization error, than abort server operation");
+            out = new PrintStream(this.socket.getOutputStream());
+        } catch (IOException e) {
+            System.out.println("can't find socket");
             return;
         }
 
+        String serialized;
         try {
-            this.socket.getOutputStream().write(serialized.getBytes(StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            System.out.println("can't find socket");
+            serialized = new ObjectMapper().writeValueAsString(packet);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            System.out.println("serialization error, abort operation...");
+            return;
         }
+
+        out.println(serialized);
     }
 
     /**
-     * return the last packet received in the passed channel
+     * Return the last packet received in the passed channel
      * @param ch the channel where look at
      * @return the packet
      */
     public synchronized Packet pollPacketFrom(ChannelTypes ch) {
-        return this.channelsQueue.get(ch).poll();
+        Packet result;
+        Object lock = this.waitingZone.get(ch);
+        synchronized (lock) {
+            while ((result = this.channelsQueue.get(ch).poll()) == null) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Return the instance of the real socket
+     * @return the real socket
+     */
+    public Socket realSocket() {
+        return this.socket;
     }
 }

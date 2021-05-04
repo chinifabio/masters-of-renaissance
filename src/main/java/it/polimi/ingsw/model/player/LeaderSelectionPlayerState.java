@@ -6,7 +6,6 @@ import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -22,7 +21,7 @@ public class LeaderSelectionPlayerState extends PlayerState {
     /**
      * The number of resource to choose before end the turn
      */
-    private int resourceToChoose;
+    private final int resourceToChoose;
 
     /**
      * How many resources the player chose
@@ -76,9 +75,6 @@ public class LeaderSelectionPlayerState extends PlayerState {
     /**
      * This method removes a LeaderCard from the player
      * @param leaderId the string that identify the leader card to be discarded
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws EmptyDeckException if the Deck of the LeaderCard is empty
-     * @throws MissingCardException if the Card to discard isn't in the Deck
      */
     @Override
     public Packet discardLeader(String leaderId) {
@@ -97,7 +93,6 @@ public class LeaderSelectionPlayerState extends PlayerState {
     /**
      * The player ends its turn
      * @return true if success, false otherwise
-     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public Packet endThisTurn() {
@@ -115,8 +110,6 @@ public class LeaderSelectionPlayerState extends PlayerState {
      * set a chosen resource attribute in player
      * @param slot the Depot where the Resources are taken from
      * @param chosen the resource chosen
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws WrongDepotException if the Resources can't be taken from the Depot
      */
     @Override
     public Packet chooseResource(DepotSlot slot, ResourceType chosen) {
