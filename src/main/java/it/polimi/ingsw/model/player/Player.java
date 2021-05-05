@@ -38,6 +38,12 @@ import java.util.*;
  * This class identifies the Player
  */
 public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer {
+
+    /**
+     * represent the color assigned to the player
+     */
+    private String color;
+
     /**
      * represent the player state and contains the implementation of the method of PlayerModifier
      */
@@ -82,8 +88,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * This method create a player by nickname and saving the match reference
-     * @param nickname identifies the player
-     * @param matchReference used to reference the match which i am playing
+     * @param nickname (type String) identifies the player
      * @throws IllegalTypeInProduction if the Basic Production of the PersonalBoard has IllegalResources
      */
     public Player(String nickname, boolean creator) throws IllegalTypeInProduction {
@@ -255,7 +260,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * SpecialAbility that converts white marbles in resources
      * @param conversionsIndex the index of the marble conversions available
      * @param marbleIndex the index of chosen tray's marble to color
-     * @throws UnpaintableMarbleException if the Marble can't be painted
      * @throws PlayerStateException if the Player can't do this action
      */
     @Override
@@ -269,7 +273,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param col the column of the card required
      * @param destination the slot where put the dev card slot
      * @return true if there where no issue, false instead
-     * @throws NoRequisiteException if the Card has no requisite
      * @throws EmptyDeckException if the Deck is empty
      * @throws LootTypeException if the attribute can't be obtained from this Requisite
      */
@@ -308,7 +311,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param dest the destination of the resource to move
      * @param loot the resource to move
      * @return the succeed of the operation
-     * @throws UnknownUnspecifiedException if the Production is unspecified
      * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
      */
     @Override

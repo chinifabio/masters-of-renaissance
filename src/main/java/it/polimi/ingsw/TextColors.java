@@ -2,16 +2,35 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
-import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.*;
 
 public class TextColors {
 
     public static String colorText(String textColors, String text){
         return textColors + text + RESET ;
+    }
+
+
+    public static String casualColorYellow(String text){
+        return getString(text, YELLOW_BRIGHT, YELLOW, YELLOW_BOLD);
+
+    }
+
+    private static String getString(String text, String bright, String normal, String bold) {
+        Random random = new Random();
+        List<String> casual = new ArrayList<>();
+        casual.add(bright);
+        casual.add(normal);
+        casual.add(bold);
+
+        return  casual.get(random.nextInt(casual.size())) + text + RESET;
+    }
+
+    public static String casualColorRed(String text){
+        return getString(text, RED_BRIGHT, RED, RED_BOLD);
+
     }
 
     public static String colorResourceType(ResourceType resourceType){

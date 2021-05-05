@@ -40,4 +40,9 @@ public class Normal extends Cell {
     public VaticanSpace getVaticanSpace() {
         return vaticanSpace;
     }
+
+    @Override
+    public boolean isPopeSpace() {
+        return false;
+    }
 }

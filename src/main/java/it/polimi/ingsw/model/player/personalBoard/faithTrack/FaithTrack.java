@@ -136,4 +136,24 @@ public class FaithTrack {
     public int victoryPointCellPlayer(){
         return track.get(playerPosition).getVictoryPoint();
     }
+
+    //For CLI
+    public boolean isVaticanSpace(int cell){
+        return track.get(cell).vaticanSpace != VaticanSpace.NONE;
+    }
+
+    //For CLI
+    public boolean isPopeSpace(int cell){
+        return track.get(cell).isPopeSpace();
+    }
+
+    //For CLI
+    public int getSizeTrack(){
+        return this.track.size();
+    }
+
+    //For CLI
+    public int getVictoryPointCell(int cell){
+        return this.track.get(cell).victoryPoint;
+    }
 }

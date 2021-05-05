@@ -47,4 +47,6 @@ public abstract class Cell {
     */
    public abstract VaticanSpace getVaticanSpace();
 
+   public abstract boolean isPopeSpace();
+
 }
