@@ -11,25 +11,6 @@ import java.util.Random;
 
 public class CLI implements View {
 
-    public void test() throws IOException {
-        LiteFaithTrack faith = new LiteFaithTrack();
-
-        FaithTrackPrinter printer = new FaithTrackPrinter(faith);
-        Random numbers = new Random();
-        List<String> names = new ArrayList<>();
-        names.add("Vinz");
-        names.add("Cini");
-        names.add("LastBuddy");
-        names.add("Test");
-
-        List <Integer> position = new ArrayList<>();
-        for (String name : names){
-            position.add(numbers.nextInt(24));
-        }
-
-        printer.printFaithTrack(names, position);
-    }
-
     @Override
     public void showFaithTrack() {
 
@@ -54,4 +35,11 @@ public class CLI implements View {
     public void askToPlayer() {
 
     }
+
+    @Override
+    public void clearScreen() {
+
+    }
+
+
 }

@@ -6,9 +6,7 @@ package it.polimi.ingsw;
  */
 public class App 
 {
-    public int sample = 5;
+    public static void main(String[] a){
 
-    public int getSample() {
-        return sample;
     }
 }
