@@ -12,6 +12,9 @@ import java.util.*;
  */
 public class FaithTrackPrinter {
 
+    private static final int MAX_VERT = 3; //rows.
+    private static final int MAX_HORIZ_CELL = 6; //cols.
+
     /**
      * This attribute is the FaithTrack to print
      */
@@ -24,184 +27,120 @@ public class FaithTrackPrinter {
         this.track = model.getTrack();
     }
 
-    //Max player's name char: 20
-    /**
-     * This method prints the FaithTrack with the list of Player and their position inside the track
-     * @param nicknames is the nickname of the players
-     * @param positions is the value of the position of each player
-     */
-    public void printFaithTrack(List<String> nicknames, List<Integer> positions){
-        System.out.println();
-        printNormalTrack();
-        printPlayerPos(nicknames, positions);
-    }
+    public void createTrack(LiteFaithTrack track, int players, String[][] faithTrack) {
+        int number = 0;
+        int riga = 0;
+        int colonna = 0;
+        String color = TextColors.RESET;
 
-    /**
-     * This method prints the Top and Middle lines of the Track
-     */
-    private void printNormalTrack() {
-
-        System.out.print("                      ");
-        for (int i = 0; i < track.getSizeTrack(); i++) {
-            printTopCell(i, track);
-        }
-        System.out.println();
-        System.out.print("                      ");
-        for (int i = 0; i < track.getSizeTrack(); i++) {
-            printMiddleCell(track,i);
-        }
-
-    }
-
-    /**
-     * This method prints the middle part of the Track that has the FaithMarkers of each player
-     * @param nicknames is the List of nicknames of the Players
-     * @param positions is the List of positions of the Players
-     */
-    private void printPlayerPos(List<String> nicknames, List<Integer> positions) {
-        String[] colors = {TextColors.RED_BRIGHT, TextColors.BLUE_BRIGHT, TextColors.YELLOW_BRIGHT, TextColors.GREEN_BRIGHT};
-        System.out.println();
-
-        int j = 0;
-
-        for (String nickname : nicknames){
-
-            StringBuilder temp = new StringBuilder();
-            temp.append(TextColors.colorText(colors[j], nickname + ": "));
-            while (temp.length() < 33){
-                temp.append(" ");
-            }
-
-            for (int i = 0; i< track.getSizeTrack(); i++){
-                if (track.isVaticanSpace(i)) {
-                    if (track.isPopeSpace(i)){
-                        if (i == positions.get(j)){
-                            temp.append(TextColors.colorText(TextColors.CYAN, "║ "));
-                            temp.append(TextColors.colorText(colors[j],"┼" + nickname.charAt(0) + " "));
-                            temp.append(TextColors.colorText(TextColors.CYAN, "║"));
-                        } else {
-                            temp.append(TextColors.colorText(TextColors.CYAN, "║  " + "  ║"));
-                        }
-                    } else {
-                        if (i == positions.get(j)) {
-                            temp.append(TextColors.colorText(TextColors.YELLOW, "║ "));
-                            temp.append(TextColors.colorText(colors[j], "┼" + nickname.charAt(0) + " "));
-                            temp.append(TextColors.colorText(TextColors.YELLOW, "║"));
-                        } else {
-                            temp.append(TextColors.colorText(TextColors.YELLOW, "║  " + "  ║"));
-                        }
-                    }
-                } else {
-                    if (i == positions.get(j)){
-                        temp.append( "║ ");
-                        temp.append(TextColors.colorText(colors[j],"┼" + nickname.charAt(0) + " "));
-                        temp.append("║");
-                    } else {
-                        temp.append("║    ║");
-                    }
-                }
-            }
-
-            System.out.println(temp);
-            j++;
-        }
-        System.out.print("                      ");
-        for (int i = 0; i < track.getSizeTrack(); i++) {
-            printBottomCell(track, i);
-        }
-    }
-
-    /**
-     * This method prints the Top part of the cell
-     * @param number is the value of the cell that indicates its position in the track
-     * @param track is the track that contains the cell
-     */
-    private void printTopCell(int number, LiteFaithTrack track) {
-        if (number <= 9) {
+        while (colonna < (MAX_HORIZ_CELL * track.getSizeTrack())) {
+            int col = colonna;
             if (track.isVaticanSpace(number)) {
-                if (track.isPopeSpace(number)){
-                    System.out.print(TextColors.colorText(TextColors.CYAN, "╔══" + (number) + "═╗"));
-                } else{
-                System.out.print(TextColors.colorText(TextColors.YELLOW, "╔══" + (number) + "═╗"));
-                }
-            } else {
-                System.out.print("╔══" + (number) + "═╗");
+                color = TextColors.YELLOW;
             }
-        } else {
-            if (track.isVaticanSpace(number)) {
-                if (track.isPopeSpace(number)){
-                    System.out.print(TextColors.colorText(TextColors.CYAN, "╔═" + (number) + "═╗"));
-                } else {
-                System.out.print(TextColors.colorText(TextColors.YELLOW, "╔═" + (number) + "═╗"));}
-            } else {
-                System.out.print("╔═" + (number) + "═╗");
-            }
-        }
-    }
-
-    /**
-     * This method prints the Middle part of the cell
-     * @param track is the track that contains the cell
-     * @param number is the index of the cell
-     */
-    private void printMiddleCell(LiteFaithTrack track, int number) {
-        if (track.getVictoryPointCell(number) == 0) {
-            if (track.isVaticanSpace(number)) {
-                if (track.isPopeSpace(number)){
-                    System.out.print(TextColors.colorText(TextColors.CYAN, "║  " + "  ║"));
-                } else {
-                System.out.print(TextColors.colorText(TextColors.YELLOW, "║  " + "  ║"));}
-            } else {
-                System.out.print("║  " + "  ║");
-            }
-        } else if (track.getVictoryPointCell(number) <= 9) {
-            checkVaticanSpacePrint(track, number);
-        } else {
-            if (number <= 9) {
-                checkVaticanSpacePrint(track, number);
-            } else {
-                if (track.isVaticanSpace(number)) {
-                    if (track.isPopeSpace(number)){
-                        System.out.print(TextColors.colorText(TextColors.CYAN, "║ ") + TextColors.colorText(TextColors.PURPLE_BRIGHT,String.valueOf(track.getVictoryPointCell(number))) + TextColors.colorText(TextColors.CYAN," ║"));
-                }else{
-                    System.out.print(TextColors.colorText(TextColors.YELLOW, "║ ") + TextColors.colorText(TextColors.PURPLE_BRIGHT,String.valueOf(track.getVictoryPointCell(number))) + TextColors.colorText(TextColors.YELLOW," ║"));}
-                } else {
-                    System.out.print("║ " + TextColors.colorText(TextColors.PURPLE_BRIGHT,String.valueOf(track.getVictoryPointCell(number))) + " ║") ;
-                }
-            }
-        }
-    }
-
-    /**
-     * This method checks if the cell is a VaticanSpace so change its color to YELLOW
-     * @param track is the track that contains the cell
-     * @param number is the index of the cell
-     */
-    private void checkVaticanSpacePrint(LiteFaithTrack track, int number) {
-        if (track.isVaticanSpace(number)) {
             if (track.isPopeSpace(number)){
-                System.out.print(TextColors.colorText(TextColors.CYAN, "║  ") + TextColors.colorText(TextColors.PURPLE_BRIGHT,String.valueOf(track.getVictoryPointCell(number))) + TextColors.colorText(TextColors.CYAN," ║"));
-        }else{
-            System.out.print(TextColors.colorText(TextColors.YELLOW, "║  ") + TextColors.colorText(TextColors.PURPLE_BRIGHT,String.valueOf(track.getVictoryPointCell(number))) + TextColors.colorText(TextColors.YELLOW," ║"));}
-        } else {
-            System.out.print("║  " + TextColors.colorText(TextColors.PURPLE_BRIGHT,String.valueOf(track.getVictoryPointCell(number))) + " ║");
+                color = TextColors.CYAN;
+            }
+            faithTrack[riga][col] = TextColors.colorText(color, "╔");
+            for (int i = col + 1; i < col + (MAX_HORIZ_CELL - 1); i++) {
+                if (i == (col + 2)) {
+                    faithTrack[riga][i] = TextColors.colorText(color, String.valueOf(number));
+                } else {
+                    faithTrack[riga][i] = TextColors.colorText(color, "═");
+                }
+            }
+            if (number > 9 && number < 100) {
+                faithTrack[riga][col + (MAX_HORIZ_CELL - 2)] = TextColors.colorText(color, "╗");
+                faithTrack[riga][col + (MAX_HORIZ_CELL - 1)] = "";
+            } else if (number > 99){
+                faithTrack[riga][col + (MAX_HORIZ_CELL - 3)] = TextColors.colorText(color, "╗");
+                faithTrack[riga][col + (MAX_HORIZ_CELL - 2)] = "";
+                faithTrack[riga][col + (MAX_HORIZ_CELL - 1)] = "";
+            } else{
+                faithTrack[riga][col + (MAX_HORIZ_CELL - 1)] = TextColors.colorText(color, "╗");
+            }
+
+            for (int r = 1; r < (MAX_VERT+players); r++) {
+                faithTrack[r][col] = TextColors.colorText(color, "║");
+                for (int c = col + 1; c < col + (MAX_HORIZ_CELL - 1); c++) {
+                    faithTrack[r][c] = " ";
+                }
+                faithTrack[r][col + (MAX_HORIZ_CELL - 1)] = TextColors.colorText(color, "║");
+            }
+
+            faithTrack[(MAX_VERT+players) - 1][col] = TextColors.colorText(color, "╚");
+            for (int c = col + 1; c < col + (MAX_HORIZ_CELL - 1); c++) {
+                faithTrack[(MAX_VERT+players) - 1][c] = TextColors.colorText(color, "═");
+            }
+
+            faithTrack[(MAX_VERT+players) - 1][col + (MAX_HORIZ_CELL - 1)] = TextColors.colorText(color, "╝");
+
+        colonna = colonna + MAX_HORIZ_CELL;
+        number++;
+        color = TextColors.RESET;
+        }
+        insertFaithPoints(track, faithTrack);
+    }
+
+    private void insertFaithPoints(LiteFaithTrack track, String[][] faithTrack){
+        int row = 1;
+        int col = 2;
+        for (int i = 0; i < track.getSizeTrack(); i++){
+            if (track.getVictoryPointCell(i) != 0){
+                faithTrack[row][col] = TextColors.colorText(TextColors.PURPLE_BRIGHT,String.valueOf(track.getVictoryPointCell(i)));
+            }
+            if (track.getVictoryPointCell(i) > 9 && track.getVictoryPointCell(i) < 100){
+                faithTrack[row][col+1] = "";
+            } else if (track.getVictoryPointCell(i) >= 100){
+                faithTrack[row][col+1] = "";
+                faithTrack[row][col+2] = "";
+            }
+            col = col + MAX_HORIZ_CELL;
         }
     }
 
-    /**
-     * This method prints the Bottom part of the cell
-     * @param track is the track that contains the cell
-     * @param i is the index of the cell
-     */
-    private void printBottomCell(LiteFaithTrack track, int i){
-        if (track.isVaticanSpace(i)) {
-            if (track.isPopeSpace(i)){
-                System.out.print(TextColors.colorText(TextColors.CYAN, "╚════╝"));
-            }else {
-            System.out.print(TextColors.colorText(TextColors.YELLOW, "╚════╝"));}
-        } else {
-            System.out.print("╚════╝");
+    private String createLegend(List<String> nicknames){
+        StringBuilder legend = new StringBuilder();
+        String[] colors = {TextColors.RED_BRIGHT, TextColors.BLUE_BRIGHT, TextColors.YELLOW_BRIGHT, TextColors.GREEN_BRIGHT};
+        int i = 0;
+
+        for (String name : nicknames){
+            legend.append(TextColors.colorText(colors[i%4], name)).append(": ").append(TextColors.colorText(colors[i%4],"┼" + name.charAt(0))).append("\n");
+            i++;
         }
+        return legend.toString();
+    }
+
+    private void insertPlayerPos(List<String> nicknames, List<Integer> positions, String[][] faithTrack){
+        System.out.println(createLegend(nicknames));
+        String[] colors = {TextColors.RED_BRIGHT, TextColors.BLUE_BRIGHT, TextColors.YELLOW_BRIGHT, TextColors.GREEN_BRIGHT};
+        int row = 2;
+        int i = 0;
+        int ins;
+        System.out.println();
+        for (Integer pos: positions){
+            ins = 2+(pos*MAX_HORIZ_CELL);
+            faithTrack[row][ins] = TextColors.colorText(colors[i%4],"┼" + nicknames.get(i).charAt(0));
+            faithTrack[row][ins+1] = "";
+            row++;
+            i++;
+        }
+
+    }
+
+    public void printTrack(List<String> nicknames, List<Integer> positions){
+
+        String[][] faithTrack = new String[MAX_VERT+positions.size()][MAX_HORIZ_CELL*(this.track.getSizeTrack())];
+
+        createTrack(this.track, positions.size(), faithTrack);
+        insertPlayerPos(nicknames,positions, faithTrack);
+        for (int r = 0; r < (MAX_VERT + positions.size()); r++){
+            System.out.println();
+            for (int c = 0; c < (MAX_HORIZ_CELL*this.track.getSizeTrack()); c++){
+                System.out.print(faithTrack[r][c]);
+            }
+        }
+        System.out.println();
     }
 
     public static void main(String[] args) throws IOException {
@@ -223,7 +162,10 @@ public class FaithTrackPrinter {
             position.add(numbers.nextInt(24));
         }
 
-        printer.printFaithTrack(names, position);
+        printer.printTrack(names, position);
+
     }
+
+
 
 }

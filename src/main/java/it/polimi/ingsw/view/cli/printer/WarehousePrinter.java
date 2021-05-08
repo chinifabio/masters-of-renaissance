@@ -14,6 +14,9 @@ import java.util.Map;
 
 public class WarehousePrinter {
 
+    private static final int MAX_VERT = 7; //rows.
+    private static final int MAX_HORIZ = 29; //cols.
+
     private final LiteWarehouse warehouse;
 
     private final Map<ResourceType, String> colors;
@@ -29,6 +32,123 @@ public class WarehousePrinter {
 
     }
 
+
+    public void printWarehouse() {
+
+        String[][] warehouse = new String[MAX_VERT][MAX_HORIZ];
+
+        createDepots(this.warehouse, warehouse);
+        createStrongbox(this.warehouse, warehouse);
+
+        printLegend();
+
+        for (int r = 0; r < (MAX_VERT); r++) {
+            System.out.println();
+            for (int c = 0; c < (MAX_HORIZ); c++) {
+                System.out.print(warehouse[r][c]);
+            }
+        }
+        System.out.println();
+    }
+
+    private void createDepots(LiteWarehouse liteWarehouse, String[][] warehouse) {
+
+        warehouse[0][0] = "╔";
+        for (int i = 1; i < MAX_HORIZ - 1; i++) {
+            warehouse[0][i] = "═";
+        }
+        warehouse[0][MAX_HORIZ - 1] = "╗";
+
+        for (int i = 1; i < 4; i++) {
+            warehouse[i][0] = "║";
+            for (int r = 1; r < MAX_HORIZ - 1; r++) {
+                warehouse[i][r] = " ";
+            }
+            warehouse[i][MAX_HORIZ - 1] = "║";
+        }
+
+        int initR = 1;
+        int initC = 12;
+
+        for (int depot = 0; depot < 3; depot++) {
+            warehouse[initR][initC] = "[";
+            for (LiteResource resource : liteWarehouse.getDepots().get(depot).getResourcesInside()) {
+                for (int i = initC+2; i < (initC+2) + (resource.getAmount() * 2); i++) {
+                    if (initR != 2) {
+                        if (i % 2 == 0) {
+                            warehouse[initR][i] = colors.get(resource.getType());
+                        } else {
+                            warehouse[initR][i] = " ";
+                        }
+                    } else {
+                        if (i % 2 == 1) {
+                            warehouse[initR][i] = colors.get(resource.getType());
+                        } else {
+                            warehouse[initR][i] = " ";
+                        }
+                    }
+                }
+                int z = resource.getAmount();
+                while (z < initR) {
+                    warehouse[initR][(z * 2) + (initC+2)] = " ";
+                    z++;
+                }
+                warehouse[initR][(z*2) + (initC+2)] = "]";
+            }
+
+            initC--;
+            initR++;
+        }
+
+    }
+
+
+    private void createStrongbox(LiteWarehouse liteWarehouse, String[][] warehouse){
+
+        int reset = 4;
+        warehouse[reset][0] = TextColors.colorText(TextColors.YELLOW,"╔");
+        warehouse[reset][MAX_HORIZ - 1] = TextColors.colorText(TextColors.YELLOW,"╗");
+        warehouse[MAX_VERT-1][0] = TextColors.colorText(TextColors.YELLOW,"╚");
+        warehouse[MAX_VERT-1][MAX_HORIZ-1] = TextColors.colorText(TextColors.YELLOW,"╝");
+
+        for (int i = 1; i < MAX_HORIZ - 1; i++) {
+            if (i == ((MAX_HORIZ-1) / 2)){
+                warehouse[reset][i] = TextColors.colorText(TextColors.WHITE_BRIGHT,"0");
+            } else {
+                warehouse[reset][i] = TextColors.colorText(TextColors.YELLOW,"═");
+            }
+            warehouse[MAX_VERT-1][i] = TextColors.colorText(TextColors.YELLOW,"═");
+        }
+        for (int i = reset+1; i < MAX_VERT-1; i++) {
+            warehouse[i][0] = TextColors.colorText(TextColors.YELLOW,"║");
+            for (int r = 1; r < MAX_HORIZ - 1; r++) {
+                warehouse[i][r] = " ";
+            }
+            warehouse[i][MAX_HORIZ - 1] = TextColors.colorText(TextColors.YELLOW,"║");
+        }
+
+        //Insert resources in Strongbox
+        reset++;
+        int init = 4;
+        for (LiteResource resource : liteWarehouse.getDepots().get(3).getResourcesInside()){
+            warehouse[reset][init] = colors.get(resource.getType());
+            init = init+1;
+            warehouse[reset][init] = "x";
+            init = init+1;
+            warehouse[reset][init] = String.valueOf(resource.getAmount());
+           if (resource.getAmount() > 9 && resource.getAmount() < 100){
+               warehouse[reset][init+1] = "";
+            } else if (resource.getAmount() >= 100) {
+                warehouse[reset][init+1] = "";
+               warehouse[reset][init+2] = "";
+            }
+
+            init = init + 4;
+        }
+
+
+    }
+
     public void printLegend(){
 
         String legend = TextColors.colorText(TextColors.YELLOW_BRIGHT, "©") + " = " + TextColors.colorText(TextColors.YELLOW_BRIGHT, "Coin\n") +
@@ -37,86 +157,6 @@ public class WarehousePrinter {
                 TextColors.colorText(TextColors.WHITE, "■") + " = " + TextColors.colorText(TextColors.WHITE, "Stone\n");
         System.out.println(legend);
 
-    }
-
-    private void printBottomDepot(){
-        System.out.print("║         [ ");
-        for (LiteResource resource : warehouse.getDepots().get(2).getResourcesInside()){
-            for (int i = 0; i< resource.getAmount(); i++){
-                System.out.print(colors.get(resource.getType()));
-                System.out.print(" ");
-            }
-            int z = resource.getAmount();
-            while (z < 3){
-                System.out.print("  ");
-                z++;
-            }
-        }
-
-        System.out.println("]         ║");
-    }
-
-    private void printMiddleDepot(){
-        System.out.print("║          [ ");
-        for (LiteResource resource : warehouse.getDepots().get(1).getResourcesInside()){
-            for (int i = 0; i< resource.getAmount(); i++){
-                System.out.print(colors.get(resource.getType()));
-                System.out.print(" ");
-            }
-            int z = resource.getAmount();
-            while (z < 2){
-                System.out.print("  ");
-                z++;
-            }
-        }
-
-        System.out.println("]          ║");
-    }
-
-    private void printTopDepot(){
-
-        System.out.print("║            [");
-        for (LiteResource resource : warehouse.getDepots().get(0).getResourcesInside()){
-            for (int i = 0; i< resource.getAmount(); i++){
-                System.out.print(colors.get(resource.getType()));
-            }
-            int z = resource.getAmount();
-            while (z < 1){
-                System.out.print(" ");
-                z++;
-            }
-        }
-        System.out.println("]            ║");
-    }
-
-    private void printStrongbox(){
-        StringBuilder strongbox = new StringBuilder();
-        strongbox.append("╔═════════════0═════════════╗\n");
-        strongbox.append("║  ");
-        for (LiteResource resource : warehouse.getDepots().get(3).getResourcesInside()){
-            strongbox.append(colors.get(resource.getType())).append("x").append((resource.getAmount()));
-            if (resource.getAmount() < 10) {
-                strongbox.append("   ");
-            } else if (resource.getAmount() > 9 && resource.getAmount() < 100){
-                strongbox.append("  ");
-            } else {
-                strongbox.append(" ");
-            }
-        }
-        strongbox.append(" ║\n");
-        strongbox.append("╚═══════════════════════════╝");
-        System.out.println(strongbox);
-    }
-
-
-
-    public void printWarehouse(){
-        printLegend();
-        System.out.println("╔═══════════════════════════╗");
-        printTopDepot();
-        printMiddleDepot();
-        printBottomDepot();
-        printStrongbox();
     }
 
     public static void main(String[] args){
@@ -135,10 +175,10 @@ public class WarehousePrinter {
         resourcesBottom.add(stone);
 
         List<LiteResource> resourcesStrongbox = new ArrayList<>();
-        resourcesStrongbox.add(coin);
+        resourcesStrongbox.add(new LiteResource(ResourceType.COIN, 20));
         resourcesStrongbox.add(servant);
-        resourcesStrongbox.add(stone);
-        resourcesStrongbox.add(shield);
+        resourcesStrongbox.add(new LiteResource(ResourceType.STONE, 3));
+        resourcesStrongbox.add(new LiteResource(ResourceType.SHIELD, 15));
 
         LiteDepot depotTop = new LiteDepot(resourcesTop);
         LiteDepot depotBottom = new LiteDepot(resourcesBottom);
