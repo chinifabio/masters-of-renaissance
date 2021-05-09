@@ -7,6 +7,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.view.litemodel.LiteModel;
 
+import java.io.IOException;
+
 /**
  * This class contains a method that take as input a lite model and than depending on the implementation update it
  */

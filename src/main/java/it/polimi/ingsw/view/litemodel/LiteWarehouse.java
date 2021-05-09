@@ -1,16 +1,19 @@
 package it.polimi.ingsw.view.litemodel;
 
-import java.util.List;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 public class LiteWarehouse {
 
-    private final List<LiteDepot> depots;
+    private final Map<DepotSlot, LiteDepot> depots = new EnumMap<>(DepotSlot.class);
 
-    public LiteWarehouse(List<LiteDepot> depots) {
-        this.depots = depots;
+    public void setDepot(DepotSlot slot, LiteDepot depot) {
+        this.depots.put(slot, depot);
     }
 
-    public List<LiteDepot> getDepots() {
-        return depots;
+    public LiteDepot getDepots(DepotSlot slot) {
+        return this.depots.get(slot);
     }
 }

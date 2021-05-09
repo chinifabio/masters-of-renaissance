@@ -1,12 +1,13 @@
 package it.polimi.ingsw.view.cli.printer;
 
 import it.polimi.ingsw.TextColors;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.litemodel.LiteDepot;
 import it.polimi.ingsw.view.litemodel.LiteModel;
 import it.polimi.ingsw.view.litemodel.LiteResource;
-import it.polimi.ingsw.view.litemodel.LiteWarehouse;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -17,12 +18,12 @@ public class WarehousePrinter {
     private static final int MAX_VERT = 7; //rows.
     private static final int MAX_HORIZ = 29; //cols.
 
-    private final LiteWarehouse warehouse;
+    private final LiteModel model;
 
     private final Map<ResourceType, String> colors;
 
     public WarehousePrinter(LiteModel model) {
-        this.warehouse = model.getWarehouse();
+        this.model = model;
         this.colors = new EnumMap<>(ResourceType.class);
         colors.put(ResourceType.COIN, TextColors.colorText(TextColors.YELLOW_BRIGHT,"©"));
         colors.put(ResourceType.SHIELD, TextColors.colorText(TextColors.BLUE_BRIGHT,"▼"));
@@ -33,12 +34,12 @@ public class WarehousePrinter {
     }
 
 
-    public void printWarehouse() {
+    public void printWarehouse(String nickname) {
 
         String[][] warehouse = new String[MAX_VERT][MAX_HORIZ];
 
-        createDepots(this.warehouse, warehouse);
-        createStrongbox(this.warehouse, warehouse);
+        createDepots(nickname, warehouse);
+        createStrongbox(nickname, warehouse);
 
         printLegend();
 
@@ -51,7 +52,7 @@ public class WarehousePrinter {
         System.out.println();
     }
 
-    private void createDepots(LiteWarehouse liteWarehouse, String[][] warehouse) {
+    private void createDepots(String nickname, String[][] warehouse) {
 
         warehouse[0][0] = "╔";
         for (int i = 1; i < MAX_HORIZ - 1; i++) {
@@ -70,9 +71,14 @@ public class WarehousePrinter {
         int initR = 1;
         int initC = 12;
 
+        List<LiteDepot> depots = new ArrayList<>();
+        depots.add(this.model.getDepot(nickname, DepotSlot.TOP));
+        depots.add(this.model.getDepot(nickname, DepotSlot.MIDDLE));
+        depots.add(this.model.getDepot(nickname, DepotSlot.BOTTOM));
+
         for (int depot = 0; depot < 3; depot++) {
             warehouse[initR][initC] = "[";
-            for (LiteResource resource : liteWarehouse.getDepots().get(depot).getResourcesInside()) {
+            for (LiteResource resource : depots.get(depot).getResourcesInside()) {
                 for (int i = initC+2; i < (initC+2) + (resource.getAmount() * 2); i++) {
                     if (initR != 2) {
                         if (i % 2 == 0) {
@@ -103,7 +109,7 @@ public class WarehousePrinter {
     }
 
 
-    private void createStrongbox(LiteWarehouse liteWarehouse, String[][] warehouse){
+    private void createStrongbox(String nickname, String[][] warehouse){
 
         int reset = 4;
         warehouse[reset][0] = TextColors.colorText(TextColors.YELLOW,"╔");
@@ -130,7 +136,7 @@ public class WarehousePrinter {
         //Insert resources in Strongbox
         reset++;
         int init = 4;
-        for (LiteResource resource : liteWarehouse.getDepots().get(3).getResourcesInside()){
+        for (LiteResource resource : this.model.getDepot(nickname, DepotSlot.STRONGBOX).getResourcesInside()){
             warehouse[reset][init] = colors.get(resource.getType());
             init = init+1;
             warehouse[reset][init] = "x";
@@ -161,6 +167,7 @@ public class WarehousePrinter {
 
     public static void main(String[] args){
         LiteModel model = new LiteModel();
+        model.createPlayer("gino");
 
         LiteResource coin = new LiteResource(ResourceType.COIN, 2);
         LiteResource shield = new LiteResource(ResourceType.SHIELD, 1);
@@ -185,18 +192,14 @@ public class WarehousePrinter {
         LiteDepot depotMiddle = new LiteDepot(resourcesMiddle);
         LiteDepot strongbox = new LiteDepot(resourcesStrongbox);
 
-        List<LiteDepot> depots = new ArrayList<>();
-        depots.add(depotTop);
-        depots.add(depotMiddle);
-        depots.add(depotBottom);
-        depots.add(strongbox);
+        model.setDepot("gino", DepotSlot.TOP, depotTop);
+        model.setDepot("gino", DepotSlot.MIDDLE, depotMiddle);
+        model.setDepot("gino", DepotSlot.BOTTOM, depotBottom);
+        model.setDepot("gino", DepotSlot.STRONGBOX, strongbox);
 
-        LiteWarehouse warehouse = new LiteWarehouse(depots);
-
-        model.setWarehouse(warehouse);
         WarehousePrinter printer = new WarehousePrinter(model);
 
-        printer.printWarehouse();
+        printer.printWarehouse("gino");
     }
 
 }

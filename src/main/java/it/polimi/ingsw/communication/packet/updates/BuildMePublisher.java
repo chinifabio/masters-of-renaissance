@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.view.litemodel.LiteModel;
 
+import java.io.IOException;
+
 public class BuildMePublisher extends Publisher {
     /**
      * the nickname of the player
@@ -22,6 +24,6 @@ public class BuildMePublisher extends Publisher {
      */
     @Override
     public void update(LiteModel liteModel) {
-        liteModel.createMePlayer(this.nickname);
+        liteModel.createPlayer(this.nickname);
     }
 }
