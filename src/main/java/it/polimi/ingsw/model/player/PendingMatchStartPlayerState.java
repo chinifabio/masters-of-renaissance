@@ -26,10 +26,10 @@ public class PendingMatchStartPlayerState extends PlayerState {
     }
 
     /**
-     * This method start the turn of the player
+     * Receive the input to start the turn
      */
     @Override
-    public void startTurn() {
+    public void starTurn() {
         this.context.setState(new LeaderSelectionPlayerState(this.context));
     }
 

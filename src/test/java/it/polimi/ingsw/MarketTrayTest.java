@@ -3,12 +3,8 @@ package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.commands.Command;
-import it.polimi.ingsw.communication.packet.commands.SetNumberCommand;
-import it.polimi.ingsw.communication.server.ClientController;
-import it.polimi.ingsw.model.Model;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
-import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.DimensionReader;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
@@ -16,9 +12,8 @@ import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.match.markettray.MarketTray;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
+import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayableCardReaction;
-import it.polimi.ingsw.model.player.PlayerAction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -32,18 +27,21 @@ import java.util.Map;
 
 public class MarketTrayTest {
 
-    Model model = new Model();
-    Match game;
+    Match game = new MultiplayerMatch(2);
 
-    ClientController player1 = new ClientController(null, "lino");
-    ClientController player2 = new ClientController(null, "gino");
+    Player player1;
+    Player player2;
+
+    VirtualView view = new VirtualView();
 
     @BeforeEach
     public void initialization() {
-        assertDoesNotThrow(()->model.start(player1));
-        model.handleClientCommand(player1, new SetNumberCommand(2));
-        assertTrue(model.connectController(player2));
-        game = model.getMatch();
+        assertDoesNotThrow(()->player1 = new Player("gino", game, view));
+        assertTrue(game.playerJoin(player1));
+        assertDoesNotThrow(()->player2 = new Player("pino", game, view));
+        assertTrue(game.playerJoin(player2));
+
+        assertTrue(game.startGame());
 
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());

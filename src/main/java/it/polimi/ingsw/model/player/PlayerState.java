@@ -47,9 +47,9 @@ public abstract class PlayerState implements PlayerAction {
     public abstract boolean doStuff();
 
     /**
-     * this method start the turn of the player
+     * Receive the input to start the turn
      */
-    public void startTurn() {}
+    public void starTurn() {}
 
 // ----------------------------------------------------------------
 // ----- player state action as default launch an exception -------
@@ -168,17 +168,6 @@ public abstract class PlayerState implements PlayerAction {
      */
     @Override
     public Packet chooseResource(DepotSlot slot, ResourceType chosen) {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
-    }
-
-    /**
-     * Create a game with the passed number of player
-     *
-     * @param number the number of player of the match to be create
-     * @return the succeed of the operation
-     */
-    @Override
-    public Packet setPlayerNumber(int number) {
         return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 }

@@ -38,14 +38,6 @@ public class NoActionDonePlayerState extends PlayerState {
         return true;
     }
 
-    /**
-     * This method starts the turn of the player
-     */
-    @Override
-    public void startTurn() {
-        this.context.setState(new NotHisTurnPlayerState(this.context));
-    }
-
 // -------------------------- PLAYER ACTION IMPLEMENTATIONS ---------------------------------
 
 
@@ -60,11 +52,11 @@ public class NoActionDonePlayerState extends PlayerState {
     public Packet useMarketTray(RowCol rc, int index) {
         try {
             // using market tray
-            this.context.model.getMatch().useMarketTray(rc, index);
+            this.context.match.useMarketTray(rc, index);
 
         } catch (EndGameException e) {
 
-            this.context.model.getMatch().startEndGameLogic();                                      // stop the game when the last player end his turn
+            this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
             this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
             return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
 
@@ -85,7 +77,7 @@ public class NoActionDonePlayerState extends PlayerState {
     @Override
     public Packet paintMarbleInTray(int conversionsIndex, int marbleIndex) {
         try {
-            this.context.model.getMatch().paintMarbleInTray(this.context.marbleConversions.get(conversionsIndex).copy(), marbleIndex);
+            this.context.match.paintMarbleInTray(this.context.marbleConversions.get(conversionsIndex).copy(), marbleIndex);
         } catch (UnpaintableMarbleException e) {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
@@ -105,7 +97,7 @@ public class NoActionDonePlayerState extends PlayerState {
         this.context.slotDestination = destination;
         boolean res;
         try {
-            res = this.context.model.getMatch().buyDevCard(row, col);
+            res = this.context.match.buyDevCard(row, col);
         } catch (Exception e) {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
@@ -127,7 +119,7 @@ public class NoActionDonePlayerState extends PlayerState {
             this.context.personalBoard.activateProductions();
         } catch (EndGameException e) {
 
-            this.context.model.getMatch().startEndGameLogic();                                      // stop the game when the last player end his turn
+            this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
             this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
             return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
 
@@ -215,10 +207,10 @@ public class NoActionDonePlayerState extends PlayerState {
     public Packet discardLeader(String leaderId) {
         try {
             this.context.personalBoard.discardLeaderCard(leaderId);
-            this.context.personalBoard.moveFaithMarker(1, this.context.model.getMatch());
+            this.context.personalBoard.moveFaithMarker(1, this.context.match);
         } catch (EndGameException e) {
 
-            this.context.model.getMatch().startEndGameLogic();                                      // stop the game when the last player end his turn
+            this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
             this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
             return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
 
@@ -235,9 +227,9 @@ public class NoActionDonePlayerState extends PlayerState {
      */
     @Override
     public Packet endThisTurn() {
-        this.context.personalBoard.flushBufferDepot(this.context.model.getMatch());
+        this.context.personalBoard.flushBufferDepot(this.context.match);
         this.context.setState(new NotHisTurnPlayerState(this.context));
-        this.context.model.getMatch().endMyTurn();
+        this.context.match.endMyTurn();
         return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "your turn is ended");
     }
 }

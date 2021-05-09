@@ -35,12 +35,12 @@ public abstract class Match implements PlayerToMatch {
     /**
      * the number of possible players in the game
      */
-    protected final int gameSize;
+    public final int gameSize;
 
     /**
      * the minimum player number to start the game
      */
-    private final int minimumPlayer;
+    public final int minimumPlayer;
 
     /**
      * this flag is used to check if the game is started
@@ -116,14 +116,8 @@ public abstract class Match implements PlayerToMatch {
     public boolean playerJoin(Player joined) {
         if (this.turn.playerInGame() > gameSize) return false;
         if (gameOnAir) return false;
-        if (!turn.joinPlayer(joined)) return false;
-        if (this.turn.playerInGame() == gameSize) {
-            this.turn.randomizeInkwellPlayer();
-            this.gameOnAir = true;
-        }
-        return true;
+        return this.turn.joinPlayer(joined);
     }
-
 
     /**
      * start the game: start the turn of the first player
@@ -131,7 +125,9 @@ public abstract class Match implements PlayerToMatch {
      */
     public boolean startGame() {
         if(this.turn.playerInGame() < this.minimumPlayer || gameOnAir) return false;
-        // todo delete when test is passed for new start match strategy
+        this.gameOnAir = true;
+        System.out.println("randomizing");
+        this.turn.randomizeInkwellPlayer();
         return true;
     }
 
@@ -312,4 +308,5 @@ public abstract class Match implements PlayerToMatch {
     public boolean test_getGameOnAir() {
         return gameOnAir;
     }
+
 }

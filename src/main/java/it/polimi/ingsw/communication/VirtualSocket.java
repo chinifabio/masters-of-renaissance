@@ -30,17 +30,23 @@ public class VirtualSocket implements Runnable{
     // Object must not be modified
     private final Map<ChannelTypes, Object> waitingZone = new EnumMap<>(ChannelTypes.class);
 
+    private final Object sendLocker = new Object();
+
+    private final PrintStream sender;
+
     /**
      * Create a virtual socket to sort received packet in channels
      * @param socket the real socket
      */
-    public VirtualSocket(Socket socket) {
+    public VirtualSocket(Socket socket) throws IOException {
         this.socket = socket;
 
         for (ChannelTypes ch : ChannelTypes.values()) {
             this.channelsQueue.put(ch, new LinkedList<>());
             this.waitingZone.put(ch, new Object());
         }
+
+        this.sender = new PrintStream(this.socket.getOutputStream());
     }
 
     /**
@@ -79,25 +85,19 @@ public class VirtualSocket implements Runnable{
      * Send the paket passed
      * @param packet the packet to send
      */
-    public synchronized void send(Packet packet) {
-        PrintStream out;
-        try {
-            out = new PrintStream(this.socket.getOutputStream());
-        } catch (IOException e) {
-            System.out.println("can't find socket");
-            return;
-        }
+    public void send(Packet packet) {
+        synchronized (this.sendLocker) {
+            String serialized;
+            try {
+                serialized = new ObjectMapper().writeValueAsString(packet);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                System.out.println("serialization error, abort operation...");
+                return;
+            }
 
-        String serialized;
-        try {
-            serialized = new ObjectMapper().writeValueAsString(packet);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            System.out.println("serialization error, abort operation...");
-            return;
+            this.sender.println(serialized);
         }
-
-        out.println(serialized);
     }
 
     /**
@@ -105,7 +105,7 @@ public class VirtualSocket implements Runnable{
      * @param ch the channel where look at
      * @return the packet
      */
-    public synchronized Packet pollPacketFrom(ChannelTypes ch) {
+    public Packet pollPacketFrom(ChannelTypes ch) {
         Packet result;
         Object lock = this.waitingZone.get(ch);
         synchronized (lock) {

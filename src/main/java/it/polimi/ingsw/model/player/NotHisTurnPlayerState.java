@@ -28,11 +28,10 @@ public class NotHisTurnPlayerState extends PlayerState {
     }
 
     /**
-     * This method starts the turn of the player
-     * @throws PlayerStateException if the Player can't do this action
+     * Receive the input to start the turn
      */
     @Override
-    public void startTurn() {
+    public void starTurn() {
         this.context.setState(new NoActionDonePlayerState(this.context));
     }
 

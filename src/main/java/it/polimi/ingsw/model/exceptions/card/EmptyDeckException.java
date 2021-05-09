@@ -8,7 +8,9 @@ public class EmptyDeckException extends Exception{
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      */
-    public EmptyDeckException() {}
+    public EmptyDeckException() {
+        super(colorText(RED_BRIGHT, "This Deck is empty!"));
+    }
 
     /**
      * Prints this throwable and its backtrace to the

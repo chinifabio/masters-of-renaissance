@@ -1,19 +1,17 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.communication.packet.ChannelTypes;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.model.Model;
+import it.polimi.ingsw.communication.packet.updates.BuildMePublisher;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.ExtraProductionException;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
 import it.polimi.ingsw.model.exceptions.warehouse.*;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
+import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
@@ -38,11 +36,15 @@ import java.util.*;
  * This class identifies the Player
  */
 public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer {
+    /**
+     * This virtual view is used to notify all clients for changes in player holdings
+     */
+    final VirtualView view;
 
     /**
-     * represent the color assigned to the player
+     * this attribute flag the waiting state
      */
-    private String color;
+    public boolean waiting = false;
 
     /**
      * represent the player state and contains the implementation of the method of PlayerModifier
@@ -70,9 +72,9 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     final List<Marble> marbleConversions;
 
     /**
-     * This attribute reference the model in the server
+     * This attribute reference the match in the model in the  server
      */
-    Model model;
+    PlayerToMatch match;
 
     /**
      * destination where put a dev card obtained
@@ -86,31 +88,27 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     public Pair<Integer> initialSetup = new Pair<>(0,0);
 
+    public final Object waitForWakeUp = new Object();
+
     /**
      * This method create a player by nickname and saving the match reference
      * @param nickname (type String) identifies the player
      * @throws IllegalTypeInProduction if the Basic Production of the PersonalBoard has IllegalResources
      */
-    public Player(String nickname, boolean creator) throws IllegalTypeInProduction {
+    public Player(String nickname, PlayerToMatch match, VirtualView view) throws IllegalTypeInProduction {
 
         this.nickname = nickname;
-        this.personalBoard = new PersonalBoard(this);
+        this.personalBoard = new PersonalBoard(this, view);
 
         this.marbleConversions = new ArrayList<>();
         this.marketDiscount = new ArrayList<>();
 
-        this.playerState = creator ?
-                new SetPlayersNumberPlayerState(this):
-                new PendingMatchStartPlayerState(this);
-    }
+        this.playerState = new PendingMatchStartPlayerState(this);
 
-    /**
-     * Set the match reference of the player
-     * @param link the new model reference of the player
-     */
-    public Player linkModel(Model link) {
-        this.model = link;
-        return this;
+        this.match = match;
+
+        this.view = view;
+        this.view.sendPublisher(new BuildMePublisher(this.nickname));
     }
 
     /**
@@ -223,12 +221,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     @Override
     public boolean obtainResource(DepotSlot slot, Resource obt) throws WrongDepotException, UnobtainableResourceException, EndGameException {
-        /*try {
-            obt.onObtain(this);
-        } catch (EndGameException e) {
-            // reached the end of faith track so tells to the match to start end game logic
-            this.model.getMatch().startEndGameLogic();
-        }*/
         obt.onObtain(this);
         if(obt.isStorable()) return this.personalBoard.insertInDepot(slot, obt);
         return false;
@@ -240,7 +232,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     @Override
     public void moveFaithMarker(int amount) throws EndGameException {
-        this.personalBoard.moveFaithMarker(amount, this.model.getMatch());
+        this.personalBoard.moveFaithMarker(amount, this.match);
     }
 
 
@@ -260,7 +252,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * SpecialAbility that converts white marbles in resources
      * @param conversionsIndex the index of the marble conversions available
      * @param marbleIndex the index of chosen tray's marble to color
-     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public Packet paintMarbleInTray(int conversionsIndex, int marbleIndex) {
@@ -273,8 +264,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param col the column of the card required
      * @param destination the slot where put the dev card slot
      * @return true if there where no issue, false instead
-     * @throws EmptyDeckException if the Deck is empty
-     * @throws LootTypeException if the attribute can't be obtained from this Requisite
      */
     @Override
     public Packet buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
@@ -285,8 +274,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * This method takes the resources from the Depots and the Strongbox to
      * activate the productions and insert the Resources obtained into the Strongbox
      * @return true if success
-     * @throws UnobtainableResourceException if the Resource can't be obtained
-     * @throws WrongPointsException if the Player can't obtain the points
      */
     @Override
     public Packet activateProductions() {
@@ -311,7 +298,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param dest the destination of the resource to move
      * @param loot the resource to move
      * @return the succeed of the operation
-     * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
      */
     @Override
     public Packet moveInProduction(DepotSlot from, ProductionID dest, Resource loot) {
@@ -324,11 +310,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param from depot from which withdraw resource
      * @param to depot where insert withdrawn resource
      * @param loot the resource to move
-     * @throws WrongDepotException if the Depot cannot be used
-     * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
-     * @throws UnobtainableResourceException if the Resources cannot be obtained
-     * @throws WrongPointsException if the Player cannot obtain the FaithPoint
-     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
@@ -338,8 +319,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     /**
      * This method activates the special ability of the LeaderCard
      * @param leaderId the string that identify the leader card
-     * @throws MissingCardException if the Card isn't in the Deck
-     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public Packet activateLeaderCard(String leaderId) {
@@ -350,9 +329,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     /**
      * This method removes a LeaderCard from the player
      * @param leaderId the string that identify the leader card to be discarded
-     * @throws PlayerStateException if the Player cannot do this action
-     * @throws EmptyDeckException if the deck is empty
-     * @throws MissingCardException if the card isn't in the deck
      */
     @Override
     public Packet discardLeader(String leaderId) {
@@ -362,8 +338,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     /**
      * The player ends its turn
      * @return true if success, false otherwise
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws WrongDepotException if the Depot cannot be used
      */
     @Override
     public Packet endThisTurn() {
@@ -374,23 +348,10 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * Set a chosen resource attribute in player
      * @param slot is the Depot where the Resource is located
      * @param chosen the resource chosen
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws WrongDepotException if the Depot cannot be used
      */
     @Override
     public Packet chooseResource(DepotSlot slot, ResourceType chosen) {
         return this.playerState.chooseResource(slot, chosen);
-    }
-
-    /**
-     * Create a game with the passed number of player
-     *
-     * @param number the number of player of the match to be create
-     * @return the succeed of the operation
-     */
-    @Override
-    public Packet setPlayerNumber(int number) {
-        return this.playerState.setPlayerNumber(number);
     }
 
     // match to player implementation
@@ -471,12 +432,14 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * starts the turn of the player;
-     * @return true if success, false otherwise
      */
     @Override
-    public boolean startHisTurn() {
-        this.playerState.startTurn();
-        return true;
+    public void startHisTurn() {
+        System.out.println(nickname + " waking up");
+        synchronized (waitForWakeUp) {
+            waitForWakeUp.notifyAll();
+        }
+        this.playerState.starTurn();
     }
 
     /**
@@ -516,9 +479,5 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     // for testing
     public List<Marble> test_getConv() {
         return this.marbleConversions;
-    }
-
-    public String test_getState() {
-        return this.playerState.toString();
     }
 }

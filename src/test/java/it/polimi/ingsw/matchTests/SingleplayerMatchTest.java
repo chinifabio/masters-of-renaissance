@@ -5,19 +5,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.commands.Command;
-import it.polimi.ingsw.communication.packet.commands.SetNumberCommand;
-import it.polimi.ingsw.communication.server.ClientController;
-import it.polimi.ingsw.model.Model;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.SoloActionToken;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -29,22 +26,20 @@ import java.util.List;
 
 public class SingleplayerMatchTest {
 
-    private Model model;
-    private Match singleplayer;
+    private Match singleplayer = new SingleplayerMatch();
 
-    private ClientController gino = new ClientController(null, "gino");
+    private Player gino;
+
+    VirtualView view = new VirtualView();
 
     int oldLorenzoPos = 0;
     int oldNumDiscarded = 0;
 
     @BeforeEach
-    public void initializeMatch() {
-        this.model = new Model();
-        assertDoesNotThrow(()->this.model.start(gino));
-        this.model.handleClientCommand(gino, new SetNumberCommand(1));
-
-        assertNotNull(model.getMatch());
-        singleplayer = model.getMatch();
+    public void initializeMatch() throws IllegalTypeInProduction {
+        gino = new Player("gino", singleplayer, view);
+        assertTrue(singleplayer.playerJoin(gino));
+        assertTrue(singleplayer.startGame());
 
         // the player discard the first two leader card
         assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().test_discardLeader());

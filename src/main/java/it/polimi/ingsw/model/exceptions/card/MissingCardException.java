@@ -14,6 +14,7 @@ public class MissingCardException extends Exception{
      * call to {@link #initCause}.
      */
     public MissingCardException(String missed) {
+        super(colorText(RED_BRIGHT, "This card was not found: " + missed));
         this.missed = missed;
     }
 

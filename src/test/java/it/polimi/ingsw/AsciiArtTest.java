@@ -1,11 +1,11 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.model.VirtualView;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
+import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.view.cli.FaithTrackPrinter;
 import it.polimi.ingsw.view.cli.NamePrinter;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.commands.SetNumberCommand;
-import it.polimi.ingsw.communication.server.ClientController;
-import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.player.Player;
@@ -26,28 +26,32 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class AsciiArtTest {
 
-    private Model model;
-    private Match multiplayer;
+    private Match multiplayer = new MultiplayerMatch(4);
 
-    ClientController pino = new ClientController(null, "TheDarkVinz");
-    ClientController gino = new ClientController(null, "MadCini");
-    ClientController dino = new ClientController(null, "Gino");
-    ClientController tino = new ClientController(null, "LastBuddy");
+    Player pino;
+    Player gino;
+    Player dino;
+    Player tino;
 
     List<Player> order = new ArrayList<>();
 
+    VirtualView view = new VirtualView();
+
     @BeforeEach
-    public void initializeMatch() {
+    public void initializeMatch() throws IllegalTypeInProduction {
+        pino = new Player("pino", multiplayer, view);
+        assertTrue(multiplayer.playerJoin(pino));
 
-        model = new Model();
-        assertDoesNotThrow(()->model.start(pino));
-        model.handleClientCommand(pino, new SetNumberCommand(4));
-        assertTrue(model.connectController(gino));
-        assertTrue(model.connectController(dino));
-        assertTrue(model.connectController(tino));
+        gino = new Player("gino", multiplayer, view);
+        assertTrue(multiplayer.playerJoin(gino));
 
-        assertNotNull(model.getMatch());
-        this.multiplayer = model.getMatch();
+        dino = new Player("dino", multiplayer, view);
+        assertTrue(multiplayer.playerJoin(dino));
+
+        tino = new Player("tino", multiplayer, view);
+        assertTrue(multiplayer.playerJoin(tino));
+
+        assertTrue(multiplayer.startGame());
 
         // initializing player section
         /*

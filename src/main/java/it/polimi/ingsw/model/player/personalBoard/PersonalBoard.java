@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.player.personalBoard;
 
+import it.polimi.ingsw.communication.packet.updates.LeaderCardPublisher;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
@@ -65,12 +67,17 @@ public class PersonalBoard {
      */
     private final Player player;
 
+    /**
+     * This view is used to notify to clients all the changes in player holdings
+     */
+    private final VirtualView view;
+
 
     /**
      * This method is the constructor of the class
      * @param player the player who own this personal board
      */
-    public PersonalBoard(Player player) throws IllegalTypeInProduction {
+    public PersonalBoard(Player player, VirtualView view) throws IllegalTypeInProduction {
         this.leaderDeck = new Deck<>();
 
         this.devDeck = new EnumMap<>(DevCardSlot.class);
@@ -86,13 +93,14 @@ public class PersonalBoard {
         this.warehouse = new Warehouse();
         this.faithTrack = new FaithTrack();
         this.player = player;
+
+        this.view = view;
     }
 
     /**
      * This method adds the DevCard bought by the Player into the DevCardSlot
      * @param slot is the slot where the DevCard is inserted
      * @param card is the DevCard bought by the Player
-     * @param pm is the Player that do this action
      * @return true if the card is correctly added
      */
     public boolean addDevCard(DevCardSlot slot, DevCard card) throws EndGameException, AlreadyInDeckException {
@@ -148,6 +156,7 @@ public class PersonalBoard {
      */
     public void addLeaderCard(LeaderCard card) throws AlreadyInDeckException {
         this.leaderDeck.insertCard(card);
+        notifyLeaderCards();
     }
 
     /**
@@ -191,6 +200,7 @@ public class PersonalBoard {
         }
         card.activate();
         card.useEffect(this.player);
+        notifyLeaderCards();
         return true;
     }
 
@@ -203,6 +213,7 @@ public class PersonalBoard {
      */
     public void discardLeaderCard(String card) throws EmptyDeckException, MissingCardException {
         this.leaderDeck.discard(card);
+        notifyLeaderCards();
     }
 
     /**
@@ -406,6 +417,17 @@ public class PersonalBoard {
             }
         }
         return points;
+    }
+
+    /**
+     * Send to the view the list of leader cards ids owned by the player
+     */
+    private void notifyLeaderCards() {
+        List<String> result = new ArrayList<>();
+
+        for (LeaderCard c : this.leaderDeck.getCards()) result.add(c.getCardID());
+
+        this.view.sendPublisher(new LeaderCardPublisher(result, this.player.getNickname()));
     }
 
     // only for testing

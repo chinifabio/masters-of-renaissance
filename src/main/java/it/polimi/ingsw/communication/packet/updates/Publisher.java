@@ -1,30 +1,28 @@
-package it.polimi.ingsw.communication.packet.commands;
+package it.polimi.ingsw.communication.packet.updates;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.model.player.PlayerAction;
+import it.polimi.ingsw.view.litemodel.LiteModel;
 
 /**
- * This interface is used to contain a command to be execute on a playerAction interface
+ * This class contains a method that take as input a lite model and than depending on the implementation update it
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonSubTypes({
-        @JsonSubTypes.Type(name = "BuyDevCard", value = BuyDevCardCommand.class),
-        @JsonSubTypes.Type(name = "DiscardLeader", value = DiscardLeaderCommand.class),
-        @JsonSubTypes.Type(name = "PaintMarble", value = PaintMarbleCommand.class),
-        @JsonSubTypes.Type(name = "UseTray", value = UseMarketTrayCommand.class),
+        @JsonSubTypes.Type(name = "LeaderCard", value = LeaderCardPublisher.class),
+        @JsonSubTypes.Type(name = "Tray", value = TrayPublisher.class),
+        @JsonSubTypes.Type(name = "BuildMe", value = BuildMePublisher.class)
 })
-public abstract class Command {
+public abstract class Publisher {
     /**
-     * The command to execute on a player action interface
-     * @param player the player on which execute the command
+     * Take a lite model as input and apply to the implementing function
+     * @param liteModel the lite model on the client
      */
-    public abstract Packet execute(PlayerAction player);
+    public abstract void update(LiteModel liteModel);
 
     /**
      * Return a json representation of the command

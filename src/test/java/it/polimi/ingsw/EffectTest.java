@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.*;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
@@ -42,9 +43,9 @@ public class EffectTest {
 
         DevCard c = new DevCard("000", new AddProductionEffect(p), 2, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
 
-        Player player = new Player("dummy", false);
+        Player player = new Player("dummy", null, new VirtualView());
 
-        PersonalBoard personalBoard = new PersonalBoard(player);
+        PersonalBoard personalBoard = new PersonalBoard(player, null);
 
         assertDoesNotThrow(()->personalBoard.addDevCard(DevCardSlot.LEFT,c));
         player.test_setDest(DevCardSlot.LEFT);
@@ -66,7 +67,7 @@ public class EffectTest {
         DevCard c = new DevCard("000", new AddDepotEffect(ResourceType.COIN), 2, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
 
         assertDoesNotThrow(()->{
-            Player player = new Player("gino", false);
+            Player player = new Player("gino", null, new VirtualView());
 
             c.useEffect(player);
             try {
@@ -96,7 +97,7 @@ public class EffectTest {
             Production extraProd = new UnknownProduction(Collections.singletonList(ResourceBuilder.buildUnknown()), Arrays.asList(ResourceBuilder.buildUnknown(), ResourceBuilder.buildFaithPoint()));
             LeaderCard c = new LeaderCard("000", new AddExtraProductionEffect(extraProd), 1, req);
 
-            Player player = new Player("gino", false);
+            Player player = new Player("gino", null, new VirtualView());
 
             c.useEffect(player);
             assertEquals(extraProd, player.test_getPB().possibleProduction().get(ProductionID.LEADER1));

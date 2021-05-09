@@ -51,7 +51,7 @@ public class LeaderSelectionPlayerState extends PlayerState {
         try { this.context.moveFaithMarker(initRes.two); } catch (EndGameException ignore) {}
         this.resourceToChoose = initRes.one;
 
-        for(LeaderCard ld : this.context.model.getMatch().requestLeaderCard()) {
+        for(LeaderCard ld : this.context.match.requestLeaderCard()) {
             try {
                 this.context.personalBoard.addLeaderCard(ld);
             } catch (AlreadyInDeckException e) {
@@ -99,7 +99,7 @@ public class LeaderSelectionPlayerState extends PlayerState {
         if (chosenResources == resourceToChoose && discarded == toDiscard) {
 
             this.context.setState(new NotHisTurnPlayerState(this.context));
-            this.context.model.getMatch().endMyTurn();
+            this.context.match.endMyTurn();
             return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "your turn is ended");
 
         } else

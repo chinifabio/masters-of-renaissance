@@ -20,9 +20,6 @@ public interface PlayerAction {
      * @param rc enum to identify if I am pushing row or col
      * @param index the index of the row or column of the tray
      * @return the result of the operation
-     * @throws OutOfBoundMarketTrayException if the MarketTray is out of bound
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws UnobtainableResourceException if the Player can't obtain that Resource
      */
     Packet useMarketTray(RowCol rc, int index);
 
@@ -31,8 +28,6 @@ public interface PlayerAction {
      * SpecialAbility that converts white marbles in resources
      * @param conversionsIndex the index of chosen tray's marble to color
      * @param marbleIndex the index of the marble conversions available
-     * @throws UnpaintableMarbleException if the Marble can't be painted
-     * @throws PlayerStateException if the Player can't do this action
      */
     Packet paintMarbleInTray(int conversionsIndex, int marbleIndex);
 
@@ -42,10 +37,6 @@ public interface PlayerAction {
      * @param col the column of the card required
      * @param destination the slot where put the dev card slot
      * @return true if there where no issue, false instead
-     * @throws NoRequisiteException if the Card has no requisite
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws EmptyDeckException if the Deck is empty
-     * @throws LootTypeException if the attribute cannot be obtained from this Requisite
      */
     Packet buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination);
 
@@ -53,9 +44,6 @@ public interface PlayerAction {
      * This method takes the resources from the Depots and the Strongbox to
      * activate the productions and insert the Resources obtained into the Strongbox
      * @return the result of the operation
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws UnobtainableResourceException if the Player can't obtain the Resource
-     * @throws WrongPointsException if the Player can't obtain the FaithPoints
      */
     Packet activateProductions();
 
@@ -65,10 +53,6 @@ public interface PlayerAction {
      * @param dest the destination of the resource to move
      * @param loot the resource to move
      * @return  true if the resources are correctly moved in Production
-     * @throws UnknownUnspecifiedException if the Production is unspecified
-     * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws WrongDepotException if the Depot cannot be used
      */
     Packet moveInProduction(DepotSlot from, ProductionID dest, Resource loot);
 
@@ -77,7 +61,6 @@ public interface PlayerAction {
      * @param id the id of the unknown production
      * @param normalProduction the input new normal production
      * @return the succeed of the operation
-     * @throws PlayerStateException if the Player can't do this action
      */
     Packet setNormalProduction(ProductionID id, NormalProduction normalProduction);
 
@@ -86,31 +69,18 @@ public interface PlayerAction {
      * @param from depot from which withdraw resource
      * @param to depot where insert withdrawn resource
      * @param loot is the Resource to move
-     * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws UnobtainableResourceException if the Resources cannot be obtained by the Player
-     * @throws WrongPointsException if the Player can't obtain the FaithPoint
-     * @throws WrongDepotException if the Depot cannot be used
      */
     Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot);
 
     /**
      * This method activates the special ability of the LeaderCard
      * @param leaderId the string that identify the leader card
-     * @throws MissingCardException if the card isn't in the Deck
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws EmptyDeckException if the Deck is empty
-     * @throws LootTypeException if the attribute cannot be obtained from this Requisite
-     * @throws WrongDepotException if the Depot cannot be used
      */
     Packet activateLeaderCard(String leaderId);
 
     /**
      * This method removes a LeaderCard from the player
      * @param leaderId the string that identify the leader card to be discarded
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws EmptyDeckException if the Deck is empty
-     * @throws MissingCardException if the card isn't in the Deck
      */
     Packet discardLeader(String leaderId);
 
@@ -118,23 +88,12 @@ public interface PlayerAction {
      * set a chosen resource attribute in player
      * @param slot the Depot where the Resource is taken from
      * @param chosen the resource chosen
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws WrongDepotException if the Depot cannot be used
      */
     Packet chooseResource(DepotSlot slot, ResourceType chosen);
 
     /**
      * The player ends his turn
      * @return true if success, false otherwise
-     * @throws PlayerStateException if the Player can't do this action
-     * @throws WrongDepotException if the Depot can't be used
      */
     Packet endThisTurn();
-
-    /**
-     * Create a game with the passed number of player
-     * @param number the number of player of the match to be create
-     * @return the succeed of the operation
-     */
-    Packet setPlayerNumber(int number);
 }

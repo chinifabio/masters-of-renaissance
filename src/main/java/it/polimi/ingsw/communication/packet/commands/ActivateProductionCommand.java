@@ -1,17 +1,15 @@
 package it.polimi.ingsw.communication.packet.commands;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.player.PlayerAction;
 
-public class SetNumberCommand extends Command {
-    private int size;
-
+/**
+ * This command activate the production of the passed player
+ */
+public class ActivateProductionCommand extends Command{
     @JsonCreator
-    public SetNumberCommand(@JsonProperty("size") int size) {
-        this.size = size;
-    }
+    public ActivateProductionCommand(){}
 
     /**
      * The command to execute on a player action interface
@@ -20,6 +18,6 @@ public class SetNumberCommand extends Command {
      */
     @Override
     public Packet execute(PlayerAction player) {
-        return player.setPlayerNumber(this.size);
+        return player.activateProductions();
     }
 }
