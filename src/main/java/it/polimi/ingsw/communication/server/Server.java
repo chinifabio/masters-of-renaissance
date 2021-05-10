@@ -44,7 +44,7 @@ public class Server implements Runnable{
 
         System.out.println("Server ready");
 
-        while(true)  {
+        while (true) {
             try {
                 VirtualSocket sock = new VirtualSocket(serverSocket.accept());
                 new Thread(sock).start();

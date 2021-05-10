@@ -2,6 +2,10 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.*;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
+import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Player;
@@ -17,6 +21,8 @@ import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -32,8 +38,11 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class EffectTest {
 
+    /**
+     *
+     */
     @Test
-    void addProduction() throws IllegalTypeInProduction {
+    void addProductionEffect() throws IllegalTypeInProduction {
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -57,7 +66,7 @@ public class EffectTest {
      * This test activates a LeaderCard that creates a depot and check its ResourceType
      */
     @Test
-    void addDepot() {
+    void addDepotEffect() {
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -114,6 +123,9 @@ public class EffectTest {
         assertNotEquals(pre,match.viewDevSetup().get(0));
     }
 
+    /**
+     *
+     */
     @Test
     void moveTwoEffect() {
         SingleplayerMatch match = new SingleplayerMatch();
@@ -126,13 +138,48 @@ public class EffectTest {
     }
 
     //TODO adjust when buyDevCard will works
+
+    /**
+     *
+     */
     @Test
-    void addDiscountEffect(){
+    void addDiscountEffect() throws IllegalTypeInProduction {
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
         LeaderCard c = new LeaderCard("000", new AddDiscountEffect(ResourceType.COIN), 1, req);
+
+        Player player1 = new Player("pino",false);
+
+        assertTrue(player1.test_getDiscount().isEmpty());
+        c.useEffect(player1);
+        assertEquals(Arrays.asList(ResourceBuilder.buildCoin()),player1.test_getDiscount());
+    }
+
+    @RepeatedTest(10)
+    void shuffleMoveOne() throws EmptyDeckException {
+        SingleplayerMatch match = new SingleplayerMatch();
+        SoloActionToken token = new SoloActionToken("505", new ShuffleMoveOneEffect());
+
+        assertEquals(7,match.test_getSoloDeck().getNumberOfCards());
+
+        SoloActionToken[] array = new SoloActionToken[7];
+        for( int i=0 ; i<7 ; i++ ) {
+            array[i] = match.test_getSoloDeck().getCards().get(i);
+        }
+        match.test_getSoloDeck().useAndDiscard().useEffect(match);
+        match.test_getSoloDeck().useAndDiscard().useEffect(match);
+        match.test_getSoloDeck().useAndDiscard().useEffect(match);
+        int pos = match.test_getLorenzoPosition();
+        token.useEffect(match);
+        assertEquals(7,match.test_getSoloDeck().getNumberOfCards());
+        int flag=0;
+        for( int i=0 ; i<7 ; i++ ) {
+            if(array[i].equals(match.test_getSoloDeck().getCards().get(i))) flag++;
+        }
+        assertNotEquals(7,flag);
+        assertEquals(pos+1,match.test_getLorenzoPosition());
     }
 }

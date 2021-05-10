@@ -4,7 +4,6 @@ package it.polimi.ingsw.personalboardTests;
 import static it.polimi.ingsw.model.resource.ResourceBuilder.buildStone;
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.communication.packet.commands.Command;
 import it.polimi.ingsw.communication.packet.commands.SetNumberCommand;
 import it.polimi.ingsw.communication.server.ClientController;
 import it.polimi.ingsw.model.Model;
@@ -18,11 +17,17 @@ import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
+import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
+import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
+import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
+import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayerAction;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
@@ -286,10 +291,9 @@ public class PersonalBoardTest {
      * This test checks every method that involve production.
      */
     @Test
-    void Production() {
-        assertDoesNotThrow(()->{
+    void Production() throws IllegalTypeInProduction {
+        assertDoesNotThrow(()-> {
             Player player = new Player("gino", false);
-            PersonalBoard personalBoard = new PersonalBoard(player);
 
             List<Requisite> req = new ArrayList<>();
             Resource twoCoin = ResourceBuilder.buildCoin(2);
@@ -354,6 +358,54 @@ public class PersonalBoardTest {
         });
     }
 
+    /**
+     * This test create a personalBoard and moves the player on its faith track.
+     */
+    @Test
+    void FaithTrackMoves() throws IllegalTypeInProduction, EndGameException {
+        Resource first = ResourceBuilder.buildFaithPoint(1);
+        Resource ten = ResourceBuilder.buildFaithPoint(10);
+
+        Player player1 = new Player("gino",false);
+
+        PersonalBoard personalBoard = new PersonalBoard(player1);
+
+        Player player2 = new Player("gino",false);
+
+        Match pm = new MultiplayerMatch(2);
+        pm.playerJoin(player2);
+        pm.playerJoin(player1);
+
+        assertEquals(0,personalBoard.FaithMarkerPosition());
+        personalBoard.moveFaithMarker(first.amount(), pm);
+
+        assertEquals(1,personalBoard.FaithMarkerPosition());
+        personalBoard.moveFaithMarker(first.amount(), pm);
+
+        assertEquals(2,personalBoard.FaithMarkerPosition());
+        personalBoard.moveFaithMarker(ten.amount(), pm);
+
+        assertEquals(12,personalBoard.FaithMarkerPosition());
+        personalBoard.moveFaithMarker(ten.amount(), pm);
+
+        assertEquals(22,personalBoard.FaithMarkerPosition());
+
+        try{
+            personalBoard.moveFaithMarker(ten.amount(), pm);
+            fail();
+        }
+        catch (EndGameException e){ }
+
+
+        //List<Requisite> LCreq = new ArrayList<>(Arrays.asList(new ResourceRequisite(ResourceBuilder.buildCoin())));
+        //Production extraProd = new UnknownProduction(Arrays.asList(ResourceBuilder.buildUnknown()), Arrays.asList(ResourceBuilder.buildUnknown(), ResourceBuilder.buildFaithPoint()));
+        //LeaderCard card = new LeaderCard("175", new AddExtraProductionEffect(extraProd), 5, LCreq);
+
+    }
+
+    /**
+     *
+     */
     @Test
     public void countsDevCardsPoints() {
 

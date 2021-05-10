@@ -521,4 +521,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     public String test_getState() {
         return this.playerState.toString();
     }
+
+    //for testing
+    public LeaderCard test_getLeader(int x){ return this.personalBoard.test_getLeader(x); }
 }

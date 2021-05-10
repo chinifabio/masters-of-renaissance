@@ -43,12 +43,14 @@ public class DeckTest {
 
 
         DevCard c1 = new DevCard(ID, new AddProductionEffect(null), 3, LevelDevCard.LEVEL3, ColorDevCard.BLUE,requisite);
+        DevCard c3 = new DevCard("100", new AddProductionEffect(null), 3, LevelDevCard.LEVEL3, ColorDevCard.BLUE,requisite);;
         LeaderCard c2 = new LeaderCard(ID1, new AddProductionEffect(null),6,requisite);
         SoloActionToken token = new SoloActionToken(ID2, new AddProductionEffect(null));
 
         assertEquals(ID,c1.getCardID());
         assertEquals(ID1,c2.getCardID());
         assertEquals(ID2,token.getCardID());
+        assertNotEquals(c3, c1);
     }
 
     /**
@@ -497,9 +499,9 @@ public class DeckTest {
         }
 
         assertEquals(Card1,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.GREEN).getCardID());
-        assertEquals(Card2,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.YELLOW).getCardID());
+        assertEquals(Card2,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.PURPLE).getCardID());
         assertEquals(Card3,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.BLUE).getCardID());
-        assertEquals(Card4,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.PURPLE).getCardID());
+        assertEquals(Card4,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.YELLOW).getCardID());
     }
 
     @Test

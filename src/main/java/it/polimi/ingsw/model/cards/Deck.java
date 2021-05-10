@@ -82,7 +82,7 @@ public class Deck<T extends Card>{
     }
 
     /**
-     * This method return the first card of the deck and thann add it to the discarded cards
+     * This method return the first card of the deck and then add it to the discarded cards
      * @throws EmptyDeckException if the deck is empty.
      */
     public T useAndDiscard() throws EmptyDeckException {

@@ -316,8 +316,8 @@ public class PersonalBoard {
      * @throws NegativeResourcesDepotException if the Depot "from" hasn't enough resources to move
      * @throws UnobtainableResourceException if the Player can't receive that Resource
      */
-    public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource resource) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException {
-        warehouse.moveBetweenDepot(from,to, resource);
+    public boolean moveResourceDepot(DepotSlot from, DepotSlot to, Resource resource) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException {
+        return warehouse.moveBetweenDepot(from,to, resource);
     }
 
     /**
@@ -427,4 +427,6 @@ public class PersonalBoard {
     public Map<ProductionID, Production> test_getProduction() {
         return this.warehouse.test_getProduction();
     }
+
+    public LeaderCard test_getLeader(int x) { return this.leaderDeck.getCards().get(x); }
 }

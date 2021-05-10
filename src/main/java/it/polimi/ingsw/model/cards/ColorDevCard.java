@@ -6,7 +6,7 @@ import it.polimi.ingsw.TextColors;
  * This enumeration indicates the colors of the DevCards
  */
 public enum ColorDevCard {
-    GREEN, YELLOW, BLUE, PURPLE;
+    GREEN, PURPLE, BLUE, YELLOW;
 
     /**
      * Returns the name of this enum constant, as contained in the
