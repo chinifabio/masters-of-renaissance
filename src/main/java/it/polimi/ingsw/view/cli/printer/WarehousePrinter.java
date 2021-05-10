@@ -3,11 +3,10 @@ package it.polimi.ingsw.view.cli.printer;
 import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceType;
-import it.polimi.ingsw.view.litemodel.LiteDepot;
-import it.polimi.ingsw.view.litemodel.LiteModel;
-import it.polimi.ingsw.view.litemodel.LiteResource;
+import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
+import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.litemodel.LiteResource;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -63,7 +62,7 @@ public class WarehousePrinter {
         for (int i = 1; i < 4; i++) {
             warehouse[i][0] = "║";
             for (int r = 1; r < MAX_HORIZ - 1; r++) {
-                warehouse[i][r] = " ";
+                warehouse[i][r] = "─";
             }
             warehouse[i][MAX_HORIZ - 1] = "║";
         }
@@ -79,6 +78,7 @@ public class WarehousePrinter {
         for (int depot = 0; depot < 3; depot++) {
             warehouse[initR][initC] = "[";
             for (LiteResource resource : depots.get(depot).getResourcesInside()) {
+                warehouse[initR][initC+1] = " ";
                 for (int i = initC+2; i < (initC+2) + (resource.getAmount() * 2); i++) {
                     if (initR != 2) {
                         if (i % 2 == 0) {

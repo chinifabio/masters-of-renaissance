@@ -5,7 +5,7 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.Command;
 import it.polimi.ingsw.communication.packet.commands.EndTurnCommand;
-import it.polimi.ingsw.view.litemodel.LiteModel;
+import it.polimi.ingsw.litemodel.LiteModel;
 
 import java.util.Scanner;
 

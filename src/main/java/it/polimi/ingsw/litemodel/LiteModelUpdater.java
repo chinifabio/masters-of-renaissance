@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.litemodel;
+package it.polimi.ingsw.litemodel;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
