@@ -79,10 +79,10 @@ public class MainActionDonePlayerState extends PlayerState {
         }
 
         try {
-            this.context.personalBoard.moveFaithMarker(1, this.context.model.getMatch());
+            this.context.personalBoard.moveFaithMarker(1, this.context.match);
         } catch (EndGameException e) {
 
-            this.context.model.getMatch().startEndGameLogic();                                      // stop the game when the last player end his turn
+            this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
             this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
             return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
 
@@ -94,13 +94,12 @@ public class MainActionDonePlayerState extends PlayerState {
     /**
      * This method ends the turn of the Player
      * @return true if the turn is correctly ended
-     * @throws PlayerStateException if the Player can't do this action
      */
     @Override
     public Packet endThisTurn() {
-        this.context.personalBoard.flushBufferDepot(this.context.model.getMatch());
+        this.context.personalBoard.flushBufferDepot(this.context.match);
         this.context.setState(new NotHisTurnPlayerState(this.context));
-        this.context.model.getMatch().endMyTurn();
+        this.context.match.endMyTurn();
         return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "your turn is ended");
     }
 }

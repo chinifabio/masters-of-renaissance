@@ -17,7 +17,6 @@ import it.polimi.ingsw.model.player.PlayerAction;
         @JsonSubTypes.Type(name = "BuyDevCard", value = BuyDevCardCommand.class),
         @JsonSubTypes.Type(name = "DiscardLeader", value = DiscardLeaderCommand.class),
         @JsonSubTypes.Type(name = "PaintMarble", value = PaintMarbleCommand.class),
-        @JsonSubTypes.Type(name = "SetNumber", value = SetNumberCommand.class),
         @JsonSubTypes.Type(name = "UseTray", value = UseMarketTrayCommand.class),
 })
 public abstract class Command {

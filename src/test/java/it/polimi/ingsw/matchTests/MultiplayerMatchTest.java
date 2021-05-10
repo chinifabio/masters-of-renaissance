@@ -1,18 +1,16 @@
 package it.polimi.ingsw.matchTests;
 
 import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.commands.Command;
-import it.polimi.ingsw.communication.packet.commands.SetNumberCommand;
-import it.polimi.ingsw.communication.server.ClientController;
-import it.polimi.ingsw.model.Model;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
+import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerAction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -28,27 +26,32 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MultiplayerMatchTest {
 
-    private Model model;
-    private Match multiplayer;
+    private Match multiplayer = new MultiplayerMatch(4);
 
-    ClientController pino = new ClientController(null, "pino");
-    ClientController gino = new ClientController(null, "gino");
-    ClientController dino = new ClientController(null, "dino");
-    ClientController tino = new ClientController(null, "tino");
+    Player pino;
+    Player gino;
+    Player dino;
+    Player tino;
 
     List<Player> order = new ArrayList<>();
 
-    @BeforeEach
-    public void initializeMatch() {
-        model = new Model();
-        assertDoesNotThrow(()->model.start(pino));
-        model.handleClientCommand(pino, new SetNumberCommand(4));
-        assertTrue(model.connectController(gino));
-        assertTrue(model.connectController(dino));
-        assertTrue(model.connectController(tino));
+    VirtualView view = new VirtualView();
 
-        assertNotNull(model.getMatch());
-        this.multiplayer = model.getMatch();
+    @BeforeEach
+    public void initializeMatch() throws IllegalTypeInProduction {
+        pino = new Player("pino", multiplayer, view);
+        assertTrue(multiplayer.playerJoin(pino));
+
+        gino = new Player("gino", multiplayer, view);
+        assertTrue(multiplayer.playerJoin(gino));
+
+        dino = new Player("dino", multiplayer, view);
+        assertTrue(multiplayer.playerJoin(dino));
+
+        tino = new Player("tino", multiplayer, view);
+        assertTrue(multiplayer.playerJoin(tino));
+
+        assertTrue(multiplayer.startGame());
 
         // initializing player section
         /*

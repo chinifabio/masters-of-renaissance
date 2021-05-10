@@ -75,7 +75,7 @@ public interface PlayerToMatch {
      * Tells to the match the end of the player turn;
      * @return true if the player ended is turn
      */
-    void endMyTurn() throws PlayerStateException;
+    void endMyTurn();
 
     /**
      * This method return a Leader Card Deck

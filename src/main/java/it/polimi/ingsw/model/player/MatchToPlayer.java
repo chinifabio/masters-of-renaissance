@@ -54,8 +54,7 @@ public interface MatchToPlayer {
 
     /**
      * Starts the turn of the player;
-     * @return true if the turn starts correctly
      * @throws PlayerStateException if the Player can't do this action
      */
-    boolean startHisTurn() throws PlayerStateException;
+    void startHisTurn() throws PlayerStateException;
 }

@@ -1,13 +1,15 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.Command;
-import it.polimi.ingsw.communication.server.ClientController;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.server.Controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,12 +17,7 @@ import java.util.Map;
 /**
  * The model class, contains all the data and logic of the game
  */
-public class Model {
-    /**
-     * The size of the match -> -1 implies that no player set the number
-     */
-    private int size = -1;
-
+public class Model implements Runnable{
     /**
      * The instance of the game in the model
      */
@@ -29,40 +26,42 @@ public class Model {
     /**
      * This attribute map all the controller to his player in the model
      */
-    private final Map<ClientController, Player> map = new HashMap<>();
+    private final Map<Controller, Player> players = new HashMap<>();
 
     /**
-     * Save the entry value of the player creator to then ad it when he create the match.
-     * When the creator invokes the start method we can't add immediately the Player instance to the match because it doesn't exists
+     * The virtual view used to notify all changes to clients
      */
-    private Player creatorPlayer = null;
+    public final VirtualView virtualView = new VirtualView();
 
     /**
-     * This attribute flag the start of the model, so you can known if the match exists
+     * Queue for waiting the initialization of the match
      */
-    private boolean startedFlag = false;
+    private final Object initializingQueue = new Object();
 
     /**
-     * Create a model from a creator player
-     * @param creator the creator of the game
-     * @throws IllegalTypeInProduction when something goes wrong in the constructor of the creator player
+     * Queue for wait all the player is waiting
      */
-    public void start(ClientController creator) throws IllegalTypeInProduction {
-        // creating the player instance
-        Player newPlayer;
-        try {
-            newPlayer = new Player(creator.nickname, true).linkModel(this);
-        } catch (IllegalTypeInProduction illegalTypeInProduction) {
-            System.out.println("error while creating player");
-            return;
-        }
+    public final Object startGameQueue = new Object();
 
-        // saving the entry and linking the model
-        this.map.put(creator, newPlayer);
-        this.creatorPlayer = newPlayer;
+    /**
+     * Queue for detaching model from server to create new model matches
+     */
+    public final Object detachModel = new Object();
 
-        creator.linkModel(this);
-    }
+    /**
+     * Players ready for start (waiting for start)
+     */
+    private int readyPlayer = 0;
+
+    /**
+     * selected game size of the match
+     */
+    private int gameSize = -1;
+
+    /**
+     * initialization flag
+     */
+    private boolean init = false;
 
     /**
      * This method execute the command passed on the mapped player of the passed client
@@ -70,9 +69,8 @@ public class Model {
      * @param command the command to execute
      * @return the packet containing the result of the command to send back to the client
      */
-    public synchronized Packet handleClientCommand(ClientController client, Command command) {
-        //System.out.println(client.nickname + " " + command);
-        return command.execute(this.map.get(client));
+    public synchronized Packet handleClientCommand(Controller client, Command command) {
+        return command.execute(this.players.get(client));
     }
 
     /**
@@ -80,59 +78,96 @@ public class Model {
      * @param client the new client
      * @return the succeed of the operation
      */
-    public synchronized boolean connectController(ClientController client) {
-        if (this.map.containsKey(client) || !startedFlag) return false;
-
-        Player newPlayer;
-        try {
-            newPlayer = new Player(client.nickname, false).linkModel(this);
-        } catch (IllegalTypeInProduction illegalTypeInProduction) {
-            System.out.println("error while creating player");
-            return false;
+    public Packet login(Controller client, String nickname) {
+        if (!this.init) {
+            this.init = true;
+            return new Packet(HeaderTypes.SET_PLAYERS_NUMBER, ChannelTypes.PLAYER_ACTIONS, "You have to create the Lobby!");
         }
-        this.map.put(client, newPlayer);
-        client.linkModel(this);
 
-        return this.match.playerJoin(newPlayer);
+        if (this.players.containsKey(client)) return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "The Client Already Exists");
+
+        try {
+            Player p = new Player(nickname, this.match, this.virtualView);
+
+            this.players.put(client, p);        // save the player
+            return this.match.playerJoin(p) ?   // add the player to the match
+                    new Packet(HeaderTypes.JOIN_LOBBY, ChannelTypes.PLAYER_ACTIONS, "Lobby joined, wait for start..."):
+                    new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "can't join the player");
+
+        } catch (IllegalTypeInProduction e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "Error while creating player, sorry :(");
+        }
     }
 
-    /**
-     * This method create a match of a passed number of player
-     * @param number the number of player of the new match
-     */
-    public void createMatchOf(int number) {
-        this.match = (number == 1) ?
+    public void createMatch(int size) {
+        this.gameSize = size;
+        this.match = size == 1 ?
                 new SingleplayerMatch():
-                new MultiplayerMatch(number);
+                new MultiplayerMatch(size);
 
-        this.match.playerJoin(creatorPlayer);
+        synchronized (this.initializingQueue) {
+            this.initializingQueue.notifyAll();
+        }
+    }
 
-        // flag the start of the model
-        this.startedFlag = true;
-        this.size = number;
+    public boolean initialized() {
+        return this.init;
+    }
+
+    public Packet readyForStart(Controller controller) {
+        Player p = this.players.get(controller);
+        synchronized (p.waitForWakeUp){
+            try {
+                this.readyPlayer ++;
+                synchronized (this.startGameQueue){
+                    this.startGameQueue.notifyAll();
+                }
+                p.waitForWakeUp.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return new Packet(HeaderTypes.START_TURN, ChannelTypes.PLAYER_ACTIONS, "Turn Started");
     }
 
     /**
-     * Return the match instance
-     * @return the match instance
+     * Wait the notify and check if match can starts, then starts the match
      */
-    public Match getMatch() {
-        return this.match;
+    @Override
+    public void run() {
+        synchronized (this.startGameQueue) {
+            while (this.readyPlayer != this.gameSize) {
+                try {
+                    System.out.println("model: " + readyPlayer + " " + gameSize);
+                    this.startGameQueue.wait();
+                } catch (InterruptedException e) {
+                    System.out.println("oooops");
+                }
+            }
+
+            System.out.println("starting game");
+            this.match.startGame();
+        }
+
+        synchronized (this.detachModel) {
+            this.detachModel.notifyAll();
+        }
     }
 
-    /**
-     * return the size of the model
-     * @return the size. -1 implies that no player set the number
-     */
-    public int getSize() {
-        return size;
-    }
-
-    /**
-     * Return the available seat in the game. -1 implies that no player set the match size
-     * @return the available seat in the game
-     */
     public int availableSeats() {
-        return this.startedFlag ? size - this.match.playerInGame() : -1;
+        if (!init) return -1;
+
+        if (this.match == null) {
+            synchronized (this.initializingQueue) {
+                try {
+                    this.initializingQueue.wait();
+                } catch (InterruptedException e) {
+                    System.out.println("model wait error");
+                }
+            }
+        }
+
+        return this.match.gameSize - this.match.playerInGame();
     }
 }

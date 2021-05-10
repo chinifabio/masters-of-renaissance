@@ -57,4 +57,13 @@ public class Packet {
     public String getBody() {
         return body;
     }
+
+    /**
+     * Returns a string representation of the object.
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return "{" + header + "; " + channel + "; " + body + "}";
+    }
 }

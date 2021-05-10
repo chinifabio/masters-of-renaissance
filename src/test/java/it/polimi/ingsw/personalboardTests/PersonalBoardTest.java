@@ -4,9 +4,7 @@ package it.polimi.ingsw.personalboardTests;
 import static it.polimi.ingsw.model.resource.ResourceBuilder.buildStone;
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.communication.packet.commands.SetNumberCommand;
-import it.polimi.ingsw.communication.server.ClientController;
-import it.polimi.ingsw.model.Model;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.AddDepotEffect;
 import it.polimi.ingsw.model.cards.effects.AddExtraProductionEffect;
@@ -29,7 +27,6 @@ import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.PlayerAction;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
@@ -56,18 +53,21 @@ import java.util.*;
  */
 public class PersonalBoardTest {
 
-    Model model = new Model();
-    Match game;
+    Match game = new MultiplayerMatch(2);
 
-    ClientController player1 = new ClientController(null, "lino");
-    ClientController player2 = new ClientController(null, "gino");
+    Player player1;
+    Player player2;
+
+    VirtualView view = new VirtualView();
 
     @BeforeEach
     public void initialization() {
-        assertDoesNotThrow(()->model.start(player1));
-        model.handleClientCommand(player1, new SetNumberCommand(2));
-        assertTrue(model.connectController(player2));
-        game = model.getMatch();
+        assertDoesNotThrow(()->player1 = new Player("gino", game, view));
+        assertTrue(game.playerJoin(player1));
+        assertDoesNotThrow(()->player2 = new Player("pino", game, view));
+        assertTrue(game.playerJoin(player2));
+
+        assertTrue(game.startGame());
 
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
@@ -99,9 +99,7 @@ public class PersonalBoardTest {
         DevCardSlot Left = DevCardSlot.LEFT;
         DevCardSlot Center = DevCardSlot.CENTER;
 
-        Player player =  new Player("gino",false);
-
-        PersonalBoard finalPersonalBoard = new PersonalBoard(player);
+        PersonalBoard finalPersonalBoard = new PersonalBoard(player1, null);
 
         assertDoesNotThrow(()->{
             if (finalPersonalBoard.addDevCard(Left, c1)) {
@@ -179,9 +177,7 @@ public class PersonalBoardTest {
         LeaderCard c1 = new LeaderCard(ID1, new AddExtraProductionEffect(p), 1, req);
         LeaderCard c2 = new LeaderCard(ID2, new AddExtraProductionEffect(p), 2, req);
 
-        Player player = new Player("gino", false);
-
-        PersonalBoard personalBoard =  new PersonalBoard(player);
+        PersonalBoard personalBoard =  new PersonalBoard(game.test_getCurrPlayer(), view);
 
         personalBoard.addLeaderCard(c1);
         try {
@@ -228,10 +224,7 @@ public class PersonalBoardTest {
         LeaderCard c1 = new LeaderCard(ID1, new AddProductionEffect(p), 1, req);
         LeaderCard c2 = new LeaderCard(ID2, new AddProductionEffect(p), 2, req);
 
-        Player player = new Player("gino", false);
-
-
-        PersonalBoard personalBoard = new PersonalBoard(player);
+        PersonalBoard personalBoard = new PersonalBoard(game.test_getCurrPlayer(), view);
 
         assertNotNull(personalBoard);
         for (LeaderCard leaderCard : Arrays.asList(c1, c2)) {
@@ -271,10 +264,7 @@ public class PersonalBoardTest {
      */
     @Test
     void Resources() throws IllegalTypeInProduction, NegativeResourcesDepotException, UnobtainableResourceException, WrongDepotException {
-
-        Player player = new Player("gino", false);
-
-        PersonalBoard personalBoard = new PersonalBoard(player);
+        PersonalBoard personalBoard = new PersonalBoard(player1, null);
 
         Resource twoStone = ResourceBuilder.buildStone(2);
         Resource oneStone = ResourceBuilder.buildStone(1);
@@ -291,9 +281,9 @@ public class PersonalBoardTest {
      * This test checks every method that involve production.
      */
     @Test
-    void Production() throws IllegalTypeInProduction {
-        assertDoesNotThrow(()-> {
-            Player player = new Player("gino", false);
+    void Production() {
+        assertDoesNotThrow(()->{
+            Player player = this.game.test_getCurrPlayer();
 
             List<Requisite> req = new ArrayList<>();
             Resource twoCoin = ResourceBuilder.buildCoin(2);
@@ -408,14 +398,7 @@ public class PersonalBoardTest {
      */
     @Test
     public void countsDevCardsPoints() {
-
-        //PersonalBoard board = game.test_getCurrPlayer().test_getPB();
-        PersonalBoard board = null;
-        try {
-            board = new PersonalBoard(new Player("aaa", false));
-        } catch (IllegalTypeInProduction illegalTypeInProduction) {
-            fail();
-        }
+        PersonalBoard board = player1.test_getPB();
 
         DevCard devCard1 = new DevCard("DC1", null, 3, LevelDevCard.LEVEL1, ColorDevCard.BLUE,null);
         DevCard devCard2 = new DevCard("DC2", null, 5, LevelDevCard.LEVEL1, ColorDevCard.GREEN,null);
@@ -463,12 +446,7 @@ public class PersonalBoardTest {
     public void countingLeaderPoints()  {
 
         assertDoesNotThrow(()->{
-            PersonalBoard board = null;
-            try {
-                board = new PersonalBoard(new Player("adfadfad", false));
-            } catch (IllegalTypeInProduction illegalTypeInProduction) {
-                fail();
-            }
+            PersonalBoard board = player1.test_getPB();
 
 
             Effect effect = new AddDepotEffect(ResourceType.STONE);

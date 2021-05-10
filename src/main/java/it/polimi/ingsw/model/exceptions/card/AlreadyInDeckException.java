@@ -9,15 +9,16 @@ public class AlreadyInDeckException extends Exception{
     /**
      * the required resource list of wrong production
      */
-    private final Card alredy;
+    private final Card already;
 
     /**
      * Constructs a new exception with {@code null} as its detail message.
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      */
-    public AlreadyInDeckException(Card alredy) {
-        this.alredy = alredy;
+    public AlreadyInDeckException(Card already) {
+        super(TextColors.colorText(RED_BRIGHT, "This card is already in the Deck: " + already.getCardID()));
+        this.already = already;
     }
 
     /**
@@ -26,6 +27,6 @@ public class AlreadyInDeckException extends Exception{
      */
     @Override
     public void printStackTrace() {
-        System.out.println(TextColors.colorText(RED_BRIGHT, "This card is already in the Deck: " + this.alredy.getCardID()));
+        System.out.println(TextColors.colorText(RED_BRIGHT, "This card is already in the Deck: " + this.already.getCardID()));
     }
 }
