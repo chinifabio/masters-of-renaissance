@@ -11,6 +11,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(name = "CardReq", value = LiteCardRequirements.class),
         @JsonSubTypes.Type(name = "ColorCardReq", value = LiteColorCardRequirements.class)
 })
-public abstract class LiteRequirements {
+public abstract class LiteRequirementsType {
 
 }

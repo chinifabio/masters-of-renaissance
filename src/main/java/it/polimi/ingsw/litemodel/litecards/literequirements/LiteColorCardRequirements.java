@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 
-public class LiteColorCardRequirements extends LiteRequirements{
+public class LiteColorCardRequirements extends LiteRequirementsType {
 
     private ColorDevCard color;
 

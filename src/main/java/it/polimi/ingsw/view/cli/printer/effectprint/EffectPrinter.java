@@ -4,7 +4,7 @@ public interface EffectPrinter {
 
     int HEIGHT = 2;
 
-    int WIDTH = 11;
+    int WIDTH = 12;
 
     String[][] printEffect();
 

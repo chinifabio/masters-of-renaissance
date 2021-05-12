@@ -3,16 +3,16 @@ package it.polimi.ingsw.litemodel.litecards.literequirements;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class LiteResourceRequirements extends LiteRequirements{
+public class LiteResourceRequirements extends LiteRequirementsType {
 
-    private LiteRequisite resource;
+    private LiteResourceTypeResquisite resource;
 
     @JsonCreator
-    public LiteResourceRequirements(@JsonProperty("resource") LiteRequisite resource) {
+    public LiteResourceRequirements(@JsonProperty("resource") LiteResourceTypeResquisite resource) {
         this.resource = resource;
     }
 
-    public LiteRequisite getResource() {
+    public LiteResourceTypeResquisite getResource() {
         return resource;
     }
 }

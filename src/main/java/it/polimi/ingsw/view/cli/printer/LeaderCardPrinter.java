@@ -58,7 +58,7 @@ public class LeaderCardPrinter {
             leaderCard[r][MAX_HORIZ - 1] = "║";
         }
 
-        leaderCard[MAX_VERT-3][MAX_HORIZ-6] = String.valueOf(toPrint.getVictoryPoints());
+        leaderCard[MAX_VERT-5][MAX_HORIZ-6] = String.valueOf(toPrint.getVictoryPoints());
         leaderCard[MAX_VERT-1][MAX_HORIZ-1] = "╝";
     }
 

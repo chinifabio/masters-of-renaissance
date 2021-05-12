@@ -5,15 +5,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.resource.ResourceType;
 
-public class LiteRequisite {
+public class LiteResourceTypeResquisite {
 
     private final ResourceType resourceType;
 
     private final int amount;
 
     @JsonCreator
-    public LiteRequisite(@JsonProperty("type") ResourceType resourceType,
-                         @JsonProperty("amount") int amount) {
+    public LiteResourceTypeResquisite(@JsonProperty("type") ResourceType resourceType,
+                                      @JsonProperty("amount") int amount) {
         this.resourceType = resourceType;
         this.amount = amount;
     }

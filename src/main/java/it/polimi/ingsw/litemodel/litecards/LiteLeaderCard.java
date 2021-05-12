@@ -2,7 +2,7 @@ package it.polimi.ingsw.litemodel.litecards;
 
 import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
-import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequirements;
+import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequirementsType;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public class LiteLeaderCard extends LiteCard {
 
     private final int victoryPoints;
 
-    private final List<LiteRequirements> requirements;
+    private final List<LiteRequirementsType> requirements;
 
     private final boolean activated;
 
@@ -19,7 +19,7 @@ public class LiteLeaderCard extends LiteCard {
     public LiteLeaderCard(@JsonProperty("cardID") String cardID,
                           @JsonProperty("effect") LiteEffect effect,
                           @JsonProperty("victoryPoint") int victoryPoints,
-                          @JsonProperty("requirements") List<LiteRequirements> requirements,
+                          @JsonProperty("requirements") List<LiteRequirementsType> requirements,
                           @JsonProperty("activated") boolean activated) {
         super(cardID, effect);
         this.victoryPoints = victoryPoints;
@@ -35,7 +35,7 @@ public class LiteLeaderCard extends LiteCard {
         return victoryPoints;
     }
 
-    public List<LiteRequirements> getRequirements() {
+    public List<LiteRequirementsType> getRequirements() {
         return requirements;
     }
 
