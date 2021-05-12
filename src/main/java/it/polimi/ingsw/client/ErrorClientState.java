@@ -1,7 +1,7 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.view.litemodel.LiteModel;
+import it.polimi.ingsw.litemodel.LiteModel;
 
 public class ErrorClientState extends ClientState {
     /**

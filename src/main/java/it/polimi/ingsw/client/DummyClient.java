@@ -1,8 +1,8 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.communication.VirtualSocket;
-import it.polimi.ingsw.view.litemodel.LiteModel;
-import it.polimi.ingsw.view.litemodel.LiteModelUpdater;
+import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.litemodel.LiteModelUpdater;
 
 import java.io.IOException;
 import java.net.Socket;

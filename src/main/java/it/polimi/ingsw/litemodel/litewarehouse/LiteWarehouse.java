@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.litemodel;
+package it.polimi.ingsw.litemodel.litewarehouse;
 
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 
@@ -16,4 +16,5 @@ public class LiteWarehouse {
     public LiteDepot getDepots(DepotSlot slot) {
         return this.depots.get(slot);
     }
+
 }

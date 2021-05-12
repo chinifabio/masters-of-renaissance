@@ -1,4 +1,6 @@
-package it.polimi.ingsw.view.litemodel;
+package it.polimi.ingsw.litemodel.litewarehouse;
+
+import it.polimi.ingsw.litemodel.LiteResource;
 
 import java.util.List;
 

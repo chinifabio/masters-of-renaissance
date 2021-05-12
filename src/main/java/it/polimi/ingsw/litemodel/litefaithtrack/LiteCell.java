@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.litemodel;
+package it.polimi.ingsw.litemodel.litefaithtrack;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

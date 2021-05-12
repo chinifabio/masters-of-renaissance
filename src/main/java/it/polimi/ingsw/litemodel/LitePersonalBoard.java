@@ -1,9 +1,11 @@
-package it.polimi.ingsw.view.litemodel;
+package it.polimi.ingsw.litemodel;
 
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
+import it.polimi.ingsw.litemodel.litefaithtrack.LiteFaithTrack;
+import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
+import it.polimi.ingsw.litemodel.litewarehouse.LiteWarehouse;
 
-import java.io.IOException;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class LitePersonalBoard {
     /**
      * Used to memorize dev cards and their position
      */
-    private Map<DevCardSlot, String> devCard = new EnumMap<>(DevCardSlot.class);
+    private final Map<DevCardSlot, String> devCard = new EnumMap<>(DevCardSlot.class);
 
     public void setLeader(List<String> cards) {
         // todo now use strings, then we will build the associated card in lite model
@@ -61,5 +63,13 @@ public class LitePersonalBoard {
 
     public void setDepot(DepotSlot slot, LiteDepot depot) {
         this.warehouse.setDepot(slot, depot);
+    }
+
+    public void flipPopeTile(String popeTile) {
+        this.track.flipPopeTile(popeTile);
+    }
+
+    public Map<String, Boolean> getPopeTiles(){
+        return this.track.getPopeTiles();
     }
 }

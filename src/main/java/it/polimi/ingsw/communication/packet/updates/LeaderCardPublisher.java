@@ -2,7 +2,7 @@ package it.polimi.ingsw.communication.packet.updates;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.view.litemodel.LiteModel;
+import it.polimi.ingsw.litemodel.LiteModel;
 
 import java.util.List;
 

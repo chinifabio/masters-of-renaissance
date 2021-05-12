@@ -2,9 +2,7 @@ package it.polimi.ingsw.communication.packet.updates;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.view.litemodel.LiteModel;
-
-import java.io.IOException;
+import it.polimi.ingsw.litemodel.LiteModel;
 
 public class BuildMePublisher extends Publisher {
     /**

@@ -1,6 +1,7 @@
-package it.polimi.ingsw.view.litemodel;
+package it.polimi.ingsw.litemodel;
 
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
+import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 public class LiteModel {
 
     private final Map<String, LitePersonalBoard> players = new HashMap<>();
+
     private String me;
 
     private List<String> tray;
@@ -65,8 +67,20 @@ public class LiteModel {
         return result;
     }
 
+    public synchronized Map<String, Map<String, Boolean>> getPopeTilesPlayer(){
+        Map <String, Map<String, Boolean>> result = new HashMap<>();
+        for (Map.Entry<String, LitePersonalBoard> entry : this.players.entrySet()){
+            result.put(entry.getKey(), entry.getValue().getPopeTiles());
+        }
+        return result;
+    }
+
     public synchronized void movePlayer(String nickname, int amount) {
         this.players.get(nickname).movePlayer(amount);
+    }
+
+    public synchronized void flipPopeTile(String nickname, String popeTile) {
+        this.players.get(nickname).flipPopeTile(popeTile);
     }
 
     public void setDepot(String nickname, DepotSlot slot, LiteDepot depot) {
