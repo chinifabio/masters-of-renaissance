@@ -6,7 +6,17 @@ import it.polimi.ingsw.TextColors;
  * This enumeration indicates the colors of the DevCards
  */
 public enum ColorDevCard {
-    GREEN, YELLOW, BLUE, PURPLE;
+    GREEN(0), YELLOW(1), BLUE(2), PURPLE(3);
+
+    private final int devSetupIndex;
+
+    ColorDevCard(int index) {
+        this.devSetupIndex = index;
+    }
+
+    public int getDevSetupIndex() {
+        return this.devSetupIndex;
+    }
 
     /**
      * Returns the name of this enum constant, as contained in the
@@ -17,4 +27,6 @@ public enum ColorDevCard {
     public String toString() {
         return TextColors.colorDevCard(this);
     }
+
+
 }

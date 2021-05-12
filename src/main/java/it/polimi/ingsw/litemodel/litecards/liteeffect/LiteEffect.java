@@ -10,7 +10,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(name = "AddDepot", value = LiteAddDepotEffect.class),
         @JsonSubTypes.Type(name = "AddDiscount", value = LiteAddDiscountEffect.class),
         @JsonSubTypes.Type(name = "WhiteMarble", value = LiteWhiteMarbleEffect.class),
-        @JsonSubTypes.Type(name = "AddExtraProduction", value = LiteAddProductionEffect.class)
+        @JsonSubTypes.Type(name = "AddExtraProduction", value = LiteAddProductionEffect.class),
+        @JsonSubTypes.Type(name = "AddProduction", value = LiteAddProductionEffect.class)
 })
 public abstract class LiteEffect {
     

@@ -7,13 +7,14 @@ import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 public class LeaderCardPrinter {
 
     private static final int MAX_VERT = 7; //rows.
     private static final int MAX_HORIZ = 12; //cols.
 
-    private List<LiteLeaderCard> leaderCards;
+    private final List<LiteLeaderCard> leaderCards;
 
     public LeaderCardPrinter() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -40,6 +41,7 @@ public class LeaderCardPrinter {
         for (int i = 4; i <8; i++){
             leaderCard[0][i] = "";
         }
+        assert toPrint != null;
         if (toPrint.getId().length() < 4) {
             leaderCard[0][4] = toPrint.getId();
             leaderCard[0][5] = "═";
@@ -55,13 +57,15 @@ public class LeaderCardPrinter {
             }
             leaderCard[r][MAX_HORIZ - 1] = "║";
         }
+
+        leaderCard[MAX_VERT-3][MAX_HORIZ-6] = String.valueOf(toPrint.getVictoryPoints());
         leaderCard[MAX_VERT-1][MAX_HORIZ-1] = "╝";
     }
 
-    public void printLeaderCard(){
+    public void printLeaderCard(String Leaderid){
         String[][] leaderCard = new String[MAX_VERT][MAX_HORIZ];
 
-        createLeaderCard(leaderCard, "LC10");
+        createLeaderCard(leaderCard, Leaderid);
         for (int r = 0; r < (MAX_VERT); r++) {
             System.out.println();
             for (int c = 0; c < (MAX_HORIZ); c++) {
@@ -73,8 +77,9 @@ public class LeaderCardPrinter {
 
     public static void main(String[] args) throws IOException {
         LeaderCardPrinter printer = new LeaderCardPrinter();
+        Random rd = new Random();
 
-        printer.printLeaderCard();
+        printer.printLeaderCard("LC"+rd.nextInt(16));
 
     }
 }

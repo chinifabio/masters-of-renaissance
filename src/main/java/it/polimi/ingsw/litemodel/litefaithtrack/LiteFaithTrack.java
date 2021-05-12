@@ -19,7 +19,7 @@ public class LiteFaithTrack {
     }
 
     public void movePlayer(int amount) {
-        this.playerPosition += amount;
+        this.playerPosition = amount;
     }
 
     public void flipPopeTile(String toFlip){
