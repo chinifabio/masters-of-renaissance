@@ -9,11 +9,12 @@ import java.util.List;
 
 public class LiteProduction {
 
+    @JsonIgnore
     private String type;
 
-    private List<LiteResourceTypeResquisite> required;
+    private final List<LiteResourceTypeResquisite> required;
 
-    private List<LiteResourceTypeResquisite> output;
+    private final List<LiteResourceTypeResquisite> output;
 
     @JsonCreator
     public LiteProduction(@JsonProperty("required") List<LiteResourceTypeResquisite> required, @JsonProperty("output") List<LiteResourceTypeResquisite> output) {

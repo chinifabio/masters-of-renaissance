@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.resource.ResourceType;
 
-public class LiteResourceTypeResquisite {
+public class LiteResourceTypeResquisite{
 
     private final ResourceType resourceType;
 

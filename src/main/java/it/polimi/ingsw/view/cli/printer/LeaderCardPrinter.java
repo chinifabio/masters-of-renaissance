@@ -7,7 +7,6 @@ import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 
 public class LeaderCardPrinter {
 
@@ -31,6 +30,7 @@ public class LeaderCardPrinter {
                 toPrint = card;
             }
         }
+        assert toPrint != null;
 
         leaderCard[0][0] = "╔";
         leaderCard[MAX_VERT-1][0] = "╚";
@@ -41,7 +41,6 @@ public class LeaderCardPrinter {
         for (int i = 4; i <8; i++){
             leaderCard[0][i] = "";
         }
-        assert toPrint != null;
         if (toPrint.getId().length() < 4) {
             leaderCard[0][4] = toPrint.getId();
             leaderCard[0][5] = "═";
@@ -58,7 +57,8 @@ public class LeaderCardPrinter {
             leaderCard[r][MAX_HORIZ - 1] = "║";
         }
 
-        leaderCard[MAX_VERT-5][MAX_HORIZ-6] = String.valueOf(toPrint.getVictoryPoints());
+        toPrint.getEffect().getPrinter().printEffect(leaderCard);
+        leaderCard[MAX_VERT-5][MAX_HORIZ-7] = String.valueOf(toPrint.getVictoryPoints());
         leaderCard[MAX_VERT-1][MAX_HORIZ-1] = "╝";
     }
 
@@ -77,9 +77,11 @@ public class LeaderCardPrinter {
 
     public static void main(String[] args) throws IOException {
         LeaderCardPrinter printer = new LeaderCardPrinter();
-        Random rd = new Random();
 
-        printer.printLeaderCard("LC"+rd.nextInt(16));
+        for (int i = 1; i < 17; i++) {
+            printer.printLeaderCard("LC" + i);
+        }
 
     }
+
 }
