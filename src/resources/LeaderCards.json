@@ -187,7 +187,7 @@
       "marble": {
         "type": "Normal",
         "color": "YELLOW",
-        "toResource": "COIN"
+        "toResource": "SERVANT"
       }
     },
     "victoryPoint": 5,

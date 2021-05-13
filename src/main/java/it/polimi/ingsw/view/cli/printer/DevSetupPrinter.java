@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DevSetupPrinter {
+    //CREARE UNA MATRICE DI STRINGHE GRANDE QUANTO 12 MATRICI DI STRINGHE DELLE DEVCARD E ORDINARLE
 
     List<List<LiteDevCard>> devSetup = new ArrayList<>();;
 

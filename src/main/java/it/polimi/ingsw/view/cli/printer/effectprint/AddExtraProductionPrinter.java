@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.cli.printer.effectprint;
 
 import it.polimi.ingsw.TextColors;
-import it.polimi.ingsw.litemodel.litecards.literequirements.LiteResourceTypeResquisite;
+import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.model.resource.ResourceType;
 
@@ -31,19 +31,19 @@ public class AddExtraProductionPrinter implements EffectPrinter{
             leaderCard[3][i] = "-";
         }
         int initcol = 1;
-        for (LiteResourceTypeResquisite type : production.getRequired()){
+        for (LiteResource type : production.getRequired()){
            leaderCard[4][initcol] = (String.valueOf(type.getAmount()));
            initcol++;
-           leaderCard[4][initcol] = (colors.get(type.getResourceType()));
+           leaderCard[4][initcol] = (colors.get(type.getType()));
            initcol++;
         }
         leaderCard[4][initcol] = "}";
         initcol++;
         initcol++;
-        for (LiteResourceTypeResquisite type : production.getOutput()){
+        for (LiteResource type : production.getOutput()){
             leaderCard[4][initcol] = (String.valueOf(type.getAmount()));
             initcol++;
-            leaderCard[4][initcol] = (colors.get(type.getResourceType()));
+            leaderCard[4][initcol] = (colors.get(type.getType()));
             initcol++;
             initcol++;
         }

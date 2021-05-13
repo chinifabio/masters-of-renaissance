@@ -10,8 +10,8 @@ import java.util.List;
 
 public class LeaderCardPrinter {
 
-    private static final int MAX_VERT = 7; //rows.
-    private static final int MAX_HORIZ = 12; //cols.
+    private static final int HEIGHT = 7; //rows.
+    private static final int WIDTH = 12; //cols.
 
     private final List<LiteLeaderCard> leaderCards;
 
@@ -33,10 +33,10 @@ public class LeaderCardPrinter {
         assert toPrint != null;
 
         leaderCard[0][0] = "╔";
-        leaderCard[MAX_VERT-1][0] = "╚";
-        for (int i = 1; i< MAX_HORIZ -1; i++){
+        leaderCard[HEIGHT -1][0] = "╚";
+        for (int i = 1; i< WIDTH -1; i++){
             leaderCard[0][i] = "═";
-            leaderCard[MAX_VERT-1][i] = "═";
+            leaderCard[HEIGHT -1][i] = "═";
         }
         for (int i = 4; i <8; i++){
             leaderCard[0][i] = "";
@@ -48,27 +48,27 @@ public class LeaderCardPrinter {
             leaderCard[0][4] = toPrint.getId();
         }
 
-        leaderCard[0][MAX_HORIZ-1] = "╗";
-        for (int r = 1; r < MAX_VERT-1; r++){
+        leaderCard[0][WIDTH -1] = "╗";
+        for (int r = 1; r < HEIGHT -1; r++){
            leaderCard[r][0] = ("║");
-            for (int c = 1; c < MAX_HORIZ -1; c++){
+            for (int c = 1; c < WIDTH -1; c++){
                 leaderCard[r][c] = " ";
             }
-            leaderCard[r][MAX_HORIZ - 1] = "║";
+            leaderCard[r][WIDTH - 1] = "║";
         }
 
         toPrint.getEffect().getPrinter().printEffect(leaderCard);
-        leaderCard[MAX_VERT-5][MAX_HORIZ-7] = String.valueOf(toPrint.getVictoryPoints());
-        leaderCard[MAX_VERT-1][MAX_HORIZ-1] = "╝";
+        leaderCard[HEIGHT -5][WIDTH -7] = String.valueOf(toPrint.getVictoryPoints());
+        leaderCard[HEIGHT -1][WIDTH -1] = "╝";
     }
 
     public void printLeaderCard(String Leaderid){
-        String[][] leaderCard = new String[MAX_VERT][MAX_HORIZ];
+        String[][] leaderCard = new String[HEIGHT][WIDTH];
 
         createLeaderCard(leaderCard, Leaderid);
-        for (int r = 0; r < (MAX_VERT); r++) {
+        for (int r = 0; r < (HEIGHT); r++) {
             System.out.println();
-            for (int c = 0; c < (MAX_HORIZ); c++) {
+            for (int c = 0; c < (WIDTH); c++) {
                 System.out.print(leaderCard[r][c]);
             }
         }
