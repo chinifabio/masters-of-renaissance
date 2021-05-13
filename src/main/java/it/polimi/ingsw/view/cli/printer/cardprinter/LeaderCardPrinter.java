@@ -1,7 +1,8 @@
-package it.polimi.ingsw.view.cli.printer;
+package it.polimi.ingsw.view.cli.printer.cardprinter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 
 import java.io.File;
@@ -32,34 +33,35 @@ public class LeaderCardPrinter {
         }
         assert toPrint != null;
 
-        leaderCard[0][0] = "╔";
-        leaderCard[HEIGHT -1][0] = "╚";
+        leaderCard[0][0] = TextColors.colorText(TextColors.CYAN,"╔");
+        leaderCard[HEIGHT -1][0] = TextColors.colorText(TextColors.CYAN,"╚");
         for (int i = 1; i< WIDTH -1; i++){
-            leaderCard[0][i] = "═";
-            leaderCard[HEIGHT -1][i] = "═";
+            leaderCard[0][i] = TextColors.colorText(TextColors.CYAN,"═");
+            leaderCard[HEIGHT -1][i] = TextColors.colorText(TextColors.CYAN,"═");
         }
         for (int i = 4; i <8; i++){
             leaderCard[0][i] = "";
         }
+        leaderCard[0][4] = TextColors.colorText(TextColors.CYAN, toPrint.getId());
         if (toPrint.getId().length() < 4) {
-            leaderCard[0][4] = toPrint.getId();
-            leaderCard[0][5] = "═";
-        } else{
-            leaderCard[0][4] = toPrint.getId();
+            leaderCard[0][5] = TextColors.colorText(TextColors.CYAN, "═");
         }
 
-        leaderCard[0][WIDTH -1] = "╗";
+        leaderCard[0][WIDTH -1] = TextColors.colorText(TextColors.CYAN,"╗");
         for (int r = 1; r < HEIGHT -1; r++){
-           leaderCard[r][0] = ("║");
+           leaderCard[r][0] = TextColors.colorText(TextColors.CYAN,"║");
             for (int c = 1; c < WIDTH -1; c++){
                 leaderCard[r][c] = " ";
             }
-            leaderCard[r][WIDTH - 1] = "║";
+            leaderCard[r][WIDTH - 1] = TextColors.colorText(TextColors.CYAN,"║");
         }
 
         toPrint.getEffect().getPrinter().printEffect(leaderCard);
-        leaderCard[HEIGHT -5][WIDTH -7] = String.valueOf(toPrint.getVictoryPoints());
-        leaderCard[HEIGHT -1][WIDTH -1] = "╝";
+        leaderCard[HEIGHT -6][WIDTH -7] = TextColors.colorText(TextColors.PURPLE_BRIGHT,String.valueOf(toPrint.getVictoryPoints()));
+        leaderCard[HEIGHT -1][WIDTH -1] = TextColors.colorText(TextColors.CYAN,"╝");
+        for (int i = 1; i < leaderCard[3].length - 1; i++) {
+            leaderCard[2][i] = TextColors.colorText(TextColors.CYAN,"-");
+        }
     }
 
     public void printLeaderCard(String Leaderid){

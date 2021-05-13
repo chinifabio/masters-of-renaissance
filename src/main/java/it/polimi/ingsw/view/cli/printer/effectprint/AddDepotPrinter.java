@@ -24,9 +24,6 @@ public class AddDepotPrinter implements EffectPrinter{
 
     @Override
     public void printEffect(String[][] leaderCard) {
-        for (int i = 1; i < leaderCard[3].length-1; i++){
-            leaderCard[3][i] = "-";
-        }
         int initcol = 1;
         for (int i = 0; i < 2; i++){
             leaderCard[4][initcol] = "[";
@@ -37,8 +34,5 @@ public class AddDepotPrinter implements EffectPrinter{
             initcol = initcol+5;
         }
 
-        for (int i = 1; i < leaderCard[5].length-1; i++){
-            leaderCard[5][i] = "-";
-        }
     }
 }

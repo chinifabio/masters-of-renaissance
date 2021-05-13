@@ -26,31 +26,37 @@ public class AddExtraProductionPrinter implements EffectPrinter{
     }
 
     @Override
-    public void printEffect(String[][] leaderCard) {
-        for (int i = 1; i < leaderCard[3].length-1; i++){
-            leaderCard[3][i] = "-";
-        }
+    public void printEffect(String[][] card) {
+
         int initcol = 1;
+        if (production.getRequired().size() == 1){
+            initcol = 4;
+        } else if (production.getRequired().size() == 2){
+            initcol = 3;
+        }
         for (LiteResource type : production.getRequired()){
-           leaderCard[4][initcol] = (String.valueOf(type.getAmount()));
-           initcol++;
-           leaderCard[4][initcol] = (colors.get(type.getType()));
-           initcol++;
+            card[3][initcol] = (String.valueOf(type.getAmount()));
+            initcol++;
+            card[3][initcol] = (colors.get(type.getType()));
+            initcol++;
+            initcol++;
         }
-        leaderCard[4][initcol] = "}";
-        initcol++;
-        initcol++;
+        card[4][(card[1].length/2) -1] = "↓";
+
+        if (production.getOutput().size() == 1){
+            initcol = 4;
+        } else if (production.getOutput().size() == 2){
+            initcol = 3;
+        } else {
+            initcol = 2;
+        }
+
         for (LiteResource type : production.getOutput()){
-            leaderCard[4][initcol] = (String.valueOf(type.getAmount()));
+            card[5][initcol] = (String.valueOf(type.getAmount()));
             initcol++;
-            leaderCard[4][initcol] = (colors.get(type.getType()));
+            card[5][initcol] = (colors.get(type.getType()));
             initcol++;
             initcol++;
         }
-
-        for (int i = 1; i < leaderCard[5].length-1; i++){
-            leaderCard[5][i] = "-";
-        }
-
     }
 }

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.cli.printer;
+package it.polimi.ingsw.view.cli.printer.cardprinter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
@@ -13,7 +13,7 @@ import java.util.List;
 public class DevSetupPrinter {
     //CREARE UNA MATRICE DI STRINGHE GRANDE QUANTO 12 MATRICI DI STRINGHE DELLE DEVCARD E ORDINARLE
 
-    List<List<LiteDevCard>> devSetup = new ArrayList<>();;
+    List<List<LiteDevCard>> devSetup = new ArrayList<>();
 
     public DevSetupPrinter() {
         //TESTING

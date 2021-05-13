@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.cli.printer;
+package it.polimi.ingsw.view.cli.printer.cardprinter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,11 +65,22 @@ public class DevCardPrinter {
             }
             devCard[r][WIDTH - 1] = TextColors.colorText(colorCard,"║");
         }
-        devCard[HEIGHT -5][WIDTH -7] = TextColors.colorText(TextColors.PURPLE_BRIGHT,String.valueOf(toPrint.getVictoryPoint()));
+        devCard[HEIGHT -6][WIDTH -7] = TextColors.colorText(TextColors.PURPLE_BRIGHT,String.valueOf(toPrint.getVictoryPoint()));
         if (toPrint.getVictoryPoint() > 9){
-            devCard[HEIGHT -5][WIDTH -6] = "";
+            devCard[HEIGHT -6][WIDTH -6] = "";
         }
         devCard[HEIGHT -1][WIDTH -1] = TextColors.colorText(colorCard,"╝");
+
+
+        devCard[HEIGHT-1][3] = TextColors.colorText(colorCard,"LEVEL");
+        devCard[HEIGHT-1][4] = TextColors.colorText(colorCard, String.valueOf(toPrint.getLevel().getLevelCard()));
+        for (int i = 5; i< WIDTH-3; i++){
+            devCard[HEIGHT-1][i] = "";
+        }
+        toPrint.getEffect().getPrinter().printEffect(devCard);
+        for (int i = 1; i < devCard[3].length - 1; i++) {
+            devCard[2][i] = TextColors.colorText(colorCard,"-");
+        }
 
     }
 

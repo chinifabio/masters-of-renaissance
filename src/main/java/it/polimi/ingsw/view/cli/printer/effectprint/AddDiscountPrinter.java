@@ -25,15 +25,9 @@ public class AddDiscountPrinter implements EffectPrinter{
 
     @Override
     public void printEffect(String[][] leaderCard) {
-        for (int i = 1; i < leaderCard[3].length-1; i++){
-            leaderCard[3][i] = "-";
-        }
         leaderCard[4][4] = "";
         leaderCard[4][5] = "-1";
         leaderCard[4][6] = colors.get(resourceType);
-        for (int i = 1; i < leaderCard[5].length-1; i++){
-            leaderCard[5][i] = "-";
-        }
 
     }
 
