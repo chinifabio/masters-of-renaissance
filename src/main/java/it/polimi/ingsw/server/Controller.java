@@ -10,6 +10,8 @@ import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.Command;
 import it.polimi.ingsw.model.Model;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class Controller implements Runnable {
 
     public final Server server;
@@ -26,7 +28,7 @@ public class Controller implements Runnable {
         this.server = server;
     }
 
-    protected void setState(ControllerState newState) {
+    void setState(ControllerState newState) {
         this.state = newState;
     }
 
@@ -76,33 +78,17 @@ class InitState implements ControllerState {
             return context.invalid("pls change nickname");
 
         context.nickname = packet.body;
-
-        context.model = context.server.obtainModel();
+        try {
+            context.model = context.server.obtainModel();
+        } catch (InterruptedException e) {
+            return context.invalid("error in obtaining model");
+        }
 
         context.setState(context.model.initialized() ?
-                new LobbyState():
+                new InGameState():
                 new CreatorState());
 
         return context.model.login(context, context.nickname);
-    }
-}
-
-class LobbyState implements ControllerState {
-    /**
-     * handle the client message and create a response Packet
-     *
-     * @param packet  the message to handle
-     * @param context the context of the state
-     * @return the response message
-     */
-    @Override
-    public Packet handleMessage(Packet packet, Controller context) {
-        if (packet.header != HeaderTypes.WAIT_FOR_START)
-            return context.invalid("invalid packet: " + packet.header + "; expected " + HeaderTypes.WAIT_FOR_START);
-
-        System.out.println(context.nickname + " ready for start");
-        context.setState(new InGameState());
-        return context.model.readyForStart(context);
     }
 }
 
@@ -121,8 +107,10 @@ class CreatorState implements ControllerState {
 
         try {
             context.model.createMatch(Integer.parseInt(packet.body));
-            context.setState(new LobbyState());
+
+            context.setState(new InGameState());
             return context.model.login(context, context.nickname);
+
         } catch (NumberFormatException e) {
             return context.invalid("invalid number format: " + packet.body);
         }
@@ -141,13 +129,11 @@ class InGameState implements ControllerState {
     @Override
     public Packet handleMessage(Packet packet, Controller context) {
         if (packet.header != HeaderTypes.DO_ACTION)
-            return context.invalid("invalid packet: " + packet.header + "; expected " + HeaderTypes.DO_ACTION);
+            return context.invalid("invalid packet received: " + packet.header + "; expected " + HeaderTypes.DO_ACTION);
 
         try {
-            return context.model.handleClientCommand(
-                    context,
-                    new ObjectMapper().readerFor(Command.class).readValue(packet.body)
-            );
+            Command c = new ObjectMapper().readerFor(Command.class).readValue(packet.body);
+            return context.model.handleClientCommand(context, c);
         } catch (JsonProcessingException e) {
             return context.invalid(e.getMessage());
         }

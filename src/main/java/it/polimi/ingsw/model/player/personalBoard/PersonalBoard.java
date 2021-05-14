@@ -1,10 +1,13 @@
 package it.polimi.ingsw.model.player.personalBoard;
 
-import it.polimi.ingsw.communication.packet.updates.LeaderCardPublisher;
-import it.polimi.ingsw.model.VirtualView;
+import it.polimi.ingsw.communication.packet.updates.DevelopUpdater;
+import it.polimi.ingsw.communication.packet.updates.LeaderUpdater;
+import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
+import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
+import it.polimi.ingsw.model.cards.effects.AddDiscountEffect;
 import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
@@ -18,10 +21,12 @@ import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.personalBoard.faithTrack.PopeTile;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
@@ -29,6 +34,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Productio
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.requisite.RequisiteType;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.*;
 
@@ -55,46 +61,37 @@ public class PersonalBoard {
     /**
      * This attribute is the Warehouse contained into the PersonalBoard
      */
-    private final Warehouse warehouse;
+    public final Warehouse warehouse;
 
     /**
      * This attribute is the FaithTrack of the PersonalBoard
      */
-    private final FaithTrack faithTrack;
+    public final FaithTrack faithTrack;
 
     /**
      * This attribute is the Player that own this PersonalBoard
      */
     private final Player player;
 
-    /**
-     * This view is used to notify to clients all the changes in player holdings
-     */
-    private final VirtualView view;
-
 
     /**
      * This method is the constructor of the class
      * @param player the player who own this personal board
      */
-    public PersonalBoard(Player player, VirtualView view) throws IllegalTypeInProduction {
+    public PersonalBoard(Player player) throws IllegalTypeInProduction {
         this.leaderDeck = new Deck<>();
 
         this.devDeck = new EnumMap<>(DevCardSlot.class);
-        devDeck.put(DevCardSlot.LEFT, new Deck<>());
-        devDeck.put(DevCardSlot.CENTER, new Deck<>());
-        devDeck.put(DevCardSlot.RIGHT, new Deck<>());
+        for (DevCardSlot slot : DevCardSlot.values()) devDeck.put(slot, new Deck<>());
 
         this.productionSlotMap = new EnumMap<>(DevCardSlot.class);
         productionSlotMap.put(DevCardSlot.LEFT, ProductionID.LEFT);
         productionSlotMap.put(DevCardSlot.CENTER, ProductionID.CENTER);
         productionSlotMap.put(DevCardSlot.RIGHT, ProductionID.RIGHT);
 
-        this.warehouse = new Warehouse();
-        this.faithTrack = new FaithTrack();
+        this.warehouse = new Warehouse(player);
+        this.faithTrack = new FaithTrack(player);
         this.player = player;
-
-        this.view = view;
     }
 
     /**
@@ -109,6 +106,7 @@ public class PersonalBoard {
         if (sum >= 7) throw new EndGameException();
         if (checkDevCard(slot, card)) {
             this.devDeck.get(slot).insertCard(card);
+            this.updateDevCard();
             return true;
         }
         return false;
@@ -121,16 +119,11 @@ public class PersonalBoard {
      * @return true if the card can be placed into that position.
      */
      public boolean checkDevCard(DevCardSlot slot, DevCard card) {
-        boolean result = false;
-        Deck<DevCard> temp = this.devDeck.get(slot);
-        if (temp == null) temp = new Deck<>();
+        DevCard onTop = this.devDeck.get(slot).peekFirstCard();
 
-        try {
-            if (temp.peekFirstCard().getLevel().getLevelCard() == (card.getLevel().getLevelCard() - 1)) result = true;
-        } catch (EmptyDeckException e) {
-            if (card.getLevel() == LevelDevCard.LEVEL1) result = true;
-        }
-        return result;
+        return (onTop == null) ?
+            card.getLevel() == LevelDevCard.LEVEL1:
+            onTop.getLevel().getLevelCard() == (card.getLevel().getLevelCard() - 1);
     }
 
     /**
@@ -140,11 +133,7 @@ public class PersonalBoard {
     public Map<DevCardSlot, DevCard> viewDevCards() {
         Map<DevCardSlot, DevCard> tempMap = new EnumMap<>(DevCardSlot.class);
         for (DevCardSlot devCardSlot : DevCardSlot.values()) {
-            try {
-                tempMap.put(devCardSlot, this.devDeck.get(devCardSlot).peekFirstCard());
-            } catch (EmptyDeckException e) {
-                e.printStackTrace();
-            }
+            tempMap.put(devCardSlot, this.devDeck.get(devCardSlot).peekFirstCard());
         }
         return tempMap;
     }
@@ -156,7 +145,7 @@ public class PersonalBoard {
      */
     public void addLeaderCard(LeaderCard card) throws AlreadyInDeckException {
         this.leaderDeck.insertCard(card);
-        notifyLeaderCards();
+        this.updateLeader();
     }
 
     /**
@@ -200,7 +189,7 @@ public class PersonalBoard {
         }
         card.activate();
         card.useEffect(this.player);
-        notifyLeaderCards();
+        this.updateLeader();
         return true;
     }
 
@@ -213,7 +202,7 @@ public class PersonalBoard {
      */
     public void discardLeaderCard(String card) throws EmptyDeckException, MissingCardException {
         this.leaderDeck.discard(card);
-        notifyLeaderCards();
+        this.updateLeader();
     }
 
     /**
@@ -311,11 +300,11 @@ public class PersonalBoard {
 
     /**
      * Create a new depot in the warehouse
-     * @param depot is the new Depot
+     * @param res is the new Depot type
      * @throws ExtraDepotsException if the Player can't add more Depots
      */
-    public void addDepot(Depot depot) throws ExtraDepotsException {
-        warehouse.addDepot(depot);
+    public void addDepot(ResourceType res) throws ExtraDepotsException {
+        warehouse.addDepot(DepotBuilder.buildSpecialDepot(res));
     }
 
     /**
@@ -335,18 +324,9 @@ public class PersonalBoard {
      * tells to the faith track to move amount times the player marker.
      * @param amount the amount to move.
      * @param pm is the Player that own the FaithMarker
-     * @return true if the move is allowed, else false.
      */
     public void moveFaithMarker(int amount, PlayerToMatch pm) throws EndGameException {
         this.faithTrack.movePlayer(amount, pm);
-    }
-
-    /**
-     * return the faith marker position of the player
-     * @return faith marker position of the player
-     */
-    public int FaithMarkerPosition() {
-        return faithTrack.getPlayerPosition();
     }
 
     /**
@@ -419,15 +399,23 @@ public class PersonalBoard {
         return points;
     }
 
-    /**
-     * Send to the view the list of leader cards ids owned by the player
-     */
-    private void notifyLeaderCards() {
-        List<String> result = new ArrayList<>();
+    private void updateLeader() {
+        List<LiteLeaderCard> deck = new ArrayList<>();
+        for (LeaderCard c : this.viewLeaderCard().getCards()) deck.add(c.liteVersion());
 
-        for (LeaderCard c : this.leaderDeck.getCards()) result.add(c.getCardID());
+        this.player.view.publish(new LeaderUpdater(this.player.getNickname(), deck));
+    }
 
-        this.view.sendPublisher(new LeaderCardPublisher(result, this.player.getNickname()));
+    private void updateDevCard() {
+        DevCard nullCard = new DevCard("empty", new AddDiscountEffect(ResourceType.SERVANT), 0, null, null,  new ArrayList<>());
+
+        List<LiteDevCard> deck = new ArrayList<>();
+        for (DevCardSlot slot : DevCardSlot.values()) {
+            DevCard card = this.devDeck.get(slot).peekFirstCard();
+            deck.add( card == null ? nullCard.liteVersion() : card.liteVersion());
+        }
+
+        this.player.view.publish(new DevelopUpdater(this.player.getNickname(), deck));
     }
 
     // only for testing
@@ -449,4 +437,5 @@ public class PersonalBoard {
     public Map<ProductionID, Production> test_getProduction() {
         return this.warehouse.test_getProduction();
     }
+
 }

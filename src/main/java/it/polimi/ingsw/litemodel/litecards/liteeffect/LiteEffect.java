@@ -12,7 +12,10 @@ import it.polimi.ingsw.view.cli.printer.effectprint.EffectPrinter;
         @JsonSubTypes.Type(name = "AddDiscount", value = LiteAddDiscountEffect.class),
         @JsonSubTypes.Type(name = "WhiteMarble", value = LiteWhiteMarbleEffect.class),
         @JsonSubTypes.Type(name = "AddExtraProduction", value = LiteAddProductionEffect.class),
-        @JsonSubTypes.Type(name = "AddProduction", value = LiteAddProductionEffect.class)
+        @JsonSubTypes.Type(name = "AddProduction", value = LiteAddProductionEffect.class),
+        @JsonSubTypes.Type(name = "ShuffleMoveOne", value = LiteShuffleMoveOneEffect.class),
+        @JsonSubTypes.Type(name = "MoveTwo", value = LiteMoveTwoEffect.class),
+        @JsonSubTypes.Type(name = "DestroyCard", value = LiteDestroyCardsEffect.class),
 })
 public abstract class LiteEffect {
 

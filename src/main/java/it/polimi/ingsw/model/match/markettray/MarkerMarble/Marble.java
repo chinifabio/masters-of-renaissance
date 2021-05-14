@@ -1,6 +1,10 @@
 package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
+import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -16,7 +20,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
         @JsonSubTypes.Type(name = "Normal", value = Marble.class),
         @JsonSubTypes.Type(name = "White", value = PaintableMarble.class)
 })
-public class Marble {
+public class Marble implements MappableToLiteVersion {
     /**
      * The color of the marble
      */
@@ -44,7 +48,7 @@ public class Marble {
      * return the color of the marble
      * @return color of the marble
      */
-    public MarbleColor type() {
+    public MarbleColor color() {
         return this.color;
     }
 
@@ -104,5 +108,16 @@ public class Marble {
      */
     public void unPaint() {
 
+    }
+
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteMarble liteVersion() {
+        return new LiteMarble(this.color, this.toResource);
+        // todo add the lite version of the paintable marble
     }
 }

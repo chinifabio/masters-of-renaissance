@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.cards.effects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
+import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteWhiteMarbleEffect;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
@@ -31,5 +33,15 @@ public class WhiteMarbleEffect extends Effect{
     @Override
     public void use(CardReaction p) {
         ((PlayableCardReaction) p).addMarbleConversion(conv);
+    }
+
+    /**
+     * Return a lite version of the effect
+     *
+     * @return a lite version of the effect
+     */
+    @Override
+    public LiteEffect liteVersion() {
+        return new LiteWhiteMarbleEffect(this.conv.liteVersion());
     }
 }

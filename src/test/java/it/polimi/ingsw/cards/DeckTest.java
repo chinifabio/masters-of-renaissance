@@ -459,9 +459,7 @@ public class DeckTest {
 
         DevSetup empty = new DevSetup(deckList);
 
-        try {
-            empty.showDevDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN);
-        } catch (EmptyDeckException ignore) {}
+        assertNull(empty.showDevDeck(LevelDevCard.LEVEL3,ColorDevCard.GREEN));
 
         deckList.add(greenDeck);
         deckList.add(yellowDeck);

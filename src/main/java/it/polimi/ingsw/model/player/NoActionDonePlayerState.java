@@ -3,6 +3,9 @@ package it.polimi.ingsw.model.player;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
+import it.polimi.ingsw.litemodel.liteplayer.LiteState;
+import it.polimi.ingsw.litemodel.liteplayer.NoActionDone;
+import it.polimi.ingsw.litemodel.liteplayer.PendingStart;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
@@ -205,6 +208,7 @@ public class NoActionDonePlayerState extends PlayerState {
      */
     @Override
     public Packet discardLeader(String leaderId) {
+
         try {
             this.context.personalBoard.discardLeaderCard(leaderId);
             this.context.personalBoard.moveFaithMarker(1, this.context.match);
@@ -231,5 +235,15 @@ public class NoActionDonePlayerState extends PlayerState {
         this.context.setState(new NotHisTurnPlayerState(this.context));
         this.context.match.endMyTurn();
         return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "your turn is ended");
+    }
+
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteState liteVersion() {
+        return new NoActionDone();
     }
 }

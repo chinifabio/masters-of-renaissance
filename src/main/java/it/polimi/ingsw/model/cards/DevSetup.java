@@ -2,17 +2,23 @@ package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
+import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
+import it.polimi.ingsw.model.MappableToLiteVersion;
+import it.polimi.ingsw.model.cards.effects.AddDiscountEffect;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This class contains a List of Deck of DevCards. It contains the 12 decks of DevCards divided by level and color.
  */
-public class DevSetup {
+public class DevSetup implements MappableToLiteVersion {
     /**
      * This is the constructor of the devSetup class.
      * @param decks to insert.
@@ -51,7 +57,7 @@ public class DevSetup {
      * This method returns the first card of a single deck of DevCards. It needs the level and the color of the Deck.
      * @return the top card of the deck which color and level matches the one of the parameters.
      */
-    public DevCard showDevDeck(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException, EmptyDeckException {
+    public DevCard showDevDeck(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException {
         Deck<DevCard> tempDeck = takeOneDeck(row, col);
         return tempDeck.peekFirstCard();
     }
@@ -77,22 +83,24 @@ public class DevSetup {
     private Deck<DevCard> takeOneDeck(LevelDevCard row, ColorDevCard col) throws IndexOutOfBoundsException{
         return devDeckGrid
                 .stream()
-                .filter(c -> {
-                    try {
-                        return col.equals(c.peekFirstCard().getColor());
-                    } catch (EmptyDeckException e) {
-                        return false;
-                    }
-                })
-                .filter(c -> {
-                    try {
-                        return row.equals(c.peekFirstCard().getLevel());
-                    } catch (EmptyDeckException e) {
-                        e.printStackTrace();
-                        return false;
-                    }
-                })
+                .filter(c -> col.equals(c.peekFirstCard() == null ? ColorDevCard.NOCOLOR : c.peekFirstCard().getColor()))
+                .filter(c -> row.equals(c.peekFirstCard() == null ? LevelDevCard.NOLEVEL : c.peekFirstCard().getLevel()))
                 .findAny().orElse(new Deck<>());
     }
 
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteDevSetup liteVersion() {
+        List<LiteDevCard> cards = new ArrayList<>();
+        LiteDevCard nullCard= new LiteDevCard("empty", null, 0, null, null, new ArrayList<>());
+        for(Deck<DevCard> deck : this.devDeckGrid){
+            DevCard c = deck.peekFirstCard();
+            cards.add(c == null ? nullCard : c.liteVersion());
+        }
+        return new LiteDevSetup(cards);
+    }
 }

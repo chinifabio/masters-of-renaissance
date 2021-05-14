@@ -2,7 +2,7 @@ package it.polimi.ingsw.personalboardTests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.CustomAssertion;
-import it.polimi.ingsw.model.VirtualView;
+import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
@@ -19,13 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FaithTrackTest {
-
-    Match game = new MultiplayerMatch(2);
-
     Player player1;
     Player player2;
 
-    VirtualView view = new VirtualView();
+    Dispatcher view = new Dispatcher();
+    Match game = new MultiplayerMatch(2, view);
 
     @BeforeEach
     public void initialization() {
@@ -34,7 +32,7 @@ public class FaithTrackTest {
         assertDoesNotThrow(()->player2 = new Player("pino", game, view));
         assertTrue(game.playerJoin(player2));
 
-        assertTrue(game.startGame());
+        //assertTrue(game.startGame());
 
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
@@ -50,7 +48,7 @@ public class FaithTrackTest {
     @Test
     public void infoFaithTrack() {
 
-        FaithTrack track = new FaithTrack();
+        FaithTrack track = new FaithTrack(this.game.test_getCurrPlayer());
         Resource point = ResourceBuilder.buildFaithPoint();
 
         assertDoesNotThrow(()->{
@@ -96,7 +94,7 @@ public class FaithTrackTest {
         Resource third = ResourceBuilder.buildFaithPoint(3);
         Resource last = ResourceBuilder.buildFaithPoint(20);
 
-        FaithTrack faithTrack = new FaithTrack();
+        FaithTrack faithTrack = new FaithTrack(this.game.test_getCurrPlayer());
 
         assertEquals(0,faithTrack.getPlayerPosition());
         faithTrack.movePlayer(first.amount(), game);
@@ -125,7 +123,7 @@ public class FaithTrackTest {
      */
     @Test
     public void callExceptionsPlayer() {
-        FaithTrack track = new FaithTrack();
+        FaithTrack track = new FaithTrack(this.game.test_getCurrPlayer());
 
         assertDoesNotThrow(()->{
             track.movePlayer(8, game);

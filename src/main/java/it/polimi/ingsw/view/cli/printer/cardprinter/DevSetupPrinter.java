@@ -30,7 +30,7 @@ public class DevSetupPrinter {
     public static void main(String[] args) throws EmptyDeckException {
         //TESTING
         DevSetupPrinter printer = new DevSetupPrinter();
-        LiteDevSetup setup = new LiteDevSetup();
+        LiteDevSetup setup = new LiteDevSetup(new ArrayList<>());
 
         for (List<LiteDevCard> list : printer.devSetup){
             for (LiteDevCard card: list){

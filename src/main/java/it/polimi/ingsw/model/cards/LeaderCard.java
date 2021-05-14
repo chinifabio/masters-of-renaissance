@@ -1,16 +1,20 @@
 package it.polimi.ingsw.model.cards;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.model.cards.effects.Effect;
 import it.polimi.ingsw.model.requisite.Requisite;
 
 /**
  * This class represents the LeaderCard
  */
-public class LeaderCard extends Card{
+public class LeaderCard extends Card {
 
     /**
      * This method is the constructor of the LeaderCard class. The attribute activated is initially set to false.
@@ -81,4 +85,14 @@ public class LeaderCard extends Card{
         return activated;
     }
 
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteLeaderCard liteVersion() {
+        LiteLeaderCard lite = new LiteLeaderCard(this.cardID, this.effect.liteVersion(),this.victoryPoint, new ArrayList<>(this.requirements), this.activated);
+        return lite;
+    }
 }

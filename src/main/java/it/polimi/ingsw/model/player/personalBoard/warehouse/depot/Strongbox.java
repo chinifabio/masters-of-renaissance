@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.depot;
 
+import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -77,6 +78,16 @@ public class Strongbox implements Depot {
         List<Resource> clone = new ArrayList<>(this.resources.size());
         clone.addAll(this.resources);
         return clone;
+    }
+
+    /**
+     * return a lite version of the depot
+     *
+     * @return the lite version
+     */
+    @Override
+    public LiteDepot liteVersion() {
+        return new LiteDepot(ResourceBuilder.mapResource(this.viewResources()));
     }
 
     /**

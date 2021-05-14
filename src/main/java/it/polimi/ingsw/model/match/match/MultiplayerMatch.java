@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.match.match;
 
 import it.polimi.ingsw.TextColors;
+import it.polimi.ingsw.model.Dispatcher;
 
 /**
  * This class represents the MultiplayerMatch
@@ -12,8 +13,8 @@ public class MultiplayerMatch extends Match{
      * and require at least 2 player to be started
      * @param number the game size of the match
      */
-    public MultiplayerMatch(int number) {
-        super(number, 2);
+    public MultiplayerMatch(int number, Dispatcher view) {
+        super(number, 2, view);
     }
 
     /**

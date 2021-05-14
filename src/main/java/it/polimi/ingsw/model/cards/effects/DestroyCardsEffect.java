@@ -2,6 +2,8 @@ package it.polimi.ingsw.model.cards.effects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteDestroyCardsEffect;
+import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.match.SoloTokenReaction;
 
@@ -30,5 +32,15 @@ public class DestroyCardsEffect extends Effect {
      */
     public void use(CardReaction p) {
         ((SoloTokenReaction) p).discardDevCard(this.color);
+    }
+
+    /**
+     * Return a lite version of the effect
+     *
+     * @return a lite version of the effect
+     */
+    @Override
+    public LiteEffect liteVersion() {
+        return new LiteDestroyCardsEffect(this.color);
     }
 }

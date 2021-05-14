@@ -1,7 +1,8 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.depot;
 
+import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
+import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import java.util.List;
 import java.util.function.BiPredicate;
@@ -9,7 +10,7 @@ import java.util.function.BiPredicate;
 /**
  * This interface is the representation of the Warehouse Depots that can be NormalDepot, SpecialDepot and Strongbox
  */
-public interface Depot{
+public interface Depot extends MappableToLiteVersion {
 
     /**
      * This method accept a lambda function predicate with two parameters: first one is always referred to the input resource,
@@ -44,4 +45,10 @@ public interface Depot{
      * @return true if the Depot has a check on the type of the Resources inside
      */
     boolean checkTypeDepot();
+
+    /**
+     * return a lite version of the depot
+     * @return the lite version
+     */
+    LiteDepot liteVersion();
 }

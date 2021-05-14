@@ -3,10 +3,10 @@ package it.polimi.ingsw.litemodel.litecards;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequirementsType;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
+import it.polimi.ingsw.model.requisite.Requisite;
 
 import java.util.List;
 
@@ -19,10 +19,10 @@ public class LiteDevCard extends LiteCard {
 
     private final ColorDevCard color;
 
-    private final List<LiteRequirementsType> cost;
+    private final List<Requisite> cost;
 
     @JsonCreator
-    public LiteDevCard(@JsonProperty("cardID") String cardID, @JsonProperty("effect") LiteEffect effect,@JsonProperty("victoryPoint") int victoryPoint,@JsonProperty("level") LevelDevCard level,@JsonProperty("color") ColorDevCard color,@JsonProperty("cost") List<LiteRequirementsType> cost) {
+    public LiteDevCard(@JsonProperty("cardID") String cardID, @JsonProperty("effect") LiteEffect effect,@JsonProperty("victoryPoint") int victoryPoint,@JsonProperty("level") LevelDevCard level,@JsonProperty("color") ColorDevCard color,@JsonProperty("cost") List<Requisite> cost) {
         super(cardID, effect);
         this.victoryPoint = victoryPoint;
         this.level = level;
@@ -51,7 +51,7 @@ public class LiteDevCard extends LiteCard {
         return color;
     }
 
-    public List<LiteRequirementsType> getCost() {
+    public List<Requisite> getCost() {
         return cost;
     }
 }

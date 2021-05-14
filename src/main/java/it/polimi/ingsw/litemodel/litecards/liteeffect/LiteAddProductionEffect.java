@@ -1,6 +1,7 @@
 package it.polimi.ingsw.litemodel.litecards.liteeffect;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.view.cli.printer.effectprint.AddDiscountPrinter;
@@ -11,6 +12,7 @@ public class LiteAddProductionEffect extends LiteEffect{
 
     private final LiteProduction production;
 
+    @JsonIgnore
     private final AddExtraProductionPrinter printer;
 
     @JsonCreator

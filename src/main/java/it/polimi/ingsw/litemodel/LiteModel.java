@@ -1,8 +1,21 @@
 package it.polimi.ingsw.litemodel;
 
+import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
+import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
+import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
+import it.polimi.ingsw.litemodel.litecards.LiteSoloActionToken;
+import it.polimi.ingsw.litemodel.litefaithtrack.LiteFaithTrack;
+import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
+import it.polimi.ingsw.litemodel.litemarkettray.LiteMarketTray;
+import it.polimi.ingsw.litemodel.liteplayer.LiteState;
+import it.polimi.ingsw.litemodel.liteplayer.PendingStart;
+import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
+import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,9 +26,11 @@ public class LiteModel {
 
     private String me;
 
-    private List<String> tray;
-    private List<String> devSetup;
+    private LiteMarketTray tray;
+    private LiteDevSetup devSetup;
     private int numberOfPlayer = 0;
+    private List<LiteSoloActionToken> soloToken;
+    private LiteState playerState = new PendingStart();
 
     public synchronized void createPlayer(String nickname) {
         this.players.put(nickname, new LitePersonalBoard());
@@ -28,30 +43,65 @@ public class LiteModel {
         this.me = nickname;
     }
 
-    public synchronized void setLeader(String nickname, List<String> cards) {
+    public synchronized void setLeader(String nickname, List<LiteLeaderCard> cards) {
         this.players.get(nickname).setLeader(cards);
     }
 
-    public synchronized void setMarbleMarket(List<String> tray) {
-        this.tray = tray;
+    public void setDevelop(String nickname, List<LiteDevCard> deck) {
+        this.players.get(nickname).setDevelop(deck);
     }
 
-    public synchronized void setDevSetup(List<String> devSetup) {
+    public synchronized void setDevSetup(LiteDevSetup devSetup) {
         this.devSetup = devSetup;
     }
 
+    public synchronized void movePlayer(String nickname, int amount) {
+        this.players.get(nickname).movePlayer(amount);
+    }
+
+    public synchronized void updateFaithTrack(String nickname, LiteFaithTrack track) {
+        this.players.get(nickname).updateFaithTrack(track);
+    }
+
+    public synchronized void setMarketTray(LiteMarketTray lite) {
+        this.tray = lite;
+    }
+
+    public synchronized void setProduction(String nickname, LiteProduction prod, ProductionID id) {
+        this.players.get(nickname).setProduction(id, prod);
+    }
+
+    public synchronized void setDepot(String nickname, DepotSlot slot, LiteDepot depot) {
+        this.players.get(nickname).setDepot(slot, depot);
+    }
+
+    public synchronized void setSoloToken(List<LiteSoloActionToken> deck) {
+        this.soloToken = deck;
+    }
+
+    public synchronized void setDiscounts(String nickname, List<LiteResource> discounts) {
+        this.players.get(nickname).setDiscounts(discounts);
+    }
+
+    public synchronized void setConversions(String nickname, List<MarbleColor> collect) {
+        this.players.get(nickname).setConversions(collect);
+    }
+
+    public void setPlayerState(LiteState state) {
+        this.playerState = state;
+    }
 
 // ------------------- GETTER METHODS ------------------
 
-    public synchronized List<String> getLeader(String nickname) {
+    public synchronized List<LiteLeaderCard> getLeader(String nickname) {
         return this.players.get(nickname).getLeaderCards();
     }
 
-    public synchronized List<String> getTray() {
-        return tray;
+    public synchronized LiteMarble[][] getTray() {
+        return tray.getMarbles(0);
     }
 
-    public synchronized List<String> getDevSetup() {
+    public synchronized LiteDevSetup getDevSetup() {
         return devSetup;
     }
 
@@ -75,19 +125,23 @@ public class LiteModel {
         return result;
     }
 
-    public synchronized void movePlayer(String nickname, int amount) {
-        this.players.get(nickname).movePlayer(amount);
-    }
-
     public synchronized void flipPopeTile(String nickname, String popeTile) {
         this.players.get(nickname).flipPopeTile(popeTile);
     }
 
-    public void setDepot(String nickname, DepotSlot slot, LiteDepot depot) {
-        this.players.get(nickname).setDepot(slot, depot);
+    public synchronized int playersInGame() {
+        return numberOfPlayer;
     }
 
-    public int playersInGame() {
-        return numberOfPlayer;
+    public synchronized List<LiteSoloActionToken> getSoloToken() {
+        return new ArrayList<>(this.soloToken);
+    }
+
+    public synchronized String getMe() {
+        return this.me;
+    }
+
+    public LiteState getState() {
+        return this.playerState;
     }
 }

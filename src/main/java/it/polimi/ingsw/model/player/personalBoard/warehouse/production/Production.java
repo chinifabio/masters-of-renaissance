@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.production;
 
 import com.fasterxml.jackson.annotation.*;
+import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
+import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
@@ -19,9 +21,7 @@ import java.util.*;
         @JsonSubTypes.Type(name = "NormalProd", value = NormalProduction.class),
         @JsonSubTypes.Type(name = "UnknownProd", value = UnknownProduction.class)
 })
-public abstract class Production{
-
-
+public abstract class Production implements MappableToLiteVersion {
     /**
      * this list contains all the input resource not allowed in the production
      */
@@ -177,4 +177,11 @@ public abstract class Production{
         return ResourceBuilder.rearrangeResourceList(addedResource);
     }
 
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public abstract LiteProduction liteVersion();
 }

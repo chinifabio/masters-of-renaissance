@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.litemodel.liteplayer.CountingPoints;
+import it.polimi.ingsw.litemodel.liteplayer.LiteState;
+
 /**
  * This class is the State where are counted the VictoryPoints of the Player
  */
@@ -24,4 +27,14 @@ public class CountingPointsPlayerState extends PlayerState {
 
 // --------------------- PLAYER ACTION IMPLEMENTATIONS ---------------------------
 
+
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteState liteVersion() {
+        return new CountingPoints();
+    }
 }

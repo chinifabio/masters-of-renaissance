@@ -1,8 +1,10 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.communication.packet.updates.BuildMePublisher;
-import it.polimi.ingsw.model.VirtualView;
+import it.polimi.ingsw.communication.packet.updates.ConversionUpdater;
+import it.polimi.ingsw.communication.packet.updates.DiscountUpdater;
+import it.polimi.ingsw.communication.packet.updates.PlayerStateUpdater;
+import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
@@ -21,7 +23,6 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalPro
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.requisite.ResourceRequisite;
@@ -39,7 +40,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     /**
      * This virtual view is used to notify all clients for changes in player holdings
      */
-    final VirtualView view;
+    public final Dispatcher view;
 
     /**
      * this attribute flag the waiting state
@@ -54,7 +55,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     /**
      * this is the personal board associated to the player
      */
-    final PersonalBoard personalBoard;
+    public final PersonalBoard personalBoard;
 
     /**
      * This attribute is the nickname of the Player, it is unique for each player in the match
@@ -95,10 +96,10 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param nickname (type String) identifies the player
      * @throws IllegalTypeInProduction if the Basic Production of the PersonalBoard has IllegalResources
      */
-    public Player(String nickname, PlayerToMatch match, VirtualView view) throws IllegalTypeInProduction {
+    public Player(String nickname, PlayerToMatch match, Dispatcher view) throws IllegalTypeInProduction {
 
         this.nickname = nickname;
-        this.personalBoard = new PersonalBoard(this, view);
+        this.personalBoard = new PersonalBoard(this);
 
         this.marbleConversions = new ArrayList<>();
         this.marketDiscount = new ArrayList<>();
@@ -108,7 +109,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         this.match = match;
 
         this.view = view;
-        this.view.sendPublisher(new BuildMePublisher(this.nickname));
     }
 
     /**
@@ -155,6 +155,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     public void setState(PlayerState newPlayerState) {
         this.playerState = newPlayerState;
+        updateState();
     }
 
     /**
@@ -182,12 +183,12 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     /**
      * This method adds an extra Depot in the Warehouse
-     * @param depot new depot to be added to Warehouse depots
+     * @param res new depot type to be added to Warehouse depots
      */
     @Override
-    public void addDepot(Depot depot) {
+    public void addDepot(ResourceType res) {
         try {
-            this.personalBoard.addDepot(depot);
+            this.personalBoard.addDepot(res);
         } catch (ExtraDepotsException e) {
             // todo exception to player handler
         }
@@ -198,9 +199,10 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param discount the new discount
      */
     @Override
-    public void addDiscount(Resource discount) {
-        Resource temp = ResourceBuilder.buildFromType(discount.type(), 1);
+    public void addDiscount(ResourceType discount) {
+        Resource temp = ResourceBuilder.buildFromType(discount, 1);
         this.marketDiscount.add(temp);
+        this.view.publish(new DiscountUpdater(this.nickname, new ArrayList<>(this.marketDiscount)));
     }
 
     /**
@@ -210,6 +212,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     @Override
     public void addMarbleConversion(Marble newConversion) {
         this.marbleConversions.add(newConversion);
+        this.view.publish(new ConversionUpdater(this.nickname, new ArrayList<>(this.marbleConversions)));
     }
 
     /**
@@ -222,8 +225,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     @Override
     public boolean obtainResource(DepotSlot slot, Resource obt) throws WrongDepotException, UnobtainableResourceException, EndGameException {
         obt.onObtain(this);
-        if(obt.isStorable()) return this.personalBoard.insertInDepot(slot, obt);
-        return false;
+        return (obt.isStorable() && this.personalBoard.insertInDepot(slot, obt));
     }
 
     /**
@@ -435,11 +437,11 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     @Override
     public void startHisTurn() {
-        System.out.println(nickname + " waking up");
-        synchronized (waitForWakeUp) {
-            waitForWakeUp.notifyAll();
-        }
         this.playerState.starTurn();
+    }
+
+    private void updateState() {
+        this.view.publish(new PlayerStateUpdater(this.playerState.liteVersion()));
     }
 
     /**

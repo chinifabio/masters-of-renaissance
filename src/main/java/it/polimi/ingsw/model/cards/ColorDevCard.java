@@ -7,7 +7,7 @@ import it.polimi.ingsw.TextColors;
  */
 public enum ColorDevCard {
     GREEN(0, TextColors.GREEN), YELLOW(1, TextColors.YELLOW),
-    BLUE(2,TextColors.BLUE), PURPLE(3, TextColors.PURPLE);
+    BLUE(2,TextColors.BLUE), PURPLE(3, TextColors.PURPLE), NOCOLOR(-1, TextColors.RED_BACKGROUND);
 
     private final int devSetupIndex;
 

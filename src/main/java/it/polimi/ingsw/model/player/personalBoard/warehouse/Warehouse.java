@@ -1,11 +1,14 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse;
 
+import it.polimi.ingsw.communication.packet.updates.DepotUpdater;
+import it.polimi.ingsw.communication.packet.updates.ProductionUpdater;
 import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.exceptions.warehouse.*;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
+import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.*;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.*;
@@ -44,10 +47,15 @@ public class Warehouse {
     private final LinkedList<ProductionRecord> movesCache;
 
     /**
+     * The owner of the warehouse
+     */
+    private final Player player;
+
+    /**
      * This method is the constructor of the class
      * @throws IllegalTypeInProduction if the Basic Production has IllegalResources
      */
-    public Warehouse() throws IllegalTypeInProduction {
+    public Warehouse(Player player) throws IllegalTypeInProduction {
         //Initializing Production
         List<Resource> req = new ArrayList<>();
         List<Resource> output = new ArrayList<>();
@@ -74,7 +82,7 @@ public class Warehouse {
         this.addConstraint(x -> x.getFrom() != DepotSlot.STRONGBOX || x.getDest() == DepotSlot.BUFFER);
         this.addConstraint(x-> x.getDest() != DepotSlot.STRONGBOX || x.getFrom() == DepotSlot.BUFFER);
 
-
+        this.player = player;
     }
 
     /**
@@ -87,17 +95,17 @@ public class Warehouse {
 
     /**
      * This method add extra depots into the Warehouse when the SpecialAbility of LeaderCards are activated
-     * @param newDepot is the new Depot that will be added into the Warehouse
-     * @return true if the Depot is correctly made and there aren't other extraDepot with the same resources
+     * @param depot is the new Depot that will be added into the Warehouse
      * @throws ExtraDepotsException when the LeaderCard adds more than the number of extra depots that the warehouse can creates
      */
-    public boolean addDepot(Depot newDepot) throws ExtraDepotsException {
+    public void addDepot(Depot depot) throws ExtraDepotsException {
 
         for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()) {
             //Find the first empty space to create extra Depot
             if (entry.getValue() == null) {
-                entry.setValue(newDepot);
-                return true;
+                entry.setValue(depot);
+                updateDepot(entry.getKey());
+                return;
             }
         }
         throw new ExtraDepotsException();
@@ -113,7 +121,7 @@ public class Warehouse {
      * @throws NegativeResourcesDepotException if the Depot "from" hasn't enough resources to move
      * @throws WrongDepotException if the Depot "from" is empty or doesn't have the same type of resources of "resource"
      */
-    public boolean moveBetweenDepot(DepotSlot from, DepotSlot dest, Resource resource) throws NegativeResourcesDepotException, WrongDepotException, UnobtainableResourceException {
+    public boolean moveBetweenDepot(DepotSlot from, DepotSlot dest, Resource resource) throws NegativeResourcesDepotException, WrongDepotException {
         MoveResource moveResource = new MoveResource(from, dest, resource);
         AtomicBoolean testResult = new AtomicBoolean(true);
         this.constraint.forEach(x -> {
@@ -128,6 +136,8 @@ public class Warehouse {
 
             if (removeFromDepot(from, resource)) {
                 if (insertInDepot(dest, resource)) {
+                    updateDepot(dest);
+                    updateDepot(from);
                     return true;
                 } else {
                     insertInDepot(from, resource);
@@ -153,6 +163,8 @@ public class Warehouse {
         if (removeFromDepot(from, resource)){
             if (availableProductions.get(dest).insertResource(resource)){
                 this.movesCache.add(temp);
+                updateDepot(from);
+                updateProduction(dest);
                 return true;
             } else {
                 insertInDepot(from, resource);
@@ -185,7 +197,10 @@ public class Warehouse {
                 }
             }
             entry.getValue().reset();
+            updateProduction(entry.getKey());
         }
+
+        updateDepot(DepotSlot.BUFFER);
         return true;
     }
 
@@ -198,8 +213,12 @@ public class Warehouse {
      */
     public boolean insertInDepot(DepotSlot type, Resource resource) throws WrongDepotException {
         if (!depots.get(type).checkTypeDepot()) {
-            return depots.get(type).insert(resource);
+            if (depots.get(type).insert(resource)){
+                updateDepot(type);
+                return true;
+            } return false;
         }
+
         for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()) {
             if ((entry.getValue()) != null && (entry.getValue().checkTypeDepot())) {
                 if ((entry.getKey() != type) && entry.getValue().viewResources().get(0).equalsType(resource)) {
@@ -207,7 +226,11 @@ public class Warehouse {
                 }
             }
         }
-        return depots.get(type).insert(resource);
+
+        if (depots.get(type).insert(resource)) {
+            updateDepot(type);
+            return true;
+        } return false;
     }
 
     /**
@@ -218,7 +241,11 @@ public class Warehouse {
      * @throws NegativeResourcesDepotException if the Depot doesn't have enough resources
      */
     public boolean removeFromDepot(DepotSlot type, Resource resource) throws NegativeResourcesDepotException {
-        return depots.get(type).withdraw(resource);
+        if (depots.get(type).withdraw(resource)) {
+            updateDepot(type);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -242,6 +269,7 @@ public class Warehouse {
         }
         for (Map.Entry<ProductionID, Production> entry : availableProductions.entrySet()) {
             entry.getValue().reset();
+            updateProduction(entry.getKey());
         }
     }
 
@@ -255,6 +283,7 @@ public class Warehouse {
     public boolean setNormalProduction(ProductionID id, NormalProduction normalProduction) throws IllegalNormalProduction {
         try {
             availableProductions.get(id).setNormalProduction(normalProduction);
+            updateProduction(id);
             return true;
         } catch (IllegalNormalProduction e) {
             throw new IllegalNormalProduction(normalProduction, "The method to set this production to normal failed");
@@ -278,6 +307,7 @@ public class Warehouse {
      */
     public void addProduction(ProductionID key, Production value){
         this.availableProductions.put(key, value);
+        updateProduction(key);
     }
 
     /**
@@ -289,6 +319,7 @@ public class Warehouse {
         for (ProductionID id : ProductionID.special()){
             if (availableProductions.get(id) == null) {
                 availableProductions.put(id, prod);
+                updateProduction(id);
                 return;
             }
         }
@@ -342,6 +373,7 @@ public class Warehouse {
      */
     public void flushBufferDepot() {
         depots.put(DepotSlot.BUFFER, DepotBuilder.buildStrongBoxDepot());
+        updateDepot(DepotSlot.BUFFER);
     }
 
     /**
@@ -349,9 +381,17 @@ public class Warehouse {
      * @return the Map of ProductionID - Production
      */
     public Map<ProductionID, Production> getProduction(){
-        Map<ProductionID, Production> temp = new EnumMap<ProductionID, Production>(ProductionID.class);
+        Map<ProductionID, Production> temp = new EnumMap<>(ProductionID.class);
         temp.putAll(this.availableProductions);
         return temp;
+    }
+
+    protected void updateDepot(DepotSlot depot) {
+        this.player.view.publish(new DepotUpdater(this.player.getNickname(), this.depots.get(depot).liteVersion(), depot));
+    }
+
+    protected void updateProduction(ProductionID prod) {
+        this.player.view.publish(new ProductionUpdater(this.player.getNickname(), this.availableProductions.get(prod).liteVersion(), prod));
     }
 
     // for testing
@@ -362,4 +402,6 @@ public class Warehouse {
     public Map<ProductionID, Production> test_getProduction() {
         return this.availableProductions;
     }
+
+
 }

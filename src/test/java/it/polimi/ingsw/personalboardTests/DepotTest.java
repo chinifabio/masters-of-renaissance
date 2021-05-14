@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
+import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -100,8 +101,8 @@ public class DepotTest {
     }
 
     @Test
-    public void removeFromSpecialDepot() throws NegativeResourcesDepotException, WrongDepotException {
-        Depot special = DepotBuilder.buildSpecialDepot(ResourceBuilder.buildShield());
+    public void removeFromSpecialDepot() throws NegativeResourcesDepotException {
+        Depot special = DepotBuilder.buildSpecialDepot(ResourceType.SHIELD);
         boolean exc = false;
 
         special.insert(ResourceBuilder.buildShield(2));

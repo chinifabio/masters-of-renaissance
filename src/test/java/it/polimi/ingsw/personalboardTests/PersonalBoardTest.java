@@ -4,12 +4,9 @@ package it.polimi.ingsw.personalboardTests;
 import static it.polimi.ingsw.model.resource.ResourceBuilder.buildStone;
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.VirtualView;
+import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.*;
-import it.polimi.ingsw.model.cards.effects.AddDepotEffect;
-import it.polimi.ingsw.model.cards.effects.AddExtraProductionEffect;
-import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
-import it.polimi.ingsw.model.cards.effects.Effect;
+import it.polimi.ingsw.model.cards.effects.*;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
@@ -47,13 +44,11 @@ import java.util.*;
  * test collectors for PersonalBoard
  */
 public class PersonalBoardTest {
-
-    Match game = new MultiplayerMatch(2);
-
     Player player1;
     Player player2;
 
-    VirtualView view = new VirtualView();
+    Dispatcher view = new Dispatcher();
+    Match game = new MultiplayerMatch(2, view);
 
     @BeforeEach
     public void initialization() {
@@ -62,7 +57,7 @@ public class PersonalBoardTest {
         assertDoesNotThrow(()->player2 = new Player("pino", game, view));
         assertTrue(game.playerJoin(player2));
 
-        assertTrue(game.startGame());
+        //assertTrue(game.startGame());
 
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
@@ -94,7 +89,7 @@ public class PersonalBoardTest {
         DevCardSlot Left = DevCardSlot.LEFT;
         DevCardSlot Center = DevCardSlot.CENTER;
 
-        PersonalBoard finalPersonalBoard = new PersonalBoard(player1, null);
+        PersonalBoard finalPersonalBoard = new PersonalBoard(player1);
 
         assertDoesNotThrow(()->{
             if (finalPersonalBoard.addDevCard(Left, c1)) {
@@ -157,7 +152,7 @@ public class PersonalBoardTest {
     void ActivateLeaderCard() throws MissingCardException, AlreadyInDeckException, IllegalTypeInProduction, WrongDepotException {
         String ID1="000", ID2="111";
         List<Resource> sample = new ArrayList<>();
-        Warehouse warehouse = new Warehouse();
+        Warehouse warehouse = new Warehouse(this.game.test_getCurrPlayer());
 
         Production p = new NormalProduction( sample, sample);
 
@@ -172,14 +167,10 @@ public class PersonalBoardTest {
         LeaderCard c1 = new LeaderCard(ID1, new AddExtraProductionEffect(p), 1, req);
         LeaderCard c2 = new LeaderCard(ID2, new AddExtraProductionEffect(p), 2, req);
 
-        PersonalBoard personalBoard =  new PersonalBoard(game.test_getCurrPlayer(), view);
+        PersonalBoard personalBoard =  new PersonalBoard(game.test_getCurrPlayer());
 
         personalBoard.addLeaderCard(c1);
-        try {
-            assertEquals(personalBoard.viewLeaderCard().peekFirstCard(), c1);
-        } catch (EmptyDeckException e) {
-            fail();
-        }
+        assertEquals(personalBoard.viewLeaderCard().peekFirstCard(), c1);
 
         //personalBoard.addLeaderCard(c1);
 
@@ -219,7 +210,7 @@ public class PersonalBoardTest {
         LeaderCard c1 = new LeaderCard(ID1, new AddProductionEffect(p), 1, req);
         LeaderCard c2 = new LeaderCard(ID2, new AddProductionEffect(p), 2, req);
 
-        PersonalBoard personalBoard = new PersonalBoard(game.test_getCurrPlayer(), view);
+        PersonalBoard personalBoard = new PersonalBoard(game.test_getCurrPlayer());
 
         assertNotNull(personalBoard);
         for (LeaderCard leaderCard : Arrays.asList(c1, c2)) {
@@ -259,7 +250,7 @@ public class PersonalBoardTest {
      */
     @Test
     void Resources() throws IllegalTypeInProduction, NegativeResourcesDepotException, UnobtainableResourceException, WrongDepotException {
-        PersonalBoard personalBoard = new PersonalBoard(player1, null);
+        PersonalBoard personalBoard = new PersonalBoard(player1);
 
         Resource twoStone = ResourceBuilder.buildStone(2);
         Resource oneStone = ResourceBuilder.buildStone(1);
@@ -320,8 +311,7 @@ public class PersonalBoardTest {
             try {
                 player.test_getPB().moveInProduction(DepotSlot.BOTTOM, ProductionID.CENTER, ResourceBuilder.buildShield(2));
                 fail();
-            } catch (NegativeResourcesDepotException e) {
-            }
+            } catch (NegativeResourcesDepotException ignore) {}
             player.test_getPB().activateProductions();
             assertEquals(check, player.test_getPB().viewDepotResource(DepotSlot.STRONGBOX));
 
@@ -337,8 +327,8 @@ public class PersonalBoardTest {
             assertEquals(check2, player.test_getPB().viewDepotResource(DepotSlot.STRONGBOX));
 
 
-            List<Requisite> LCreq = new ArrayList<>(Arrays.asList(new ResourceRequisite(ResourceBuilder.buildCoin())));
-            Production extraProd = new UnknownProduction(Arrays.asList(ResourceBuilder.buildUnknown()), Arrays.asList(ResourceBuilder.buildUnknown(), ResourceBuilder.buildFaithPoint()));
+            List<Requisite> LCreq = new ArrayList<>(Collections.singletonList(new ResourceRequisite(ResourceBuilder.buildCoin())));
+            Production extraProd = new UnknownProduction(Collections.singletonList(ResourceBuilder.buildUnknown()), Arrays.asList(ResourceBuilder.buildUnknown(), ResourceBuilder.buildFaithPoint()));
             LeaderCard card = new LeaderCard("175", new AddExtraProductionEffect(extraProd), 5, LCreq);
         });
     }
@@ -347,15 +337,15 @@ public class PersonalBoardTest {
     public void countsDevCardsPoints() {
         PersonalBoard board = player1.test_getPB();
 
-        DevCard devCard1 = new DevCard("DC1", null, 3, LevelDevCard.LEVEL1, ColorDevCard.BLUE,null);
-        DevCard devCard2 = new DevCard("DC2", null, 5, LevelDevCard.LEVEL1, ColorDevCard.GREEN,null);
-        DevCard devCard3 = new DevCard("DC3", null, 2, LevelDevCard.LEVEL1, ColorDevCard.YELLOW,null);
-        DevCard devCard4 = new DevCard("DC4", null, 6, LevelDevCard.LEVEL2, ColorDevCard.BLUE,null);
-        DevCard devCard5 = new DevCard("DC5", null, 3, LevelDevCard.LEVEL2, ColorDevCard.GREEN,null);
-        DevCard devCard6 = new DevCard("DC6", null, 10, LevelDevCard.LEVEL2, ColorDevCard.YELLOW,null);
-        DevCard devCard7 = new DevCard("DC7", null, 25, LevelDevCard.LEVEL3, ColorDevCard.GREEN,null);
+        DevCard devCard1 = new DevCard("DC1", new AddDiscountEffect(ResourceType.SERVANT), 3, LevelDevCard.LEVEL1, ColorDevCard.BLUE, new ArrayList<>());
+        DevCard devCard2 = new DevCard("DC2", new AddDiscountEffect(ResourceType.SERVANT), 5, LevelDevCard.LEVEL1, ColorDevCard.GREEN, new ArrayList<>());
+        DevCard devCard3 = new DevCard("DC3", new AddDiscountEffect(ResourceType.SERVANT), 2, LevelDevCard.LEVEL1, ColorDevCard.YELLOW, new ArrayList<>());
+        DevCard devCard4 = new DevCard("DC4", new AddDiscountEffect(ResourceType.SERVANT), 6, LevelDevCard.LEVEL2, ColorDevCard.BLUE, new ArrayList<>());
+        DevCard devCard5 = new DevCard("DC5", new AddDiscountEffect(ResourceType.SERVANT), 3, LevelDevCard.LEVEL2, ColorDevCard.GREEN, new ArrayList<>());
+        DevCard devCard6 = new DevCard("DC6", new AddDiscountEffect(ResourceType.SERVANT), 10, LevelDevCard.LEVEL2, ColorDevCard.YELLOW, new ArrayList<>());
+        DevCard devCard7 = new DevCard("DC7", new AddDiscountEffect(ResourceType.SERVANT), 25, LevelDevCard.LEVEL3, ColorDevCard.GREEN, new ArrayList<>());
 
-        DevCard nothing = new DevCard("DC8", null, 1, LevelDevCard.LEVEL3, ColorDevCard.BLUE,null);
+        DevCard nothing = new DevCard("DC8", new AddDiscountEffect(ResourceType.SERVANT), 1, LevelDevCard.LEVEL3, ColorDevCard.BLUE, new ArrayList<>());
 
         PersonalBoard finalBoard = board;
         assertDoesNotThrow(()->{
@@ -413,11 +403,11 @@ public class PersonalBoardTest {
             }
 
             //Adding the DevCards to activate LeaderCards
-            DevCard devCard1 = new DevCard("DC1", null, 1, LevelDevCard.LEVEL1, ColorDevCard.GREEN, null);
-            DevCard devCard2 = new DevCard("DC2", null, 1, LevelDevCard.LEVEL1, ColorDevCard.GREEN, null);
-            DevCard devCard3 = new DevCard("DC3", null, 1, LevelDevCard.LEVEL1, ColorDevCard.YELLOW, null);
-            DevCard devCard4 = new DevCard("DC4", null, 1, LevelDevCard.LEVEL2, ColorDevCard.BLUE, null);
-            DevCard devCard5 = new DevCard("DC5", null, 1, LevelDevCard.LEVEL2, ColorDevCard.GREEN, null);
+            DevCard devCard1 = new DevCard("DC1", new AddDiscountEffect(ResourceType.SERVANT), 1, LevelDevCard.LEVEL1, ColorDevCard.GREEN,  new ArrayList<>());
+            DevCard devCard2 = new DevCard("DC2", new AddDiscountEffect(ResourceType.SERVANT), 1, LevelDevCard.LEVEL1, ColorDevCard.GREEN,  new ArrayList<>());
+            DevCard devCard3 = new DevCard("DC3", new AddDiscountEffect(ResourceType.SERVANT), 1, LevelDevCard.LEVEL1, ColorDevCard.YELLOW,  new ArrayList<>());
+            DevCard devCard4 = new DevCard("DC4", new AddDiscountEffect(ResourceType.SERVANT), 1, LevelDevCard.LEVEL2, ColorDevCard.BLUE,  new ArrayList<>());
+            DevCard devCard5 = new DevCard("DC5", new AddDiscountEffect(ResourceType.SERVANT), 1, LevelDevCard.LEVEL2, ColorDevCard.GREEN,  new ArrayList<>());
 
 
             board.addDevCard(DevCardSlot.LEFT, devCard1);
@@ -512,10 +502,10 @@ public class PersonalBoardTest {
         }
 
         //Adding DevCards
-        DevCard devCard1 = new DevCard("DC1", null, randomNum, LevelDevCard.LEVEL1, ColorDevCard.BLUE,null);
-        DevCard devCard2 = new DevCard("DC2", null, randomNum, LevelDevCard.LEVEL1, ColorDevCard.GREEN,null);
-        DevCard devCard3 = new DevCard("DC3", null, randomNum, LevelDevCard.LEVEL1, ColorDevCard.YELLOW,null);
-        DevCard devCard4 = new DevCard("DC4", null, randomNum, LevelDevCard.LEVEL2, ColorDevCard.BLUE,null);
+        DevCard devCard1 = new DevCard("DC1", new AddDiscountEffect(ResourceType.SERVANT), randomNum, LevelDevCard.LEVEL1, ColorDevCard.BLUE, new ArrayList<>());
+        DevCard devCard2 = new DevCard("DC2", new AddDiscountEffect(ResourceType.SERVANT), randomNum, LevelDevCard.LEVEL1, ColorDevCard.GREEN, new ArrayList<>());
+        DevCard devCard3 = new DevCard("DC3", new AddDiscountEffect(ResourceType.SERVANT), randomNum, LevelDevCard.LEVEL1, ColorDevCard.YELLOW, new ArrayList<>());
+        DevCard devCard4 = new DevCard("DC4", new AddDiscountEffect(ResourceType.SERVANT), randomNum, LevelDevCard.LEVEL2, ColorDevCard.BLUE, new ArrayList<>());
 
         assertDoesNotThrow(()->{
             board.addDevCard(DevCardSlot.LEFT, devCard1);

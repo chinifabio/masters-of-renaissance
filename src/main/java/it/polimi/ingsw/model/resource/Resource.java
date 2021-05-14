@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.resource;
 
 import com.fasterxml.jackson.annotation.*;
+import it.polimi.ingsw.litemodel.LiteResource;
+import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
@@ -10,7 +12,7 @@ import it.polimi.ingsw.model.resource.strategy.ObtainStrategy;
  * the resource class that represent a generic resource. its type is defined in the builder
  */
 
-public class Resource{
+public class Resource implements MappableToLiteVersion {
 
     /**
      * flag to check before store a resource
@@ -172,5 +174,15 @@ public class Resource{
      */
     public boolean isStorable() {
         return storable;
+    }
+
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteResource liteVersion() {
+        return new LiteResource(this.type, this.amount);
     }
 }

@@ -2,6 +2,8 @@ package it.polimi.ingsw.model.cards.effects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteAddProductionEffect;
+import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 
@@ -32,5 +34,15 @@ public class AddProductionEffect extends Effect{
     @Override
     public void use(CardReaction p) {
         ((PlayableCardReaction) p).addProduction(this.prod);
+    }
+
+    /**
+     * Return a lite version of the effect
+     *
+     * @return a lite version of the effect
+     */
+    @Override
+    public LiteEffect liteVersion() {
+        return new LiteAddProductionEffect(this.prod.liteVersion());
     }
 }

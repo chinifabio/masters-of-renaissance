@@ -1,9 +1,13 @@
 package it.polimi.ingsw.model.match.markettray;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
+import it.polimi.ingsw.litemodel.litemarkettray.LiteMarketTray;
+import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
@@ -23,7 +27,7 @@ import java.util.function.BiPredicate;
  * the market tray class represent the market of resources in the game.
  * it allows the player to obtain resources pushing the extra marble in a column or row
  */
-public class MarketTray {
+public class MarketTray implements MappableToLiteVersion {
     /**
      * this matrix represent the marbles in the tray
      */
@@ -187,5 +191,25 @@ public class MarketTray {
                 marbles[i][j].copy().unPaint();
             }
         }
+    }
+
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteMarketTray liteVersion() {
+        List<LiteMarble> config = new ArrayList<>();
+
+        for (Marble[] array : this.marbles) {
+            for (Marble m : array) {
+                config.add(m.liteVersion());
+            }
+        }
+
+
+        LiteMarketTray lite = new LiteMarketTray(config, this.slideMarble.liteVersion(), this.row, this.row);
+        return lite;
     }
 }

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.litemodel.liteplayer.LiteState;
+import it.polimi.ingsw.litemodel.liteplayer.PendingStart;
+
 /**
  * This class is the State where the Player is waiting for Match to start
  */
@@ -43,5 +46,15 @@ public class PendingMatchStartPlayerState extends PlayerState {
     @Override
     public String toString() {
         return "PendingStart state";
+    }
+
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteState liteVersion() {
+        return new PendingStart();
     }
 }

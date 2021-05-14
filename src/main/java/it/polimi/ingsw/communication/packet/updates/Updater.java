@@ -13,11 +13,22 @@ import it.polimi.ingsw.litemodel.LiteModel;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonSubTypes({
-        @JsonSubTypes.Type(name = "LeaderCard", value = LeaderCardPublisher.class),
-        @JsonSubTypes.Type(name = "Tray", value = TrayPublisher.class),
-        @JsonSubTypes.Type(name = "BuildMe", value = BuildMePublisher.class)
+        @JsonSubTypes.Type(name = "Conversion", value = ConversionUpdater.class),
+        @JsonSubTypes.Type(name = "Depot", value = DepotUpdater.class),
+        @JsonSubTypes.Type(name = "Develop", value = DevelopUpdater.class),
+        @JsonSubTypes.Type(name = "DevSetup", value = DevSetupUpdater.class),
+        @JsonSubTypes.Type(name = "Discount", value = DiscountUpdater.class),
+        @JsonSubTypes.Type(name = "FaithTrack", value = FaithTrackUpdater.class),
+        @JsonSubTypes.Type(name = "Leader", value = LeaderUpdater.class),
+        @JsonSubTypes.Type(name = "Lorenzo", value = LorenzoUpdater.class),
+        @JsonSubTypes.Type(name = "NewPlayer", value = NewPlayerUpdater.class),
+        @JsonSubTypes.Type(name = "Production", value = ProductionUpdater.class),
+        @JsonSubTypes.Type(name = "Token", value = TokenUpdater.class),
+        @JsonSubTypes.Type(name = "Tray", value = TrayUpdater.class),
+        @JsonSubTypes.Type(name = "PlayerState", value = PlayerStateUpdater.class),
 })
-public abstract class Publisher {
+public abstract class Updater {
+
     /**
      * Take a lite model as input and apply to the implementing function
      * @param liteModel the lite model on the client

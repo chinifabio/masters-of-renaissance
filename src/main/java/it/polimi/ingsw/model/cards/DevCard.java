@@ -2,9 +2,13 @@ package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.model.cards.effects.Effect;
 import it.polimi.ingsw.model.requisite.Requisite;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +30,7 @@ public class DevCard extends Card{
         this.victoryPoint = victoryPoint;
         this.level = level;
         this.color = color;
-        this.cost = cost;
+        this.cost.addAll(cost);
     }
 
     /**
@@ -47,7 +51,7 @@ public class DevCard extends Card{
     /**
      * This attribute is the list of Requisite that the DevCard requires to be bought.
      */
-    private final List<Requisite> cost;
+    private final List<Requisite> cost = new ArrayList<>();
 
     /**
      * This method is used to get the value of victoryPoint of the Card.
@@ -81,4 +85,13 @@ public class DevCard extends Card{
         return cost;
     }
 
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteDevCard liteVersion() {
+        return new LiteDevCard(this.cardID, this.effect.liteVersion(), this.victoryPoint, this.level, this.color, new ArrayList<>(this.cost));
+    }
 }

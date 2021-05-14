@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 /**
  * This interface includes all the methods that can be called to modify the Player when an effect ca
@@ -26,14 +27,14 @@ public interface PlayableCardReaction extends CardReaction {
 
     /**
      * This method adds an extra Depot in the Warehouse
-     * @param depot new depot to be added to Warehouse depots
+     * @param res new depot type to be added to Warehouse depots
      */
-    void addDepot(Depot depot);
+    void addDepot(ResourceType res);
 
     /**
      * This method gives a discount to the player when buying DevCards
      */
-    void addDiscount(Resource discount);
+    void addDiscount(ResourceType discount);
 
     /**
      * This method allow adding a marble conversion to the player

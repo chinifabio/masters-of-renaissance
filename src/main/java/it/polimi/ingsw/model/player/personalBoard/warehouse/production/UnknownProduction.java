@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.player.personalBoard.warehouse.production;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.TextColors;
+import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
@@ -153,5 +154,19 @@ public class UnknownProduction extends Production{
         return this.normal.isPresent() ?
                 this.normal.get().viewResourcesAdded() :
                 super.viewResourcesAdded();
+    }
+
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteProduction liteVersion() {
+        return new LiteProduction (
+                ResourceBuilder.mapResource(this.required),
+                ResourceBuilder.mapResource(this.addedResource),
+                ResourceBuilder.mapResource(this.output)
+        );
     }
 }

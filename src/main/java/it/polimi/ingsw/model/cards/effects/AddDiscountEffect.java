@@ -2,6 +2,8 @@ package it.polimi.ingsw.model.cards.effects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteAddDiscountEffect;
+import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -31,6 +33,16 @@ public class AddDiscountEffect extends Effect{
      */
     @Override
     public void use(CardReaction p) {
-        ((PlayableCardReaction) p).addDiscount(ResourceBuilder.buildFromType(this.resource, 1));
+        ((PlayableCardReaction) p).addDiscount(this.resource);
+    }
+
+    /**
+     * Return a lite version of the effect
+     *
+     * @return a lite version of the effect
+     */
+    @Override
+    public LiteEffect liteVersion() {
+        return new LiteAddDiscountEffect(this.resource);
     }
 }

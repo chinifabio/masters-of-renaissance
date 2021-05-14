@@ -13,7 +13,8 @@ import java.util.List;
  * This class contains every method to manage a deck of cards. Generics are useful to use methods inside the Card sublcasses.
  * @param <T>
  */
-public class Deck<T extends Card>{
+public class Deck<T extends Card> {
+
     /**
      * This method create a deck of card starting from an array of given cards
      * @param newCards array of all the cards to add to the deck
@@ -130,16 +131,14 @@ public class Deck<T extends Card>{
         if (this.cards.contains(card)) throw new AlreadyInDeckException(card);
         this.cards.add(0, card);
         this.updateNumberOfCards();
-
-
     }
 
     /**
      * This method return the first card (position 0) of the deck.
      * @return the top card of the deck.
      */
-    public T peekFirstCard() throws EmptyDeckException {
-        if(this.cards.isEmpty()) throw new EmptyDeckException();
+    public T peekFirstCard() {
+        if(this.cards.isEmpty()) return null;
         return this.cards.get(0);
     }
 

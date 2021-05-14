@@ -15,15 +15,16 @@ public class Server implements Runnable{
     private static int port = 4444;
     private static String address = "127.0.0.1";
 
-    private final ExecutorService executor = Executors.newCachedThreadPool();
+    public final ExecutorService executor = Executors.newCachedThreadPool();
     private final ServerSocket serverSocket;
 
     private final List<String> nicknames = new ArrayList<>();
     private Model lobby = new Model();
 
+    private final Object modelQueue = new Object();
+
     public Server() throws IOException {
         serverSocket = new ServerSocket(port);
-        this.executor.submit(this.lobby);
     }
 
     public static void main(String[] args) {
@@ -74,12 +75,9 @@ public class Server implements Runnable{
         return this.nicknames.remove(nickname);
     }
 
-    public Model obtainModel() {
-        if (this.lobby.availableSeats() == 0) {
-            this.lobby = new Model();
-            this.executor.submit(this.lobby);
-        }
-
+    public Model obtainModel() throws InterruptedException {
+        if (this.lobby.availableSeats() > 0) return this.lobby;
+        if (this.lobby.availableSeats() == 0) this.lobby = new Model();
         return this.lobby;
     }
 }

@@ -3,7 +3,7 @@ package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.model.VirtualView;
+import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
 import it.polimi.ingsw.model.match.markettray.DimensionReader;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
@@ -26,13 +26,11 @@ import java.util.List;
 import java.util.Map;
 
 public class MarketTrayTest {
-
-    Match game = new MultiplayerMatch(2);
-
     Player player1;
     Player player2;
 
-    VirtualView view = new VirtualView();
+    Dispatcher view = new Dispatcher();
+    Match game = new MultiplayerMatch(2, view);
 
     @BeforeEach
     public void initialization() {
@@ -41,7 +39,7 @@ public class MarketTrayTest {
         assertDoesNotThrow(()->player2 = new Player("pino", game, view));
         assertTrue(game.playerJoin(player2));
 
-        assertTrue(game.startGame());
+        //assertTrue(game.startGame());
 
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
@@ -148,11 +146,11 @@ public class MarketTrayTest {
         List<Marble> initConfig = tray.showMarketTray();
 
         initConfig.forEach((Marble m) -> {
-            if(map.containsKey(m.type())){
-                int j = map.get(m.type());
-                map.put(m.type(), ++j);
+            if(map.containsKey(m.color())){
+                int j = map.get(m.color());
+                map.put(m.color(), ++j);
             } else {
-                map.put(m.type(), 1);
+                map.put(m.color(), 1);
             }
         });
 
@@ -162,8 +160,8 @@ public class MarketTrayTest {
             }
         }
 
-        int j = map.get(tray.showSlideMarble().type());
-        map.put(tray.showSlideMarble().type(), ++j);
+        int j = map.get(tray.showSlideMarble().color());
+        map.put(tray.showSlideMarble().color(), ++j);
 
         assertEquals(4, map.get(MarbleColor.WHITE));
         assertEquals(2, map.get(MarbleColor.BLUE));
@@ -202,7 +200,7 @@ public class MarketTrayTest {
         assertEquals(1, map.get(ResourceType.FAITHPOINT));
 
         int i = 0;
-        while (marbles.get(i).type() != MarbleColor.WHITE) i++;
+        while (marbles.get(i).color() != MarbleColor.WHITE) i++;
         try {
             tray.paintMarble(conversion, i);
         } catch (UnpaintableMarbleException e) {

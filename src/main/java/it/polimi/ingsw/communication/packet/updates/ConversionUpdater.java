@@ -3,29 +3,19 @@ package it.polimi.ingsw.communication.packet.updates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class LeaderCardPublisher extends Publisher {
-    /**
-     * the list of card id
-     */
-    private final List<String> cards;
-
-    /**
-     * The nickname of the player who modified leader cards
-     */
+public class ConversionUpdater extends Updater {
+    private final List<Marble> list;
     private final String nickname;
 
-    /**
-     * Build an updater
-     * @param cards list of card id
-     * @param nickname nickname of the player
-     */
     @JsonCreator
-    public LeaderCardPublisher(@JsonProperty("cards") List<String> cards, @JsonProperty("player") String nickname) {
-        this.cards = cards;
+    public ConversionUpdater(@JsonProperty("nickname") String nickname, @JsonProperty("list") List<Marble> marbleConversions) {
         this.nickname = nickname;
+        this.list = marbleConversions;
     }
 
     /**
@@ -35,6 +25,6 @@ public class LeaderCardPublisher extends Publisher {
      */
     @Override
     public void update(LiteModel liteModel) {
-        liteModel.setLeader(this.nickname, this.cards);
+        liteModel.setConversions(this.nickname, this.list.stream().map(x->x.color()).collect(Collectors.toList()));
     }
 }
