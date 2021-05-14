@@ -2,12 +2,14 @@ package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.view.cli.printer.FaithTrackPrinter;
+
+import java.io.IOException;
 
 public class CLI implements View {
 
     @Override
-    public void showFaithTrack() {
-
+    public void showFaithTrack(){
     }
 
     @Override

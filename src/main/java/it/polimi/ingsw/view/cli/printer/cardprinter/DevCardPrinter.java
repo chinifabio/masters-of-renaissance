@@ -84,6 +84,7 @@ public class DevCardPrinter {
 
     }
 
+
     public void printDevCard(String devCardId){
         String[][] devCard = new String[HEIGHT][WIDTH];
 

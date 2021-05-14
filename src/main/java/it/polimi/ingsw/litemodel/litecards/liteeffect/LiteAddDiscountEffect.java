@@ -8,23 +8,24 @@ import it.polimi.ingsw.view.cli.printer.effectprint.EffectPrinter;
 
 public class LiteAddDiscountEffect extends LiteEffect{
 
-    private final ResourceType resourceType;
+    private final ResourceType resource;
 
     @JsonIgnore
     private final AddDiscountPrinter printer;
 
     @JsonCreator
-    public LiteAddDiscountEffect(@JsonProperty("resource") ResourceType resourceType) {
-        this.resourceType = resourceType;
-        this.printer = new AddDiscountPrinter(this.resourceType);
+    public LiteAddDiscountEffect(@JsonProperty("resource") ResourceType resource) {
+        this.resource = resource;
+        this.printer = new AddDiscountPrinter(this.resource);
     }
 
-    public ResourceType getResourceType() {
-        return resourceType;
+    public ResourceType getResource() {
+        return resource;
     }
 
     @Override
     public EffectPrinter getPrinter() {
         return this.printer;
     }
+
 }

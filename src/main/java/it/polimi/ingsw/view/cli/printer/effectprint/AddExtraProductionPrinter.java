@@ -30,7 +30,7 @@ public class AddExtraProductionPrinter implements EffectPrinter{
 
         int initcol = 1;
         if (production.getRequired().size() == 1){
-            initcol = 4;
+            initcol = 5;
         } else if (production.getRequired().size() == 2){
             initcol = 3;
         }
@@ -44,7 +44,7 @@ public class AddExtraProductionPrinter implements EffectPrinter{
         card[4][(card[1].length/2) -1] = "↓";
 
         if (production.getOutput().size() == 1){
-            initcol = 4;
+            initcol = 5;
         } else if (production.getOutput().size() == 2){
             initcol = 3;
         } else {
@@ -55,6 +55,41 @@ public class AddExtraProductionPrinter implements EffectPrinter{
             card[5][initcol] = (String.valueOf(type.getAmount()));
             initcol++;
             card[5][initcol] = (colors.get(type.getType()));
+            initcol++;
+            initcol++;
+        }
+    }
+
+    @Override
+    public void printEffect(String[][] card, int x, int y) {
+
+        int initcol = y + 1;
+        if (this.production.getRequired().size() == 1){
+            initcol = y + 5;
+        } else if (this.production.getRequired().size() == 2){
+            initcol = y + 3;
+        }
+        for (LiteResource type : this.production.getRequired()){
+            card[x + 3][initcol] = (String.valueOf(type.getAmount()));
+            initcol++;
+            card[x + 3][initcol] = (colors.get(type.getType()));
+            initcol++;
+            initcol++;
+        }
+        card[x + 4][y+5] = "↓";
+
+        if (this.production.getOutput().size() == 1){
+            initcol = y + 5;
+        } else if (this.production.getOutput().size() == 2){
+            initcol = y + 3;
+        } else {
+            initcol = y + 2;
+        }
+
+        for (LiteResource type : this.production.getOutput()){
+            card[x + 5][initcol] = (String.valueOf(type.getAmount()));
+            initcol++;
+            card[x + 5][initcol] = (colors.get(type.getType()));
             initcol++;
             initcol++;
         }

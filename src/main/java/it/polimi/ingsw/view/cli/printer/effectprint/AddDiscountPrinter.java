@@ -31,5 +31,13 @@ public class AddDiscountPrinter implements EffectPrinter{
 
     }
 
+    @Override
+    public void printEffect(String[][] leaderCard, int x, int y) {
+        leaderCard[x + 4][y + 4] = "";
+        leaderCard[x + 4][y + 5] = "-1";
+        leaderCard[x + 4][y + 6] = colors.get(resourceType);
+
+    }
+
 
 }

@@ -9,18 +9,20 @@ import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.model.cards.DevCard;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LeaderUpdater extends Updater{
 
     private final String nickname;
 
-    private final List<LiteLeaderCard> deck;
+    private final List<LiteLeaderCard> deck = new ArrayList<>();
 
     @JsonCreator
     public LeaderUpdater(@JsonProperty("nickname") String nickname, @JsonProperty("deck") List<LiteLeaderCard> deck) {
-        this.deck = deck;
+        this.deck.addAll(deck);
         this.nickname = nickname;
+
     }
 
     /**

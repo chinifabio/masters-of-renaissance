@@ -8,16 +8,19 @@ import it.polimi.ingsw.communication.packet.commands.Command;
 import it.polimi.ingsw.communication.packet.commands.DiscardLeaderCommand;
 import it.polimi.ingsw.communication.packet.commands.EndTurnCommand;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
 import it.polimi.ingsw.litemodel.liteplayer.Actions;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.cli.printer.FaithTrackPrinter;
+import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class InGameClientState extends ClientState {
 
@@ -45,7 +48,11 @@ public class InGameClientState extends ClientState {
             switch (new Scanner(System.in).nextLine()) {
                 case "discardLeader":
                     System.out.println("choose the id: ");
-                    System.out.println(model.getLeader(model.getMe()));
+                    try {
+                        new ShowLeaderCards(model.getLeader(model.getMe())).printLeaderCardsPlayer();
+                    } catch (IOException e) {
+                        System.out.println("something wrong...");
+                    }
                     System.out.print("> ");
                     command = new DiscardLeaderCommand(new Scanner(System.in).nextLine());
                     commandSet = true;

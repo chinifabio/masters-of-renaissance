@@ -29,4 +29,11 @@ public class WhiteMarblePrinter implements EffectPrinter{
         leaderCard[4][5] = "=";
         leaderCard[4][7] = colors.get(marble.getToResource());
     }
+
+    @Override
+    public void printEffect(String[][] leaderCard, int x, int y) {
+        leaderCard[x + 4][y + 3] = "O";
+        leaderCard[x + 4][y + 5] = "=";
+        leaderCard[x + 4][y + 7] = colors.get(marble.getToResource());
+    }
 }

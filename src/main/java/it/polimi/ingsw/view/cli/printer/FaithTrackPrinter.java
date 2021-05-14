@@ -19,12 +19,12 @@ public class FaithTrackPrinter {
     /**
      * This attribute is the initial vertical size of a cell
      */
-    private static final int MAX_VERT = 3; //rows.
+    private static final int MAX_VERT = 3;
 
     /**
      * This attribute is the horizontal size of a cell
      */
-    private static final int MAX_HORIZ_CELL = 6; //cols.
+    private static final int MAX_HORIZ_CELL = 6;
 
     /**
      * This attribute is an array of colors that will indicates different players

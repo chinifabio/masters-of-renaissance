@@ -175,6 +175,6 @@ public class ResourceBuilder {
     }
 
     public static List<LiteResource> mapResource(List<Resource> in) {
-        return in.stream().map(x -> new LiteResource(x.type(), x.amount())).collect(Collectors.toList());
+        return in.stream().filter(x -> x.amount() > 0).map(Resource::liteVersion).collect(Collectors.toList());
     }
 }

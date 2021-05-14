@@ -5,4 +5,9 @@ public class DestroyCardsPrinter implements EffectPrinter{
     public void printEffect(String[][] leaderCard) {
 
     }
+
+    @Override
+    public void printEffect(String[][] leaderCard, int x, int y) {
+
+    }
 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.cli.printer.effectprint;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.resource.ResourceType;
 
@@ -31,6 +32,20 @@ public class AddDepotPrinter implements EffectPrinter{
             leaderCard[4][initcol+2] = colors.get(resourceType);
             leaderCard[4][initcol+3] = " ";
             leaderCard[4][initcol+4] = "]";
+            initcol = initcol+5;
+        }
+
+    }
+
+    @Override
+    public void printEffect(String[][] leaderCard, int x, int y) {
+        int initcol = y + 1;
+        for (int i = 0; i < 2; i++){
+            leaderCard[x + 4][initcol] = "[";
+            leaderCard[x + 4][initcol+1] = " ";
+            leaderCard[x + 4][initcol+2] = colors.get(resourceType);
+            leaderCard[x + 4][initcol+3] = " ";
+            leaderCard[x + 4][initcol+4] = "]";
             initcol = initcol+5;
         }
 

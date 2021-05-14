@@ -9,19 +9,19 @@ import it.polimi.ingsw.view.cli.printer.effectprint.EffectPrinter;
 
 public class LiteAddDepotEffect extends LiteEffect {
 
-    private final ResourceType resourceType;
+    private final ResourceType resource;
 
     @JsonIgnore
     private final AddDepotPrinter printer;
 
     @JsonCreator
-    public LiteAddDepotEffect(@JsonProperty("resource") ResourceType resourceType) {
-        this.resourceType = resourceType;
-        this.printer = new AddDepotPrinter(resourceType);
+    public LiteAddDepotEffect(@JsonProperty("resource") ResourceType resource) {
+        this.resource = resource;
+        this.printer = new AddDepotPrinter(this.resource);
     }
 
-    public ResourceType getResourceType() {
-        return resourceType;
+    public ResourceType getResource() {
+        return resource;
     }
 
     @Override

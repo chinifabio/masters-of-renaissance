@@ -395,12 +395,16 @@ public class PersonalBoardTest {
             String ID1 = "";
             String ID2 = "";
             for (LeaderCard card : board.viewLeaderCard().getCards()) {
+                System.out.println(card);
                 if (ID1.equals("")) {
                     ID1 = card.getCardID();
                 } else {
                     ID2 = card.getCardID();
                 }
             }
+
+            player1.test_getPB().discardLeaderCard(ID1);
+            player1.test_getPB().discardLeaderCard(ID2);
 
             //Adding the DevCards to activate LeaderCards
             DevCard devCard1 = new DevCard("DC1", new AddDiscountEffect(ResourceType.SERVANT), 1, LevelDevCard.LEVEL1, ColorDevCard.GREEN,  new ArrayList<>());

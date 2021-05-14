@@ -40,7 +40,6 @@ public class LitePersonalBoard {
     private List<MarbleColor> conversions;
 
     public void setLeader(List<LiteLeaderCard> cards) {
-        // todo now use strings, then we will build the associated card in lite model
         this.leaderCards = cards;
     }
 
