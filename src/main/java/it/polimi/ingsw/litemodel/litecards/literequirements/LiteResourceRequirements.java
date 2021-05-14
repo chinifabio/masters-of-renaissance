@@ -2,17 +2,18 @@ package it.polimi.ingsw.litemodel.litecards.literequirements;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.litemodel.LiteResource;
 
-public class LiteResourceRequirements extends LiteRequirements{
+public class LiteResourceRequirements extends LiteRequirementsType {
 
-    private LiteRequisite resource;
+    private LiteResource resource;
 
     @JsonCreator
-    public LiteResourceRequirements(@JsonProperty("resource") LiteRequisite resource) {
+    public LiteResourceRequirements(@JsonProperty("resource") LiteResource resource) {
         this.resource = resource;
     }
 
-    public LiteRequisite getResource() {
+    public LiteResource getResource() {
         return resource;
     }
 }

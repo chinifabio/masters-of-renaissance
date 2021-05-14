@@ -3,20 +3,21 @@ package it.polimi.ingsw.litemodel.litewarehouse;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequisite;
+import it.polimi.ingsw.litemodel.LiteResource;
 
 import java.util.List;
 
 public class LiteProduction {
 
+    @JsonIgnore
     private String type;
 
-    private List<LiteRequisite> required;
+    private final List<LiteResource> required;
 
-    private List<LiteRequisite> output;
+    private final List<LiteResource> output;
 
     @JsonCreator
-    public LiteProduction(@JsonProperty("required") List<LiteRequisite> required, @JsonProperty("output") List<LiteRequisite> output) {
+    public LiteProduction(@JsonProperty("required") List<LiteResource> required, @JsonProperty("output") List<LiteResource> output) {
         this.required = required;
         this.output = output;
     }
@@ -26,11 +27,11 @@ public class LiteProduction {
         return type;
     }
 
-    public List<LiteRequisite> getRequired() {
+    public List<LiteResource> getRequired() {
         return required;
     }
 
-    public List<LiteRequisite> getOutput() {
+    public List<LiteResource> getOutput() {
         return output;
     }
 }

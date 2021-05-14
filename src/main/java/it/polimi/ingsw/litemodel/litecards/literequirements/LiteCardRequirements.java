@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 
-public class LiteCardRequirements extends LiteRequirements{
+public class LiteCardRequirements extends LiteRequirementsType {
 
     private LevelDevCard level;
 
