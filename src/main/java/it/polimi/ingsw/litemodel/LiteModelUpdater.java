@@ -31,8 +31,8 @@ public class LiteModelUpdater implements Runnable{
                 Updater received = new ObjectMapper().readerFor(Updater.class).readValue(packet.body);
                 received.update(this.model);
             } catch (JsonProcessingException e) {
-                //System.out.println(TextColors.colorText(TextColors.RED, "update view error: ") + e);
-                //System.out.println(packet.body);
+                System.out.println(TextColors.colorText(TextColors.RED, "update view error: ") + e.getMessage());
+                System.out.println(packet.body);
             }
         }
     }

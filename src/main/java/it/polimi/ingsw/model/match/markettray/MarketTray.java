@@ -19,6 +19,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.function.BiPredicate;
@@ -200,16 +201,12 @@ public class MarketTray implements MappableToLiteVersion {
      */
     @Override
     public LiteMarketTray liteVersion() {
-        List<LiteMarble> config = new ArrayList<>();
+        LiteMarble[][] config = new LiteMarble[this.row][this.col];
 
-        for (Marble[] array : this.marbles) {
-            for (Marble m : array) {
-                config.add(m.liteVersion());
-            }
+        for (int i = 0; i < 3; i++) {
+            System.arraycopy(Arrays.stream(this.marbles[i]).map(Marble::liteVersion).toArray(), 0, config[i], 0, this.col);
         }
 
-
-        LiteMarketTray lite = new LiteMarketTray(config, this.slideMarble.liteVersion(), this.row, this.row);
-        return lite;
+        return new LiteMarketTray(config, this.slideMarble.liteVersion(), this.row, this.col);
     }
 }

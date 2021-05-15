@@ -51,6 +51,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      */
     public SingleplayerMatch(Dispatcher view) {
         super(1, 1, view);
+        System.out.println("super fatto");
 
         List<SoloActionToken> init = new ArrayList<>();
 

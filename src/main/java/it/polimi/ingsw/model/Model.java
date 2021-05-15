@@ -87,6 +87,7 @@ public class Model {
 
     public void createMatch(int size) {
         this.gameSize = size;
+
         this.match = size == 1 ?
                 new SingleplayerMatch(dispatcher):
                 new MultiplayerMatch(size, dispatcher);
@@ -100,17 +101,11 @@ public class Model {
         return this.init;
     }
 
-    public int availableSeats() {
+    public int availableSeats() throws InterruptedException {
         if (!init) return -1;
 
-        if (this.match == null) {
-            synchronized (this.initializingQueue) {
-                try {
-                    this.initializingQueue.wait();
-                } catch (InterruptedException e) {
-                    System.out.println("model wait error");
-                }
-            }
+        synchronized (this.initializingQueue) {
+            while (this.match == null) this.initializingQueue.wait();
         }
 
         return this.match.gameSize - this.match.playerInGame();

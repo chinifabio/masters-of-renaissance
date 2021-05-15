@@ -98,7 +98,7 @@ public class LiteModel {
     }
 
     public synchronized LiteMarble[][] getTray() {
-        return tray.getMarbles(0);
+        return tray.getMarbles();
     }
 
     public synchronized LiteDevSetup getDevSetup() {

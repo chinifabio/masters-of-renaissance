@@ -8,6 +8,8 @@ import it.polimi.ingsw.communication.packet.commands.Command;
 import it.polimi.ingsw.communication.packet.commands.DiscardLeaderCommand;
 import it.polimi.ingsw.communication.packet.commands.EndTurnCommand;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
+import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
 import it.polimi.ingsw.litemodel.liteplayer.Actions;
@@ -91,6 +93,10 @@ public class InGameClientState extends ClientState {
                         System.out.println("illegal");
                     break;
 
+                case "devSetup":
+                    for (LiteDevCard[] row : model.getDevSetup().getDevSetup())
+                        System.out.println(Arrays.asList(row));
+                    break;
 
                 default:
                     System.out.println("I don't understand... pls don't bullish me. It is your fault! <3");

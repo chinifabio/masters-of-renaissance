@@ -3,6 +3,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
+import it.polimi.ingsw.model.cards.DevSetup;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 
 import java.io.File;
@@ -30,11 +31,11 @@ public class DevSetupPrinter {
     public static void main(String[] args) throws EmptyDeckException {
         //TESTING
         DevSetupPrinter printer = new DevSetupPrinter();
-        LiteDevSetup setup = new LiteDevSetup(new ArrayList<>());
+        LiteDevSetup setup = new DevSetup().liteVersion();
 
         for (List<LiteDevCard> list : printer.devSetup){
             for (LiteDevCard card: list){
-                setup.setDevCard(card);
+                setup.setDevCard(card, null, null);
             }
         }
     }

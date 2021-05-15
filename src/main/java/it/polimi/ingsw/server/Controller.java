@@ -107,7 +107,6 @@ class CreatorState implements ControllerState {
 
         try {
             context.model.createMatch(Integer.parseInt(packet.body));
-
             context.setState(new InGameState());
             return context.model.login(context, context.nickname);
 

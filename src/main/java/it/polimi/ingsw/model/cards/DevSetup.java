@@ -95,12 +95,15 @@ public class DevSetup implements MappableToLiteVersion {
      */
     @Override
     public LiteDevSetup liteVersion() {
-        List<LiteDevCard> cards = new ArrayList<>();
-        LiteDevCard nullCard= new LiteDevCard("empty", null, 0, null, null, new ArrayList<>());
+        LiteDevCard[][] result = new LiteDevCard[3][4]; // todo remove the hardcoded values
+        LiteDevCard nullCard= new LiteDevCard("empty", null, 0, LevelDevCard.NOLEVEL, ColorDevCard.NOCOLOR, new ArrayList<>());
+
+        int i = 0;
         for(Deck<DevCard> deck : this.devDeckGrid){
             DevCard c = deck.peekFirstCard();
-            cards.add(c == null ? nullCard : c.liteVersion());
+            result[i/4][i%4] = c == null ? nullCard : c.liteVersion();
         }
-        return new LiteDevSetup(cards);
+
+        return new LiteDevSetup(result, 3, 4);
     }
 }
