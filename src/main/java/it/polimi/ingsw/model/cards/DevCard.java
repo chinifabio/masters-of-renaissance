@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.requisite.Requisite;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class is the representation of the DevCard
@@ -92,6 +93,7 @@ public class DevCard extends Card{
      */
     @Override
     public LiteDevCard liteVersion() {
-        return new LiteDevCard(this.cardID, this.effect.liteVersion(), this.victoryPoint, this.level, this.color, new ArrayList<>(this.cost));
+        return new LiteDevCard(this.cardID, this.effect.liteVersion(), this.victoryPoint, this.level, this.color,
+                this.cost.stream().map(Requisite::liteVersion).collect(Collectors.toList()));
     }
 }

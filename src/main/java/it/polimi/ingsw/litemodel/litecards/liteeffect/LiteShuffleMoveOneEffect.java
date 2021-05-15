@@ -1,8 +1,6 @@
 package it.polimi.ingsw.litemodel.litecards.liteeffect;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import it.polimi.ingsw.view.cli.printer.effectprint.EffectPrinter;
 
 public class LiteShuffleMoveOneEffect extends LiteEffect {
     /**
@@ -11,9 +9,9 @@ public class LiteShuffleMoveOneEffect extends LiteEffect {
     @JsonCreator
     public LiteShuffleMoveOneEffect() {}
 
-    @Override
-    public EffectPrinter getPrinter() {
-        return null;
-    }
 
+    @Override
+    public void printEffect(String[][] leaderCard, int x, int y) {
+
+    }
 }

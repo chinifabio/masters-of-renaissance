@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.cards;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -92,7 +93,7 @@ public class LeaderCard extends Card {
      */
     @Override
     public LiteLeaderCard liteVersion() {
-        LiteLeaderCard lite = new LiteLeaderCard(this.cardID, this.effect.liteVersion(),this.victoryPoint, new ArrayList<>(this.requirements), this.activated);
-        return lite;
+        return new LiteLeaderCard(this.cardID, this.effect.liteVersion(), this.victoryPoint,
+                this.requirements.stream().map(Requisite::liteVersion).collect(Collectors.toList()), this.activated);
     }
 }

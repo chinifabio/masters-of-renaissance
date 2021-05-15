@@ -102,6 +102,7 @@ public class DevSetup implements MappableToLiteVersion {
         for(Deck<DevCard> deck : this.devDeckGrid){
             DevCard c = deck.peekFirstCard();
             result[i/4][i%4] = c == null ? nullCard : c.liteVersion();
+            i++;
         }
 
         return new LiteDevSetup(result, 3, 4);

@@ -12,6 +12,10 @@ public class TextColors {
         return textColors + text + RESET ;
     }
 
+    public static String colorTextBackGround(String textColors, String background, String text){
+        return textColors  + background + text + RESET ;
+    }
+
 
     public static String casualColorYellow(String text){
         return getString(text, YELLOW_BRIGHT, YELLOW, YELLOW_BOLD);

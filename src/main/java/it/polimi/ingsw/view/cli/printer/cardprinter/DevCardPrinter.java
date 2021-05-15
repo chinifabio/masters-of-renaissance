@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
+import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequisite;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,84 +12,66 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DevCardPrinter {
-    private static final int HEIGHT = 7; //rows.
+    private static final int HEIGHT = 9; //rows.
     private static final int WIDTH = 12; //cols.
 
-    private final List<LiteDevCard> devCards = new ArrayList<>();
+    public static void createDevCard(String[][] display, LiteDevCard toPrint, int x, int y){
 
-    List<List<LiteDevCard>> devCardsList = new ArrayList<>();
-
-    public DevCardPrinter() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            devCardsList = objectMapper.readValue(
-                    new File("src/resources/DevCards.json"),
-                    new TypeReference<List<List<LiteDevCard>>>(){});
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-        for (List<LiteDevCard> list : this.devCardsList){
-            devCards.addAll(list);
-        }
-    }
-
-    public void createDevCard(String[][] devCard, String ID){
         String colorCard;
-        LiteDevCard toPrint = null;
-        for (LiteDevCard card: devCards){
-            if (card.getId().equals(ID)){
-                toPrint = card;
-            }
-        }
-        assert toPrint != null;
         colorCard = toPrint.getColor().getDevCardColor();
 
-        devCard[0][0] = TextColors.colorText(colorCard,"╔");
-        devCard[HEIGHT -1][0] = TextColors.colorText(colorCard,"╚");
-        for (int i = 1; i< WIDTH -1; i++){
-            devCard[0][i] = TextColors.colorText(colorCard,"═");
-            devCard[HEIGHT -1][i] = TextColors.colorText(colorCard,"═");
+        display[x][y] = TextColors.colorText(colorCard,"╔");
+        display[x + HEIGHT -1][y] = TextColors.colorText(colorCard,"╚");
+        for (int i = y + 1; i< y + WIDTH -1; i++){
+            display[x][i] = TextColors.colorText(colorCard,"═");
+            display[x + HEIGHT -1][i] = TextColors.colorText(colorCard,"═");
         }
-        for (int i = 4; i <8; i++){
-            devCard[0][i] = "";
+        for (int i = y + 4; i < y + 8; i++){
+            display[x][i] = "";
         }
-        devCard[0][4] = TextColors.colorText(colorCard,toPrint.getId());
+        display[x][y + 4] = TextColors.colorText(colorCard,toPrint.getId());
         if (toPrint.getId().length() < 4) {
-            devCard[0][5] = TextColors.colorText(colorCard,"═");
+            display[x][y + 5] = TextColors.colorText(colorCard,"═");
         }
 
-        devCard[0][WIDTH -1] = TextColors.colorText(colorCard,"╗");
-        for (int r = 1; r < HEIGHT -1; r++){
-            devCard[r][0] = (TextColors.colorText(colorCard,"║"));
-            for (int c = 1; c < WIDTH -1; c++){
-                devCard[r][c] = " ";
+        display[x][y + WIDTH -1] = TextColors.colorText(colorCard,"╗");
+        for (int r = x + 1; r < x + HEIGHT -1; r++){
+            display[r][y] = (TextColors.colorText(colorCard,"║"));
+            for (int c = y + 1; c < y + WIDTH -1; c++){
+                display[r][c] = " ";
             }
-            devCard[r][WIDTH - 1] = TextColors.colorText(colorCard,"║");
+            display[r][y + WIDTH - 1] = TextColors.colorText(colorCard,"║");
         }
-        devCard[HEIGHT -6][WIDTH -7] = TextColors.colorText(TextColors.PURPLE_BRIGHT,String.valueOf(toPrint.getVictoryPoint()));
+        display[x + HEIGHT - 2][y + WIDTH -7] = TextColors.colorText(TextColors.PURPLE_BRIGHT,String.valueOf(toPrint.getVictoryPoint()));
         if (toPrint.getVictoryPoint() > 9){
-            devCard[HEIGHT -6][WIDTH -6] = "";
+            display[x + HEIGHT - 2][y + WIDTH -6] = "";
         }
-        devCard[HEIGHT -1][WIDTH -1] = TextColors.colorText(colorCard,"╝");
+        display[x + HEIGHT -1][y + WIDTH -1] = TextColors.colorText(colorCard,"╝");
 
 
-        devCard[HEIGHT-1][3] = TextColors.colorText(colorCard,"LEVEL");
-        devCard[HEIGHT-1][4] = TextColors.colorText(colorCard, String.valueOf(toPrint.getLevel().getLevelCard()));
-        for (int i = 5; i< WIDTH-3; i++){
-            devCard[HEIGHT-1][i] = "";
+        display[x + HEIGHT-1][y + 3] = TextColors.colorText(colorCard,"LEVEL");
+        display[x + HEIGHT-1][y + 4] = TextColors.colorText(colorCard, String.valueOf(toPrint.getLevel().getLevelCard()));
+        for (int i = y + 5; i< y + WIDTH-3; i++){
+            display[x + HEIGHT-1][i] = "";
         }
-        toPrint.getEffect().getPrinter().printEffect(devCard);
-        for (int i = 1; i < devCard[3].length - 1; i++) {
-            devCard[2][i] = TextColors.colorText(colorCard,"-");
+        toPrint.getEffect().printEffect(display, x, y);
+        for (int i = y + 1; i < y + WIDTH - 1; i++) {
+            display[x + 2][i] = TextColors.colorText(TextColors.CYAN,"-");
+            display[x + HEIGHT -3][i] = TextColors.colorText(TextColors.CYAN,"-");
+        }
+        int z = y;
+        for (LiteRequisite requisite : toPrint.getCost()) {
+            requisite.printRequisite(display, x, z);
+            z = z + 3;
         }
 
     }
 
 
-    public void printDevCard(String devCardId){
+    public void printDevCard(LiteDevCard devCardToPrint){
         String[][] devCard = new String[HEIGHT][WIDTH];
 
-        createDevCard(devCard, devCardId);
+        createDevCard(devCard, devCardToPrint, 0,0);
         for (int r = 0; r < (HEIGHT); r++) {
             System.out.println();
             for (int c = 0; c < (WIDTH); c++) {
@@ -100,9 +83,23 @@ public class DevCardPrinter {
 
     public static void main(String[] args) throws IOException {
         DevCardPrinter printer = new DevCardPrinter();
+        List<LiteDevCard> devCards = new ArrayList<>();
+        List<List<LiteDevCard>> devCardsList = new ArrayList<>();
 
-        for (int i = 1; i < 49; i++) {
-            printer.printDevCard("DC" + i);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            devCardsList = objectMapper.readValue(
+                    new File("src/resources/DevCards.json"),
+                    new TypeReference<List<List<LiteDevCard>>>(){});
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (List<LiteDevCard> list : devCardsList){
+            devCards.addAll(list);
+        }
+
+        for (LiteDevCard card : devCards){
+            printer.printDevCard(card);
         }
 
     }

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import it.polimi.ingsw.view.cli.printer.effectprint.EffectPrinter;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
@@ -21,5 +20,6 @@ import it.polimi.ingsw.view.cli.printer.effectprint.EffectPrinter;
 public abstract class LiteEffect {
 
     @JsonIgnore
-    public abstract EffectPrinter getPrinter();
+    public abstract void printEffect(String[][] leaderCard, int x, int y);
+
 }

@@ -1,8 +1,12 @@
 package it.polimi.ingsw.model.requisite;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
+import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequisite;
+import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
@@ -19,7 +23,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
         @JsonSubTypes.Type(name = "CardReq", value = CardRequisite.class),
         @JsonSubTypes.Type(name = "ColorCardReq", value = ColorCardRequisite.class)
 })
-public interface Requisite {
+public interface Requisite extends MappableToLiteVersion {
 
     /**
      * return the amount of loot contained
@@ -53,4 +57,10 @@ public interface Requisite {
      * @return the type of requisite, so CARD or RESOURCE
      */
     RequisiteType getRequisiteType();
+
+    /**
+     * Return a lite version of the effect
+     * @return a lite version of the effect
+     */
+    LiteRequisite liteVersion();
 }

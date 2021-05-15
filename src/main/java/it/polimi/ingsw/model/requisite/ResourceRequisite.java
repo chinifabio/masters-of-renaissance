@@ -2,6 +2,8 @@ package it.polimi.ingsw.model.requisite;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequisite;
+import it.polimi.ingsw.litemodel.litecards.literequirements.LiteResourceRequisite;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
@@ -83,5 +85,15 @@ public class ResourceRequisite implements Requisite {
     @Override
     public RequisiteType getRequisiteType() {
         return RequisiteType.RESOURCE;
+    }
+
+    /**
+     * Return a lite version of the effect
+     *
+     * @return a lite version of the effect
+     */
+    @Override
+    public LiteRequisite liteVersion() {
+        return new LiteResourceRequisite(this.resource.liteVersion());
     }
 }

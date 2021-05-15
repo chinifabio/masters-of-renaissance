@@ -1,17 +1,15 @@
 package it.polimi.ingsw.litemodel.litecards.liteeffect;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import it.polimi.ingsw.view.cli.printer.effectprint.EffectPrinter;
 
 public class LiteMoveTwoEffect extends LiteEffect {
 
     @JsonCreator
     public LiteMoveTwoEffect() {}
 
-    @Override
-    public EffectPrinter getPrinter() {
-        return null;
-    }
 
+    @Override
+    public void printEffect(String[][] leaderCard, int x, int y) {
+
+    }
 }

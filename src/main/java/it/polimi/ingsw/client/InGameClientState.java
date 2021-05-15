@@ -51,7 +51,7 @@ public class InGameClientState extends ClientState {
                 case "discardLeader":
                     System.out.println("choose the id: ");
                     try {
-                        new ShowLeaderCards(model.getLeader(model.getMe())).printLeaderCardsPlayer();
+                        ShowLeaderCards.printLeaderCardsPlayer(model.getLeader(model.getMe()));
                     } catch (IOException e) {
                         System.out.println("something wrong...");
                     }

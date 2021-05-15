@@ -1,11 +1,7 @@
 package it.polimi.ingsw.litemodel.litecards;
 
-import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
-import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequirementsType;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
-
-import java.util.List;
 
 public class LiteDevCardEmpty extends LiteDevCard{
 

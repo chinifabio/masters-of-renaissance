@@ -12,18 +12,11 @@ import java.util.Random;
 
 public class ShowLeaderCards {
 
-    private static final int HEIGHT = 9; //rows.
+    private static final int HEIGHT = 11; //rows.
     private static final int WIDTH = 60; //cols.
 
-    private final List<LiteLeaderCard> toShow = new ArrayList<>();
-
-    private final String[][] leaderCards = new String[HEIGHT][WIDTH];
-
-    public ShowLeaderCards(List<LiteLeaderCard> toShow) {
-        this.toShow.addAll(toShow);
-    }
-
-    public void printLeaderCardsPlayer() throws IOException {
+    public static void printLeaderCardsPlayer(List<LiteLeaderCard> toShow) throws IOException {
+        String[][] leaderCards = new String[HEIGHT][WIDTH];
         for (int i = 0; i< HEIGHT-1; i++){
             for (int j = 0; j<WIDTH-1; j++){
                 leaderCards[i][j] = " ";
@@ -59,9 +52,7 @@ public class ShowLeaderCards {
         names.add(leaderCards.get(rd.nextInt(16)));
         names.add(leaderCards.get(rd.nextInt(16)));
 
-
-        ShowLeaderCards leader = new ShowLeaderCards(names);
-        leader.printLeaderCardsPlayer();
+        printLeaderCardsPlayer(names);
     }
 
 
