@@ -97,8 +97,8 @@ public class LiteModel {
         return this.players.get(nickname).getLeaderCards();
     }
 
-    public synchronized LiteMarble[][] getTray() {
-        return tray.getMarbles();
+    public synchronized LiteMarketTray getTray() {
+        return tray;
     }
 
     public synchronized LiteDevSetup getDevSetup() {

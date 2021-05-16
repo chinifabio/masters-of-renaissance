@@ -10,9 +10,9 @@ import java.io.IOException;
 public class MarketTrayPrinter {
 
     private static final int HEIGHT = 10;
-    private  static final int WIDTH = 17;
+    private  static final int WIDTH = 24;
 
-    public static void createMarketTray(LiteMarketTray tray , String[][] display, int x, int y){
+    private static void createMarketTray(LiteMarketTray tray, String[][] display, int x, int y){
 
         LiteMarble[][] marbles = new LiteMarble[3][4];
 
@@ -23,33 +23,34 @@ public class MarketTrayPrinter {
         LiteMarble slideMarble = new LiteMarble(tray.getSlideMarble().getColor(), tray.getSlideMarble().getToResource());
 
         final String traySample =
-                            "╔═══╦═══╦═══╦═══╗" +
-                            "║   ║   ║   ║   ║" +
-                            "╠═══╬═══╬═══╬═══╣" +
-                            "║   ║   ║   ║   ║" +
-                            "╠═══╬═══╬═══╬═══╣" +
-                            "║   ║   ║   ║   ║" +
-                            "╚═══╩═══╩═══╩═══╝" +
-                            "╔═══════════════╗" +
-                            "║               ║" +
-                            "╚═══════════════╝";
+                            "╔════════════════════╗  " +
+                            "║                    ║  " +
+                            "║    ╔═══╦═══╦═══╦═══╣  " +
+                            "║    ║   ║   ║   ║   ║ ←" +
+                            "║    ╠═══╬═══╬═══╬═══╣  " +
+                            "║    ║   ║   ║   ║   ║ ←" +
+                            "║    ╠═══╬═══╬═══╬═══╣  " +
+                            "║    ║   ║   ║   ║   ║ ←" +
+                            "╚════╩═══╩═══╩═══╩═══╝  " +
+                            "       ↑   ↑   ↑   ↑    ";
+
         int i = 0;
         for (char c : traySample.toCharArray()){
             display[x+i/WIDTH][y+i%WIDTH] = String.valueOf(c);
             i++;
         }
         int id = 0;
-        int indexX = 1;
-        int indexY = 2;
+        int indexX = 3;
+        int indexY = 7;
         for (int z = 0; z < 3; z++){
             for (int j = 0; j < 4; j++){
                 display[indexX][indexY] = CLI.colorMarbles.get(marbles[z][j].getColor());
                 indexY = indexY + 4;
             }
-            indexY = 2;
+            indexY = 7;
             indexX = indexX + 2;
         }
-        display[HEIGHT-2][WIDTH-3] = CLI.colorMarbles.get(slideMarble.getColor());
+        display[1][WIDTH-5] = CLI.colorMarbles.get(slideMarble.getColor());
 
     }
 

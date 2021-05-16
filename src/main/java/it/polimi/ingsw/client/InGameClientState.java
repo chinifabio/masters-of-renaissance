@@ -3,22 +3,22 @@ package it.polimi.ingsw.client;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.communication.packet.commands.ChooseResourceCommand;
-import it.polimi.ingsw.communication.packet.commands.Command;
-import it.polimi.ingsw.communication.packet.commands.DiscardLeaderCommand;
-import it.polimi.ingsw.communication.packet.commands.EndTurnCommand;
+import it.polimi.ingsw.communication.packet.commands.*;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
 import it.polimi.ingsw.litemodel.liteplayer.Actions;
+import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.cli.printer.FaithTrackPrinter;
+import it.polimi.ingsw.view.cli.printer.MarketTrayPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
 
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Scanner;
@@ -44,7 +44,7 @@ public class InGameClientState extends ClientState {
         Command command = null;
         boolean commandSet = false;
 
-        while (!commandSet) {
+        while (command == null) {
             System.out.println("give me action: ");
             System.out.print("> ");
             switch (new Scanner(System.in).nextLine()) {
@@ -77,9 +77,29 @@ public class InGameClientState extends ClientState {
                     break;
 
                 case "viewTray":
-                    LiteMarble[][] tray = model.getTray();
-                    for (LiteMarble[] row : tray) System.out.println(Arrays.asList(row));
+                    MarketTrayPrinter.printMarketTray(model.getTray());
                     break;
+
+                case "useMarket":
+                    MarketTrayPrinter.printMarketTray(model.getTray());
+                    System.out.println("Row or col?");
+                    System.out.print("> ");
+                    RowCol rowCol = RowCol.valueOf(new Scanner(System.in).nextLine().toUpperCase(Locale.ROOT));
+                    int index = -1;
+                    boolean repeat = false;
+                    do{
+                        System.out.println("Index?");
+                        System.out.print("> ");
+                        try {
+                            index = Integer.parseInt(new Scanner(System.in).nextLine());
+                        } catch (NumberFormatException e){
+                            repeat = true;
+                        }
+                    }while (repeat);
+                    command = new UseMarketTrayCommand(rowCol,index);
+                    commandSet = true;
+                    break;
+
 
                 case "track":
                     try {
@@ -87,6 +107,7 @@ public class InGameClientState extends ClientState {
                     } catch (IOException e) {
                         System.out.println("something wrong...");
                     }
+                    break;
 
                 case "activateLeader":
                     if (model.getState().canDoAction(Actions.ACTIVATE_LEADER_CARD))

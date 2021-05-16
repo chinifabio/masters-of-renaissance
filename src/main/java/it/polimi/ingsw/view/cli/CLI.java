@@ -28,7 +28,7 @@ public class CLI implements View {
         put(MarbleColor.BLUE, TextColors.colorText(TextColors.BLUE_BRIGHT,"●"));
         put(MarbleColor.PURPLE, TextColors.colorText(TextColors.PURPLE,"●"));
         put(MarbleColor.WHITE, TextColors.colorText(TextColors.WHITE_BRIGHT,"●"));
-        put(MarbleColor.GRAY,"●");
+        put(MarbleColor.GRAY,TextColors.colorText(TextColors.WHITE,"●"));
         put(MarbleColor.RED, TextColors.colorText(TextColors.RED,"●"));
     }};
 

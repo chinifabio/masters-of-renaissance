@@ -203,7 +203,7 @@ public class MarketTray implements MappableToLiteVersion {
     public LiteMarketTray liteVersion() {
         LiteMarble[][] config = new LiteMarble[this.row][this.col];
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < this.row; i++) {
             System.arraycopy(Arrays.stream(this.marbles[i]).map(Marble::liteVersion).toArray(), 0, config[i], 0, this.col);
         }
 
