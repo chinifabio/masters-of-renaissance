@@ -182,8 +182,9 @@ public abstract class Match implements PlayerToMatch {
     @Override
     public void useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException, WrongDepotException {
         switch (rc) {
-            case COL: this.marketTray.pushCol(index, turn.getCurPlayer());
-            case ROW: this.marketTray.pushRow(index, turn.getCurPlayer());
+            case COL: this.marketTray.pushCol(index, turn.getCurPlayer()); break;
+            case ROW: this.marketTray.pushRow(index, turn.getCurPlayer()); break;
+
         }
 
         // update lite model

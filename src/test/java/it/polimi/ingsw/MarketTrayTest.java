@@ -74,6 +74,7 @@ public class MarketTrayTest {
         beforePush = tray.showMarketTray();
         slide = tray.showSlideMarble();
 
+
         int shiftCol = 1;
 
         try {
@@ -93,6 +94,8 @@ public class MarketTrayTest {
 
         assertArrayEquals(beforePush.toArray(), tray.showMarketTray().toArray());
         assertEquals(slide,tray.showSlideMarble());
+
+        MarketTrayPrinter.printMarketTray(tray.liteVersion());
     }
 
     /**

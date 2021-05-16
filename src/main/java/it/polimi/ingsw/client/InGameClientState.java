@@ -15,6 +15,8 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.cli.printer.FaithTrackPrinter;
 import it.polimi.ingsw.view.cli.printer.MarketTrayPrinter;
+import it.polimi.ingsw.view.cli.printer.WarehousePrinter;
+import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
 
 import java.io.IOException;
@@ -42,12 +44,12 @@ public class InGameClientState extends ClientState {
     @Override
     protected Packet doStuff(LiteModel model) {
         Command command = null;
-        boolean commandSet = false;
 
         while (command == null) {
             System.out.println("give me action: ");
             System.out.print("> ");
             switch (new Scanner(System.in).nextLine()) {
+
                 case "discardLeader":
                     System.out.println("choose the id: ");
                     try {
@@ -57,7 +59,6 @@ public class InGameClientState extends ClientState {
                     }
                     System.out.print("> ");
                     command = new DiscardLeaderCommand(new Scanner(System.in).nextLine());
-                    commandSet = true;
                     break;
 
                 case "chooseRes":
@@ -68,12 +69,10 @@ public class InGameClientState extends ClientState {
                     System.out.print("> ");
                     DepotSlot dest = DepotSlot.valueOf(new Scanner(System.in).nextLine().toUpperCase());
                     command = new ChooseResourceCommand(dest, res);
-                    commandSet = true;
                     break;
 
                 case "endTurn":
                     command = new EndTurnCommand();
-                    commandSet = true;
                     break;
 
                 case "viewTray":
@@ -97,7 +96,6 @@ public class InGameClientState extends ClientState {
                         }
                     }while (repeat);
                     command = new UseMarketTrayCommand(rowCol,index);
-                    commandSet = true;
                     break;
 
 
@@ -115,8 +113,7 @@ public class InGameClientState extends ClientState {
                     break;
 
                 case "devSetup":
-                    for (LiteDevCard[] row : model.getDevSetup().getDevSetup())
-                        System.out.println(Arrays.asList(row));
+                    DevSetupPrinter.printDevSetup(model.getDevSetup());
                     break;
 
                 default:
