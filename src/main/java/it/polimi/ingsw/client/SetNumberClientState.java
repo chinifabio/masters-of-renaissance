@@ -11,7 +11,7 @@ public class SetNumberClientState extends ClientState {
 
     public SetNumberClientState() {
         super();
-        this.nextState.put(HeaderTypes.JOIN_LOBBY, new InLobbyClientState());
+        this.nextState.put(HeaderTypes.JOIN_LOBBY, new InGameClientState());
     }
 
     /**

@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.litemodel.litecards.LiteSoloActionToken;
 import it.polimi.ingsw.model.cards.effects.Effect;
 
 /**
@@ -18,4 +19,13 @@ public class SoloActionToken extends Card{
         super(cardID,effect);
     }
 
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteSoloActionToken liteVersion() {
+        return new LiteSoloActionToken(this.cardID, this.effect.liteVersion());
+    }
 }

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.cards.effects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
+import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteShuffleMoveOneEffect;
 import it.polimi.ingsw.model.match.SoloTokenReaction;
 
 /**
@@ -22,5 +24,15 @@ public class ShuffleMoveOneEffect extends Effect {
     public void use(CardReaction p) {
         ((SoloTokenReaction) p).moveLorenzo(1);
         ((SoloTokenReaction) p).shuffleToken();
+    }
+
+    /**
+     * Return a lite version of the effect
+     *
+     * @return a lite version of the effect
+     */
+    @Override
+    public LiteEffect liteVersion() {
+        return new LiteShuffleMoveOneEffect();
     }
 }

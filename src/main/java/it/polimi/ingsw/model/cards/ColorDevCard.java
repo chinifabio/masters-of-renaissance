@@ -6,16 +6,22 @@ import it.polimi.ingsw.TextColors;
  * This enumeration indicates the colors of the DevCards
  */
 public enum ColorDevCard {
-    GREEN(0, TextColors.GREEN), YELLOW(1, TextColors.YELLOW),
-    BLUE(2,TextColors.BLUE), PURPLE(3, TextColors.PURPLE);
+    GREEN(0, TextColors.GREEN,TextColors.GREEN_BACKGROUND),
+    YELLOW(1, TextColors.YELLOW, TextColors.YELLOW_BACKGROUND),
+    BLUE(2,TextColors.BLUE, TextColors.BLUE_BACKGROUND),
+    PURPLE(3, TextColors.PURPLE, TextColors.PURPLE_BACKGROUND),
+    NOCOLOR(-1, TextColors.RED_BACKGROUND, TextColors.RED_BACKGROUND);
 
     private final int devSetupIndex;
 
     private final String color;
 
-    ColorDevCard(int index, String color) {
+    private final String backGround;
+
+    ColorDevCard(int index, String color, String backGround) {
         this.devSetupIndex = index;
         this.color = color;
+        this.backGround = backGround;
     }
 
     public int getDevSetupIndex() {
@@ -24,6 +30,10 @@ public enum ColorDevCard {
 
     public String getDevCardColor(){
         return this.color;
+    }
+
+    public String getDevCardColorBackground(){
+        return this.backGround;
     }
 
     /**

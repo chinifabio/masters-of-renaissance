@@ -1,7 +1,6 @@
 package it.polimi.ingsw.cards;
 
-import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.model.VirtualView;
+import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.effects.*;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
@@ -31,13 +30,11 @@ import static it.polimi.ingsw.model.resource.ResourceBuilder.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LeaderTest {
-
-    Match game = new MultiplayerMatch(2);
-
     Player player1;
     Player player2;
 
-    VirtualView view = new VirtualView();
+    Dispatcher view = new Dispatcher();
+    Match game = new MultiplayerMatch(2, view);
 
     @BeforeEach
     public void initialization() {
@@ -46,16 +43,16 @@ public class LeaderTest {
         assertDoesNotThrow(()->player2 = new Player("pino", game, view));
         assertTrue(game.playerJoin(player2));
 
-        assertTrue(game.startGame());
+        //assertTrue(game.startGame());
 
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
 
-        assertEquals(HeaderTypes.OK, game.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN).header);
+        assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(() -> assertEquals(buildCoin(), game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0)));
+        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
     }
 
@@ -121,7 +118,7 @@ public class LeaderTest {
         // find the first white marble
         List<Marble> list = game.viewMarketTray();
         int i = 0;
-        while(list.get(i).type() != MarbleColor.WHITE) i++;
+        while(list.get(i).color() != MarbleColor.WHITE) i++;
         int finalI = i;
 
         // adding marble conversion

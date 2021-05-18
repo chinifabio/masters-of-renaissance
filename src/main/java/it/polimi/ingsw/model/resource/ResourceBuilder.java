@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.resource;
 
+import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.model.resource.strategy.DoNothingBehavior;
 import it.polimi.ingsw.model.resource.strategy.GiveFaithPointBehavior;
 import it.polimi.ingsw.model.resource.strategy.LaunchExceptionBehavior;
@@ -7,6 +8,7 @@ import it.polimi.ingsw.model.resource.strategy.LaunchExceptionBehavior;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * class that contains all the builders for all the resource types
@@ -170,5 +172,9 @@ public class ResourceBuilder {
         List<Resource> arranged = ResourceBuilder.buildListOfResource();
         for(Resource res : raw) Objects.requireNonNull(arranged.stream().filter(x -> x.equalsType(res)).findAny().orElse(null)).merge(res);
         return arranged;
+    }
+
+    public static List<LiteResource> mapResource(List<Resource> in) {
+        return in.stream().filter(x -> x.amount() > 0).map(Resource::liteVersion).collect(Collectors.toList());
     }
 }

@@ -23,6 +23,7 @@ public class DummyClient implements Runnable{
     public DummyClient() throws IOException {
         this.socket = new VirtualSocket(new Socket(address, port));
         this.executor.submit(this.socket);
+
         this.state = new InitialClientState();
 
         this.executor.submit(new LiteModelUpdater(this.socket, this.model));

@@ -1,9 +1,13 @@
 package it.polimi.ingsw.model.match.markettray;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
+import it.polimi.ingsw.litemodel.litemarkettray.LiteMarketTray;
+import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
@@ -15,6 +19,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.function.BiPredicate;
@@ -23,7 +28,7 @@ import java.util.function.BiPredicate;
  * the market tray class represent the market of resources in the game.
  * it allows the player to obtain resources pushing the extra marble in a column or row
  */
-public class MarketTray {
+public class MarketTray implements MappableToLiteVersion {
     /**
      * this matrix represent the marbles in the tray
      */
@@ -187,5 +192,21 @@ public class MarketTray {
                 marbles[i][j].copy().unPaint();
             }
         }
+    }
+
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteMarketTray liteVersion() {
+        LiteMarble[][] config = new LiteMarble[this.row][this.col];
+
+        for (int i = 0; i < this.row; i++) {
+            System.arraycopy(Arrays.stream(this.marbles[i]).map(Marble::liteVersion).toArray(), 0, config[i], 0, this.col);
+        }
+
+        return new LiteMarketTray(config, this.slideMarble.liteVersion(), this.row, this.col);
     }
 }

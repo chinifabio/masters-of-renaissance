@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.depot;
 
-
+import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -20,21 +20,12 @@ public class NormalDepot implements Depot {
     /**
      * This attribute is the type and the number of resources into the depot
      */
-    private Resource resources;
+    private Resource resources = ResourceBuilder.buildEmpty();
 
     /**
      * This attribute is a constraint that verifies that the resources within the depot are of the same type
      */
-    private final List<BiPredicate<Resource, Resource>> constraints;
-
-    /**
-     * This method is the constructor of the class
-     */
-    public NormalDepot() {
-        resources = ResourceBuilder.buildEmpty();
-        this.constraints = new ArrayList<>();
-
-    }
+    private final List<BiPredicate<Resource, Resource>> constraints = new ArrayList<>();
 
     /**
      * This method accept a lambda function predicate with two parameters: first one is always referred to the input resource,
@@ -106,5 +97,15 @@ public class NormalDepot implements Depot {
     @Override
     public boolean checkTypeDepot() {
         return true;
+    }
+
+    /**
+     * return a lite version of the depot
+     *
+     * @return the lite version
+     */
+    @Override
+    public LiteDepot liteVersion() {
+        return new LiteDepot(ResourceBuilder.mapResource(this.viewResources()));
     }
 }

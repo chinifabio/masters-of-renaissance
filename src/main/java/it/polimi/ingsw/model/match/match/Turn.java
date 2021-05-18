@@ -56,8 +56,6 @@ public class Turn {
         Random rand = new Random();
         Collections.rotate(playerOrder, rand.nextInt(playerOrder.size()));
 
-        System.out.println("Player order: " + playerOrder);
-
         List<Pair<Integer>> initialResourcesSetup = new ArrayList<>();
 
         initialResourcesSetup.add(new Pair<>(0, 0));

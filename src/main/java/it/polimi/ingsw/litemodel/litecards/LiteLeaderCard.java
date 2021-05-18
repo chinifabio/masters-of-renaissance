@@ -2,7 +2,8 @@ package it.polimi.ingsw.litemodel.litecards;
 
 import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
-import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequirementsType;
+import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequisite;
+import it.polimi.ingsw.model.requisite.Requisite;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class LiteLeaderCard extends LiteCard {
 
     private final int victoryPoints;
 
-    private final List<LiteRequirementsType> requirements;
+    private final List<LiteRequisite> requirements;
 
     private final boolean activated;
 
@@ -19,7 +20,7 @@ public class LiteLeaderCard extends LiteCard {
     public LiteLeaderCard(@JsonProperty("cardID") String cardID,
                           @JsonProperty("effect") LiteEffect effect,
                           @JsonProperty("victoryPoint") int victoryPoints,
-                          @JsonProperty("requirements") List<LiteRequirementsType> requirements,
+                          @JsonProperty("requirements") List<LiteRequisite> requirements,
                           @JsonProperty("activated") boolean activated) {
         super(cardID, effect);
         this.victoryPoints = victoryPoints;
@@ -35,11 +36,21 @@ public class LiteLeaderCard extends LiteCard {
         return victoryPoints;
     }
 
-    public List<LiteRequirementsType> getRequirements() {
+    public List<LiteRequisite> getRequirements() {
         return requirements;
     }
 
     public boolean isActivated() {
         return activated;
+    }
+
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return this.getId();
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.annotation.*;
+import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.cards.effects.CardReaction;
 import it.polimi.ingsw.model.cards.effects.Effect;
 
@@ -14,7 +15,7 @@ import it.polimi.ingsw.model.cards.effects.Effect;
         @JsonSubTypes.Type(name = "Token", value = SoloActionToken.class),
         @JsonSubTypes.Type(name = "Leader", value = LeaderCard.class)
 })
-public abstract class Card{
+public abstract class Card implements MappableToLiteVersion {
 
     /**
      * This is the constructor of the class. It needs a cardID and an effect.
@@ -30,12 +31,12 @@ public abstract class Card{
     /**
      * This attribute is the ID of the card. Every card has a different cardID.
      */
-    private final String cardID;
+    protected final String cardID;
 
     /**
      * This attribute is the effect of the card. The effect is highly tied with the card type.
      */
-    private final Effect effect;
+    protected final Effect effect;
 
     /**
      * This method returns the cardID of the card.

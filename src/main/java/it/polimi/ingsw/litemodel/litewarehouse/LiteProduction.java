@@ -4,22 +4,26 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.LiteResource;
+import it.polimi.ingsw.litemodel.LiteResource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LiteProduction {
 
-    @JsonIgnore
     private String type;
 
-    private final List<LiteResource> required;
+    private final List<LiteResource> required = new ArrayList<>();
 
-    private final List<LiteResource> output;
+    private final List<LiteResource> output = new ArrayList<>();
+
+    private final List<LiteResource> added = new ArrayList<>();
 
     @JsonCreator
-    public LiteProduction(@JsonProperty("required") List<LiteResource> required, @JsonProperty("output") List<LiteResource> output) {
-        this.required = required;
-        this.output = output;
+    public LiteProduction(@JsonProperty("required") List<LiteResource> required, @JsonProperty("added") List<LiteResource> added, @JsonProperty("output") List<LiteResource> output) {
+        this.required.addAll(required);
+        this.output.addAll(output);
+        this.added.addAll(added == null ? new ArrayList<>() : added);
     }
 
     @JsonIgnore
@@ -33,5 +37,9 @@ public class LiteProduction {
 
     public List<LiteResource> getOutput() {
         return output;
+    }
+
+    public List<LiteResource> getAdded() {
+        return added;
     }
 }

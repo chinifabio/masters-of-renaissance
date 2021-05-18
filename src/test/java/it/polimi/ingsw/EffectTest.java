@@ -1,6 +1,6 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.model.VirtualView;
+import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.*;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotExceptio
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
+import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
@@ -22,6 +23,7 @@ import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -38,10 +40,25 @@ import static org.junit.jupiter.api.Assertions.*;
  * test collector for cards effects.
  */
 public class EffectTest {
+    private Player gino;
 
-    /**
-     *
-     */
+    Dispatcher view = new Dispatcher();
+    private SingleplayerMatch singleplayer = new SingleplayerMatch(view);
+
+    @BeforeEach
+    public void initializeMatch() throws IllegalTypeInProduction {
+        gino = new Player("gino", singleplayer, view);
+        assertTrue(singleplayer.playerJoin(gino));
+
+        //assertTrue(singleplayer.startGame());
+
+        // the player discard the first two leader card
+        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().test_discardLeader());
+        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().endThisTurn());
+        // once the second leader is discarded the turn end and match manage lorenzo automatically
+    }
+
     @Test
     void addProductionEffect() throws IllegalTypeInProduction {
         List<Requisite> req = new ArrayList<>();
@@ -52,9 +69,9 @@ public class EffectTest {
 
         DevCard c = new DevCard("000", new AddProductionEffect(p), 2, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
 
-        Player player = new Player("dummy", null, new VirtualView());
+        Player player = new Player("dummy", null, new Dispatcher());
 
-        PersonalBoard personalBoard = new PersonalBoard(player, null);
+        PersonalBoard personalBoard = new PersonalBoard(player);
 
         assertDoesNotThrow(()->personalBoard.addDevCard(DevCardSlot.LEFT,c));
         player.test_setDest(DevCardSlot.LEFT);
@@ -76,7 +93,7 @@ public class EffectTest {
         DevCard c = new DevCard("000", new AddDepotEffect(ResourceType.COIN), 2, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
 
         assertDoesNotThrow(()->{
-            Player player = new Player("gino", null, new VirtualView());
+            Player player = new Player("gino", null, new Dispatcher());
 
             c.useEffect(player);
             try {
@@ -106,7 +123,7 @@ public class EffectTest {
             Production extraProd = new UnknownProduction(Collections.singletonList(ResourceBuilder.buildUnknown()), Arrays.asList(ResourceBuilder.buildUnknown(), ResourceBuilder.buildFaithPoint()));
             LeaderCard c = new LeaderCard("000", new AddExtraProductionEffect(extraProd), 1, req);
 
-            Player player = new Player("gino", null, new VirtualView());
+            Player player = new Player("gino", null, new Dispatcher());
 
             c.useEffect(player);
             assertEquals(extraProd, player.test_getPB().possibleProduction().get(ProductionID.LEADER1));
@@ -115,34 +132,23 @@ public class EffectTest {
 
     @Test
     void destroyCardsEffect() {
-        SingleplayerMatch match = new SingleplayerMatch();
-
         SoloActionToken token = new SoloActionToken("505", new DestroyCardsEffect(ColorDevCard.GREEN));
 
-        DevCard pre = match.viewDevSetup().get(0);
-        token.useEffect(match);
-        assertNotEquals(pre,match.viewDevSetup().get(0));
+        DevCard oldOnTop = singleplayer.viewDevSetup().get(0);
+        token.useEffect(singleplayer);
+        assertNotEquals(oldOnTop, singleplayer.viewDevSetup().get(0));
     }
 
-    /**
-     *
-     */
     @Test
     void moveTwoEffect() {
-        SingleplayerMatch match = new SingleplayerMatch();
-
         SoloActionToken token = new SoloActionToken("505", new MoveTwoEffect());
 
-        int x = match.test_getLorenzoPosition();
-        token.useEffect(match);
-        assertEquals(x+2,match.test_getLorenzoPosition());
+        int x = singleplayer.test_getLorenzoPosition();
+        token.useEffect(singleplayer);
+        assertEquals(x+2, singleplayer.test_getLorenzoPosition());
     }
 
     //TODO adjust when buyDevCard will works
-
-    /**
-     *
-     */
     @Test
     void addDiscountEffect() throws IllegalTypeInProduction {
         List<Requisite> req = new ArrayList<>();

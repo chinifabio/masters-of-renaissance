@@ -2,6 +2,10 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.communication.packet.updates.DevSetupUpdater;
+import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
+import it.polimi.ingsw.communication.packet.updates.TrayUpdater;
+import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
@@ -73,13 +77,20 @@ public abstract class Match implements PlayerToMatch {
     protected Map<VaticanSpace, Boolean> vaticanSpaceCheck;
 
     /**
+     * The view to send all the changes in the state
+     */
+    protected final Dispatcher view;
+
+    /**
      * This method is the constructor of the class
      * @param gameSize indicates the number of players that can play this match
      * @param min indicates the minimum number of players to start this match
      */
-    protected Match(int gameSize, int min) {
+    protected Match(int gameSize, int min, Dispatcher view) {
         this.gameSize = gameSize;
         this.minimumPlayer = min;
+
+        this.view = view;
 
         this.turn = new Turn();
         gameOnAir = false;
@@ -106,6 +117,9 @@ public abstract class Match implements PlayerToMatch {
         this.leaderCardDeck.shuffle();
 
         this.devSetup = new DevSetup();
+
+        updateDevSetup();
+        updateTray();
     }
 
     /**
@@ -116,19 +130,23 @@ public abstract class Match implements PlayerToMatch {
     public boolean playerJoin(Player joined) {
         if (this.turn.playerInGame() > gameSize) return false;
         if (gameOnAir) return false;
-        return this.turn.joinPlayer(joined);
+        if (this.turn.joinPlayer(joined)) {
+            this.view.publish(new NewPlayerUpdater(joined.getNickname()));
+            startGame();
+            return true;
+        }
+        return false;
     }
 
     /**
      * start the game: start the turn of the first player
      * @return true if success, false instead
      */
-    public boolean startGame() {
-        if(this.turn.playerInGame() < this.minimumPlayer || gameOnAir) return false;
+    private void startGame() {
+        if(this.turn.playerInGame() != this.gameSize || gameOnAir) return;
         this.gameOnAir = true;
-        System.out.println("randomizing");
+        this.view.disableHistory();
         this.turn.randomizeInkwellPlayer();
-        return true;
     }
 
     /**
@@ -164,10 +182,13 @@ public abstract class Match implements PlayerToMatch {
     @Override
     public void useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException, WrongDepotException {
         switch (rc) {
-            case COL: this.marketTray.pushCol(index, turn.getCurPlayer());
-            case ROW: this.marketTray.pushRow(index, turn.getCurPlayer());
-            //default: throw new GameException();
+            case COL: this.marketTray.pushCol(index, turn.getCurPlayer()); break;
+            case ROW: this.marketTray.pushRow(index, turn.getCurPlayer()); break;
+
         }
+
+        // update lite model
+        this.updateTray();
     }
 
     /**
@@ -195,8 +216,6 @@ public abstract class Match implements PlayerToMatch {
                     temp.add(this.devSetup.showDevDeck(levelDevCard, colorDevCard));
                 } catch (IndexOutOfBoundsException e) {
                     System.out.println("Failed to find the Deck: " + colorDevCard + " " + levelDevCard);
-                } catch (EmptyDeckException e) {
-                // if there is no card skip to next deck
                 }
             }
         }
@@ -216,6 +235,10 @@ public abstract class Match implements PlayerToMatch {
         // todo check if non current players actually can't buy a card
         if (this.turn.getCurPlayer().hasRequisite(this.devSetup.showDevDeck(row, col).getCost(),row,col,this.devSetup.showDevDeck(row,col))) {
             this.turn.getCurPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
+
+            // update lite model
+            this.updateDevSetup();
+
             return true;
         }
         return false;
@@ -278,6 +301,7 @@ public abstract class Match implements PlayerToMatch {
     @Override
     public void startEndGameLogic(){
         this.turn.endGame();
+        //this.turn.getCurPlayer().endThisTurn();
     }
 
     /**
@@ -286,6 +310,14 @@ public abstract class Match implements PlayerToMatch {
      */
     public int playerInGame() {
         return this.turn.playerInGame();
+    }
+
+    protected void updateTray() {
+        this.view.publish(new TrayUpdater(this.marketTray.liteVersion()));
+    }
+
+    protected void updateDevSetup() {
+        this.view.publish(new DevSetupUpdater(this.devSetup.liteVersion()));
     }
 
     /**

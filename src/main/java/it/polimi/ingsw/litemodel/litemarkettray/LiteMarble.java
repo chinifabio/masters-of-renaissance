@@ -3,10 +3,12 @@ package it.polimi.ingsw.litemodel.litemarkettray;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.resource.ResourceType;
 
-public class LiteMarble {
+public class
+LiteMarble {
 
     private final MarbleColor color;
 
@@ -15,7 +17,7 @@ public class LiteMarble {
     private String type;
 
     @JsonCreator
-    public LiteMarble(@JsonProperty("color") MarbleColor color,@JsonProperty("toResource") ResourceType toResource) {
+    public LiteMarble(@JsonProperty("color") MarbleColor color, @JsonProperty("toResource") ResourceType toResource) {
         this.color = color;
         this.toResource = toResource;
     }
@@ -31,5 +33,15 @@ public class LiteMarble {
 
     public ResourceType getToResource() {
         return toResource;
+    }
+
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return this.color.toString();
     }
 }

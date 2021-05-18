@@ -11,7 +11,7 @@ public class InitialClientState extends ClientState {
 
     public InitialClientState() {
         super();
-        this.nextState.put(HeaderTypes.JOIN_LOBBY, new InLobbyClientState());
+        this.nextState.put(HeaderTypes.JOIN_LOBBY, new InGameClientState());
         this.nextState.put(HeaderTypes.SET_PLAYERS_NUMBER, new SetNumberClientState());
     }
 
@@ -24,6 +24,8 @@ public class InitialClientState extends ClientState {
     protected Packet doStuff(LiteModel model) {
         System.out.println("Insert your username");
         System.out.print("> ");
-        return new Packet(HeaderTypes.HELLO, ChannelTypes.PLAYER_ACTIONS, new Scanner(System.in).nextLine());
+        String nick = new Scanner(System.in).nextLine();
+        model.setMyNickname(nick);
+        return new Packet(HeaderTypes.HELLO, ChannelTypes.PLAYER_ACTIONS, nick);
     }
 }

@@ -2,9 +2,11 @@ package it.polimi.ingsw.model.player.personalBoard.warehouse.production;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.ArrayList;
@@ -101,5 +103,19 @@ public class NormalProduction extends Production {
      */
     public List<Resource> viewResourcesAdded(){
         return addedResource;
+    }
+
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteProduction liteVersion() {
+        return new LiteProduction (
+                ResourceBuilder.mapResource(this.required),
+                ResourceBuilder.mapResource(this.addedResource),
+                ResourceBuilder.mapResource(this.output)
+        );
     }
 }

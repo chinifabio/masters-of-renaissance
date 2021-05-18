@@ -14,10 +14,17 @@ import it.polimi.ingsw.model.player.PlayerAction;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonSubTypes({
+        @JsonSubTypes.Type(name = "ActivateLeader", value = ActivateLeaderCommand.class),
+        @JsonSubTypes.Type(name = "ActivateProduction", value = ActivateProductionCommand.class),
         @JsonSubTypes.Type(name = "BuyDevCard", value = BuyDevCardCommand.class),
+        @JsonSubTypes.Type(name = "ChooseResource", value = ChooseResourceCommand.class),
         @JsonSubTypes.Type(name = "DiscardLeader", value = DiscardLeaderCommand.class),
+        @JsonSubTypes.Type(name = "EndTurn", value = EndTurnCommand.class),
+        @JsonSubTypes.Type(name = "MoveDepot", value = MoveDepotCommand.class),
+        @JsonSubTypes.Type(name = "MoveInProduction", value = MoveInProductionCommand.class),
         @JsonSubTypes.Type(name = "PaintMarble", value = PaintMarbleCommand.class),
-        @JsonSubTypes.Type(name = "UseTray", value = UseMarketTrayCommand.class),
+        @JsonSubTypes.Type(name = "SetNormalProduction", value = SetNormalProductionCommand.class),
+        @JsonSubTypes.Type(name = "UseMarketTray", value = UseMarketTrayCommand.class)
 })
 public abstract class Command {
     /**

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.depot;
 
-import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 /**
@@ -47,10 +47,10 @@ public class DepotBuilder {
      * @param res is the type of resources that the Depot can contains
      * @return the newly built Depot
      */
-    public static Depot buildSpecialDepot(Resource res){
-        Depot temp = new SpecialDepot(res);
+    public static Depot buildSpecialDepot(ResourceType res){
+        Depot temp = new SpecialDepot(ResourceBuilder.buildFromType(res, 1));
         temp.addConstraint((x,y) -> y.type() == ResourceType.EMPTY || x.type() == y.type());
-        temp.addConstraint((x,y) -> x.type() == res.type());
+        temp.addConstraint((x,y) -> x.type() == res);
         temp.addConstraint((x,y) -> (x.amount() + y.amount())<= 2);
         return temp;
     }

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.model.VirtualView;
+import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.SoloActionToken;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
@@ -25,12 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SingleplayerMatchTest {
-
-    private Match singleplayer = new SingleplayerMatch();
-
     private Player gino;
 
-    VirtualView view = new VirtualView();
+    Dispatcher view = new Dispatcher();
+    private Match singleplayer = new SingleplayerMatch(view);
 
     int oldLorenzoPos = 0;
     int oldNumDiscarded = 0;
@@ -39,7 +37,8 @@ public class SingleplayerMatchTest {
     public void initializeMatch() throws IllegalTypeInProduction {
         gino = new Player("gino", singleplayer, view);
         assertTrue(singleplayer.playerJoin(gino));
-        assertTrue(singleplayer.startGame());
+
+        //assertTrue(singleplayer.startGame());
 
         // the player discard the first two leader card
         assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().test_discardLeader());
@@ -73,7 +72,7 @@ public class SingleplayerMatchTest {
     }
 
     @Test
-    public void CreateTokensTest() throws MissingCardException, EmptyDeckException {
+    public void CreateTokensTest() throws MissingCardException {
         Deck<SoloActionToken> soloToken;
         List<SoloActionToken> init = new ArrayList<>();
 

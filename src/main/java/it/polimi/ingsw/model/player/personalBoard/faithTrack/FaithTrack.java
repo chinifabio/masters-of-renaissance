@@ -1,10 +1,13 @@
 package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.communication.packet.updates.FaithTrackUpdater;
+import it.polimi.ingsw.litemodel.litefaithtrack.LiteFaithTrack;
+import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.match.PlayerToMatch;
+import it.polimi.ingsw.model.player.Player;
 
 
 import java.io.File;
@@ -15,7 +18,7 @@ import java.util.*;
  * This class represents the FaithTrack of each player that is composed by 25 cells which some of them have some special
  * effects like activating the Vatican Report or letting the Player receives some VictoryPoints
  */
-public class FaithTrack {
+public class FaithTrack implements MappableToLiteVersion {
 
     /**
      * This attribute is the representation of the FaithTrack, composed by several cells
@@ -33,12 +36,16 @@ public class FaithTrack {
      */
     private final Map<VaticanSpace, PopeTile> popeTiles;
 
+    /**
+     * the owner of the faith track
+     */
+    private final Player player;
 
     /**
      * This method is the constructor of the class, it reads from a file the details of the track and creates a list of cells,
      * also it initialize the Player position to 0.
      */
-    public FaithTrack() {
+    public FaithTrack(Player player) {
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -50,6 +57,7 @@ public class FaithTrack {
         }
 
         this.playerPosition = 0;
+        this.player = player;
 
         popeTiles = new HashMap<>();
         popeTiles.put(VaticanSpace.FIRST, new PopeTile(2));
@@ -74,6 +82,7 @@ public class FaithTrack {
         if(playerPosition >= (track.size()-1)) return;
         for (int i = 0; i< points; i++){
             this.playerPosition++;
+            updateFaithTrack();
             this.track.get(playerPosition).onPlayerCross(pm);
             if (this.playerPosition >= track.size()-1) {
                 throw new EndGameException();
@@ -97,6 +106,7 @@ public class FaithTrack {
     public void flipPopeTile(VaticanSpace toCheck){
         if (!(track.get(this.playerPosition).getVaticanSpace().ordinal < toCheck.ordinal)){
             popeTiles.get(toCheck).flipMe();
+            updateFaithTrack();
         }
     }
 
@@ -125,11 +135,35 @@ public class FaithTrack {
         return points + track.get(position).getVictoryPoint();
     }
 
-
-    //only for testing
+    /**
+     * Tells you if a pope tile linked to the passed vatican space is flipper or not
+     * @param vs the vatican space on which check the pope tile
+     * @return the flip value
+     */
     public boolean isFlipped(VaticanSpace vs){
         if(vs == VaticanSpace.NONE) return false;
         return this.popeTiles.get(vs).isFlipped();
+    }
+
+    /**
+     * Create a lite version of the class and serialize it in json
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteFaithTrack liteVersion() {
+        LiteFaithTrack lite = new LiteFaithTrack();
+
+        lite.movePlayer(this.playerPosition);
+
+        for (Map.Entry<VaticanSpace, PopeTile> e : this.popeTiles.entrySet()) {
+            if (e.getValue().isFlipped()) lite.flipPopeTile(e.getKey().toString());
+        }
+
+        return lite;
+    }
+
+    protected void updateFaithTrack() {
+        this.player.view.publish(new FaithTrackUpdater(this.player.getNickname(), this.liteVersion()));
     }
 
     //Only for testing

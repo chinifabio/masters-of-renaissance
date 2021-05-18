@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model.cards.effects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
+import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteMoveTwoEffect;
 import it.polimi.ingsw.model.match.SoloTokenReaction;
 
 /**
@@ -21,5 +23,15 @@ public class MoveTwoEffect extends Effect{
     @Override
     public void use(CardReaction p) {
         ((SoloTokenReaction) p).moveLorenzo(2);
+    }
+
+    /**
+     * Return a lite version of the effect
+     *
+     * @return a lite version of the effect
+     */
+    @Override
+    public LiteEffect liteVersion() {
+        return new LiteMoveTwoEffect();
     }
 }
