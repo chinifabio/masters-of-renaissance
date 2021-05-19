@@ -10,7 +10,7 @@ public class NamePrinter {
     
     
 
-    public void titleName(){
+    public static void titleName(){
         String title = "\n" +
                 TextColors.casualColorYellow("                                                   ███╗   ███╗ █████╗ ███████╗████████╗███████╗██████╗ ███████╗               \n") +
                 TextColors.casualColorYellow("                                                   ████╗ ████║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗██╔════╝               \n") +

@@ -5,26 +5,18 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.*;
 import it.polimi.ingsw.litemodel.LiteModel;
-import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
-import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
-import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
-import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
 import it.polimi.ingsw.litemodel.liteplayer.Actions;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.cli.printer.FaithTrackPrinter;
 import it.polimi.ingsw.view.cli.printer.MarketTrayPrinter;
-import it.polimi.ingsw.view.cli.printer.WarehousePrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
 
 import java.io.IOException;
-import java.sql.SQLOutput;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class InGameClientState extends ClientState {
 
@@ -98,7 +90,6 @@ public class InGameClientState extends ClientState {
                     command = new UseMarketTrayCommand(rowCol,index);
                     break;
 
-
                 case "track":
                     try {
                         new FaithTrackPrinter(model).printTrack();
@@ -121,7 +112,6 @@ public class InGameClientState extends ClientState {
                     break;
             }
         }
-
         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, command.jsonfy());
     }
 }

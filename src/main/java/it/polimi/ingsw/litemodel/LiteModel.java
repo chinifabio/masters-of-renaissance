@@ -8,7 +8,6 @@ import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.litemodel.litecards.LiteSoloActionToken;
 import it.polimi.ingsw.litemodel.litefaithtrack.LiteFaithTrack;
-import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarketTray;
 import it.polimi.ingsw.litemodel.liteplayer.LiteState;
 import it.polimi.ingsw.litemodel.liteplayer.PendingStart;
@@ -176,5 +175,13 @@ public class LiteModel {
         this.players.forEach((x, y)->res.add(new Tuple<>(x, y)));
 
         return res;
+    }
+
+    public List<LiteResource> getDiscounts(String me) {
+        return this.players.get(me).getDiscounts();
+    }
+
+    public List<MarbleColor> getConversion(String me){
+        return this.players.get(me).getConversions();
     }
 }

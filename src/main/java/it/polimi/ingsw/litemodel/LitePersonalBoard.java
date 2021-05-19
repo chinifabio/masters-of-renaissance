@@ -12,6 +12,7 @@ import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteWarehouse;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -37,8 +38,8 @@ public class LitePersonalBoard {
      * Used to memorize dev cards and their position
      */
     private final Map<DevCardSlot, String> devCard = new EnumMap<>(DevCardSlot.class);
-    private List<LiteResource> discounts;
-    private List<MarbleColor> conversions;
+    private List<LiteResource> discounts = new ArrayList<>();
+    private List<MarbleColor> conversions = new ArrayList<>();
 
     public void setLeader(List<LiteLeaderCard> cards) {
         this.leaderCards = cards;
@@ -101,5 +102,13 @@ public class LitePersonalBoard {
 
     public void setConversions(List<MarbleColor> collect) {
         this.conversions = collect;
+    }
+
+    public List<LiteResource> getDiscounts() {
+        return new ArrayList<>(this.discounts);
+    }
+
+    public List<MarbleColor> getConversions() {
+        return new ArrayList<>(this.conversions);
     }
 }

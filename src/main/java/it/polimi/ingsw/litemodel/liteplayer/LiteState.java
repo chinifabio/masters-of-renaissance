@@ -26,4 +26,9 @@ public abstract class LiteState {
     public boolean canDoAction(Actions act) {
         return this.clickable.contains(act);
     }
+
+    @Override
+    public String toString() {
+        return "LiteState{" + "clickable=" + clickable + '}';
+    }
 }

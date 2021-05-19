@@ -497,9 +497,9 @@ public class DeckTest {
         }
 
         assertEquals(Card1,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.GREEN).getCardID());
-        assertEquals(Card2,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.PURPLE).getCardID());
+        assertEquals(Card2,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.YELLOW).getCardID());
         assertEquals(Card3,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.BLUE).getCardID());
-        assertEquals(Card4,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.YELLOW).getCardID());
+        assertEquals(Card4,devSetup.showDevDeck(LevelDevCard.LEVEL1,ColorDevCard.PURPLE).getCardID());
     }
 
     @Test

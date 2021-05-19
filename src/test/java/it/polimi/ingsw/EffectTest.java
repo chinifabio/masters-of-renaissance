@@ -158,7 +158,7 @@ public class EffectTest {
 
         LeaderCard c = new LeaderCard("000", new AddDiscountEffect(ResourceType.COIN), 1, req);
 
-        Player player1 = new Player("pino",false);
+        Player player1 = new Player("pino",null, view);
 
         assertTrue(player1.test_getDiscount().isEmpty());
         c.useEffect(player1);
@@ -167,7 +167,7 @@ public class EffectTest {
 
     @RepeatedTest(10)
     void shuffleMoveOne() throws EmptyDeckException {
-        SingleplayerMatch match = new SingleplayerMatch();
+        SingleplayerMatch match = new SingleplayerMatch(view);
         SoloActionToken token = new SoloActionToken("505", new ShuffleMoveOneEffect());
 
         assertEquals(7,match.test_getSoloDeck().getNumberOfCards());

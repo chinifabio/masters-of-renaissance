@@ -26,7 +26,6 @@ public class LiteModelUpdater implements Runnable{
     public void run() {
         while (true) {
             Packet packet = this.socket.pollPacketFrom(ChannelTypes.NOTIFY_VIEW);
-
             if (packet.header == HeaderTypes.TIMEOUT) return;
 
             try {

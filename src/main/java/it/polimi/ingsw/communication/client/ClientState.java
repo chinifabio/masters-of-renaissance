@@ -1,43 +1,49 @@
 package it.polimi.ingsw.communication.client;
 
+import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
+import it.polimi.ingsw.litemodel.LiteModel;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 public abstract class ClientState {
 
     /**
-     * represent the client state and contains every method that a state must implement
+     * The next state mapped on the server response
      */
-    protected final Client context;
+    protected final Map<HeaderTypes, ClientState> nextState = new EnumMap<>(HeaderTypes.class);
 
     /**
-     * This attribute is set by a subclasses to put a message in the player state exception
+     * Do some stuff that generate a packet to send to the server
+     * @return packet to send to the server
      */
-    private final String errorMessage;
+    protected abstract Packet doStuff(LiteModel model);
 
-    public ClientState(Client context, String eMes) {
-        this.context = context;
-        this.errorMessage = eMes;
+    public void start(Client context){
+        Packet temp = this.doStuff(context.liteModel);
+        if(!temp.header.equals(HeaderTypes.INVALID)){
+            context.socket.send(temp);
+            Packet response = context.socket.pollPacketFrom(ChannelTypes.PLAYER_ACTIONS);
+            printServerResponse(response.body);
+
+            context.setState(this.nextState.containsKey(response.header) ?
+                    this.nextState.get(response.header):
+                    new ErrorCS()
+            );
+        }
+        else if(temp.body.equals("Invalid")){
+            System.out.println(TextColors.colorText(TextColors.RED_BRIGHT,"You can't do that!"));
+        }
     }
 
     /**
-     * Set the player's nickname
-     * @return the result of the operation
+     * Print the server response in a preformatted mode
+     * @param r the server response
      */
-    public Packet setNickname(){
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    protected void printServerResponse(String r) {
+        System.out.println(TextColors.colorText(TextColors.BLUE, "[server] ") + r);
     }
-
-    public Packet setNumberOfPlayers(){ return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage); }
-
-    public Packet buyDevCard(){ return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage); }
-
-    public Packet discardLeader(){ return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage); }
-
-    public Packet useMarketTray(){ return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage); }
-
-    public Packet paintMarbleColor(){ return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage); }
-
-    //mancano le altre funzioni: muovere risorse nei depot/prod, attivare la produzione
 }
