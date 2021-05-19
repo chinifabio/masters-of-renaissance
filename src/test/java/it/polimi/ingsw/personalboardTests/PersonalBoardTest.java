@@ -13,10 +13,15 @@ import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
+import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
+import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
+import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
+import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
+import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
@@ -343,6 +348,9 @@ public class PersonalBoardTest {
         });
     }
 
+    /**
+     *
+     */
     @Test
     public void countsDevCardsPoints() {
         PersonalBoard board = player1.test_getPB();
@@ -412,7 +420,6 @@ public class PersonalBoardTest {
                     ID2 = card.getCardID();
                 }
             }
-
             player1.test_getPB().discardLeaderCard(ID1);
             player1.test_getPB().discardLeaderCard(ID2);
 

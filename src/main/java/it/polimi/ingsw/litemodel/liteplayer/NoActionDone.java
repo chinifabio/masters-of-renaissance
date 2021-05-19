@@ -18,8 +18,7 @@ public class NoActionDone extends LiteState {
                 Actions.SET_NORMAL_PRODUCTION,
                 Actions.MOVE_BETWEEN_DEPOT,
                 Actions.ACTIVATE_LEADER_CARD,
-                Actions.DISCARD_LEADER_CARD,
-                Actions.END_TURN
+                Actions.DISCARD_LEADER_CARD
         ));
     }
 }

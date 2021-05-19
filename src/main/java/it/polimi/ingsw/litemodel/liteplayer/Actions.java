@@ -11,5 +11,7 @@ public enum Actions {
     ACTIVATE_LEADER_CARD,
     DISCARD_LEADER_CARD,
     CHOOSE_RESOURCE,
-    END_TURN
+    END_TURN,
+    VIEW_MARKET_TRAY,
+
 }

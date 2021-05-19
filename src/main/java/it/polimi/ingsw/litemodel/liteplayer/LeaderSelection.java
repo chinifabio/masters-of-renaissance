@@ -9,6 +9,6 @@ public class LeaderSelection extends LiteState {
 
     @JsonCreator
     public LeaderSelection() {
-        super(Arrays.asList(Actions.DISCARD_LEADER_CARD, Actions.CHOOSE_RESOURCE));
+        super(Arrays.asList(Actions.DISCARD_LEADER_CARD, Actions.CHOOSE_RESOURCE, Actions.END_TURN));
     }
 }

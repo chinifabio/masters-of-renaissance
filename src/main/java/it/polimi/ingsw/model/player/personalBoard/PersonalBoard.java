@@ -446,4 +446,5 @@ public class PersonalBoard {
         return this.warehouse.test_getProduction();
     }
 
+    public LeaderCard test_getLeader(int x) { return this.leaderDeck.getCards().get(x); }
 }
