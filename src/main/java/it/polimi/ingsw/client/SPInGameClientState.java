@@ -9,11 +9,9 @@ import it.polimi.ingsw.litemodel.liteplayer.Actions;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceType;
-import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.cli.printer.FaithTrackPrinter;
 import it.polimi.ingsw.view.cli.printer.MarketTrayPrinter;
 import it.polimi.ingsw.view.cli.printer.WarehousePrinter;
-import it.polimi.ingsw.view.cli.printer.cardprinter.DevCardSlotPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
 import it.polimi.ingsw.view.cli.printer.cardprinter.SoloActionTokenPrinter;
@@ -125,7 +123,7 @@ public class SPInGameClientState extends ClientState {
                         break;
 
                     case "devCards":
-                        
+                        break;
 
                     default:
                         System.out.println("I don't understand... pls don't bullish me. It is your fault! <3");

@@ -11,9 +11,9 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.cli.printer.FaithTrackPrinter;
 import it.polimi.ingsw.view.cli.printer.MarketTrayPrinter;
+import it.polimi.ingsw.view.cli.printer.WarehousePrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
-import it.polimi.ingsw.view.cli.printer.cardprinter.SoloActionTokenPrinter;
 
 import java.io.IOException;
 import java.util.Locale;
