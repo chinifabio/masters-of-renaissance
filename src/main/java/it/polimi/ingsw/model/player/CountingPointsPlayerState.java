@@ -25,7 +25,17 @@ public class CountingPointsPlayerState extends PlayerState {
         return false;
     }
 
-// --------------------- PLAYER ACTION IMPLEMENTATIONS ---------------------------
+    /**
+     * Give the state of the player in case of reconnection
+     *
+     * @return the reconnection player state
+     */
+    @Override
+    public PlayerState reconnectionState() {
+        return this;
+    }
+
+    // --------------------- PLAYER ACTION IMPLEMENTATIONS ---------------------------
 
 
     /**

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.litemodel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
@@ -61,6 +62,7 @@ public class LitePersonalBoard {
         this.track.movePlayer(amount);
     }
 
+    @JsonIgnore
     public Integer getPlayerPosition() {
         return this.track.getPlayerPosition();
     }
@@ -69,6 +71,7 @@ public class LitePersonalBoard {
         return this.warehouse;
     }
 
+    @JsonIgnore
     public LiteDepot getDepot(DepotSlot slot) {
         return this.warehouse.getDepots(slot);
     }
@@ -81,6 +84,7 @@ public class LitePersonalBoard {
         this.track.flipPopeTile(popeTile);
     }
 
+    @JsonIgnore
     public Map<String, Boolean> getPopeTiles(){
         return this.track.getPopeTiles();
     }

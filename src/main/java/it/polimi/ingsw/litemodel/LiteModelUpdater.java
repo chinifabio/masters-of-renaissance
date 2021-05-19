@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.communication.VirtualSocket;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.updates.Updater;
 
@@ -26,6 +27,7 @@ public class LiteModelUpdater implements Runnable{
         while (true) {
             Packet packet = this.socket.pollPacketFrom(ChannelTypes.NOTIFY_VIEW);
 
+            if (packet.header == HeaderTypes.TIMEOUT) return;
 
             try {
                 Updater received = new ObjectMapper().readerFor(Updater.class).readValue(packet.body);

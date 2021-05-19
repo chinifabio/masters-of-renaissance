@@ -35,7 +35,17 @@ public class MainActionDonePlayerState extends PlayerState {
         return true;
     }
 
-// ------------------- PLAYER ACTION IMPLEMENTATIONS -----------------------
+    /**
+     * Give the state of the player in case of reconnection
+     *
+     * @return the reconnection player state
+     */
+    @Override
+    public PlayerState reconnectionState() {
+        return new NotHisTurnPlayerState(this.context);
+    }
+
+    // ------------------- PLAYER ACTION IMPLEMENTATIONS -----------------------
 
     /**
      * This method allows the player to move Resources between Depots

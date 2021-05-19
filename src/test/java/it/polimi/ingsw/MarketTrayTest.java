@@ -22,9 +22,7 @@ import it.polimi.ingsw.view.cli.printer.MarketTrayPrinter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MarketTrayTest {
     Player player1;
@@ -33,25 +31,33 @@ public class MarketTrayTest {
     Dispatcher view = new Dispatcher();
     Match game = new MultiplayerMatch(2, view);
 
+    List<Player> order = new ArrayList<>();
+
     @BeforeEach
     public void initialization() {
         assertDoesNotThrow(()->player1 = new Player("gino", game, view));
         assertTrue(game.playerJoin(player1));
+        order.add(player1);
+
         assertDoesNotThrow(()->player2 = new Player("pino", game, view));
         assertTrue(game.playerJoin(player2));
+        order.add(player2);
 
-        //assertTrue(game.startGame());
+        Collections.rotate(order, order.indexOf(game.test_getCurrPlayer()));
 
-        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
+        assertFalse(game.test_getGameOnAir());
 
-        assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
-        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
-        assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
+        assertDoesNotThrow(()-> order.get(0).test_discardLeader());
+        assertDoesNotThrow(()-> order.get(0).test_discardLeader());
+        assertEquals(HeaderTypes.END_TURN, order.get(0).endThisTurn().header);
 
+        assertEquals(HeaderTypes.OK, order.get(1).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN).header);
+        assertDoesNotThrow(()-> order.get(1).test_discardLeader());
+        assertDoesNotThrow(()-> order.get(1).test_discardLeader());
+        assertDoesNotThrow(() -> assertEquals(order.get(1).test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
+        assertEquals(HeaderTypes.END_TURN, order.get(1).endThisTurn().header);
+
+        assertTrue(game.test_getGameOnAir());
     }
 
     /**

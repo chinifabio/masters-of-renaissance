@@ -16,5 +16,6 @@ public enum HeaderTypes {
     INVALID,
     NOTIFY,
     PING,
-    PONG
+    PONG,
+    TIMEOUT
 }

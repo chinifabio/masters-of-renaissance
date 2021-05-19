@@ -1,5 +1,8 @@
 package it.polimi.ingsw.litemodel;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
@@ -14,11 +17,13 @@ import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
+import it.polimi.ingsw.util.Tuple;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class LiteModel {
 
@@ -28,13 +33,19 @@ public class LiteModel {
 
     private LiteMarketTray tray;
     private LiteDevSetup devSetup;
-    private int numberOfPlayer = 0;
-    private List<LiteSoloActionToken> soloToken;
+
+    private List<LiteSoloActionToken> soloToken = new ArrayList<>();
     private LiteState playerState = new PendingStart();
+
+    @JsonCreator
+    public LiteModel(@JsonProperty("players") List<Tuple<String, LitePersonalBoard>> list) {
+        list.forEach(x->players.put(x.a, x.b));
+    }
+
+    public LiteModel(){}
 
     public synchronized void createPlayer(String nickname) {
         this.players.put(nickname, new LitePersonalBoard());
-        this.numberOfPlayer ++;
     }
 
 // --------------- SETTER METHODS ------------------
@@ -131,7 +142,7 @@ public class LiteModel {
     }
 
     public synchronized int playersInGame() {
-        return numberOfPlayer;
+        return this.players.values().size();
     }
 
     public synchronized List<LiteSoloActionToken> getSoloToken() {
@@ -142,7 +153,29 @@ public class LiteModel {
         return this.me;
     }
 
-    public LiteState getState() {
+    public LiteState getPlayerState() {
         return this.playerState;
+    }
+
+    /**
+     * replace all the model data with the given one
+     * @param model
+     */
+    public void replaceModel(LiteModel model) {
+        this.playerState = model.getPlayerState();
+
+        model.players.forEach(this.players::put);
+
+        this.tray = model.getTray();
+        this.devSetup = model.getDevSetup();
+    }
+
+    @JsonGetter("players")
+    public List<Tuple<String, LitePersonalBoard>> getValues() {
+        List<Tuple<String, LitePersonalBoard>> res = new ArrayList<>();
+
+        this.players.forEach((x, y)->res.add(new Tuple<>(x, y)));
+
+        return res;
     }
 }

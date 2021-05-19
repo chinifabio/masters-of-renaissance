@@ -41,6 +41,16 @@ public class NoActionDonePlayerState extends PlayerState {
         return true;
     }
 
+    /**
+     * Give the state of the player in case of reconnection
+     *
+     * @return the reconnection player state
+     */
+    @Override
+    public PlayerState reconnectionState() {
+        return new NotHisTurnPlayerState(this.context);
+    }
+
 // -------------------------- PLAYER ACTION IMPLEMENTATIONS ---------------------------------
 
 

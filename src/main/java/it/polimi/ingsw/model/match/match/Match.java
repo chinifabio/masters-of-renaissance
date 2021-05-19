@@ -49,6 +49,11 @@ public abstract class Match implements PlayerToMatch {
     public final int minimumPlayer;
 
     /**
+     * Number of players who finished the initial phase
+     */
+    private int initPlayer = 0;
+
+    /**
      * this flag is used to check if the game is started
      */
     protected boolean gameOnAir;
@@ -133,21 +138,10 @@ public abstract class Match implements PlayerToMatch {
         if (this.turn.playerInGame() > gameSize) return false;
         if (gameOnAir) return false;
         if (this.turn.joinPlayer(joined)) {
-            startGame();
+            if(this.turn.playerInGame() == this.gameSize) this.turn.randomizeInkwellPlayer();
             return true;
         }
         return false;
-    }
-
-    /**
-     * start the game: start the turn of the first player
-     * @return true if success, false instead
-     */
-    private void startGame() {
-        if(this.turn.playerInGame() != this.gameSize || gameOnAir) return;
-        this.gameOnAir = true;
-        this.view.disableHistory();
-        this.turn.randomizeInkwellPlayer();
     }
 
     /**
@@ -266,13 +260,25 @@ public abstract class Match implements PlayerToMatch {
      */
     @Override
     public void endMyTurn() {
-        this.marketTray.unPaint();
+        this.marketTray.unPaint(); // resetting all the painted marbles
         try {
             this.turn.nextPlayer();
         } catch (EndGameException e) {
             gameOnAir = false;
             this.turn.countingPoints();
             // todo tells to the worker to calculate the points
+        }
+    }
+
+    /**
+     * Tells to the match that a player has done the init phase
+     */
+    @Override
+    public void initDone() {
+        this.initPlayer++;
+        if (initPlayer == gameSize) { // all player should be in pendingStartMatch state
+            this.gameOnAir = true;
+            this.turn.getCurPlayer().startHisTurn();
         }
     }
 
