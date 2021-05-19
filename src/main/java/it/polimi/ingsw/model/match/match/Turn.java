@@ -66,8 +66,8 @@ public class Turn {
         for (int i = 0; i < playerOrder.size(); i++) {
             playerOrder.get(i).initialSetup = initialResourcesSetup.get(i);
         }
-        this.curPlayer = 0;
-        this.playerOrder.get(curPlayer).startHisTurn();
+
+        this.playerOrder.forEach(Player::startHisTurn);
     }
 
     /**

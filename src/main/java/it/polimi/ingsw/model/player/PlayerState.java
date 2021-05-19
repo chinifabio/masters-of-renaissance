@@ -53,6 +53,12 @@ public abstract class PlayerState implements PlayerAction, MappableToLiteVersion
      */
     public void starTurn() {}
 
+    /**
+     * Give the state of the player in case of reconnection
+     * @return the reconnection player state
+     */
+    public abstract PlayerState reconnectionState();
+
 // ----------------------------------------------------------------
 // ----- player state action as default launch an exception -------
 // ----------------------------------------------------------------
@@ -180,4 +186,5 @@ public abstract class PlayerState implements PlayerAction, MappableToLiteVersion
      */
     @Override
     public abstract LiteState liteVersion();
+
 }

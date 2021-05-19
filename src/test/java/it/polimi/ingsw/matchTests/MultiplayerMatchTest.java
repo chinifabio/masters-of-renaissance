@@ -1,6 +1,7 @@
 package it.polimi.ingsw.matchTests;
 
 import it.polimi.ingsw.communication.packet.HeaderTypes;
+import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
@@ -39,17 +40,21 @@ public class MultiplayerMatchTest {
     public void initializeMatch() throws IllegalTypeInProduction {
         pino = new Player("pino", multiplayer, view);
         assertTrue(multiplayer.playerJoin(pino));
+        order.add(pino);
 
         gino = new Player("gino", multiplayer, view);
         assertTrue(multiplayer.playerJoin(gino));
+        order.add(gino);
 
         dino = new Player("dino", multiplayer, view);
         assertTrue(multiplayer.playerJoin(dino));
+        order.add(dino);
 
         tino = new Player("tino", multiplayer, view);
         assertTrue(multiplayer.playerJoin(tino));
+        order.add(tino);
 
-        //assertTrue(multiplayer.startGame());
+        Collections.rotate(order, -order.indexOf(multiplayer.test_getCurrPlayer()));
 
         // initializing player section
         /*
@@ -59,36 +64,34 @@ public class MultiplayerMatchTest {
         4th - 2 resource to choose and 1 faith points
          */
 
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
-        this.order.add(multiplayer.test_getCurrPlayer());
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
+        assertDoesNotThrow(()-> order.get(0).test_discardLeader());
+        assertDoesNotThrow(()-> order.get(0).test_discardLeader());
+        Packet p = order.get(0).endThisTurn();
+        System.out.println(p.body);
+        assertEquals(HeaderTypes.END_TURN, p.header);
 
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
-        this.order.add(multiplayer.test_getCurrPlayer());
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
+        assertDoesNotThrow(()-> order.get(1).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
+        assertDoesNotThrow(()-> order.get(1).test_discardLeader());
+        assertDoesNotThrow(()-> order.get(1).test_discardLeader());
+        assertDoesNotThrow(() -> assertEquals(order.get(1).test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
+        assertEquals(HeaderTypes.END_TURN, order.get(1).endThisTurn().header);
 
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
-        assertEquals(1, multiplayer.test_getCurrPlayer().test_getPB().getFT_forTest().getPlayerPosition());
-        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
-        this.order.add(multiplayer.test_getCurrPlayer());
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
+        assertDoesNotThrow(()-> order.get(2).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
+        assertDoesNotThrow(()-> order.get(2).test_discardLeader());
+        assertDoesNotThrow(()-> order.get(2).test_discardLeader());
+        assertEquals(1, order.get(2).test_getPB().getFT_forTest().getPlayerPosition());
+        assertDoesNotThrow(() -> assertEquals(order.get(2).test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
+        assertEquals(HeaderTypes.END_TURN, order.get(2).endThisTurn().header);
 
-        assertDoesNotThrow(()-> assertEquals(HeaderTypes.OK, multiplayer.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN).header));
-        assertDoesNotThrow(()-> assertEquals(HeaderTypes.INVALID, multiplayer.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.STONE).header));
-        assertDoesNotThrow(()-> assertEquals(HeaderTypes.OK, multiplayer.test_getCurrPlayer().chooseResource(DepotSlot.MIDDLE, ResourceType.STONE).header));
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
-        assertEquals(1, multiplayer.test_getCurrPlayer().test_getPB().getFT_forTest().getPlayerPosition());
-        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
-        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.MIDDLE).viewResources().get(0), ResourceBuilder.buildStone()));
-        this.order.add(multiplayer.test_getCurrPlayer());
-        assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
+        assertDoesNotThrow(()-> assertEquals(HeaderTypes.OK, order.get(3).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN).header));
+        assertDoesNotThrow(()-> assertEquals(HeaderTypes.INVALID, order.get(3).chooseResource(DepotSlot.BOTTOM, ResourceType.STONE).header));
+        assertDoesNotThrow(()-> assertEquals(HeaderTypes.OK, order.get(3).chooseResource(DepotSlot.MIDDLE, ResourceType.STONE).header));
+        assertDoesNotThrow(()-> order.get(3).test_discardLeader());
+        assertDoesNotThrow(()-> order.get(3).test_discardLeader());
+        assertEquals(1, order.get(3).test_getPB().getFT_forTest().getPlayerPosition());
+        assertDoesNotThrow(() -> assertEquals(order.get(3).test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
+        assertDoesNotThrow(() -> assertEquals(order.get(3).test_getPB().test_getDepots().get(DepotSlot.MIDDLE).viewResources().get(0), ResourceBuilder.buildStone()));
+        assertEquals(HeaderTypes.END_TURN, order.get(3).endThisTurn().header);
 
         // creating a list of the players in order to have player(0) = inkwell player
         Collections.rotate(order, -order.indexOf(multiplayer.test_getTurn().getCurPlayer()));
@@ -120,14 +123,10 @@ public class MultiplayerMatchTest {
      */
     @Test
     public void buildMultiplayerTest() {
-
-        assertTrue(multiplayer.test_getCurrPlayer().canDoStuff());
-
         for(int i = 0; i < this.multiplayer.test_getTurn().playerInGame(); i++){
-            assertEquals(multiplayer.test_getCurrPlayer().useMarketTray(RowCol.COL, 2).header, HeaderTypes.OK);
-            assertEquals(multiplayer.test_getCurrPlayer().useMarketTray(RowCol.COL, 2).header, HeaderTypes.INVALID);
-            assertEquals(multiplayer.test_getCurrPlayer().endThisTurn().header, HeaderTypes.END_TURN);
+            assertEquals(order.get(i).useMarketTray(RowCol.COL, 2).header, HeaderTypes.OK);
+            assertEquals(order.get(i).useMarketTray(RowCol.COL, 2).header, HeaderTypes.INVALID);
+            assertEquals(order.get(i).endThisTurn().header, HeaderTypes.END_TURN);
         }
-
     }
 }

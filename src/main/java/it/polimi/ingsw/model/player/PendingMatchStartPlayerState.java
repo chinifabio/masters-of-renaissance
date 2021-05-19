@@ -15,7 +15,7 @@ public class PendingMatchStartPlayerState extends PlayerState {
      * @param context        the context
      */
     public PendingMatchStartPlayerState(Player context) {
-        super(context, "match not started yet");
+        super(context, "Wait that all the players complete the initial selection phase!");
     }
 
     /**
@@ -33,7 +33,17 @@ public class PendingMatchStartPlayerState extends PlayerState {
      */
     @Override
     public void starTurn() {
-        this.context.setState(new LeaderSelectionPlayerState(this.context));
+        this.context.setState(new NoActionDonePlayerState(this.context));
+    }
+
+    /**
+     * Give the state of the player in case of reconnection
+     *
+     * @return the reconnection player state
+     */
+    @Override
+    public PlayerState reconnectionState() {
+        return new NotHisTurnPlayerState(this.context);
     }
 
     // ----------------- PLAYER ACTION IMPLEMENTATIONS ---------------------------------

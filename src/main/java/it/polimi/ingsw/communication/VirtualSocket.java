@@ -3,11 +3,13 @@ package it.polimi.ingsw.communication;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.sql.Time;
 import java.util.*;
 
 /**
@@ -33,6 +35,8 @@ public class VirtualSocket implements Runnable{
     private final Object sendLocker = new Object();
 
     private final PrintStream sender;
+
+    private boolean connected = true;
 
     /**
      * Create a virtual socket to sort received packet in channels
@@ -62,17 +66,16 @@ public class VirtualSocket implements Runnable{
             return;
         }
 
-        while(true) {
+        while (connected) {
             String serializedPacket = in.nextLine();
             try {
                 Packet packet = new ObjectMapper()
                         .readerFor(Packet.class)
                         .readValue(serializedPacket);
 
-                Object lock = waitingZone.get(packet.channel);
-                synchronized (lock) {
+                synchronized (waitingZone.get(packet.channel)) {
                     this.channelsQueue.get(packet.channel).add(packet);
-                    lock.notifyAll();
+                    waitingZone.get(packet.channel).notifyAll();
                 }
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -86,6 +89,8 @@ public class VirtualSocket implements Runnable{
      * @param packet the packet to send
      */
     public void send(Packet packet) {
+        if (!connected) return;
+
         synchronized (this.sendLocker) {
             String serialized;
             try {
@@ -106,25 +111,60 @@ public class VirtualSocket implements Runnable{
      * @return the packet
      */
     public Packet pollPacketFrom(ChannelTypes ch) {
+        if(!connected) return new Packet(HeaderTypes.INVALID, ch, "connection closed");
+
         Packet result;
-        Object lock = this.waitingZone.get(ch);
-        synchronized (lock) {
+        synchronized (this.waitingZone.get(ch)) {
             while ((result = this.channelsQueue.get(ch).poll()) == null) {
                 try {
-                    lock.wait();
+                    this.waitingZone.get(ch).wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                if (!connected) return new Packet(HeaderTypes.TIMEOUT, ch, "connection closed");
             }
         }
         return result;
     }
 
     /**
-     * Return the instance of the real socket
-     * @return the real socket
+     * Return the last packet received in the passed channel
+     * @param ch the channel where look at
+     * @return the packet
      */
-    public Socket realSocket() {
-        return this.socket;
+    public Packet pollPacketFrom(ChannelTypes ch, long timeout) {
+        if(!connected) return new Packet(HeaderTypes.INVALID, ch, "connection closed");
+
+
+        long time = System.currentTimeMillis();
+        Packet result;
+        synchronized (this.waitingZone.get(ch)) {
+            while ((result = this.channelsQueue.get(ch).poll()) == null) {
+                try {
+                    this.waitingZone.get(ch).wait(timeout);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                if (System.currentTimeMillis() - time > timeout) return new Packet(HeaderTypes.INVALID, ch, "connection closed");
+
+                if (!connected) return new Packet(HeaderTypes.INVALID, ch, "connection closed");
+            }
+        }
+        return result;
+    }
+
+    /**
+     * notify all the listening thread for a packet
+     */
+    public void disconnect() {
+        this.connected = false;
+
+        for (ChannelTypes ch : ChannelTypes.values()) {
+            synchronized (this.waitingZone.get(ch)) {
+                this.waitingZone.get(ch).notifyAll();
+            }
+        }
     }
 }
