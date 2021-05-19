@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.player;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.updates.ConversionUpdater;
 import it.polimi.ingsw.communication.packet.updates.DiscountUpdater;
+import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
 import it.polimi.ingsw.communication.packet.updates.PlayerStateUpdater;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.*;
@@ -89,7 +90,10 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     public Pair<Integer> initialSetup = new Pair<>(0,0);
 
-    public final Object waitForWakeUp = new Object();
+    /**
+     * the player state to set in case of reconnection
+     */
+    private PlayerState reconnectionState;
 
     /**
      * This method create a player by nickname and saving the match reference
@@ -97,18 +101,19 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @throws IllegalTypeInProduction if the Basic Production of the PersonalBoard has IllegalResources
      */
     public Player(String nickname, PlayerToMatch match, Dispatcher view) throws IllegalTypeInProduction {
-
+        this.view = view;
         this.nickname = nickname;
+
+        this.view.publish(new NewPlayerUpdater(nickname));
+
         this.personalBoard = new PersonalBoard(this);
 
         this.marbleConversions = new ArrayList<>();
         this.marketDiscount = new ArrayList<>();
 
-        this.playerState = new PendingMatchStartPlayerState(this);
+        this.playerState = new PendingInitPlayerState(this);
 
         this.match = match;
-
-        this.view = view;
     }
 
     /**
@@ -451,6 +456,18 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     @Override
     public String toString() {
         return this.nickname;
+    }
+
+    /**
+     * make the player disconnect so he skip his turn if it is his turn
+     */
+    public void disconnect() {
+        this.reconnectionState = this.playerState.reconnectionState();
+        this.playerState = new DisconnectedPlayerState(this);
+    }
+
+    public void reconnect() {
+        this.playerState = this.reconnectionState;
     }
 
     // FOR TESTING

@@ -54,8 +54,6 @@ public class SingleplayerMatchTest {
      */
     @RepeatedTest(10)
     public void simpleLifeCycleOfMatch() {
-        this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().test_getLastDiscarded().getCardID());
-
         assertTrue(singleplayer.test_getCurrPlayer().canDoStuff());
 
         assertDoesNotThrow(()-> assertEquals(singleplayer.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.OK));

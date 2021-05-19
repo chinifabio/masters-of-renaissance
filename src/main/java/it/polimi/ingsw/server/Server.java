@@ -3,10 +3,13 @@ package it.polimi.ingsw.server;
 import it.polimi.ingsw.communication.VirtualSocket;
 import it.polimi.ingsw.model.Model;
 
+import javax.naming.ldap.Control;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,10 +21,14 @@ public class Server implements Runnable{
     public final ExecutorService executor = Executors.newCachedThreadPool();
     private final ServerSocket serverSocket;
 
-    private final List<String> nicknames = new ArrayList<>();
+    private final Map<String, Controller> connectedClient = new HashMap<>();
+    private final Map<String, Controller> disconnectedClient = new HashMap<>();
+
     private Model lobby = new Model();
 
-    private final Object modelQueue = new Object();
+    public final static int error = -1;
+    public final static int reconnect = 0;
+    public final static int newPlayer = 1;
 
     public Server() throws IOException {
         serverSocket = new ServerSocket(port);
@@ -65,14 +72,29 @@ public class Server implements Runnable{
         }
     }
 
-    public boolean memorizePlayer(String nickname) {
-        if (nickname.toLowerCase().contains("lorenzo") || nickname.length() > 15 || this.nicknames.contains(nickname)) return false;
-        this.nicknames.add(nickname);
-        return true;
+    public synchronized int connect(String nickname, Controller controller) {
+        // checking the legality of the nickname
+        if (
+                nickname.equalsIgnoreCase("lorenzo il magnifico") ||
+                nickname.length() > 20 ||
+                connectedClient.containsKey(nickname)
+        ) return error;
+
+        // checking if the client was disconnected
+        if(disconnectedClient.containsKey(nickname)) {
+            controller.model = disconnectedClient.get(nickname).model; // todo to change
+            disconnectedClient.remove(nickname);
+            connectedClient.put(nickname, controller);
+            return reconnect;
+        }
+
+        this.connectedClient.put(nickname, controller);
+        return newPlayer;
     }
 
-    public boolean forgetPlayer(String nickname) {
-        return this.nicknames.remove(nickname);
+    public synchronized void disconnect(String nickname, Controller controller) {
+        connectedClient.remove(nickname);
+        disconnectedClient.put(nickname, controller);
     }
 
     public Model obtainModel() throws InterruptedException {

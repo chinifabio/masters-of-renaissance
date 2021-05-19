@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
@@ -71,7 +72,7 @@ public class Model {
 
         if (this.players.containsKey(client)) return client.invalid("something strange is going on ༼ つ ◕_◕ ༽つ");
 
-        this.dispatcher.subscribe(client);
+        this.dispatcher.subscribe(nickname, client.socket);
 
         try {
             Player p = new Player(nickname, this.match, this.dispatcher);
@@ -111,4 +112,19 @@ public class Model {
         return this.match.gameSize - this.match.playerInGame();
     }
 
+    public void disconnectMe(Controller controller) {
+        this.players.get(controller).disconnect();
+    }
+
+    public boolean reconnect(String nickname, Controller context) {
+        Player value = this.players.values().stream().filter(player -> player.getNickname().equals(nickname)).findAny().orElse(null);
+
+        if (value == null) return false;
+
+        this.dispatcher.subscribe(nickname, context.socket);
+        System.out.println(TextColors.colorText(TextColors.GREEN_BRIGHT, nickname) + " reconnected");
+        value.reconnect();
+        this.players.put(context, value);
+        return true;
+    }
 }
