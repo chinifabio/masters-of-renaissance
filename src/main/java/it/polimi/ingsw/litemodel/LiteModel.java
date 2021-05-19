@@ -19,10 +19,7 @@ import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.util.Tuple;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LiteModel {
@@ -34,7 +31,7 @@ public class LiteModel {
     private LiteMarketTray tray;
     private LiteDevSetup devSetup;
 
-    private List<LiteSoloActionToken> soloToken = new ArrayList<>();
+    private LiteSoloActionToken soloToken;
     private LiteState playerState = new PendingStart();
 
     @JsonCreator
@@ -86,8 +83,8 @@ public class LiteModel {
         this.players.get(nickname).setDepot(slot, depot);
     }
 
-    public synchronized void setSoloToken(List<LiteSoloActionToken> deck) {
-        this.soloToken = deck;
+    public synchronized void setSoloToken(LiteSoloActionToken token) {
+            this.soloToken = token;
     }
 
 
@@ -145,8 +142,8 @@ public class LiteModel {
         return this.players.values().size();
     }
 
-    public synchronized List<LiteSoloActionToken> getSoloToken() {
-        return new ArrayList<>(this.soloToken);
+    public synchronized LiteSoloActionToken getSoloToken() {
+        return this.soloToken;
     }
 
     public synchronized String getMe() {

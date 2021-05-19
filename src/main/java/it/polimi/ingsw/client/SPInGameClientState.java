@@ -13,6 +13,7 @@ import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.cli.printer.FaithTrackPrinter;
 import it.polimi.ingsw.view.cli.printer.MarketTrayPrinter;
 import it.polimi.ingsw.view.cli.printer.WarehousePrinter;
+import it.polimi.ingsw.view.cli.printer.cardprinter.DevCardSlotPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
 import it.polimi.ingsw.view.cli.printer.cardprinter.SoloActionTokenPrinter;
@@ -71,16 +72,14 @@ public class SPInGameClientState extends ClientState {
 
                     case "endTurn":
                         command = new EndTurnCommand();
-                    try{
-                        System.out.println("This is the first token of the stack: ");
-                        SoloActionTokenPrinter.printSoloActionToken(model.getSoloToken().get(0));
-                    } catch (NullPointerException e){
-                        System.out.println("Something went wrong with tokens...");
-                    }
+                        try{
+                            SoloActionTokenPrinter.printSoloActionToken(model.getSoloToken());
+                            System.out.println("This is the first token of the stack");
+                        } catch (NullPointerException e){
+                        }
                         break;
 
                     case "viewTray":
-                        View.clearScreen();
                         MarketTrayPrinter.printMarketTray(model.getTray());
                         break;
 
@@ -113,7 +112,7 @@ public class SPInGameClientState extends ClientState {
                         break;
 
                     case "activateLeader":
-                        if (model.getState().canDoAction(Actions.ACTIVATE_LEADER_CARD))
+                        if (model.getPlayerState().canDoAction(Actions.ACTIVATE_LEADER_CARD))
                             System.out.println("illegal");
                         break;
 
@@ -122,9 +121,11 @@ public class SPInGameClientState extends ClientState {
                         break;
 
                     case "showWarehouse":
-                        //TODO inizializzare il LiteWarehouse
                         WarehousePrinter.printWarehouse(model, model.getMe());
                         break;
+
+                    case "devCards":
+                        
 
                     default:
                         System.out.println("I don't understand... pls don't bullish me. It is your fault! <3");

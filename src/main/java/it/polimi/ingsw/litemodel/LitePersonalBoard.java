@@ -67,6 +67,7 @@ public class LitePersonalBoard {
         return this.track.getPlayerPosition();
     }
 
+    @JsonIgnore
     public LiteWarehouse getWarehouse(){
         return this.warehouse;
     }

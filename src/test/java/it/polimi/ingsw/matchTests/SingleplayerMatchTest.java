@@ -53,7 +53,6 @@ public class SingleplayerMatchTest {
      */
     @RepeatedTest(10)
     public void simpleLifeCycleOfMatch() {
-        this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().getDiscarded().getCardID());
 
         assertTrue(singleplayer.test_getCurrPlayer().canDoStuff());
 
@@ -116,11 +115,10 @@ public class SingleplayerMatchTest {
                 assertEquals(this.oldLorenzoPos + 2, ((SingleplayerMatch) this.singleplayer).test_getLorenzoPosition());
                 this.oldLorenzoPos += 2;
                 break;
-            case "vuoto":
+            default:
                 assertEquals(this.oldLorenzoPos + 1, ((SingleplayerMatch) this.singleplayer).test_getLorenzoPosition());
                 this.oldLorenzoPos += 1;
                 break;
-            default: fail();
             // st7 makes the discarded token stack empty
         }
     }

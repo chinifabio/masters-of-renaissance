@@ -182,7 +182,7 @@ public class Deck<T extends Card> {
 
     //for testing
     public T getDiscarded() {
-        if (this.discardedCards.isEmpty()) return (T) new SoloActionToken("vuoto", null);
+        if (this.discardedCards.isEmpty()) return (T) new SoloActionToken("empty", null);
         return this.discardedCards.get(discardedCards.size()-1);
     }
 }

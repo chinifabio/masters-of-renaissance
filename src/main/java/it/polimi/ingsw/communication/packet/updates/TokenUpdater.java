@@ -9,11 +9,11 @@ import java.util.List;
 
 public class TokenUpdater extends Updater {
 
-    private final List<LiteSoloActionToken> deck;
+    private final LiteSoloActionToken token;
 
     @JsonCreator
-    public TokenUpdater(@JsonProperty("deck") List<LiteSoloActionToken> deck) {
-        this.deck = deck;
+    public TokenUpdater(@JsonProperty("token") LiteSoloActionToken token) {
+        this.token = token;
     }
     /**
      * Take a lite model as input and apply to the implementing function
@@ -22,6 +22,6 @@ public class TokenUpdater extends Updater {
      */
     @Override
     public void update(LiteModel liteModel) {
-        liteModel.setSoloToken(this.deck);
+        liteModel.setSoloToken(this.token);
     }
 }

@@ -63,11 +63,10 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
         this.soloToken = new Deck<>(init);
         this.soloToken.shuffle();
+
         updateToken();
 
         this.discardedFromToken = new Deck<>();
-
-
 
         this.view.publish(new NewPlayerUpdater("lorenzo"));
     }
@@ -151,8 +150,8 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     public void endMyTurn() {
         try {
             SoloActionToken s = this.soloToken.useAndDiscard();
-            updateToken();
             s.useEffect(this);
+            updateToken();
         } catch (EmptyDeckException e) {
             // solo token stack is empty
             // todo end the game with error
@@ -170,8 +169,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     }
 
     private void updateToken() {
-        this.view.publish(new TokenUpdater(this.soloToken.getCards().stream().map(SoloActionToken::liteVersion).collect(Collectors.toList())));
-
+        this.view.publish(new TokenUpdater(this.soloToken.peekFirstCard().liteVersion()));
     }
 
     private void updateLorenzo() {
