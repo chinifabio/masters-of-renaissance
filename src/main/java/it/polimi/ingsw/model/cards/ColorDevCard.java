@@ -10,7 +10,7 @@ public enum ColorDevCard {
     YELLOW(1, TextColors.YELLOW, TextColors.YELLOW_BACKGROUND),
     BLUE(2,TextColors.BLUE, TextColors.BLUE_BACKGROUND),
     PURPLE(3, TextColors.PURPLE, TextColors.PURPLE_BACKGROUND),
-    NOCOLOR(-1, TextColors.RED_BACKGROUND, TextColors.RED_BACKGROUND);
+    NOCOLOR(-1, TextColors.WHITE, TextColors.WHITE);
 
     private final int devSetupIndex;
 

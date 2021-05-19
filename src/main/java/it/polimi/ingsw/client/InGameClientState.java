@@ -18,6 +18,7 @@ import it.polimi.ingsw.view.cli.printer.MarketTrayPrinter;
 import it.polimi.ingsw.view.cli.printer.WarehousePrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
+import it.polimi.ingsw.view.cli.printer.cardprinter.SoloActionTokenPrinter;
 
 import java.io.IOException;
 import java.sql.SQLOutput;
@@ -54,7 +55,7 @@ public class InGameClientState extends ClientState {
                     System.out.println("choose the id: ");
                     try {
                         ShowLeaderCards.printLeaderCardsPlayer(model.getLeader(model.getMe()));
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         System.out.println("something wrong...");
                     }
                     System.out.print("> ");
@@ -87,7 +88,7 @@ public class InGameClientState extends ClientState {
                     int index = -1;
                     boolean repeat = false;
                     do{
-                        System.out.println("Index?");
+                        System.out.println("Select the arrow");
                         System.out.print("> ");
                         try {
                             index = Integer.parseInt(new Scanner(System.in).nextLine());
@@ -114,6 +115,11 @@ public class InGameClientState extends ClientState {
 
                 case "devSetup":
                     DevSetupPrinter.printDevSetup(model.getDevSetup());
+                    break;
+
+                case "showWarehouse":
+                    //TODO inizializzare il LiteWarehouse
+                    WarehousePrinter.printWarehouse(model, model.getMe());
                     break;
 
                 default:

@@ -4,6 +4,7 @@ import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.Command;
+import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
@@ -72,6 +73,7 @@ public class Model {
         if (this.players.containsKey(client)) return client.invalid("something strange is going on ༼ つ ◕_◕ ༽つ");
 
         this.dispatcher.subscribe(client);
+        this.dispatcher.publish(new NewPlayerUpdater(nickname));
 
         try {
             Player p = new Player(nickname, this.match, this.dispatcher);

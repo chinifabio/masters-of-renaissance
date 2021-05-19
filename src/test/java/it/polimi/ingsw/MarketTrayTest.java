@@ -49,7 +49,7 @@ public class MarketTrayTest {
         assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
+        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
 
     }
@@ -95,7 +95,6 @@ public class MarketTrayTest {
         assertArrayEquals(beforePush.toArray(), tray.showMarketTray().toArray());
         assertEquals(slide,tray.showSlideMarble());
 
-        MarketTrayPrinter.printMarketTray(tray.liteVersion());
     }
 
     /**

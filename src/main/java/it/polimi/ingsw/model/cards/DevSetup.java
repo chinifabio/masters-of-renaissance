@@ -5,15 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
 import it.polimi.ingsw.model.MappableToLiteVersion;
-import it.polimi.ingsw.model.cards.effects.AddDiscountEffect;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * This class contains a List of Deck of DevCards. It contains the 12 decks of DevCards divided by level and color.
@@ -96,7 +93,7 @@ public class DevSetup implements MappableToLiteVersion {
     @Override
     public LiteDevSetup liteVersion() {
         LiteDevCard[][] result = new LiteDevCard[3][4]; // todo remove the hardcoded values
-        LiteDevCard nullCard= new LiteDevCard("empty", null, 0, LevelDevCard.NOLEVEL, ColorDevCard.NOCOLOR, new ArrayList<>());
+        LiteDevCard nullCard= new LiteDevCard("EMPTY", null, 0, LevelDevCard.NOLEVEL, ColorDevCard.NOCOLOR, new ArrayList<>());
 
         int i = 0;
         for(Deck<DevCard> deck : this.devDeckGrid){

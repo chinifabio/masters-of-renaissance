@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequisite;
+import it.polimi.ingsw.model.cards.ColorDevCard;
+import it.polimi.ingsw.model.cards.LevelDevCard;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +18,7 @@ public class DevCardPrinter {
     private static final int WIDTH = 12; //cols.
 
     public static void createDevCard(String[][] display, LiteDevCard toPrint, int x, int y){
-
+        boolean notEmpty = toPrint.getLevel() != LevelDevCard.NOLEVEL || toPrint.getColor() != ColorDevCard.NOCOLOR;
         String colorCard;
         colorCard = toPrint.getColor().getDevCardColor();
 
@@ -32,6 +34,8 @@ public class DevCardPrinter {
         display[x][y + 4] = TextColors.colorText(colorCard,toPrint.getId());
         if (toPrint.getId().length() < 4) {
             display[x][y + 5] = TextColors.colorText(colorCard,"═");
+        } else if (toPrint.getId().length() > 4){
+            display[x][y + 3] = "";
         }
 
         display[x][y + WIDTH -1] = TextColors.colorText(colorCard,"╗");
@@ -42,28 +46,37 @@ public class DevCardPrinter {
             }
             display[r][y + WIDTH - 1] = TextColors.colorText(colorCard,"║");
         }
-        display[x + HEIGHT - 2][y + WIDTH -7] = TextColors.colorText(TextColors.PURPLE_BRIGHT,String.valueOf(toPrint.getVictoryPoint()));
-        if (toPrint.getVictoryPoint() > 9){
-            display[x + HEIGHT - 2][y + WIDTH -6] = "";
+        if (notEmpty) {
+            display[x + HEIGHT - 2][y + WIDTH - 7] = TextColors.colorText(TextColors.PURPLE_BRIGHT, String.valueOf(toPrint.getVictoryPoint()));
+            if (toPrint.getVictoryPoint() > 9) {
+                display[x + HEIGHT - 2][y + WIDTH - 6] = "";
+            }
         }
         display[x + HEIGHT -1][y + WIDTH -1] = TextColors.colorText(colorCard,"╝");
 
 
         display[x + HEIGHT-1][y + 3] = TextColors.colorText(colorCard,"LEVEL");
-        display[x + HEIGHT-1][y + 4] = TextColors.colorText(colorCard, String.valueOf(toPrint.getLevel().getLevelCard()));
+        if (notEmpty) {
+            display[x + HEIGHT - 1][y + 4] = TextColors.colorText(colorCard, String.valueOf(toPrint.getLevel().getLevelCard()));
+        }
         for (int i = y + 5; i< y + WIDTH-3; i++){
             display[x + HEIGHT-1][i] = "";
         }
-        toPrint.getEffect().printEffect(display, x, y);
-        for (int i = y + 1; i < y + WIDTH - 1; i++) {
-            display[x + 2][i] = TextColors.colorText(TextColors.CYAN,"-");
-            display[x + HEIGHT -3][i] = TextColors.colorText(TextColors.CYAN,"-");
+
+        if (notEmpty) {
+            toPrint.getEffect().printEffect(display, x, y);
+            for (int i = y + 1; i < y + WIDTH - 1; i++) {
+                display[x + 2][i] = TextColors.colorText(TextColors.CYAN, "-");
+                display[x + HEIGHT - 3][i] = TextColors.colorText(TextColors.CYAN, "-");
+            }
+
+            int z = y;
+            for (LiteRequisite requisite : toPrint.getCost()) {
+                requisite.printRequisite(display, x, z);
+                z = z + 3;
+            }
         }
-        int z = y;
-        for (LiteRequisite requisite : toPrint.getCost()) {
-            requisite.printRequisite(display, x, z);
-            z = z + 3;
-        }
+
 
     }
 
@@ -71,7 +84,7 @@ public class DevCardPrinter {
     public void printDevCard(LiteDevCard devCardToPrint){
         String[][] devCard = new String[HEIGHT][WIDTH];
 
-        createDevCard(devCard, devCardToPrint, 0,0);
+        createDevCard(devCard, devCardToPrint, 0, 0);
         for (int r = 0; r < (HEIGHT); r++) {
             System.out.println();
             for (int c = 0; c < (WIDTH); c++) {

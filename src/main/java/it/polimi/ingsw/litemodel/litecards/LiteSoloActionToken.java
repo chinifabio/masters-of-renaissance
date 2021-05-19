@@ -9,4 +9,5 @@ public class LiteSoloActionToken extends LiteCard {
     public LiteSoloActionToken(@JsonProperty("cardID") String cardID,@JsonProperty("effect") LiteEffect effect) {
         super(cardID, effect);
     }
+
 }

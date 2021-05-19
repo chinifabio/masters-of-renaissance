@@ -8,7 +8,6 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.SoloActionToken;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -54,7 +53,7 @@ public class SingleplayerMatchTest {
      */
     @RepeatedTest(10)
     public void simpleLifeCycleOfMatch() {
-        this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().test_getLastDiscarded().getCardID());
+        this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().getDiscarded().getCardID());
 
         assertTrue(singleplayer.test_getCurrPlayer().canDoStuff());
 
@@ -62,13 +61,13 @@ public class SingleplayerMatchTest {
         assertDoesNotThrow(()-> assertEquals(singleplayer.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.INVALID));
 
         assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().endThisTurn());
-        this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().test_getLastDiscarded().getCardID());
+        this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().getDiscarded().getCardID());
 
         assertDoesNotThrow(()-> assertEquals(singleplayer.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.OK));
         assertDoesNotThrow(()-> assertEquals(singleplayer.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.INVALID));
 
         assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().endThisTurn());
-        this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().test_getLastDiscarded().getCardID());
+        this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().getDiscarded().getCardID());
     }
 
     @Test

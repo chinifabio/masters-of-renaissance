@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.model.player.Player;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ public interface View {
     /**
      * This method prints the current status of the FaithTrack
      */
-    void showFaithTrack() throws IOException;
+    void showFaithTrack(LiteModel model) throws IOException;
 
     void showMarketTray();
 
@@ -22,6 +23,6 @@ public interface View {
 
     void askToPlayer();
 
-    void clearScreen();
+    static void clearScreen() {}
 
 }

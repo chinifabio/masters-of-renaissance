@@ -33,10 +33,11 @@ public class WarehousePrinter {
         for (int i = 1; i < 4; i++) {
             warehouse[i][0] = "║";
             for (int r = 1; r < MAX_HORIZ - 1; r++) {
-                warehouse[i][r] = "─";
+                warehouse[i][r] = " ";
             }
             warehouse[i][MAX_HORIZ - 1] = "║";
         }
+
 
         int initR = 1;
         int initC = 12;
@@ -75,6 +76,19 @@ public class WarehousePrinter {
 
             initC--;
             initR++;
+        }
+
+        //Adding the lines
+        for (int i = 1; i < 4; i++){
+            for (int r = 1; r < MAX_HORIZ -1; r++){
+                if (warehouse[i][r].equals("[")){
+                    while (!warehouse[i][r].equals("]")){
+                        r++;
+                    }
+                } else {
+                    warehouse[i][r] = "─";
+                }
+            }
         }
 
         int reset = 4;
@@ -138,7 +152,7 @@ public class WarehousePrinter {
         LiteModel model = new LiteModel();
         model.createPlayer("gino");
 
-        LiteResource coin = new LiteResource(ResourceType.COIN, 2);
+        LiteResource coin = new LiteResource(ResourceType.EMPTY, 0);
         LiteResource shield = new LiteResource(ResourceType.SHIELD, 1);
         LiteResource stone = new LiteResource(ResourceType.STONE, 3);
         LiteResource servant = new LiteResource(ResourceType.SERVANT, 5);

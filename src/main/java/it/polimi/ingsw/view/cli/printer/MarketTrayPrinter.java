@@ -9,8 +9,8 @@ import java.io.IOException;
 
 public class MarketTrayPrinter {
 
-    private static final int HEIGHT = 10;
-    private  static final int WIDTH = 24;
+    private static final int HEIGHT = 12;
+    private  static final int WIDTH = 26;
 
     private static void createMarketTray(LiteMarketTray tray, String[][] display, int x, int y){
 
@@ -23,23 +23,26 @@ public class MarketTrayPrinter {
         LiteMarble slideMarble = new LiteMarble(tray.getSlideMarble().getColor(), tray.getSlideMarble().getToResource());
 
         final String traySample =
-                            "╔════════════════════╗  " +
-                            "║                    ║  " +
-                            "║    ╔═══╦═══╦═══╦═══╣  " +
-                            "║    ║   ║   ║   ║   ║ ←" +
-                            "║    ╠═══╬═══╬═══╬═══╣  " +
-                            "║    ║   ║   ║   ║   ║ ←" +
-                            "║    ╠═══╬═══╬═══╬═══╣  " +
-                            "║    ║   ║   ║   ║   ║ ←" +
-                            "╚════╩═══╩═══╩═══╩═══╝  " +
-                            "       ↑   ↑   ↑   ↑    ";
+                            "╔════════════════════╗    " +
+                            "║                    ║    " +
+                            "║    ╔═══╦═══╦═══╦═══╣    " +
+                            "║    ║   ║   ║   ║   ║ ←0─" +
+                            "║    ╠═══╬═══╬═══╬═══╣    " +
+                            "║    ║   ║   ║   ║   ║ ←1─" +
+                            "║    ╠═══╬═══╬═══╬═══╣    " +
+                            "║    ║   ║   ║   ║   ║ ←2─" +
+                            "╚════╩═══╩═══╩═══╩═══╝    " +
+                            "       ↑   ↑   ↑   ↑      " +
+                            "       0   1   2   3      " +
+                            "       │   │   │   │      " ;
+
 
         int i = 0;
         for (char c : traySample.toCharArray()){
             display[x+i/WIDTH][y+i%WIDTH] = String.valueOf(c);
             i++;
         }
-        int id = 0;
+
         int indexX = 3;
         int indexY = 7;
         for (int z = 0; z < 3; z++){
@@ -50,7 +53,7 @@ public class MarketTrayPrinter {
             indexY = 7;
             indexX = indexX + 2;
         }
-        display[1][WIDTH-5] = CLI.colorMarbles.get(slideMarble.getColor());
+        display[1][WIDTH-7] = CLI.colorMarbles.get(slideMarble.getColor());
 
     }
 

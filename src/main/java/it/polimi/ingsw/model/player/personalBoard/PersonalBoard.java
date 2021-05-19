@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard;
 
+import it.polimi.ingsw.communication.packet.updates.DepotUpdater;
 import it.polimi.ingsw.communication.packet.updates.DevelopUpdater;
 import it.polimi.ingsw.communication.packet.updates.LeaderUpdater;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
@@ -21,7 +22,6 @@ import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.PlayerToMatch;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.personalBoard.faithTrack.PopeTile;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
@@ -92,6 +92,7 @@ public class PersonalBoard {
         this.warehouse = new Warehouse(player);
         this.faithTrack = new FaithTrack(player);
         this.player = player;
+
     }
 
     /**
@@ -417,6 +418,17 @@ public class PersonalBoard {
 
         this.player.view.publish(new DevelopUpdater(this.player.getNickname(), deck));
     }
+    
+
+    protected void updateDepot(DepotSlot slot){
+        this.player.view.publish(new DepotUpdater(this.player.getNickname(), getDepots().get(slot).liteVersion(), slot));
+    }
+
+
+    public Map<DepotSlot, Depot> getDepots() {
+        return this.warehouse.getDepot();
+    }
+
 
     // only for testing
     public FaithTrack getFT_forTest() {
@@ -428,10 +440,6 @@ public class PersonalBoard {
         return this.warehouse;
     }
 
-    // only for testing
-    public Map<DepotSlot, Depot> test_getDepots() {
-        return this.warehouse.test_getDepot();
-    }
 
     // only for testing
     public Map<ProductionID, Production> test_getProduction() {

@@ -3,8 +3,6 @@ package it.polimi.ingsw.matchTests;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
-import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -67,7 +65,7 @@ public class MultiplayerMatchTest {
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
+        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         this.order.add(multiplayer.test_getCurrPlayer());
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
 
@@ -75,7 +73,7 @@ public class MultiplayerMatchTest {
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
         assertEquals(1, multiplayer.test_getCurrPlayer().test_getPB().getFT_forTest().getPlayerPosition());
-        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
+        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         this.order.add(multiplayer.test_getCurrPlayer());
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
 
@@ -85,8 +83,8 @@ public class MultiplayerMatchTest {
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().test_discardLeader());
         assertEquals(1, multiplayer.test_getCurrPlayer().test_getPB().getFT_forTest().getPlayerPosition());
-        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
-        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.MIDDLE).viewResources().get(0), ResourceBuilder.buildStone()));
+        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
+        assertDoesNotThrow(() -> assertEquals(multiplayer.test_getCurrPlayer().test_getPB().getDepots().get(DepotSlot.MIDDLE).viewResources().get(0), ResourceBuilder.buildStone()));
         this.order.add(multiplayer.test_getCurrPlayer());
         assertDoesNotThrow(()-> multiplayer.test_getCurrPlayer().endThisTurn());
 

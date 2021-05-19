@@ -36,7 +36,9 @@ public class LitePersonalBoard {
      * Used to memorize dev cards and their position
      */
     private final Map<DevCardSlot, String> devCard = new EnumMap<>(DevCardSlot.class);
+
     private List<LiteResource> discounts;
+
     private List<MarbleColor> conversions;
 
     public void setLeader(List<LiteLeaderCard> cards) {
@@ -61,6 +63,10 @@ public class LitePersonalBoard {
 
     public Integer getPlayerPosition() {
         return this.track.getPlayerPosition();
+    }
+
+    public LiteWarehouse getWarehouse(){
+        return this.warehouse;
     }
 
     public LiteDepot getDepot(DepotSlot slot) {

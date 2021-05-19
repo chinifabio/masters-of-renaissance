@@ -83,6 +83,12 @@ public class Warehouse {
         this.addConstraint(x-> x.getDest() != DepotSlot.STRONGBOX || x.getFrom() == DepotSlot.BUFFER);
 
         this.player = player;
+
+      for (DepotSlot slot : DepotSlot.values()){
+          if (depots.get(slot) != null){
+              updateDepot(slot);
+          }
+      }
     }
 
     /**
@@ -395,7 +401,7 @@ public class Warehouse {
     }
 
     // for testing
-    public Map<DepotSlot, Depot> test_getDepot() {
+    public Map<DepotSlot, Depot> getDepot() {
         return this.depots;
     }
     // for testing

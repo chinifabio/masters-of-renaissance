@@ -52,7 +52,7 @@ public class LeaderTest {
         assertDoesNotThrow(()-> game.test_getCurrPlayer().chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
         assertDoesNotThrow(()-> game.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
+        assertDoesNotThrow(() -> assertEquals(game.test_getCurrPlayer().test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         assertDoesNotThrow(()-> game.test_getCurrPlayer().endThisTurn());
     }
 
@@ -60,10 +60,10 @@ public class LeaderTest {
     public void testAddDepot() {
         Effect test = new AddDepotEffect(ResourceType.COIN);
 
-        assertNull(game.test_getCurrPlayer().test_getPB().test_getDepots().get(DepotSlot.SPECIAL1));
+        assertNull(game.test_getCurrPlayer().test_getPB().getDepots().get(DepotSlot.SPECIAL1));
         test.use(game.test_getCurrPlayer());
 
-        assertTrue(game.test_getCurrPlayer().test_getPB().test_getDepots().containsKey(DepotSlot.SPECIAL1));
+        assertTrue(game.test_getCurrPlayer().test_getPB().getDepots().containsKey(DepotSlot.SPECIAL1));
     }
 
     @Test

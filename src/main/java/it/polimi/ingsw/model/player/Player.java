@@ -98,6 +98,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     public Player(String nickname, PlayerToMatch match, Dispatcher view) throws IllegalTypeInProduction {
 
+        this.view = view;
         this.nickname = nickname;
         this.personalBoard = new PersonalBoard(this);
 
@@ -106,9 +107,8 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
         this.playerState = new PendingMatchStartPlayerState(this);
 
-        this.match = match;
 
-        this.view = view;
+        this.match = match;
     }
 
     /**

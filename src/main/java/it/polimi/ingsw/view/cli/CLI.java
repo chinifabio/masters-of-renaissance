@@ -1,6 +1,8 @@
 package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.TextColors;
+import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.View;
@@ -18,7 +20,7 @@ public class CLI implements View {
         put(ResourceType.SHIELD, TextColors.colorText(TextColors.BLUE_BRIGHT,"▼"));
         put(ResourceType.SERVANT, TextColors.colorText(TextColors.PURPLE,"Õ"));
         put(ResourceType.STONE, TextColors.colorText(TextColors.WHITE,"■"));
-        put(ResourceType.EMPTY," ");
+        put(ResourceType.EMPTY,"l");
         put(ResourceType.UNKNOWN,TextColors.colorText(TextColors.WHITE_BRIGHT,"?"));
         put(ResourceType.FAITHPOINT, TextColors.colorText(TextColors.RED,"┼"));
     }};
@@ -33,7 +35,9 @@ public class CLI implements View {
     }};
 
     @Override
-    public void showFaithTrack(){
+    public void showFaithTrack(LiteModel model) throws IOException {
+        FaithTrackPrinter printer = new FaithTrackPrinter(model);
+        printer.printTrack();
     }
 
     @Override
@@ -53,11 +57,6 @@ public class CLI implements View {
 
     @Override
     public void askToPlayer() {
-
-    }
-
-    @Override
-    public void clearScreen() {
 
     }
 

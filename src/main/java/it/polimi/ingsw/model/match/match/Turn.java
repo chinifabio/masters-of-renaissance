@@ -114,4 +114,9 @@ public class Turn {
     public void countingPoints() {
         this.playerOrder.forEach(Player::setCountingPoints);
     }
+
+    //Only for testing of warehouseUpdater
+    public List<Player> getPlayerOrder() {
+        return playerOrder;
+    }
 }

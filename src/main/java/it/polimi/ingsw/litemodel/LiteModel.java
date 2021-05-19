@@ -79,6 +79,7 @@ public class LiteModel {
         this.soloToken = deck;
     }
 
+
     public synchronized void setDiscounts(String nickname, List<LiteResource> discounts) {
         this.players.get(nickname).setDiscounts(discounts);
     }

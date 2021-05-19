@@ -9,9 +9,7 @@ import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.match.SoloTokenReaction;
-import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +49,6 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      */
     public SingleplayerMatch(Dispatcher view) {
         super(1, 1, view);
-        System.out.println("super fatto");
 
         List<SoloActionToken> init = new ArrayList<>();
 
@@ -66,8 +63,11 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
         this.soloToken = new Deck<>(init);
         this.soloToken.shuffle();
+        updateToken();
 
         this.discardedFromToken = new Deck<>();
+
+
 
         this.view.publish(new NewPlayerUpdater("lorenzo"));
     }
@@ -138,7 +138,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
         if (this.devSetup.showDevDeck(levels.get(levels.size() - 1), color) == null) { // try to watch if there is cards in the top level deck
             this.lorenzoWinner = true;
-            System.out.println("end of the game: Lorenzo discarded dev cards of a color");
+            System.out.println("end of the game: Lorenzo discarded all the dev cards of a color");
             this.startEndGameLogic(); // start end game logic if there is no card to discard
         }
     }
@@ -171,6 +171,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
     private void updateToken() {
         this.view.publish(new TokenUpdater(this.soloToken.getCards().stream().map(SoloActionToken::liteVersion).collect(Collectors.toList())));
+
     }
 
     private void updateLorenzo() {

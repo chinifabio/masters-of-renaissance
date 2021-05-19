@@ -26,6 +26,7 @@ import it.polimi.ingsw.litemodel.LiteModel;
         @JsonSubTypes.Type(name = "Token", value = TokenUpdater.class),
         @JsonSubTypes.Type(name = "Tray", value = TrayUpdater.class),
         @JsonSubTypes.Type(name = "PlayerState", value = PlayerStateUpdater.class),
+
 })
 public abstract class Updater {
 

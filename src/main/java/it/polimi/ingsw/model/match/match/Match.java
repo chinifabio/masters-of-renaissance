@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.communication.packet.updates.DepotUpdater;
 import it.polimi.ingsw.communication.packet.updates.DevSetupUpdater;
 import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
 import it.polimi.ingsw.communication.packet.updates.TrayUpdater;
@@ -23,6 +24,7 @@ import it.polimi.ingsw.model.match.markettray.MarketTray;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 
 import java.io.File;
 import java.io.IOException;
@@ -131,7 +133,6 @@ public abstract class Match implements PlayerToMatch {
         if (this.turn.playerInGame() > gameSize) return false;
         if (gameOnAir) return false;
         if (this.turn.joinPlayer(joined)) {
-            this.view.publish(new NewPlayerUpdater(joined.getNickname()));
             startGame();
             return true;
         }
@@ -184,7 +185,6 @@ public abstract class Match implements PlayerToMatch {
         switch (rc) {
             case COL: this.marketTray.pushCol(index, turn.getCurPlayer()); break;
             case ROW: this.marketTray.pushRow(index, turn.getCurPlayer()); break;
-
         }
 
         // update lite model
@@ -319,6 +319,8 @@ public abstract class Match implements PlayerToMatch {
     protected void updateDevSetup() {
         this.view.publish(new DevSetupUpdater(this.devSetup.liteVersion()));
     }
+
+
 
     /**
      * This method is used to calculate and notify the winner of the match.

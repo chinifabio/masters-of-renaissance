@@ -66,7 +66,7 @@ public class Server implements Runnable{
     }
 
     public boolean memorizePlayer(String nickname) {
-        if (nickname.toLowerCase().contains("lorenzo") || nickname.length() > 15 || this.nicknames.contains(nickname)) return false;
+        if (nickname.toLowerCase().contains("lorenzo") || nickname.length() > 15 || this.nicknames.contains(nickname) || nickname.length() <= 0) return false;
         this.nicknames.add(nickname);
         return true;
     }

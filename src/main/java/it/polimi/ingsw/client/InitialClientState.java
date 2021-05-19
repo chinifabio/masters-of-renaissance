@@ -4,6 +4,7 @@ import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.view.cli.printer.NamePrinter;
 
 import java.util.Scanner;
 
@@ -22,6 +23,7 @@ public class InitialClientState extends ClientState {
      */
     @Override
     protected Packet doStuff(LiteModel model) {
+        NamePrinter.titleName();
         System.out.println("Insert your username");
         System.out.print("> ");
         String nick = new Scanner(System.in).nextLine();
