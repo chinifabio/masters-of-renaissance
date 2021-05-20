@@ -18,10 +18,14 @@ public class WarehousePrinter {
     private static final int MAX_VERT = 7; //rows.
     private static final int MAX_HORIZ = 29; //cols.
 
+    private static final int MAX_VERT_BUFFER = 3; //cols.
+
 
     public static void printWarehouse(LiteModel model, String nickname) {
 
         String[][] warehouse = new String[MAX_VERT][MAX_HORIZ];
+        String[][] buffer = new String[MAX_VERT_BUFFER][MAX_HORIZ];
+
 
         //creating Depots
         warehouse[0][0] = "╔";
@@ -145,6 +149,62 @@ public class WarehousePrinter {
                 System.out.print(warehouse[r][c]);
             }
         }
+        printBuffer(model, nickname);
+
+    }
+
+    public static void printBuffer(LiteModel model, String nickname){
+        String[][] buffer = new String[MAX_VERT_BUFFER][MAX_HORIZ];
+
+        buffer[0][0] = TextColors.colorText(TextColors.CYAN,"╔");
+        buffer[0][MAX_HORIZ - 1] = TextColors.colorText(TextColors.CYAN,"╗");
+        buffer[MAX_VERT_BUFFER-1][0] = TextColors.colorText(TextColors.CYAN,"╚");
+        buffer[MAX_VERT_BUFFER-1][MAX_HORIZ-1] = TextColors.colorText(TextColors.CYAN,"╝");
+
+        for (int i = 1; i < MAX_HORIZ - 1; i++) {
+            if (i == 12){
+                buffer[0][i] = TextColors.colorText(TextColors.CYAN,"BUFFER");
+            } else {
+                buffer[0][i] = TextColors.colorText(TextColors.CYAN,"═");
+            }
+            buffer[MAX_VERT_BUFFER-1][i] = TextColors.colorText(TextColors.CYAN,"═");
+        }
+        int j = 13;
+        while (j != 18){
+            buffer[0][j] = "";
+            j++;
+        }
+        for (int i = 1; i < MAX_VERT_BUFFER-1; i++) {
+            buffer[i][0] = TextColors.colorText(TextColors.CYAN,"║");
+            for (int r = 1; r < MAX_HORIZ - 1; r++) {
+                buffer[i][r] = " ";
+            }
+            buffer[i][MAX_HORIZ - 1] = TextColors.colorText(TextColors.CYAN,"║");
+        }
+
+        int initBuffer = 4;
+        for (LiteResource resource : model.getDepot(nickname, DepotSlot.BUFFER).getResourcesInside()){
+            buffer[1][initBuffer] = CLI.colorResource.get(resource.getType());
+            initBuffer = initBuffer+1;
+            buffer[1][initBuffer] = "x";
+            initBuffer = initBuffer+1;
+            buffer[1][initBuffer] = String.valueOf(resource.getAmount());
+            if (resource.getAmount() > 9 && resource.getAmount() < 100){
+                buffer[1][initBuffer+1] = "";
+            } else if (resource.getAmount() >= 100) {
+                buffer[1][initBuffer+1] = "";
+                buffer[1][initBuffer+2] = "";
+            }
+
+            initBuffer = initBuffer + 4;
+        }
+
+        for (int r = 0; r<  MAX_VERT_BUFFER ; r++){
+            System.out.println();
+            for (int c = 0; c < (MAX_HORIZ); c++) {
+                System.out.print(buffer[r][c]);
+            }
+        }
         System.out.println();
     }
 
@@ -174,11 +234,13 @@ public class WarehousePrinter {
         LiteDepot depotBottom = new LiteDepot(resourcesBottom);
         LiteDepot depotMiddle = new LiteDepot(resourcesMiddle);
         LiteDepot strongbox = new LiteDepot(resourcesStrongbox);
+        LiteDepot buffer = new LiteDepot(resourcesStrongbox);
 
         model.setDepot("gino", DepotSlot.TOP, depotTop);
         model.setDepot("gino", DepotSlot.MIDDLE, depotMiddle);
         model.setDepot("gino", DepotSlot.BOTTOM, depotBottom);
         model.setDepot("gino", DepotSlot.STRONGBOX, strongbox);
+        model.setDepot("gino", DepotSlot.BUFFER, buffer);
 
         printWarehouse(model, "gino");
     }

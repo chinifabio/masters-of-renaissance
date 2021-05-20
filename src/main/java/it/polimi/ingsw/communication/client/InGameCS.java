@@ -63,7 +63,9 @@ public class InGameCS extends ClientState {
             case "buydevcard": return buyDevCard(model);
             case "paintmarble": return paintMarbleColor(model);
             case "usemarket": return useMarketTray(model);
-            case "moveres": return moveDepot(model);
+            case "moveres":
+                WarehousePrinter.printWarehouse(model, model.getMe());
+                return moveDepot(model);
             case "moveinproduction": return moveInProduction(model);
             case "setnormalproduction": return setNormalProduction(model);
             case "activateproduction": return activateProduction(model);
@@ -75,12 +77,13 @@ public class InGameCS extends ClientState {
             case "viewdevcards":
                 DevCardSlotPrinter.printDevCardPersonalBoard(model.getDevelop(model.getMe()));
                 return view;
-            case "viewleaders":
+            case "viewleader":
                 try {
                     ShowLeaderCards.printLeaderCardsPlayer(model.getLeader(model.getMe()));
                 } catch (IOException e) {
                     System.out.println("something's wrong... I can feel it");
                 }
+                return view;
             case "viewmarket":
                 System.out.println();
                 MarketTrayPrinter.printMarketTray(model.getTray());
