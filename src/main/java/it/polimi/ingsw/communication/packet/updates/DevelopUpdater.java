@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
+import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 
 import java.util.List;
+import java.util.Map;
 
 public class DevelopUpdater extends Updater {
 

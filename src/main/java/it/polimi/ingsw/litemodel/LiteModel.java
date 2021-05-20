@@ -13,6 +13,7 @@ import it.polimi.ingsw.litemodel.liteplayer.LiteState;
 import it.polimi.ingsw.litemodel.liteplayer.PendingStart;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
+import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
@@ -56,6 +57,10 @@ public class LiteModel {
 
     public void setDevelop(String nickname, List<LiteDevCard> deck) {
         this.players.get(nickname).setDevelop(deck);
+    }
+
+    public List<LiteDevCard> getDevelop(String nickname){
+        return this.players.get(nickname).getDevelop();
     }
 
     public synchronized void setDevSetup(LiteDevSetup devSetup) {

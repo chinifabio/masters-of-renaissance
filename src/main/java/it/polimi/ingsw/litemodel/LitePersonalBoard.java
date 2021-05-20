@@ -37,7 +37,8 @@ public class LitePersonalBoard {
     /**
      * Used to memorize dev cards and their position
      */
-    private final Map<DevCardSlot, String> devCard = new EnumMap<>(DevCardSlot.class);
+    private List<LiteDevCard> devCards;
+
     private List<LiteResource> discounts = new ArrayList<>();
     private List<MarbleColor> conversions = new ArrayList<>();
 
@@ -93,8 +94,12 @@ public class LitePersonalBoard {
         this.track = track;
     }
 
-    public void setDevelop(List<LiteDevCard> deck) {
-        // todo
+    public void setDevelop(List<LiteDevCard> devcards) {
+        this.devCards = devcards;
+    }
+
+    public List<LiteDevCard> getDevelop(){
+        return this.devCards;
     }
 
     public void setProduction(ProductionID id, LiteProduction prod) {

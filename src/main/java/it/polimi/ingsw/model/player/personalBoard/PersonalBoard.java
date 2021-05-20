@@ -5,9 +5,7 @@ import it.polimi.ingsw.communication.packet.updates.DevelopUpdater;
 import it.polimi.ingsw.communication.packet.updates.LeaderUpdater;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
-import it.polimi.ingsw.model.cards.Deck;
-import it.polimi.ingsw.model.cards.DevCard;
-import it.polimi.ingsw.model.cards.LeaderCard;
+import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.AddDiscountEffect;
 import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
@@ -15,7 +13,6 @@ import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.exceptions.warehouse.*;
-import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
@@ -92,7 +89,7 @@ public class PersonalBoard {
         this.warehouse = new Warehouse(player);
         this.faithTrack = new FaithTrack(player);
         this.player = player;
-
+        updateDevCard();
     }
 
     /**
@@ -408,14 +405,14 @@ public class PersonalBoard {
     }
 
     private void updateDevCard() {
-        DevCard nullCard = new DevCard("empty", new AddDiscountEffect(ResourceType.SERVANT), 0, null, null,  new ArrayList<>());
+        DevCard nullCard = new DevCard("Empty", new AddDiscountEffect(ResourceType.SERVANT), 0, LevelDevCard.NOLEVEL, ColorDevCard.NOCOLOR,  new ArrayList<>());
 
         List<LiteDevCard> deck = new ArrayList<>();
         for (DevCardSlot slot : DevCardSlot.values()) {
             DevCard card = this.devDeck.get(slot).peekFirstCard();
             deck.add( card == null ? nullCard.liteVersion() : card.liteVersion());
         }
-
+        System.out.println(deck);
         this.player.view.publish(new DevelopUpdater(this.player.getNickname(), deck));
     }
     

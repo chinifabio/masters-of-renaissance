@@ -19,6 +19,7 @@ import it.polimi.ingsw.model.resource.*;
 import it.polimi.ingsw.view.cli.printer.FaithTrackPrinter;
 import it.polimi.ingsw.view.cli.printer.MarketTrayPrinter;
 import it.polimi.ingsw.view.cli.printer.WarehousePrinter;
+import it.polimi.ingsw.view.cli.printer.cardprinter.DevCardSlotPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
 
@@ -71,11 +72,8 @@ public class InGameCS extends ClientState {
             case "viewdepots":
                 WarehousePrinter.printWarehouse(model, model.getMe());
                 return view;
-            case "viewdiscounts":
-                // metodo
-                return view;
-            case "viewconversione":
-                // metodo
+            case "viewdevcards":
+                DevCardSlotPrinter.printDevCardPersonalBoard(model.getDevelop(model.getMe()));
                 return view;
             case "viewleaders":
                 try {
