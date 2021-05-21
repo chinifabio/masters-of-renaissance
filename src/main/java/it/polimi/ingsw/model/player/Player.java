@@ -446,7 +446,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     }
 
     private void updateState() {
-        this.view.publish(new PlayerStateUpdater(this.playerState.liteVersion()));
+        this.view.publish(new PlayerStateUpdater(this.playerState.liteVersion(), this.nickname));
     }
 
     /**

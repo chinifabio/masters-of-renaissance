@@ -109,7 +109,7 @@ public class SPInGameClientState extends ClientState {
                         break;
 
                     case "activateLeader":
-                        if (model.getPlayerState().canDoAction(Actions.ACTIVATE_LEADER_CARD))
+                        if (model.getPlayerState(model.getMe()).canDoAction(Actions.ACTIVATE_LEADER_CARD))
                             System.out.println("illegal");
                         break;
 

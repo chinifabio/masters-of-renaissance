@@ -11,11 +11,12 @@ import java.util.List;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonSubTypes({
         @JsonSubTypes.Type(name = "CountingPoints", value = CountingPoints.class),
-        @JsonSubTypes.Type(name = "LeaderSelection", value = LeaderSelection.class),
+        @JsonSubTypes.Type(name = "LeaderSelection", value = InitSelection.class),
         @JsonSubTypes.Type(name = "MainActionDone", value = MainActionDone.class),
         @JsonSubTypes.Type(name = "NoActionDone", value = NoActionDone.class),
         @JsonSubTypes.Type(name = "NotHisTurn", value = NotHisTurn.class),
         @JsonSubTypes.Type(name = "PendingStart", value = PendingStart.class),
+        @JsonSubTypes.Type(name = "PendingInit", value = PendingInit.class),
 })
 public abstract class LiteState {
     protected final List<Actions> clickable = new ArrayList<>();

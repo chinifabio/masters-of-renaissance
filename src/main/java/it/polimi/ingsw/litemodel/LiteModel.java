@@ -10,18 +10,14 @@ import it.polimi.ingsw.litemodel.litecards.LiteSoloActionToken;
 import it.polimi.ingsw.litemodel.litefaithtrack.LiteFaithTrack;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarketTray;
 import it.polimi.ingsw.litemodel.liteplayer.LiteState;
-import it.polimi.ingsw.litemodel.liteplayer.PendingStart;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
-import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
-import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.util.Tuple;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class LiteModel {
 
@@ -33,7 +29,6 @@ public class LiteModel {
     private LiteDevSetup devSetup;
 
     private LiteSoloActionToken soloToken;
-    private LiteState playerState = new PendingStart();
 
     @JsonCreator
     public LiteModel(@JsonProperty("players") List<Tuple<String, LitePersonalBoard>> list) {
@@ -101,8 +96,8 @@ public class LiteModel {
         this.players.get(nickname).setConversions(collect);
     }
 
-    public void setPlayerState(LiteState state) {
-        this.playerState = state;
+    public void setPlayerState(String nickname, LiteState state) {
+        players.get(nickname).setState(state);
     }
 
 // ------------------- GETTER METHODS ------------------
@@ -155,8 +150,8 @@ public class LiteModel {
         return this.me;
     }
 
-    public LiteState getPlayerState() {
-        return this.playerState;
+    public LiteState getPlayerState(String nickname) {
+        return this.players.get(nickname).getState();
     }
 
     /**
@@ -164,7 +159,7 @@ public class LiteModel {
      * @param model
      */
     public void replaceModel(LiteModel model) {
-        this.playerState = model.getPlayerState();
+        //this.playerState = model.getPlayerState();
 
         model.players.forEach(this.players::put);
 

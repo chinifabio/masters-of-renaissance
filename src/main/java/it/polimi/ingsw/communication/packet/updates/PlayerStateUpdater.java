@@ -8,9 +8,12 @@ import it.polimi.ingsw.litemodel.liteplayer.LiteState;
 public class PlayerStateUpdater extends Updater {
     private final LiteState state;
 
+    private final String nickname;
+
     @JsonCreator
-    public PlayerStateUpdater(@JsonProperty("state") LiteState state) {
+    public PlayerStateUpdater(@JsonProperty("state") LiteState state, @JsonProperty("nickname") String nickname) {
         this.state = state;
+        this.nickname = nickname;
     }
 
     /**
@@ -20,6 +23,6 @@ public class PlayerStateUpdater extends Updater {
      */
     @Override
     public void update(LiteModel liteModel) {
-        liteModel.setPlayerState(this.state);
+        liteModel.setPlayerState(this.nickname, this.state);
     }
 }

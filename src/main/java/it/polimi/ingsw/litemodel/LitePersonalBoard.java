@@ -3,6 +3,8 @@ package it.polimi.ingsw.litemodel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
+import it.polimi.ingsw.litemodel.liteplayer.LiteState;
+import it.polimi.ingsw.litemodel.liteplayer.PendingInit;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
@@ -42,6 +44,7 @@ public class LitePersonalBoard {
 
     private List<LiteResource> discounts = new ArrayList<>();
     private List<MarbleColor> conversions = new ArrayList<>();
+    private LiteState state = new PendingInit();
 
     public void setLeader(List<LiteLeaderCard> cards) {
         this.leaderCards = cards;
@@ -122,4 +125,13 @@ public class LitePersonalBoard {
     public List<MarbleColor> getConversions() {
         return new ArrayList<>(this.conversions);
     }
+
+    public void setState(LiteState state) {
+        this.state = state;
+    }
+
+    public LiteState getState(){
+        return state;
+    }
+
 }

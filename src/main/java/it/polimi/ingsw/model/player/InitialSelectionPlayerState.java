@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.player;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.litemodel.liteplayer.LeaderSelection;
+import it.polimi.ingsw.litemodel.liteplayer.InitSelection;
 import it.polimi.ingsw.litemodel.liteplayer.LiteState;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
@@ -166,6 +166,6 @@ public class InitialSelectionPlayerState extends PlayerState {
      */
     @Override
     public LiteState liteVersion() {
-        return new LeaderSelection();
+        return new InitSelection();
     }
 }

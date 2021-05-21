@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.litemodel.liteplayer.LiteState;
+import it.polimi.ingsw.litemodel.liteplayer.PendingInit;
 
 public class PendingInitPlayerState extends PlayerState {
     /**
@@ -30,7 +31,7 @@ public class PendingInitPlayerState extends PlayerState {
      */
     @Override
     public LiteState liteVersion() {
-        return null; // todo change
+        return new PendingInit();
     }
 
     /**

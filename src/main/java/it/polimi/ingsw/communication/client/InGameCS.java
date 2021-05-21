@@ -117,7 +117,7 @@ public class InGameCS extends ClientState {
     //------------ACTIONS METHODS---------------
 
     public Packet discardLeader(LiteModel model) {
-        if(!model.getPlayerState().canDoAction(Actions.DISCARD_LEADER_CARD)) return invalid;
+        if(!model.getPlayerState(model.getMe()).canDoAction(Actions.DISCARD_LEADER_CARD)) return invalid;
 
         //metodi cli/gui per scegliere la carta
 
@@ -125,7 +125,7 @@ public class InGameCS extends ClientState {
     }
 
     public Packet chooseResource(LiteModel model){
-        if(!model.getPlayerState().canDoAction(Actions.CHOOSE_RESOURCE)) return invalid;
+        if(!model.getPlayerState(model.getMe()).canDoAction(Actions.CHOOSE_RESOURCE)) return invalid;
 
         Resource res;
         res = resConv(resPick());
@@ -135,7 +135,7 @@ public class InGameCS extends ClientState {
 
 
     public Packet activateLeader(LiteModel model) {
-        if(!model.getPlayerState().canDoAction(Actions.ACTIVATE_LEADER_CARD)) return invalid;
+        if(!model.getPlayerState(model.getMe()).canDoAction(Actions.ACTIVATE_LEADER_CARD)) return invalid;
 
         //metodi cli/gui per scegliere la carta
 
@@ -143,7 +143,7 @@ public class InGameCS extends ClientState {
     }
 
     public Packet buyDevCard(LiteModel model) {
-        if(!model.getPlayerState().canDoAction(Actions.BUY_DEV_CARD)) return invalid;
+        if(!model.getPlayerState(model.getMe()).canDoAction(Actions.BUY_DEV_CARD)) return invalid;
 
         System.out.println("The devsetup:");
         DevSetupPrinter.printDevSetup(model.getDevSetup());
@@ -179,7 +179,7 @@ public class InGameCS extends ClientState {
     }
 
     public Packet useMarketTray(LiteModel model) {
-        if(!model.getPlayerState().canDoAction(Actions.USE_MARKET_TRAY)) return invalid;
+        if(!model.getPlayerState(model.getMe()).canDoAction(Actions.USE_MARKET_TRAY)) return invalid;
 
         System.out.println("This is the MarketTray:");
         MarketTrayPrinter.printMarketTray(model.getTray());
@@ -219,7 +219,7 @@ public class InGameCS extends ClientState {
     }
 
     public Packet paintMarbleColor(LiteModel model) {
-        if(!model.getPlayerState().canDoAction(Actions.PAINT_MARBLE_IN_TRAY)) return invalid;
+        if(!model.getPlayerState(model.getMe()).canDoAction(Actions.PAINT_MARBLE_IN_TRAY)) return invalid;
         if(model.getConversion(model.getMe()).size()==0){
             System.out.println(TextColors.colorText(TextColors.RED,"You don't have any conversion power!"));
             return view;
@@ -248,7 +248,7 @@ public class InGameCS extends ClientState {
     }
 
     public Packet moveDepot(LiteModel model) {
-        if(!model.getPlayerState().canDoAction(Actions.MOVE_BETWEEN_DEPOT)) return invalid;
+        if(!model.getPlayerState(model.getMe()).canDoAction(Actions.MOVE_BETWEEN_DEPOT)) return invalid;
 
         DepotSlot from,dest;
         Resource res;
@@ -261,13 +261,13 @@ public class InGameCS extends ClientState {
     }
 
     public Packet activateProduction(LiteModel model) {
-        if(!model.getPlayerState().canDoAction(Actions.ACTIVATE_PRODUCTION)) return invalid;
+        if(!model.getPlayerState(model.getMe()).canDoAction(Actions.ACTIVATE_PRODUCTION)) return invalid;
 
         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ActivateProductionCommand().jsonfy());
     }
 
     public Packet moveInProduction(LiteModel model) {
-        if(!model.getPlayerState().canDoAction(Actions.MOVE_IN_PRODUCTION)) return invalid;
+        if(!model.getPlayerState(model.getMe()).canDoAction(Actions.MOVE_IN_PRODUCTION)) return invalid;
 
         DepotSlot from;
         ProductionID dest;
@@ -283,7 +283,7 @@ public class InGameCS extends ClientState {
     }
 
     public Packet setNormalProduction(LiteModel model) { //todo da fare
-        if(!model.getPlayerState().canDoAction(Actions.SET_NORMAL_PRODUCTION)) return invalid;
+        if(!model.getPlayerState(model.getMe()).canDoAction(Actions.SET_NORMAL_PRODUCTION)) return invalid;
 
         ProductionID prod=ProductionID.BASIC;
         NormalProduction normal = null;
@@ -297,7 +297,7 @@ public class InGameCS extends ClientState {
     }
 
     public Packet endTurn(LiteModel model) {
-        if(!model.getPlayerState().canDoAction(Actions.END_TURN)) return invalid;
+        if(!model.getPlayerState(model.getMe()).canDoAction(Actions.END_TURN)) return invalid;
 
         return new Packet(HeaderTypes.DO_ACTION,ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy());
     }
