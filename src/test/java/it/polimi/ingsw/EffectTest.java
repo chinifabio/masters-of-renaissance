@@ -4,11 +4,7 @@ import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.*;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
-import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
@@ -23,7 +19,6 @@ import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -53,9 +48,9 @@ public class EffectTest {
         //assertTrue(singleplayer.startGame());
 
         // the player discard the first two leader card
-        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().endThisTurn());
+        assertDoesNotThrow(()->singleplayer.currentPlayer().test_discardLeader());
+        assertDoesNotThrow(()->singleplayer.currentPlayer().test_discardLeader());
+        assertDoesNotThrow(()->singleplayer.currentPlayer().endThisTurn());
         // once the second leader is discarded the turn end and match manage lorenzo automatically
     }
 
@@ -143,9 +138,9 @@ public class EffectTest {
     void moveTwoEffect() {
         SoloActionToken token = new SoloActionToken("505", new MoveTwoEffect());
 
-        int x = singleplayer.test_getLorenzoPosition();
+        int x = singleplayer.lorenzoPosition();
         token.useEffect(singleplayer);
-        assertEquals(x+2, singleplayer.test_getLorenzoPosition());
+        assertEquals(x+2, singleplayer.lorenzoPosition());
     }
 
     //TODO adjust when buyDevCard will works
@@ -170,23 +165,23 @@ public class EffectTest {
         SingleplayerMatch match = new SingleplayerMatch(view);
         SoloActionToken token = new SoloActionToken("505", new ShuffleMoveOneEffect());
 
-        assertEquals(7,match.test_getSoloDeck().getNumberOfCards());
+        assertEquals(7,match.obtainSoloTokens().getNumberOfCards());
 
         SoloActionToken[] array = new SoloActionToken[7];
         for( int i=0 ; i<7 ; i++ ) {
-            array[i] = match.test_getSoloDeck().getCards().get(i);
+            array[i] = match.obtainSoloTokens().getCards().get(i);
         }
-        match.test_getSoloDeck().useAndDiscard().useEffect(match);
-        match.test_getSoloDeck().useAndDiscard().useEffect(match);
-        match.test_getSoloDeck().useAndDiscard().useEffect(match);
-        int pos = match.test_getLorenzoPosition();
+        match.obtainSoloTokens().useAndDiscard().useEffect(match);
+        match.obtainSoloTokens().useAndDiscard().useEffect(match);
+        match.obtainSoloTokens().useAndDiscard().useEffect(match);
+        int pos = match.lorenzoPosition();
         token.useEffect(match);
-        assertEquals(7,match.test_getSoloDeck().getNumberOfCards());
+        assertEquals(7,match.obtainSoloTokens().getNumberOfCards());
         int flag=0;
         for( int i=0 ; i<7 ; i++ ) {
-            if(array[i].equals(match.test_getSoloDeck().getCards().get(i))) flag++;
+            if(array[i].equals(match.obtainSoloTokens().getCards().get(i))) flag++;
         }
         assertNotEquals(7,flag);
-        assertEquals(pos+1,match.test_getLorenzoPosition());
+        assertEquals(pos+1,match.lorenzoPosition());
     }
 }

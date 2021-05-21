@@ -2,9 +2,7 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.communication.packet.updates.DepotUpdater;
 import it.polimi.ingsw.communication.packet.updates.DevSetupUpdater;
-import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
 import it.polimi.ingsw.communication.packet.updates.TrayUpdater;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.*;
@@ -24,14 +22,10 @@ import it.polimi.ingsw.model.match.markettray.MarketTray;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class represents the Match
@@ -42,16 +36,6 @@ public abstract class Match implements PlayerToMatch {
      * the number of possible players in the game
      */
     public final int gameSize;
-
-    /**
-     * the minimum player number to start the game
-     */
-    public final int minimumPlayer;
-
-    /**
-     * Number of players who finished the initial phase
-     */
-    private int initPlayer = 0;
 
     /**
      * this flag is used to check if the game is started
@@ -69,19 +53,9 @@ public abstract class Match implements PlayerToMatch {
     protected final DevSetup devSetup;
 
     /**
-     * this is the players handler of the match
-     */
-    protected Turn turn;
-
-    /**
      * this is the leader card of the match shuffled and given to player during the starting of the game
      */
     protected final Deck<LeaderCard> leaderCardDeck;
-
-    /**
-     * This attribute indicates if the VaticanSpace is activated and the Player can take the victoryPoints of the PopeTile
-     */
-    protected Map<VaticanSpace, Boolean> vaticanSpaceCheck;
 
     /**
      * The view to send all the changes in the state
@@ -89,24 +63,25 @@ public abstract class Match implements PlayerToMatch {
     protected final Dispatcher view;
 
     /**
+     * checked pope tiles
+     */
+    protected final Map<VaticanSpace, Boolean> checkedPopeTile = new EnumMap<>(VaticanSpace.class) {{
+        put(VaticanSpace.FIRST, false);
+        put(VaticanSpace.SECOND, false);
+        put(VaticanSpace.THIRD, false);
+    }};
+
+    /**
      * This method is the constructor of the class
      * @param gameSize indicates the number of players that can play this match
-     * @param min indicates the minimum number of players to start this match
+     * @param view the view on which notify all changes
      */
-    protected Match(int gameSize, int min, Dispatcher view) {
+    protected Match(int gameSize, Dispatcher view) {
         this.gameSize = gameSize;
-        this.minimumPlayer = min;
 
         this.view = view;
 
-        this.turn = new Turn();
         gameOnAir = false;
-
-        this.vaticanSpaceCheck = new EnumMap<>(VaticanSpace.class);
-
-        this.vaticanSpaceCheck.put(VaticanSpace.FIRST, true);
-        this.vaticanSpaceCheck.put(VaticanSpace.SECOND, true);
-        this.vaticanSpaceCheck.put(VaticanSpace.THIRD, true);
 
         this.marketTray = new MarketTray();
 
@@ -134,15 +109,7 @@ public abstract class Match implements PlayerToMatch {
      * @param joined player who join
      * @return true if success, false instead
      */
-    public boolean playerJoin(Player joined) {
-        if (this.turn.playerInGame() > gameSize) return false;
-        if (gameOnAir) return false;
-        if (this.turn.joinPlayer(joined)) {
-            if(this.turn.playerInGame() == this.gameSize) this.turn.randomizeInkwellPlayer();
-            return true;
-        }
-        return false;
-    }
+    public abstract boolean playerJoin(Player joined);
 
     /**
      * request to other player to flip the pope tile passed in the parameter
@@ -150,13 +117,7 @@ public abstract class Match implements PlayerToMatch {
      * @param toCheck the vatican space to check
      */
     @Override
-    public void vaticanReport(VaticanSpace toCheck) {
-        if(vaticanSpaceCheck.get(toCheck)) {
-            this.turn.getOtherPlayer().forEach(x -> x.flipPopeTile(toCheck));
-            this.turn.getCurPlayer().flipPopeTile(toCheck);
-            vaticanSpaceCheck.put(toCheck, false);
-        }
-    }
+    public abstract void vaticanReport(VaticanSpace toCheck);
 
     /**
      * return a view of the MarketTray
@@ -177,8 +138,8 @@ public abstract class Match implements PlayerToMatch {
     @Override
     public void useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException, WrongDepotException {
         switch (rc) {
-            case COL: this.marketTray.pushCol(index, turn.getCurPlayer()); break;
-            case ROW: this.marketTray.pushRow(index, turn.getCurPlayer()); break;
+            case COL: this.marketTray.pushCol(index, currentPlayer()); break;
+            case ROW: this.marketTray.pushRow(index, currentPlayer()); break;
         }
 
         // update lite model
@@ -227,8 +188,8 @@ public abstract class Match implements PlayerToMatch {
     @Override
     public boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws PlayerStateException, EmptyDeckException, LootTypeException, AlreadyInDeckException, EndGameException {
         // todo check if non current players actually can't buy a card
-        if (this.turn.getCurPlayer().hasRequisite(this.devSetup.showDevDeck(row, col).getCost(),row,col,this.devSetup.showDevDeck(row,col))) {
-            this.turn.getCurPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
+        if (this.currentPlayer().hasRequisite(this.devSetup.showDevDeck(row, col).getCost(),row,col,this.devSetup.showDevDeck(row,col))) {
+            this.currentPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
 
             // update lite model
             this.updateDevSetup();
@@ -244,43 +205,20 @@ public abstract class Match implements PlayerToMatch {
      * @param amount faith point given to other player
      */
     @Override
-    public void othersPlayersObtainFaithPoint(int amount) {
-        for (Player x : turn.getOtherPlayer()) {
-            try {
-                x.moveFaithMarker(amount);
-            } catch (EndGameException e) {
-                this.startEndGameLogic();
-            }
-        }
-    }
+    public abstract void othersPlayersObtainFaithPoint(int amount);
 
 
     /**
      * Tells to the match the end of the player turn;
      */
     @Override
-    public void endMyTurn() {
-        this.marketTray.unPaint(); // resetting all the painted marbles
-        try {
-            this.turn.nextPlayer();
-        } catch (EndGameException e) {
-            gameOnAir = false;
-            this.turn.countingPoints();
-            // todo tells to the worker to calculate the points
-        }
-    }
+    public abstract void turnDone();
 
     /**
      * Tells to the match that a player has done the init phase
      */
     @Override
-    public void initDone() {
-        this.initPlayer++;
-        if (initPlayer == gameSize) { // all player should be in pendingStartMatch state
-            this.gameOnAir = true;
-            this.turn.getCurPlayer().startHisTurn();
-        }
-    }
+    public abstract void initialSelectionDone();
 
     /**
      * This method return a Leader Card Deck
@@ -305,28 +243,26 @@ public abstract class Match implements PlayerToMatch {
      * This method starts the end game logic
      */
     @Override
-    public void startEndGameLogic(){
-        this.turn.endGame();
-        //this.turn.getCurPlayer().endThisTurn();
-    }
+    public abstract void startEndGameLogic();
 
     /**
      * Return the number of player in the game
      * @return the number of player
      */
-    public int playerInGame() {
-        return this.turn.playerInGame();
-    }
+    public abstract int playerInGame();
 
-    protected void updateTray() {
-        this.view.publish(new TrayUpdater(this.marketTray.liteVersion()));
-    }
+    /**
+     * disconnect a player from the match
+     * @param player the disconnected player
+     */
+    public abstract boolean disconnectPlayer(Player player);
 
-    protected void updateDevSetup() {
-        this.view.publish(new DevSetupUpdater(this.devSetup.liteVersion()));
-    }
-
-
+    /**
+     * reconnect a player to the game
+     * @param nickname the nickname of the player who need to be reconnected
+     * @return the reconnected player
+     */
+    public abstract Player reconnectPlayer(String nickname);
 
     /**
      * This method is used to calculate and notify the winner of the match.
@@ -334,19 +270,32 @@ public abstract class Match implements PlayerToMatch {
      */
     public abstract void winnerCalculator();
 
-    // for test
-    public Player test_getCurrPlayer(){
-        return turn.getCurPlayer();
-    }
+    /**
+     * Return the current player in the game
+     * @return current player
+     */
+    public abstract Player currentPlayer();
 
-    // for test
-    public Turn test_getTurn() {
-        return this.turn;
-    }
-
-    // for test
-    public boolean test_getGameOnAir() {
+    /**
+     * Used to see if the game is running
+     * @return true if game started, false if is waiting or finished
+     */
+    public boolean isGameOnAir() {
         return gameOnAir;
+    }
+
+    /**
+     * Update in the lite model the market Tray
+     */
+    protected void updateTray() {
+        this.view.publish(new TrayUpdater(this.marketTray.liteVersion()));
+    }
+
+    /**
+     * Update in the lite model the dev setup
+     */
+    protected void updateDevSetup() {
+        this.view.publish(new DevSetupUpdater(this.devSetup.liteVersion()));
     }
 
 }

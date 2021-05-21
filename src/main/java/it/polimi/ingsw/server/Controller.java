@@ -61,9 +61,11 @@ public class Controller implements Runnable, Disconnectable {
     @Override
     public void handleDisconnection() {
         System.out.println(TextColors.colorText(TextColors.RED, nickname) + " disconnected");
-        this.server.disconnect(this.nickname, this); // disconnection from server
-        this.model.disconnectMe(this); // disconnection from model
-        this.disconnected = true;
+        if (model.disconnectPlayer(this))                  // disconnection from model
+            server.disconnect(nickname, this);        // disconnection from server
+        else
+            server.removeController(nickname);
+        disconnected = true;
     }
 
     @Override
@@ -98,7 +100,7 @@ class InitState implements ControllerState {
             case Server.reconnect: // the player reconnect to the game whit a legal nickname
                 context.nickname = packet.body;
                 context.setState(new InGameState());
-                return context.model.reconnect(context.nickname, context) ?
+                return context.model.reconnectPlayer(context.nickname, context) ?
                         new Packet(HeaderTypes.JOIN_LOBBY, ChannelTypes.PLAYER_ACTIONS, "Reconnected ʕ•́ᴥ•̀ʔっ\""):
                         context.invalid("fail in reconnection");
 

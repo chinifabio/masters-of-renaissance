@@ -13,15 +13,10 @@ import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
-import it.polimi.ingsw.model.exceptions.requisite.NoRequisiteException;
-import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongPointsException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
-import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
-import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
@@ -68,9 +63,8 @@ public class PersonalBoardTest {
         assertTrue(game.playerJoin(player2));
         order.add(player2);
 
-        Collections.rotate(order, order.indexOf(game.test_getCurrPlayer()));
-
-        assertFalse(game.test_getGameOnAir());
+        Collections.rotate(order, order.indexOf(game.currentPlayer()));
+        assertTrue(game.isGameOnAir());
 
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
@@ -81,8 +75,6 @@ public class PersonalBoardTest {
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(() -> assertEquals(order.get(1).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         assertEquals(HeaderTypes.END_TURN, order.get(1).endThisTurn().header);
-
-        assertTrue(game.test_getGameOnAir());
     }
 
     /**
@@ -167,7 +159,7 @@ public class PersonalBoardTest {
     void ActivateLeaderCard() throws MissingCardException, AlreadyInDeckException, IllegalTypeInProduction, WrongDepotException {
         String ID1="000", ID2="111";
         List<Resource> sample = new ArrayList<>();
-        Warehouse warehouse = new Warehouse(this.game.test_getCurrPlayer());
+        Warehouse warehouse = new Warehouse(this.game.currentPlayer());
 
         Production p = new NormalProduction( sample, sample);
 
@@ -182,7 +174,7 @@ public class PersonalBoardTest {
         LeaderCard c1 = new LeaderCard(ID1, new AddExtraProductionEffect(p), 1, req);
         LeaderCard c2 = new LeaderCard(ID2, new AddExtraProductionEffect(p), 2, req);
 
-        PersonalBoard personalBoard =  new PersonalBoard(game.test_getCurrPlayer());
+        PersonalBoard personalBoard =  new PersonalBoard(game.currentPlayer());
 
         personalBoard.addLeaderCard(c1);
         assertEquals(personalBoard.viewLeaderCard().peekFirstCard(), c1);
@@ -225,7 +217,7 @@ public class PersonalBoardTest {
         LeaderCard c1 = new LeaderCard(ID1, new AddProductionEffect(p), 1, req);
         LeaderCard c2 = new LeaderCard(ID2, new AddProductionEffect(p), 2, req);
 
-        PersonalBoard personalBoard = new PersonalBoard(game.test_getCurrPlayer());
+        PersonalBoard personalBoard = new PersonalBoard(game.currentPlayer());
 
         assertNotNull(personalBoard);
         for (LeaderCard leaderCard : Arrays.asList(c1, c2)) {
@@ -284,7 +276,7 @@ public class PersonalBoardTest {
     @Test
     void Production() {
         assertDoesNotThrow(()->{
-            Player player = this.game.test_getCurrPlayer();
+            Player player = this.game.currentPlayer();
 
             List<Requisite> req = new ArrayList<>();
             Resource twoCoin = ResourceBuilder.buildCoin(2);
@@ -482,8 +474,8 @@ public class PersonalBoardTest {
         int randomNum = rand.nextInt(max);
 
         List<Player> orderList = new ArrayList<>();
-        orderList.add(game.test_getCurrPlayer());
-        Collections.rotate(orderList, -orderList.indexOf(game.test_getCurrPlayer()));
+        orderList.add(game.currentPlayer());
+        Collections.rotate(orderList, -orderList.indexOf(game.currentPlayer()));
 
         PersonalBoard board = orderList.get(0).test_getPB();
 

@@ -5,7 +5,6 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.liteplayer.LiteState;
 import it.polimi.ingsw.litemodel.liteplayer.MainActionDone;
-import it.polimi.ingsw.litemodel.liteplayer.PendingStart;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
@@ -112,7 +111,7 @@ public class MainActionDonePlayerState extends PlayerState {
     public Packet endThisTurn() {
         this.context.personalBoard.flushBufferDepot(this.context.match);
         this.context.setState(new NotHisTurnPlayerState(this.context));
-        this.context.match.endMyTurn();
+        this.context.match.turnDone();
         return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "your turn is ended");
     }
 

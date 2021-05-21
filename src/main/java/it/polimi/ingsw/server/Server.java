@@ -102,4 +102,8 @@ public class Server implements Runnable{
         if (this.lobby.availableSeats() == 0) this.lobby = new Model();
         return this.lobby;
     }
+
+    public void removeController(String nickname) {
+        this.connectedClient.remove(nickname);
+    }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.communication.packet.updates.FaithTrackUpdater;
 import it.polimi.ingsw.litemodel.litefaithtrack.LiteFaithTrack;
+import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.match.PlayerToMatch;
@@ -39,13 +40,18 @@ public class FaithTrack implements MappableToLiteVersion {
     /**
      * the owner of the faith track
      */
-    private final Player player;
+    private final Dispatcher view;
+
+    /**
+     * Nickname of the owner of the faith track
+     */
+    private final String nickname;
 
     /**
      * This method is the constructor of the class, it reads from a file the details of the track and creates a list of cells,
      * also it initialize the Player position to 0.
      */
-    public FaithTrack(Player player) {
+    public FaithTrack(Dispatcher view, String nickname) {
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -57,7 +63,9 @@ public class FaithTrack implements MappableToLiteVersion {
         }
 
         this.playerPosition = 0;
-        this.player = player;
+
+        this.view = view;
+        this.nickname = nickname;
 
         popeTiles = new HashMap<>();
         popeTiles.put(VaticanSpace.FIRST, new PopeTile(2));
@@ -82,12 +90,12 @@ public class FaithTrack implements MappableToLiteVersion {
         if(playerPosition >= (track.size()-1)) return;
         for (int i = 0; i< points; i++){
             this.playerPosition++;
-            updateFaithTrack();
             this.track.get(playerPosition).onPlayerCross(pm);
             if (this.playerPosition >= track.size()-1) {
                 throw new EndGameException();
             }
         }
+        updateFaithTrack();
     }
 
 
@@ -104,8 +112,8 @@ public class FaithTrack implements MappableToLiteVersion {
      * @param toCheck is the VaticanSpace that has been activated
      */
     public void flipPopeTile(VaticanSpace toCheck){
-        if (!(track.get(this.playerPosition).getVaticanSpace().ordinal < toCheck.ordinal)){
-            popeTiles.get(toCheck).flipMe();
+        if (track.get(this.playerPosition).getVaticanSpace().ordinal >= toCheck.ordinal) {
+            if (popeTiles.containsKey(toCheck)) popeTiles.get(toCheck).flipMe();
             updateFaithTrack();
         }
     }
@@ -156,14 +164,14 @@ public class FaithTrack implements MappableToLiteVersion {
         lite.movePlayer(this.playerPosition);
 
         for (Map.Entry<VaticanSpace, PopeTile> e : this.popeTiles.entrySet()) {
-            if (e.getValue().isFlipped()) lite.flipPopeTile(e.getKey().toString());
+            if (e.getValue().isFlipped()) lite.flipPopeTile(e.getKey().name());
         }
 
         return lite;
     }
 
     protected void updateFaithTrack() {
-        this.player.view.publish(new FaithTrackUpdater(this.player.getNickname(), this.liteVersion()));
+        this.view.publish(new FaithTrackUpdater(this.nickname, this.liteVersion()));
     }
 
     //Only for testing

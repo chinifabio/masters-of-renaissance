@@ -205,9 +205,12 @@ public class FaithTrackPrinter {
             }
 
             popeTiles.append(TextColors.colorText(colors[i%4],"┼" + name.charAt(0))).append( " - PopeTiles: " );
-            for (Map.Entry<String, Boolean> entry : tiles.get(i).entrySet()){
+            //for (Map.Entry<String, Boolean> entry : tiles.get(i).entrySet()){
+            List<VaticanSpace> loop = new ArrayList<>(Arrays.asList(VaticanSpace.values()));
+            loop.remove(VaticanSpace.NONE);
+            for (VaticanSpace vs : loop){
                 popeTiles.append(TextColors.colorText(TextColors.CYAN_BRIGHT,"["));
-                if (entry.getValue()){
+                if (tiles.get(i).get(vs.name())){
                     popeTiles.append(TextColors.colorText(TextColors.GREEN,"X"));
                 } else {
                     popeTiles.append(" ");

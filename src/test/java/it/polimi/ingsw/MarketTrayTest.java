@@ -18,7 +18,6 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
-import it.polimi.ingsw.view.cli.printer.MarketTrayPrinter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -43,9 +42,8 @@ public class MarketTrayTest {
         assertTrue(game.playerJoin(player2));
         order.add(player2);
 
-        Collections.rotate(order, order.indexOf(game.test_getCurrPlayer()));
-
-        assertFalse(game.test_getGameOnAir());
+        Collections.rotate(order, order.indexOf(game.currentPlayer()));
+        assertTrue(game.isGameOnAir());
 
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
@@ -56,8 +54,6 @@ public class MarketTrayTest {
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(() -> assertEquals(order.get(1).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         assertEquals(HeaderTypes.END_TURN, order.get(1).endThisTurn().header);
-
-        assertTrue(game.test_getGameOnAir());
     }
 
     /**
@@ -84,7 +80,7 @@ public class MarketTrayTest {
         int shiftCol = 1;
 
         try {
-            tray.pushCol(shiftCol, this.game.test_getCurrPlayer());
+            tray.pushCol(shiftCol, this.game.currentPlayer());
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -124,7 +120,7 @@ public class MarketTrayTest {
         int shiftRow = 1;
 
         try{
-            tray.pushRow(shiftRow, this.game.test_getCurrPlayer());
+            tray.pushRow(shiftRow, this.game.currentPlayer());
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -242,25 +238,25 @@ public class MarketTrayTest {
     public void outOfBound() {
 
         for (int i = 0; i < 5; i++) {
-            assertEquals(HeaderTypes.INVALID, game.test_getCurrPlayer().useMarketTray(RowCol.COL, 6).header);
+            assertEquals(HeaderTypes.INVALID, game.currentPlayer().useMarketTray(RowCol.COL, 6).header);
         }
 
     }
 
     @Test
     public void flushBufferTest() {
-        assertDoesNotThrow(()->game.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0));
+        assertDoesNotThrow(()->game.currentPlayer().useMarketTray(RowCol.ROW, 0));
 
-        List<Resource> list = this.game.test_getCurrPlayer().test_getPB().getWH_forTest().viewResourcesInDepot(DepotSlot.BUFFER);
+        List<Resource> list = this.game.currentPlayer().test_getPB().getWH_forTest().viewResourcesInDepot(DepotSlot.BUFFER);
         int sum = 0;
         for(Resource res : list) sum += res.amount();
 
-        assertDoesNotThrow(()->game.test_getCurrPlayer().endThisTurn());
+        assertDoesNotThrow(()->game.currentPlayer().endThisTurn());
 
-        assertEquals(sum, game.test_getCurrPlayer().test_getPB().getFT_forTest().getPlayerPosition());
-        assertDoesNotThrow(()->game.test_getCurrPlayer().endThisTurn());
+        assertEquals(sum, game.currentPlayer().test_getPB().getFT_forTest().getPlayerPosition());
+        assertDoesNotThrow(()->game.currentPlayer().endThisTurn());
 
-        assertEquals(ResourceBuilder.buildListOfStorable(), game.test_getCurrPlayer().test_getPB().getWH_forTest().viewResourcesInDepot(DepotSlot.BUFFER));
+        assertEquals(ResourceBuilder.buildListOfStorable(), game.currentPlayer().test_getPB().getWH_forTest().viewResourcesInDepot(DepotSlot.BUFFER));
     }
 
     @Test

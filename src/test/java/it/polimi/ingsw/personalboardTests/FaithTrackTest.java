@@ -1,7 +1,6 @@
 package it.polimi.ingsw.personalboardTests;
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.CustomAssertion;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
@@ -39,9 +38,8 @@ public class FaithTrackTest {
         assertTrue(game.playerJoin(player2));
         order.add(player2);
 
-        Collections.rotate(order, order.indexOf(game.test_getCurrPlayer()));
-
-        assertFalse(game.test_getGameOnAir());
+        Collections.rotate(order, order.indexOf(game.currentPlayer()));
+        assertTrue(game.isGameOnAir());
 
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
@@ -52,14 +50,12 @@ public class FaithTrackTest {
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(() -> assertEquals(order.get(1).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         assertEquals(HeaderTypes.END_TURN, order.get(1).endThisTurn().header);
-
-        assertTrue(game.test_getGameOnAir());
     }
 
     @Test
     public void infoFaithTrack() {
 
-        FaithTrack track = new FaithTrack(this.game.test_getCurrPlayer());
+        FaithTrack track = new FaithTrack(this.game.currentPlayer().view, this.game.currentPlayer().getNickname());
         Resource point = ResourceBuilder.buildFaithPoint();
 
         assertDoesNotThrow(()->{
@@ -105,7 +101,7 @@ public class FaithTrackTest {
         Resource third = ResourceBuilder.buildFaithPoint(3);
         Resource last = ResourceBuilder.buildFaithPoint(20);
 
-        FaithTrack faithTrack = new FaithTrack(this.game.test_getCurrPlayer());
+        FaithTrack faithTrack = new FaithTrack(this.game.currentPlayer().view, this.game.currentPlayer().getNickname());
 
         assertEquals(0,faithTrack.getPlayerPosition());
         faithTrack.movePlayer(first.amount(), game);
@@ -134,7 +130,7 @@ public class FaithTrackTest {
      */
     @Test
     public void callExceptionsPlayer() {
-        FaithTrack track = new FaithTrack(this.game.test_getCurrPlayer());
+        FaithTrack track = new FaithTrack(this.game.currentPlayer().view, this.game.currentPlayer().getNickname());
 
         assertDoesNotThrow(()->{
             track.movePlayer(8, game);
@@ -143,7 +139,9 @@ public class FaithTrackTest {
         });
         assertEquals(23, track.getPlayerPosition());
 
-        CustomAssertion.assertThrown(()->track.movePlayer(2, game));
+        try {
+            track.movePlayer(2, game);
+        } catch (EndGameException ignore) {}
     }
 
     @Test
@@ -152,31 +150,31 @@ public class FaithTrackTest {
         List<Player> order = new ArrayList<>();
 
         assertDoesNotThrow(()->{
-            game.test_getCurrPlayer().moveFaithMarker(4);
-            order.add(game.test_getCurrPlayer());
-            game.test_getCurrPlayer().endThisTurn();
+            game.currentPlayer().moveFaithMarker(4);
+            order.add(game.currentPlayer());
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            game.test_getCurrPlayer().moveFaithMarker(9);
-            order.add(game.test_getCurrPlayer());
-            game.test_getCurrPlayer().endThisTurn();
+            game.currentPlayer().moveFaithMarker(9);
+            order.add(game.currentPlayer());
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            assertFalse(game.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.FIRST));
-            game.test_getCurrPlayer().endThisTurn();
-            assertTrue(game.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.FIRST));
-            game.test_getCurrPlayer().endThisTurn();
+            assertFalse(game.currentPlayer().getFT_forTest().isFlipped(VaticanSpace.FIRST));
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
+            assertTrue(game.currentPlayer().getFT_forTest().isFlipped(VaticanSpace.FIRST));
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            game.test_getCurrPlayer().moveFaithMarker(8);
-            game.test_getCurrPlayer().endThisTurn();
+            game.currentPlayer().moveFaithMarker(8);
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            game.test_getCurrPlayer().moveFaithMarker(7);
-            game.test_getCurrPlayer().endThisTurn();
+            game.currentPlayer().moveFaithMarker(7);
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            assertTrue(game.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.SECOND));
-            game.test_getCurrPlayer().endThisTurn();
-            assertTrue(game.test_getCurrPlayer().getFT_forTest().isFlipped(VaticanSpace.SECOND));
+            assertTrue(game.currentPlayer().getFT_forTest().isFlipped(VaticanSpace.SECOND));
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
+            assertTrue(game.currentPlayer().getFT_forTest().isFlipped(VaticanSpace.SECOND));
 
             try{
-                game.test_getCurrPlayer().moveFaithMarker(20);
+                game.currentPlayer().moveFaithMarker(20);
             } catch (Exception ignore) {}
 
             assertFalse(order.get(0).getFT_forTest().isFlipped(VaticanSpace.THIRD));
@@ -187,71 +185,65 @@ public class FaithTrackTest {
 
     @Test
     public void countingPoints() {
-
-        //starting the game
-        List<Player> order = new ArrayList<>();
-
         assertDoesNotThrow(()->{
-            assertEquals(0, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
-            order.add(game.test_getCurrPlayer());
-            game.test_getCurrPlayer().endThisTurn();
-            assertEquals(0, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
-            order.add(game.test_getCurrPlayer());
-            game.test_getCurrPlayer().endThisTurn();
+            assertEquals(0, game.currentPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
+            assertEquals(0, game.currentPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            game.test_getCurrPlayer().moveFaithMarker(4);
-            game.test_getCurrPlayer().endThisTurn();
+            game.currentPlayer().moveFaithMarker(4);
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            game.test_getCurrPlayer().moveFaithMarker(2);
-            game.test_getCurrPlayer().endThisTurn();
+            game.currentPlayer().moveFaithMarker(2);
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            assertEquals(1, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
-            game.test_getCurrPlayer().endThisTurn();
-            assertEquals(0, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
-            game.test_getCurrPlayer().endThisTurn();
+            assertEquals(1, game.currentPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
+            assertEquals(0, game.currentPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            game.test_getCurrPlayer().moveFaithMarker(3);
-            game.test_getCurrPlayer().endThisTurn();
+            game.currentPlayer().moveFaithMarker(3);
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            game.test_getCurrPlayer().moveFaithMarker(4);
-            game.test_getCurrPlayer().endThisTurn();
+            game.currentPlayer().moveFaithMarker(4);
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            assertEquals(2, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
-            game.test_getCurrPlayer().endThisTurn();
-            assertEquals(2, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
-            game.test_getCurrPlayer().endThisTurn();
+            assertEquals(2, game.currentPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
+            assertEquals(2, game.currentPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
 
-            game.test_getCurrPlayer().moveFaithMarker(2);
-            game.test_getCurrPlayer().endThisTurn();
+            game.currentPlayer().moveFaithMarker(2);
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            game.test_getCurrPlayer().moveFaithMarker(1);
-            game.test_getCurrPlayer().endThisTurn();
+            game.currentPlayer().moveFaithMarker(1);
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            assertEquals(4 + 2, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
-            game.test_getCurrPlayer().endThisTurn();
-            assertEquals(2 + 2, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
-            game.test_getCurrPlayer().endThisTurn();
+            assertEquals(4 + 2, game.currentPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
+            assertEquals(2 + 2, game.currentPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
 
-            game.test_getCurrPlayer().moveFaithMarker(10); //Player1: 19
-            game.test_getCurrPlayer().endThisTurn();
+            game.currentPlayer().moveFaithMarker(10); //Player1: 19
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
             //When the first player reach the second PopeSpace, the second player is in the Cell 7 so he doesn't obtain the
             //victoryPoints of the second PopeTile
-            game.test_getCurrPlayer().moveFaithMarker(10); //Player2: 17
-            game.test_getCurrPlayer().endThisTurn();
+            game.currentPlayer().moveFaithMarker(10); //Player2: 17
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            assertEquals(12 + 3 + 2, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
-            game.test_getCurrPlayer().endThisTurn();
-            assertEquals(9 + 2, game.test_getCurrPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
-            game.test_getCurrPlayer().endThisTurn();
+            assertEquals(12 + 3 + 2, game.currentPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
+            assertEquals(9 + 2, game.currentPlayer().getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
 
-            game.test_getCurrPlayer().moveFaithMarker(1);//Player1: 20
-            game.test_getCurrPlayer().endThisTurn();
+            game.currentPlayer().moveFaithMarker(1);//Player1: 20
+            assertEquals(HeaderTypes.END_TURN, game.currentPlayer().endThisTurn().header);
         });
 
         try {
-            game.test_getCurrPlayer().moveFaithMarker(8);//Player2: 24
+            game.currentPlayer().moveFaithMarker(8);//Player2: 24
         } catch (EndGameException ignore) {}
 
 
