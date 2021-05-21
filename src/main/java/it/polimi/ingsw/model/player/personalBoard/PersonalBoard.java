@@ -87,7 +87,7 @@ public class PersonalBoard {
         productionSlotMap.put(DevCardSlot.RIGHT, ProductionID.RIGHT);
 
         this.warehouse = new Warehouse(player);
-        this.faithTrack = new FaithTrack(player);
+        this.faithTrack = new FaithTrack(player.view, player.getNickname());
         this.player = player;
         updateDevCard();
     }
@@ -412,7 +412,6 @@ public class PersonalBoard {
             DevCard card = this.devDeck.get(slot).peekFirstCard();
             deck.add( card == null ? nullCard.liteVersion() : card.liteVersion());
         }
-        System.out.println(deck);
         this.player.view.publish(new DevelopUpdater(this.player.getNickname(), deck));
     }
     

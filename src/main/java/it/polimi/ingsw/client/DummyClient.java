@@ -36,7 +36,8 @@ public class DummyClient implements Runnable, Disconnectable {
         this.executor.submit(new LiteModelUpdater(this.socket, this.model));
 
         // pinger thread
-        this.executor.submit(SecureConnection.pinger(this));
+        //SecureConnection.pinger(this);
+        this.socket.pinger(this);
     }
 
     public static void main(String[] args) {
@@ -47,7 +48,6 @@ public class DummyClient implements Runnable, Disconnectable {
             t.join();
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return;
         }
     }
 

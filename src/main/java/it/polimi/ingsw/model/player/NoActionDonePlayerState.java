@@ -5,7 +5,6 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.liteplayer.LiteState;
 import it.polimi.ingsw.litemodel.liteplayer.NoActionDone;
-import it.polimi.ingsw.litemodel.liteplayer.PendingStart;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
@@ -243,7 +242,7 @@ public class NoActionDonePlayerState extends PlayerState {
     public Packet endThisTurn() {
         this.context.personalBoard.flushBufferDepot(this.context.match);
         this.context.setState(new NotHisTurnPlayerState(this.context));
-        this.context.match.endMyTurn();
+        this.context.match.turnDone();
         return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "your turn is ended");
     }
 

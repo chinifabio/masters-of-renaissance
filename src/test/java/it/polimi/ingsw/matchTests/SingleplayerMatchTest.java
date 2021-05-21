@@ -40,9 +40,9 @@ public class SingleplayerMatchTest {
         //assertTrue(singleplayer.startGame());
 
         // the player discard the first two leader card
-        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().test_discardLeader());
-        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().endThisTurn());
+        assertDoesNotThrow(()->singleplayer.currentPlayer().test_discardLeader());
+        assertDoesNotThrow(()->singleplayer.currentPlayer().test_discardLeader());
+        assertDoesNotThrow(()->singleplayer.currentPlayer().endThisTurn());
         // once the second leader is discarded the turn end and match manage lorenzo automatically
     }
 
@@ -53,20 +53,19 @@ public class SingleplayerMatchTest {
      */
     @RepeatedTest(10)
     public void simpleLifeCycleOfMatch() {
+        // need to count all the discarded resources to correctly count the lorenzo points
 
-        assertTrue(singleplayer.test_getCurrPlayer().canDoStuff());
+        //assertEquals(singleplayer.currentPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.OK);
+        //assertEquals(singleplayer.currentPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.INVALID);
 
-        assertDoesNotThrow(()-> assertEquals(singleplayer.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.OK));
-        assertDoesNotThrow(()-> assertEquals(singleplayer.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.INVALID));
+        singleplayer.currentPlayer().endThisTurn();
+        this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).obtainSoloTokens().getDiscarded().getCardID());
 
-        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().endThisTurn());
-        this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().getDiscarded().getCardID());
+        //assertEquals(singleplayer.currentPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.OK);
+        //assertEquals(singleplayer.currentPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.INVALID);
 
-        assertDoesNotThrow(()-> assertEquals(singleplayer.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.OK));
-        assertDoesNotThrow(()-> assertEquals(singleplayer.test_getCurrPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.INVALID));
-
-        assertDoesNotThrow(()->singleplayer.test_getCurrPlayer().endThisTurn());
-        this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).test_getSoloDeck().getDiscarded().getCardID());
+        singleplayer.currentPlayer().endThisTurn();
+        this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).obtainSoloTokens().getDiscarded().getCardID());
     }
 
     @Test
@@ -93,12 +92,12 @@ public class SingleplayerMatchTest {
     @Test
     public void endGameByLorenzo() {
         assertDoesNotThrow(()-> {
-            while (singleplayer.test_getGameOnAir()) {
-                singleplayer.test_getCurrPlayer().endThisTurn();
+            while (singleplayer.isGameOnAir()) {
+                singleplayer.currentPlayer().endThisTurn();
             }
         });
 
-        assertTrue(((SingleplayerMatch) singleplayer).test_getLorenzoWinner());
+        assertTrue(((SingleplayerMatch) singleplayer).isLorenzoWinner());
     }
 
     private void testLorenzoAction(String idToken) {
@@ -107,17 +106,14 @@ public class SingleplayerMatchTest {
             case "ST3":
             case "ST2":
             case "ST4":
-                assertEquals(this.oldNumDiscarded + 2, ((SingleplayerMatch) this.singleplayer).test_getDiscarded().getNumberOfCards());
-                this.oldNumDiscarded += 2;
+                assertEquals(this.oldNumDiscarded += 2, ((SingleplayerMatch) this.singleplayer).test_getDiscarded().getNumberOfCards());
                 break;
             case "ST5":
             case "ST6":
-                assertEquals(this.oldLorenzoPos + 2, ((SingleplayerMatch) this.singleplayer).test_getLorenzoPosition());
-                this.oldLorenzoPos += 2;
+                assertEquals(this.oldLorenzoPos += 2, ((SingleplayerMatch) this.singleplayer).lorenzoPosition());
                 break;
             default:
-                assertEquals(this.oldLorenzoPos + 1, ((SingleplayerMatch) this.singleplayer).test_getLorenzoPosition());
-                this.oldLorenzoPos += 1;
+                assertEquals(this.oldLorenzoPos += 1, ((SingleplayerMatch) this.singleplayer).lorenzoPosition());
                 break;
             // st7 makes the discarded token stack empty
         }

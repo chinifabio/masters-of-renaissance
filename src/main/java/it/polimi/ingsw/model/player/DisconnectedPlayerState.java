@@ -19,7 +19,7 @@ public class DisconnectedPlayerState extends PlayerState {
      */
     @Override
     public void starTurn() {
-        this.context.match.endMyTurn();
+        this.context.match.turnDone();
     }
 
     /**

@@ -36,7 +36,8 @@ public class Client implements Runnable, Disconnectable {
         this.connected = true;
 
         this.executor.submit(new LiteModelUpdater(this.socket, this.liteModel));
-        this.executor.submit(SecureConnection.pinger(this));
+        //SecureConnection.pinger(this);
+        this.socket.pinger(this);
     }
 
     public static void main(String[] args) {
@@ -47,13 +48,12 @@ public class Client implements Runnable, Disconnectable {
             client.join();
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return;
         }
     }
 
     /**
      * Receive a state and set it as current state
-     * @param newClientState
+     * @param newClientState new state of the client
      */
     public void setState(ClientState newClientState){ this.clientState = newClientState; }
 

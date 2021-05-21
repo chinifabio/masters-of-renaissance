@@ -52,7 +52,7 @@ public class MultiplayerMatchTest {
         assertTrue(multiplayer.playerJoin(tino));
         order.add(tino);
 
-        Collections.rotate(order, -order.indexOf(multiplayer.test_getCurrPlayer()));
+        Collections.rotate(order, -order.indexOf(multiplayer.currentPlayer()));
 
         // initializing player section
         /*
@@ -92,7 +92,7 @@ public class MultiplayerMatchTest {
         assertEquals(HeaderTypes.END_TURN, order.get(3).endThisTurn().header);
 
         // creating a list of the players in order to have player(0) = inkwell player
-        Collections.rotate(order, -order.indexOf(multiplayer.test_getTurn().getCurPlayer()));
+        Collections.rotate(order, -order.indexOf(multiplayer.currentPlayer()));
     }
 
     @RepeatedTest(5)
@@ -102,7 +102,6 @@ public class MultiplayerMatchTest {
                 order.get(0).obtainResource(DepotSlot.STRONGBOX, MarbleBuilder.buildRed().toResource());
             } catch (EndGameException e) {
                 multiplayer.startEndGameLogic();
-                assertEquals(HeaderTypes.END_TURN, order.get(0).endThisTurn().header);
             }
             catch (Exception e) {fail();}
         }
@@ -111,7 +110,7 @@ public class MultiplayerMatchTest {
         assertEquals(HeaderTypes.END_TURN, order.get(2).endThisTurn().header);
         assertEquals(HeaderTypes.END_TURN, order.get(3).endThisTurn().header);
 
-        assertFalse(multiplayer.test_getGameOnAir());
+        assertFalse(multiplayer.isGameOnAir());
     }
 
     /**
@@ -121,7 +120,7 @@ public class MultiplayerMatchTest {
      */
     @Test
     public void buildMultiplayerTest() {
-        for(int i = 0; i < this.multiplayer.test_getTurn().playerInGame(); i++){
+        for(int i = 0; i < this.multiplayer.playerInGame(); i++){
             assertEquals(order.get(i).useMarketTray(RowCol.COL, 2).header, HeaderTypes.OK);
             assertEquals(order.get(i).useMarketTray(RowCol.COL, 2).header, HeaderTypes.INVALID);
             assertEquals(order.get(i).endThisTurn().header, HeaderTypes.END_TURN);

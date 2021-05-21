@@ -2,19 +2,23 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.communication.packet.updates.LorenzoUpdater;
+import it.polimi.ingsw.communication.packet.updates.FaithTrackUpdater;
 import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
 import it.polimi.ingsw.communication.packet.updates.TokenUpdater;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.match.SoloTokenReaction;
+import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
+import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
+import it.polimi.ingsw.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * The single player game to start need only one player.
@@ -25,9 +29,14 @@ import java.util.stream.Collectors;
 public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
     /**
+     * Nickname of lorenzo
+     */
+    public final String lorenzoNickname = "Lorenzo il Magnifico";
+
+    /**
      * The representation of lorenzo faith tack
      */
-    private int lorenzoPosition = 0;
+    private final FaithTrack lorenzo = new FaithTrack(this.view, lorenzoNickname);
 
     /**
      * The solo action token used at end turn of a single player match
@@ -45,10 +54,20 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     private boolean lorenzoWinner = false;
 
     /**
+     * This flag indicates if the actually is the turn of lorenzo
+     */
+    private boolean lorenzoTurn = false;
+
+    /**
+     * the player who are playing the game
+     */
+    private Player player = null;
+
+    /**
      * Build a single player game instance: the number of player that the game accept is 1 and the minimum 1
      */
     public SingleplayerMatch(Dispatcher view) {
-        super(1, 1, view);
+        super(1, view);
 
         List<SoloActionToken> init = new ArrayList<>();
 
@@ -68,7 +87,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
         this.discardedFromToken = new Deck<>();
 
-        this.view.publish(new NewPlayerUpdater("lorenzo"));
+        this.view.publish(new NewPlayerUpdater(lorenzoNickname));
     }
 
     /**
@@ -78,13 +97,14 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      */
     @Override
     public void moveLorenzo(int i) {
-        this.lorenzoPosition += i;
-        updateLorenzo();
-        if (lorenzoPosition >= 24) {
+        try {
+            this.lorenzo.movePlayer(i, this);
+        } catch (EndGameException e) {
             System.out.println("end of the game: Lorenzo reach the end of faith track");
             lorenzoWinner = true;
-            this.turn.endGame();
+            startEndGameLogic();
         }
+        // updateLorenzo(); useless cause faith track do it
     }
 
     /**
@@ -96,6 +116,36 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     }
 
     /**
+     * add a new player to the game
+     *
+     * @param joined player who join
+     * @return true if success, false instead
+     */
+    @Override
+    public boolean playerJoin(Player joined) {
+        if (player != null) return false;
+
+        player = joined;
+        player.initialSetup = new Pair<>(0, 0);
+        player.startHisTurn();
+        gameOnAir = true;
+        return true;
+    }
+
+    /**
+     * request to other player to flip the pope tile passed in the parameter
+     *
+     * @param toCheck the vatican space to check
+     */
+    @Override
+    public void vaticanReport(VaticanSpace toCheck) {
+        if(checkedPopeTile.get(toCheck)) return; // already checked tile
+        player.flipPopeTile(toCheck);
+        this.lorenzo.flipPopeTile(toCheck);
+        checkedPopeTile.put(toCheck, true);
+    }
+
+    /**
      * discard a develop card from the dev setup
      *
      * @param color the color of discarded cards in dev setup
@@ -103,8 +153,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     @Override
     public void discardDevCard(ColorDevCard color) {
         int toDiscard = 2;
-        List<LevelDevCard> levels = new ArrayList<>();
-        for (LevelDevCard l : LevelDevCard.values()) levels.add(l);
+        List<LevelDevCard> levels = new ArrayList<>(Arrays.asList(LevelDevCard.values()));
         levels.remove(LevelDevCard.NOLEVEL);
 
         for(int i = 0; i < toDiscard; i++) {
@@ -131,14 +180,13 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
                     // todo error to controller
                 }
             }
-
-            this.updateDevSetup();
         }
+        this.updateDevSetup();
 
         if (this.devSetup.showDevDeck(levels.get(levels.size() - 1), color) == null) { // try to watch if there is cards in the top level deck
-            this.lorenzoWinner = true;
             System.out.println("end of the game: Lorenzo discarded all the dev cards of a color");
-            this.startEndGameLogic(); // start end game logic if there is no card to discard
+            this.lorenzoWinner = true;
+            startEndGameLogic(); // start end game logic if there is no card to discard
         }
     }
 
@@ -147,16 +195,84 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      *
      */
     @Override
-    public void endMyTurn() {
+    public void turnDone() {
+        lorenzoTurn = true;
         try {
             SoloActionToken s = this.soloToken.useAndDiscard();
             s.useEffect(this);
             updateToken();
-        } catch (EmptyDeckException e) {
-            // solo token stack is empty
-            // todo end the game with error
+        } catch (EmptyDeckException ignore) {
+            System.out.println(">.<");
         }
-        super.endMyTurn();
+        lorenzoTurn = false;
+
+        this.marketTray.unPaint();
+        player.startHisTurn();
+    }
+
+    /**
+     * Tells to the match that a player has done the init phase
+     */
+    @Override
+    public void initialSelectionDone() {
+        player.startHisTurn();
+    }
+
+    /**
+     * This method starts the end game logic
+     */
+    @Override
+    public void startEndGameLogic() {
+        gameOnAir = false;
+        player.endThisTurn();
+    }
+
+    /**
+     * Return the number of player in the game
+     *
+     * @return the number of player
+     */
+    @Override
+    public int playerInGame() {
+        return 1;
+    }
+
+    /**
+     * disconnect a player from the match
+     *
+     * @param player the disconnected player
+     */
+    @Override
+    public boolean disconnectPlayer(Player player) {
+        return true;
+    }
+
+    /**
+     * reconnect a player to the game
+     *
+     * @param nickname the nickname of the player who need to be reconnected
+     * @return the reconnected player
+     */
+    @Override
+    public Player reconnectPlayer(String nickname) {
+        player.startHisTurn();
+        return player;
+    }
+
+    /**
+     * Method called when player do action such that other players obtain faith point
+     *
+     * @param amount faith point given to other player
+     */
+    @Override
+    public void othersPlayersObtainFaithPoint(int amount) {
+        try {
+            lorenzo.movePlayer(amount, this);
+        } catch (EndGameException e) {
+            System.out.println("end of the game: Lorenzo reach the end of faith track");
+            lorenzoWinner = true;
+            startEndGameLogic();
+        }
     }
 
     /**
@@ -172,12 +288,16 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
         this.view.publish(new TokenUpdater(this.soloToken.peekFirstCard().liteVersion()));
     }
 
+    // useless
     private void updateLorenzo() {
-        this.view.publish(new LorenzoUpdater(this.lorenzoPosition));
+        this.view.publish(new FaithTrackUpdater(lorenzoNickname, lorenzo.liteVersion()));
     }
 
-    // for testing
-    public Deck<SoloActionToken> test_getSoloDeck() {
+    /**
+     * Obtain the solo action token in the game
+     * @return a new deck of solo action tocken
+     */
+    public Deck<SoloActionToken> obtainSoloTokens() {
         return this.soloToken;
     }
 
@@ -186,13 +306,27 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
         return this.discardedFromToken;
     }
 
-    // for testing
-    public int test_getLorenzoPosition() {
-        return lorenzoPosition;
+    /**
+     * Obtain the position of lorenzo in the game
+     * @return the position of lorenzo il magnifico
+     */
+    public int lorenzoPosition() {
+        return lorenzo.getPlayerPosition();
     }
 
-    // for testing
-    public boolean test_getLorenzoWinner() {
+    /**
+     * used to view the value of the flag lorenzo winner
+     * @return the lorenzo winner flag value
+     */
+    public boolean isLorenzoWinner() {
         return lorenzoWinner;
+    }
+
+    /**
+     * Used to obtain the current player in the match
+     * @return
+     */
+    public Player currentPlayer(){
+        return this.player;
     }
 }

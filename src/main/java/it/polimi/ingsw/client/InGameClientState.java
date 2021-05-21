@@ -43,7 +43,7 @@ public class InGameClientState extends ClientState {
             System.out.print("> ");
             switch (new Scanner(System.in).nextLine()) {
 
-                case "discardLeader":
+                case "dis":
                     System.out.println("choose the id: ");
                     try {
                         ShowLeaderCards.printLeaderCardsPlayer(model.getLeader(model.getMe()));
@@ -64,7 +64,7 @@ public class InGameClientState extends ClientState {
                     command = new ChooseResourceCommand(dest, res);
                     break;
 
-                case "endTurn":
+                case "done":
                     command = new EndTurnCommand();
                     break;
 

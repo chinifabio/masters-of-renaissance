@@ -47,7 +47,7 @@ public class SPInGameClientState extends ClientState {
                 System.out.print("> ");
                 switch (new Scanner(System.in).nextLine()) {
 
-                    case "discardLeader":
+                    case "dis":
                         System.out.println("choose the id: ");
                         try {
                             ShowLeaderCards.printLeaderCardsPlayer(model.getLeader(model.getMe()));
@@ -68,13 +68,12 @@ public class SPInGameClientState extends ClientState {
                         command = new ChooseResourceCommand(dest, res);
                         break;
 
-                    case "endTurn":
+                    case "done":
                         command = new EndTurnCommand();
                         try{
                             SoloActionTokenPrinter.printSoloActionToken(model.getSoloToken());
                             System.out.println("This is the first token of the stack");
-                        } catch (NullPointerException e){
-                        }
+                        } catch (NullPointerException ignore){}
                         break;
 
                     case "viewTray":

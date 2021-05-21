@@ -71,7 +71,7 @@ public class Model {
             return new Packet(HeaderTypes.SET_PLAYERS_NUMBER, ChannelTypes.PLAYER_ACTIONS, "Empty match, you have to create one.");
         }
 
-        if (this.players.containsKey(client)) return client.invalid("something strange is going on ༼ つ ◕_◕ ༽つ");
+        if (this.players.containsKey(client)) return client.invalid("Something strange is going on ༼ つ ◕_◕ ༽つ");
 
         this.dispatcher.subscribe(nickname, client.socket);
 
@@ -113,19 +113,15 @@ public class Model {
         return this.match.gameSize - this.match.playerInGame();
     }
 
-    public void disconnectMe(Controller controller) {
-        this.players.get(controller).disconnect();
+    public boolean disconnectPlayer(Controller controller) {
+        //this.players.get(controller).disconnect();
+        return this.match.disconnectPlayer(this.players.get(controller));
     }
 
-    public boolean reconnect(String nickname, Controller context) {
-        Player value = this.players.values().stream().filter(player -> player.getNickname().equals(nickname)).findAny().orElse(null);
-
-        if (value == null) return false;
-
+    public boolean reconnectPlayer(String nickname, Controller context) {
+        this.players.put(context, this.match.reconnectPlayer(nickname));
         this.dispatcher.subscribe(nickname, context.socket);
         System.out.println(TextColors.colorText(TextColors.GREEN_BRIGHT, nickname) + " reconnected");
-        value.reconnect();
-        this.players.put(context, value);
         return true;
     }
 }

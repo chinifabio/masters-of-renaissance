@@ -75,7 +75,7 @@ public interface PlayerToMatch {
      * Tells to the match the end of the player turn;
      * @return true if the player ended is turn
      */
-    void endMyTurn();
+    void turnDone();
 
     /**
      * This method return a Leader Card Deck
@@ -91,5 +91,5 @@ public interface PlayerToMatch {
     /**
      * Tells to the match that a player has done the init phase
      */
-    void initDone();
+    void initialSelectionDone();
 }

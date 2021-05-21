@@ -1,10 +1,8 @@
 package it.polimi.ingsw.cards;
 
 import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.effects.*;
-import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
@@ -51,9 +49,8 @@ public class LeaderTest {
         assertTrue(game.playerJoin(player2));
         order.add(player2);
 
-        Collections.rotate(order, order.indexOf(game.test_getCurrPlayer()));
-
-        assertFalse(game.test_getGameOnAir());
+        Collections.rotate(order, order.indexOf(game.currentPlayer()));
+        assertTrue(game.isGameOnAir());
 
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
@@ -64,18 +61,16 @@ public class LeaderTest {
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(() -> assertEquals(order.get(1).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         assertEquals(HeaderTypes.END_TURN, order.get(1).endThisTurn().header);
-
-        assertTrue(game.test_getGameOnAir());
     }
 
     @Test
     public void testAddDepot() {
         Effect test = new AddDepotEffect(ResourceType.COIN);
 
-        assertNull(game.test_getCurrPlayer().test_getPB().getDepots().get(DepotSlot.SPECIAL1));
-        test.use(game.test_getCurrPlayer());
+        assertNull(game.currentPlayer().test_getPB().getDepots().get(DepotSlot.SPECIAL1));
+        test.use(game.currentPlayer());
 
-        assertTrue(game.test_getCurrPlayer().test_getPB().getDepots().containsKey(DepotSlot.SPECIAL1));
+        assertTrue(game.currentPlayer().test_getPB().getDepots().containsKey(DepotSlot.SPECIAL1));
     }
 
     @Test
@@ -87,12 +82,12 @@ public class LeaderTest {
                 Collections.singletonList(buildStone())
         ))));
 
-        game.test_getCurrPlayer().test_setDest(DevCardSlot.CENTER);
+        game.currentPlayer().test_setDest(DevCardSlot.CENTER);
 
-        assertFalse(game.test_getCurrPlayer().test_getPB().test_getProduction().containsKey(ProductionID.CENTER));
-        test.get().use(game.test_getCurrPlayer());
+        assertFalse(game.currentPlayer().test_getPB().test_getProduction().containsKey(ProductionID.CENTER));
+        test.get().use(game.currentPlayer());
 
-        assertTrue(game.test_getCurrPlayer().test_getPB().test_getProduction().containsKey(ProductionID.CENTER));
+        assertTrue(game.currentPlayer().test_getPB().test_getProduction().containsKey(ProductionID.CENTER));
     }
 
     @Test
@@ -104,14 +99,14 @@ public class LeaderTest {
                 Collections.singletonList(buildStone())
        ))));
 
-        assertFalse(game.test_getCurrPlayer().test_getPB().test_getProduction().containsKey(ProductionID.LEADER1));
+        assertFalse(game.currentPlayer().test_getPB().test_getProduction().containsKey(ProductionID.LEADER1));
 
-        test.get().use(game.test_getCurrPlayer());
+        test.get().use(game.currentPlayer());
 
-        assertTrue(game.test_getCurrPlayer().test_getPB().test_getProduction().containsKey(ProductionID.LEADER1));
+        assertTrue(game.currentPlayer().test_getPB().test_getProduction().containsKey(ProductionID.LEADER1));
 
-        test.get().use(game.test_getCurrPlayer());
-        assertTrue(game.test_getCurrPlayer().test_getPB().test_getProduction().containsKey(ProductionID.LEADER2));
+        test.get().use(game.currentPlayer());
+        assertTrue(game.currentPlayer().test_getPB().test_getProduction().containsKey(ProductionID.LEADER2));
 
 
     }
@@ -120,9 +115,9 @@ public class LeaderTest {
     public void testAddDiscount() {
         Effect test = new AddDiscountEffect(ResourceType.SERVANT);
 
-        assertTrue(game.test_getCurrPlayer().test_getDiscount().isEmpty());
-        test.use(game.test_getCurrPlayer());
-        assertTrue(game.test_getCurrPlayer().test_getDiscount().contains(buildServant()));
+        assertTrue(game.currentPlayer().test_getDiscount().isEmpty());
+        test.use(game.currentPlayer());
+        assertTrue(game.currentPlayer().test_getDiscount().contains(buildServant()));
     }
 
     @RepeatedTest(10)
@@ -136,12 +131,12 @@ public class LeaderTest {
         Marble conv = MarbleBuilder.buildBlue();
         Effect test = new WhiteMarbleEffect(conv);
 
-        assertTrue(game.test_getCurrPlayer().test_getConv().isEmpty());
-        test.use(game.test_getCurrPlayer());
-        assertTrue(game.test_getCurrPlayer().test_getConv().contains(conv));
+        assertTrue(game.currentPlayer().test_getConv().isEmpty());
+        test.use(game.currentPlayer());
+        assertTrue(game.currentPlayer().test_getConv().contains(conv));
 
         // paint it
-        assertEquals(HeaderTypes.OK, game.test_getCurrPlayer().paintMarbleInTray(0, whiteMarble).header);
+        assertEquals(HeaderTypes.OK, game.currentPlayer().paintMarbleInTray(0, whiteMarble).header);
 
         // counting the right resources that should be in the buffer
         List<Resource> check = ResourceBuilder.buildListOfStorable();
@@ -156,9 +151,9 @@ public class LeaderTest {
                     .merge(list.get(finalJ).toResource());                          // merging the .toResource of the marble whit the storable resource
         }
 
-        assertEquals(HeaderTypes.OK, game.test_getCurrPlayer().useMarketTray(RowCol.ROW, whiteMarble / 4).header);
+        assertEquals(HeaderTypes.OK, game.currentPlayer().useMarketTray(RowCol.ROW, whiteMarble / 4).header);
 
-        assertArrayEquals(check.toArray(), game.test_getCurrPlayer().test_getPB().getWH_forTest().viewResourcesInDepot(DepotSlot.BUFFER).toArray());
+        assertArrayEquals(check.toArray(), game.currentPlayer().test_getPB().getWH_forTest().viewResourcesInDepot(DepotSlot.BUFFER).toArray());
 
     }
 }

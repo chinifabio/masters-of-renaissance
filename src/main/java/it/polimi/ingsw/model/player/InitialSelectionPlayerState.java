@@ -119,7 +119,7 @@ public class InitialSelectionPlayerState extends PlayerState {
         if (chosen == toChoose && discarded == toDiscard) {
 
             this.context.setState(new PendingMatchStartPlayerState(this.context));
-            this.context.match.initDone();
+            this.context.match.initialSelectionDone();
             return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "Initial phase done!");
 
         } else
