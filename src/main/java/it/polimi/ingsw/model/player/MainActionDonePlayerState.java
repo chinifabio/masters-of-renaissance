@@ -69,13 +69,16 @@ public class MainActionDonePlayerState extends PlayerState {
      */
     @Override
     public Packet activateLeaderCard(String leaderId) {
+        boolean res;
         try {
-            this.context.personalBoard.activateLeaderCard(leaderId);
+            res = this.context.personalBoard.activateLeaderCard(leaderId);
         } catch (Exception e) {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
 
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
+        return res ?
+                new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully"):
+                new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "you have no requisite to activate the leader");
     }
 
     /**

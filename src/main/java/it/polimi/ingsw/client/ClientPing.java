@@ -1,11 +1,10 @@
-package it.polimi.ingsw.communication.client;
+package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.communication.VirtualSocket;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class ClientPing implements Runnable{

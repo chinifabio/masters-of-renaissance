@@ -183,4 +183,8 @@ public class LiteModel {
     public List<MarbleColor> getConversion(String me){
         return this.players.get(me).getConversions();
     }
+
+    public Map<String, LitePersonalBoard> getPlayers(){
+        return this.players;
+    }
 }

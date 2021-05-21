@@ -1,4 +1,4 @@
-package it.polimi.ingsw.communication.client;
+package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
@@ -6,8 +6,6 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.view.cli.printer.NamePrinter;
-
-import java.util.Scanner;
 
 public class InitialCS extends ClientState{
 
@@ -23,8 +21,11 @@ public class InitialCS extends ClientState{
         //metodo della gui/cli per settare il nick
         NamePrinter.titleName();
         System.out.print(TextColors.colorText(TextColors.YELLOW, "Choose your nickname:\n>"));
-        Scanner scanner = new Scanner(System.in);
-        String nick = scanner.nextLine();
+
+        String nick = inputHandler.getNick();
+
+        //Scanner scanner = new Scanner(System.in);
+        //String nick = scanner.nextLine();
         model.setMyNickname(nick);
         return new Packet(HeaderTypes.HELLO, ChannelTypes.PLAYER_ACTIONS, nick);
     }

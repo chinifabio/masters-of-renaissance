@@ -114,10 +114,12 @@ public class NoActionDonePlayerState extends PlayerState {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
 
-        if (res) this.context.setState(new MainActionDonePlayerState(this.context));
+        if (res) {
+            this.context.setState(new MainActionDonePlayerState(this.context));
+        }
         return res ?
-                new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "you have no requisite to buy this card"):
-                new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
+                new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully"):
+                new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "you have no requisite to buy this card");
     }
 
     /**
@@ -202,8 +204,9 @@ public class NoActionDonePlayerState extends PlayerState {
      */
     @Override
     public Packet activateLeaderCard(String leaderId) {
+        boolean res;
         try {
-            this.context.personalBoard.activateLeaderCard(leaderId);
+            res = this.context.personalBoard.activateLeaderCard(leaderId);
         } catch (Exception e) {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
@@ -217,7 +220,6 @@ public class NoActionDonePlayerState extends PlayerState {
      */
     @Override
     public Packet discardLeader(String leaderId) {
-
         try {
             this.context.personalBoard.discardLeaderCard(leaderId);
             this.context.personalBoard.moveFaithMarker(1, this.context.match);
@@ -232,6 +234,7 @@ public class NoActionDonePlayerState extends PlayerState {
         }
 
         return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
+                //new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "you have no requisite to activate the leader");
     }
 
     /**

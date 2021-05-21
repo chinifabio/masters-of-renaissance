@@ -71,7 +71,6 @@ public class LitePersonalBoard {
         return this.track.getPlayerPosition();
     }
 
-    @JsonIgnore
     public LiteWarehouse getWarehouse(){
         return this.warehouse;
     }
@@ -107,7 +106,7 @@ public class LitePersonalBoard {
     }
 
     public void setProduction(ProductionID id, LiteProduction prod) {
-        this.warehouse.setProduction(id, prod);
+        this.warehouse.setProductions(id, prod);
     }
 
     public void setDiscounts(List<LiteResource> discounts) {
@@ -133,5 +132,7 @@ public class LitePersonalBoard {
     public LiteState getState(){
         return state;
     }
+
+
 
 }

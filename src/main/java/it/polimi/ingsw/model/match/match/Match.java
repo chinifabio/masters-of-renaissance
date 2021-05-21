@@ -65,11 +65,7 @@ public abstract class Match implements PlayerToMatch {
     /**
      * checked pope tiles
      */
-    protected final Map<VaticanSpace, Boolean> checkedPopeTile = new EnumMap<>(VaticanSpace.class) {{
-        put(VaticanSpace.FIRST, false);
-        put(VaticanSpace.SECOND, false);
-        put(VaticanSpace.THIRD, false);
-    }};
+    protected final Map<VaticanSpace, Boolean> checkedPopeTile = new EnumMap<>(VaticanSpace.class);
 
     /**
      * This method is the constructor of the class
@@ -99,6 +95,10 @@ public abstract class Match implements PlayerToMatch {
         this.leaderCardDeck.shuffle();
 
         this.devSetup = new DevSetup();
+
+        this.checkedPopeTile.put(VaticanSpace.FIRST, false);
+        this.checkedPopeTile.put(VaticanSpace.SECOND, false);
+        this.checkedPopeTile.put(VaticanSpace.THIRD, false);
 
         updateDevSetup();
         updateTray();
@@ -163,10 +163,12 @@ public abstract class Match implements PlayerToMatch {
      * @return the list representation of the dev setup
      */
     @Override
-    public List<DevCard> viewDevSetup() {
+    public List<DevCard> viewDevSetup() {                                   // solo per test?
         List<DevCard> temp = new ArrayList<>();
         for(ColorDevCard colorDevCard : ColorDevCard.values()){
+            if(colorDevCard.equals(ColorDevCard.NOCOLOR)) break;
             for(LevelDevCard levelDevCard : LevelDevCard.values()){
+                if(levelDevCard.equals(LevelDevCard.NOLEVEL)) break;
                 try {
                     temp.add(this.devSetup.showDevDeck(levelDevCard, colorDevCard));
                 } catch (IndexOutOfBoundsException e) {

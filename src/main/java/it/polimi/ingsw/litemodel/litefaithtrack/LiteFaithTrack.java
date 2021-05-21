@@ -20,11 +20,11 @@ public class LiteFaithTrack {
     private final Map<String, Boolean> tiles;
 
     public LiteFaithTrack() {
-        tiles = new HashMap<>(){{
-            put("FIRST",false);
-            put("SECOND",false);
-            put("THIRD",false);
-        }};
+        tiles = new HashMap<>();
+        tiles.put("FIRST",false);
+        tiles.put("SECOND",false);
+        tiles.put("THIRD",false);
+
     }
 
     @JsonCreator

@@ -199,7 +199,8 @@ public class Warehouse {
         for (Map.Entry<ProductionID, Production> entry : availableProductions.entrySet()){
             if(entry.getValue().isActivated()){
                 for (Resource res : entry.getValue().getOutput()){
-                    insertInDepot(DepotSlot.STRONGBOX, res);
+                    player.obtainResource(DepotSlot.STRONGBOX,res);
+                    //insertInDepot(DepotSlot.STRONGBOX, res);
                 }
             }
             entry.getValue().reset();

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.communication.client;
+package it.polimi.ingsw.dummy;
 
 import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
@@ -9,6 +9,9 @@ import it.polimi.ingsw.litemodel.LiteModel;
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * This class represent the state of the fsm that manage the client possible action
+ */
 public abstract class ClientState {
 
     /**
@@ -22,21 +25,20 @@ public abstract class ClientState {
      */
     protected abstract Packet doStuff(LiteModel model);
 
-    public void start(Client context){
-        Packet temp = this.doStuff(context.liteModel);
-        if(!temp.header.equals(HeaderTypes.INVALID)){
-            context.socket.send(temp);
-            Packet response = context.socket.pollPacketFrom(ChannelTypes.PLAYER_ACTIONS);
-            printServerResponse(response.body);
+    /**
+     * From the context generate a string and than send it to the player. than once
+     * the server responses set the context state passed by the sever
+     * @param context the context of operation
+     */
+    public void start(DummyClient context) {
+        context.socket.send(this.doStuff(context.model));
+        Packet response = context.socket.pollPacketFrom(ChannelTypes.PLAYER_ACTIONS);
+        printServerResponse(response.body);
 
-            context.setState(this.nextState.containsKey(response.header) ?
-                    this.nextState.get(response.header):
-                    new ErrorCS()
-            );
-        }
-        else if(temp.body.equals("Invalid")){
-            System.out.println(TextColors.colorText(TextColors.RED_BRIGHT,"You can't do that!"));
-        }
+        context.setState(this.nextState.containsKey(response.header) ?
+                this.nextState.get(response.header):
+                new ErrorClientState()
+        );
     }
 
     /**
@@ -47,3 +49,4 @@ public abstract class ClientState {
         System.out.println(TextColors.colorText(TextColors.BLUE, "[server] ") + r);
     }
 }
+

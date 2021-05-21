@@ -1,4 +1,4 @@
-package it.polimi.ingsw.communication.client;
+package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.communication.VirtualSocket;
 import it.polimi.ingsw.communication.packet.ChannelTypes;

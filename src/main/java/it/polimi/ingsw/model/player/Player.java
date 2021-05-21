@@ -387,7 +387,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @throws LootTypeException if the attribute cannot be obtained from the requisite
      */
     @Override
-    public boolean hasRequisite(List<Requisite> req, LevelDevCard row, ColorDevCard col,DevCard card) throws LootTypeException {
+    public boolean hasRequisite(List<Requisite> req, LevelDevCard row, ColorDevCard col, DevCard card) throws LootTypeException {
         if (!this.personalBoard.checkDevCard(slotDestination, card)) {
             return false;
         }
@@ -426,6 +426,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     @Override
     public void receiveDevCard(DevCard newDevCard) throws AlreadyInDeckException, EndGameException {
         this.personalBoard.addDevCard(this.slotDestination, newDevCard);
+        newDevCard.useEffect(this);
     }
 
     /**

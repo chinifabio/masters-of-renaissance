@@ -1,4 +1,4 @@
-package it.polimi.ingsw.communication.client;
+package it.polimi.ingsw.client;
 import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
@@ -31,7 +31,7 @@ import java.util.Scanner;
 
 public class InGameCS extends ClientState {
 
-    private boolean help = false;
+    private boolean introduction = false;
 
     private final Packet invalid = new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "Invalid");
     private final Packet view = new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "View");
@@ -49,10 +49,10 @@ public class InGameCS extends ClientState {
 
     @Override
     protected Packet doStuff(LiteModel model) {
-        if(!help){
+        if(!introduction){
             printHelp();
-            System.out.println(TextColors.colorText(TextColors.YELLOW,"\nAt the start of the game, you have to discard two leader cards and, based on your position in the sequence, you can select up to 2 initial resources."));
-            help=true;
+            System.out.println(TextColors.colorText(TextColors.YELLOW_BRIGHT,"\nAt the start of the game, you have to discard two leader cards and, based on your position in the sequence, you can select up to 2 initial resources.\nAfter that, end your turn. You can type \"help\" to see again the possible moves."));
+            introduction=true;
         }
         System.out.print("\n" + TextColors.colorText(TextColors.YELLOW, "Choose an action:\n>"));
         String action = new Scanner(System.in).nextLine();      //gui/cli per scegliere azione   -  usiamo enumerazione
@@ -78,7 +78,7 @@ public class InGameCS extends ClientState {
             case "viewdevcards":
                 DevCardSlotPrinter.printDevCardSlots(model.getDevelop(model.getMe()));
                 return view;
-            case "viewleader":
+            case "viewleaders":
                 try {
                     ShowLeaderCards.printLeaderCardsPlayer(model.getLeader(model.getMe()));
                 } catch (IOException e) {
@@ -96,11 +96,11 @@ public class InGameCS extends ClientState {
                     System.out.println("Something's wrong... I can feel it");
                 }
                 return view;
-            case "viewcardsgrid":
+            case "viewcardgrid":
                 DevSetupPrinter.printDevSetup(model.getDevSetup());
                 return view;
-            case "viewplayer":
-                // metodo view per vedere un altro player
+            case "viewplayers":
+                //model.getPlayers().forEach((nick,pb)->PersonalBoardPrinter.printPersonalBoard(model, nick, model.getLeader(nick), model.getDevelop(nick)));
                 return view;
             case "viewpersonalboard":
                 PersonalBoardPrinter.printPersonalBoard(model, model.getMe(), model.getLeader(model.getMe()), model.getDevelop(model.getMe()));
@@ -109,7 +109,7 @@ public class InGameCS extends ClientState {
                 printHelp();
                 return view;
             default:
-                System.out.println(TextColors.colorText(TextColors.RED_BRIGHT,"\nI don't understand!"));
+                System.out.println(TextColors.colorText(TextColors.RED_BRIGHT,"I don't understand!"));
                 return invalid;
         }
     }
@@ -151,29 +151,30 @@ public class InGameCS extends ClientState {
         LevelDevCard level;
         ColorDevCard color;
         DevCardSlot slot;
-        int lev,col,pos;
+        String lev,col,pos;
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Insert the level\n>");
+        System.out.println(TextColors.colorText(TextColors.YELLOW_BRIGHT,"Don't forget that you have to place the needed resource into the buffer!"));
+        System.out.print("Insert the level\n>");
         while(true){
-            lev = scanner.nextInt(); //TODO CAMBIARE TUTTI I NEXTINT
-            if(lev < 4 && lev > 0) break;
-            else System.out.println("You have to insert a valid level between 1, 2 and 3!\n>");
+            lev = scanner.nextLine();
+            if(lev.equals("1") || lev.equals("2") || lev.equals("3")) break;
+            else System.out.print("You have to insert a valid level between 1, 2 and 3!\n>");
         }
-        System.out.println("Insert a color, 0->Green, 1->Yellow, 2->Blue, 3->Purple:\n>");
+        System.out.print("Insert a color, 0->Green, 1->Yellow, 2->Blue, 3->Purple:\n>");
         while(true){
-            col = scanner.nextInt();
-            if(col < 4 && col >= 0) break;
-            else System.out.println("You have to insert a valid color! 0->Green, 1->Yellow, 2->Blue, 3->Purple:\n>");
+            col = scanner.nextLine();
+            if(col.equals("0") || col.equals("1") || col.equals("2") || col.equals("3")) break;
+            else System.out.print("You have to insert a valid color! 0->Green, 1->Yellow, 2->Blue, 3->Purple:\n>");
         }
-        System.out.println("Insert the position in the personal board, 0->Left, 1->Center, 2->Right:\n>");
+        System.out.print("Insert the position in the personal board, 0->Left, 1->Center, 2->Right:\n>");
         while(true){
-            pos = scanner.nextInt();
-            if(pos < 3 && pos >= 0) break;
-            else System.out.println("You have to insert a valid position! 0->Left, 1->Center, 2->Right:\n>");
+            pos = scanner.nextLine();
+            if(pos.equals("0") || pos.equals("1") || pos.equals("2")) break;
+            else System.out.print("You have to insert a valid position! 0->Left, 1->Center, 2->Right:\n>");
         }
-        level = levelConv(lev);
-        color = colorConv(col);
-        slot  = slotConv(pos);
+        level = levelConv(Integer.parseInt(lev));
+        color = colorConv(Integer.parseInt(col));
+        slot  = slotConv(Integer.parseInt(pos));
 
         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyDevCardCommand(level,color,slot).jsonfy());
     }
@@ -199,23 +200,24 @@ public class InGameCS extends ClientState {
             }
             else System.out.print("You have to insert row or column!\n>");
         }
-        System.out.print("Insert the row number <=3 or column number <=4:\n>");
-        int index;
+        System.out.print("Insert the row or column number:\n>");
+        String index;
         while(true){
-            index = scanner.nextInt();
-            if(rc.equals(RowCol.COL)){
-                if(index>0 && index <5) break;
+            index = scanner.nextLine();
+            if(rc.equals(RowCol.ROW)){
+                if(index.equals("1") || index.equals("2") || index.equals("3")) break;
                 else System.out.print("You have to insert a valid number!\n>");
             }
-            else{
-                if(index>0 && index <4) break;
+            else {
+                if(index.equals("1") || index.equals("2") || index.equals("3") || index.equals("4")) break;
                 else System.out.print("You have to insert a valid number!\n>");
             }
         }
+        System.out.println(TextColors.colorText(TextColors.YELLOW_BRIGHT,"The obtained resource are stored in the buffer depot, don't forget to reposition them!"));
 
         //metodi cli/gui per scegliere la linea
 
-        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new UseMarketTrayCommand(rc,index-1).jsonfy());
+        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new UseMarketTrayCommand(rc,Integer.parseInt(index)-1).jsonfy());
     }
 
     public Packet paintMarbleColor(LiteModel model) {
@@ -225,13 +227,13 @@ public class InGameCS extends ClientState {
             return view;
         }
 
-        int conversion, index;
+        String conversion, index;
         Scanner scanner = new Scanner(System.in);
         System.out.print("Choose the index of the white marble to convert:\n>");
 
         while(true){
-            index = scanner.nextInt();
-            if(index < 12 && index > 0) break;
+            index = scanner.nextLine();
+            if(index.equals("0") || index.equals("1") || index.equals("2") || index.equals("3") || index.equals("4") || index.equals("5") || index.equals("6") || index.equals("7") || index.equals("8") || index.equals("9") || index.equals("10") || index.equals("11")) break;
             else System.out.print("You have to choose a valid index!\n>");
         }
 
@@ -239,12 +241,12 @@ public class InGameCS extends ClientState {
         else System.out.print("What the white marble should be? 1->" + model.getConversion(model.getMe()).get(0) + " 2->" + model.getConversion(model.getMe()).get(1) + "\n>");
 
         while(true){
-            conversion = scanner.nextInt();
-            if(conversion < 2 && conversion > 0) break;
+            conversion = scanner.nextLine();
+            if(conversion.equals("1") || conversion.equals("2")) break;
             else System.out.print("You have to choose a valid conversion resource!\n>");
         }   // conversion compreso fra 0 e 1 inclusi, solo 0 se non ho due carte leader, magari in automatico?
 
-        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new PaintMarbleCommand(conversion-1,index-1).jsonfy());
+        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new PaintMarbleCommand(Integer.parseInt(conversion)-1,Integer.parseInt(index)-1).jsonfy());
     }
 
     public Packet moveDepot(LiteModel model) {
@@ -323,37 +325,36 @@ public class InGameCS extends ClientState {
     }
 
     private int depotPick(String where){
-        int temp;
+        String temp;
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Choose the " + where + " depot, (1->TOP, 2->MID, 3->BOTTOM, 4->LEADER1, 5->LEADER2, 6->BUFFER):\n>");
+        System.out.print("Choose the " + where + " depot (1->TOP, 2->MID, 3->BOTTOM, 4->LEADER1, 5->LEADER2, 6->BUFFER):\n>");
         while(true){
-            temp = scanner.nextInt();
-            if(temp < 7 && temp > 0) return temp;
-            else System.out.println("You have to choose a valid depot! (1->TOP, 2->MID, 3->BOTTOM, 4->LEADER1, 5->LEADER2):\n>");
+            temp = scanner.nextLine();
+            if(temp.equals("1") || temp.equals("2") || temp.equals("3") || temp.equals("4") || temp.equals("5") || temp.equals("6")) return Integer.parseInt(temp);
+            else System.out.print("You have to choose a valid depot! (1->TOP, 2->MID, 3->BOTTOM, 4->LEADER1, 5->LEADER2, 6->BUFFER):\n>");
         }
     }
 
     private int prodPick(){
-        int temp;
+        String temp;
         Scanner scanner = new Scanner(System.in);
         System.out.print("Choose the destination production (0->BASIC,1->LEFT,2->CENTER,3->RIGHT,4->LEADER1,5->LEADER2):\n>");
         while(true){
-            temp = scanner.nextInt();
-            if(temp <6  && temp >=0) return temp;
+            temp = scanner.nextLine();
+            if(temp.equals("0") || temp.equals("1") || temp.equals("2") || temp.equals("3") || temp.equals("4") || temp.equals("5") ) return Integer.parseInt(temp);
             else System.out.print("You have to choose a valid production!\n>");
         }
     }
 
     private int resPick(){
-        int temp;
+        String temp;
         System.out.print("What resource do you want? (0->Coin, 1->Stone, 2->Shield, 3->Servant)\n>");
         Scanner scanner = new Scanner(System.in);
         while(true) {
-            temp = scanner.nextInt();
-            if(temp<4 && temp >=0) break;
+            temp = scanner.nextLine();
+            if(temp.equals("0") || temp.equals("1") || temp.equals("2") || temp.equals("3")) return Integer.parseInt(temp);
             else System.out.print("You have to choose a valid resource!\n>");
         }
-        return temp;
     }
 
     private Resource resConv(int x){

@@ -1,11 +1,7 @@
-package it.polimi.ingsw.client;
+package it.polimi.ingsw.dummy;
 
 import it.polimi.ingsw.communication.Disconnectable;
-import it.polimi.ingsw.communication.SecureConnection;
 import it.polimi.ingsw.communication.VirtualSocket;
-import it.polimi.ingsw.communication.packet.ChannelTypes;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.LiteModelUpdater;
 

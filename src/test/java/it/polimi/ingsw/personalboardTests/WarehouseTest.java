@@ -63,7 +63,7 @@ public class WarehouseTest {
      */
     @Test
     public void insertResources() throws IllegalTypeInProduction, WrongDepotException {
-        Warehouse test = new Warehouse(game.currentPlayer());
+        Warehouse test = game.currentPlayer().test_getPB().warehouse;
 
         //Testing the bottom depot
         assertTrue(test.insertInDepot(DepotSlot.BOTTOM,ResourceBuilder.buildCoin(2)));
@@ -90,7 +90,7 @@ public class WarehouseTest {
      */
     @Test
     public void viewResources() throws IllegalTypeInProduction, WrongDepotException {
-        Warehouse test = new Warehouse(game.currentPlayer());
+        Warehouse test = game.currentPlayer().test_getPB().warehouse;
 
         //Testing resources in BOTTOM Depot
         test.insertInDepot(DepotSlot.BOTTOM,ResourceBuilder.buildShield(2));
@@ -124,7 +124,7 @@ public class WarehouseTest {
      */
     @Test
     public void insertInStrongbox() throws IllegalTypeInProduction, WrongDepotException {
-        Warehouse test = new Warehouse(game.currentPlayer());
+        Warehouse test = game.currentPlayer().test_getPB().warehouse;
         List<Resource> list = new ArrayList<>();
 
         list.add(ResourceBuilder.buildCoin(2));
@@ -164,7 +164,7 @@ public class WarehouseTest {
      */
     @Test
     public void InsertInExtraDepots() throws ExtraDepotsException, IllegalTypeInProduction, WrongDepotException {
-        Warehouse test = new Warehouse(game.currentPlayer());
+        Warehouse test = game.currentPlayer().test_getPB().warehouse;
         boolean exc = false;
 
         //Add depot SPECIAL1
@@ -198,7 +198,7 @@ public class WarehouseTest {
 
     @Test
     public void moveResourcesInDepots() throws NegativeResourcesDepotException, WrongDepotException, ExtraDepotsException, IllegalTypeInProduction {
-        Warehouse warehouse = new Warehouse(game.currentPlayer());
+        Warehouse warehouse = game.currentPlayer().test_getPB().warehouse;
         warehouse.addDepot(DepotBuilder.buildSpecialDepot(ResourceType.STONE));
         warehouse.addDepot(DepotBuilder.buildSpecialDepot(ResourceType.SHIELD));
 
@@ -258,7 +258,7 @@ public class WarehouseTest {
 
     @Test
     public void activateProductions() throws IllegalTypeInProduction, UnobtainableResourceException, NegativeResourcesDepotException, UnknownUnspecifiedException, EndGameException, WrongDepotException {
-        Warehouse warehouse = new Warehouse(game.currentPlayer());
+        Warehouse warehouse = game.currentPlayer().test_getPB().warehouse;
         List<Resource> req = Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildShield());
         List<Resource> out = Collections.singletonList(ResourceBuilder.buildStone(10));
 
@@ -301,12 +301,11 @@ public class WarehouseTest {
         assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildStone(28)));
         assertTrue(warehouse.viewResourcesInDepot(DepotSlot.STRONGBOX).contains(ResourceBuilder.buildServant(10)));
 
-
     }
 
     @Test
     public void notEnoughResourceProduction() throws NegativeResourcesDepotException, UnknownUnspecifiedException, IllegalTypeInProduction, IllegalNormalProduction, UnobtainableResourceException, EndGameException, WrongDepotException {
-        Warehouse warehouse = new Warehouse(game.currentPlayer());
+        Warehouse warehouse = game.currentPlayer().test_getPB().warehouse;
         List<Resource> req = Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildUnknown());
         List<Resource> out = Collections.singletonList(ResourceBuilder.buildStone(10));
 
@@ -385,7 +384,7 @@ public class WarehouseTest {
 
     @Test
     public void countTotalResources() throws IllegalTypeInProduction, ExtraDepotsException, WrongDepotException {
-        Warehouse warehouse = new Warehouse(game.currentPlayer());
+        Warehouse warehouse = game.currentPlayer().test_getPB().warehouse;
 
         warehouse.insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildShield(2));
         warehouse.insertInDepot(DepotSlot.MIDDLE, ResourceBuilder.buildCoin(2));
@@ -411,7 +410,7 @@ public class WarehouseTest {
 
     @Test
     public void usingBuffer() throws IllegalTypeInProduction, WrongDepotException, NegativeResourcesDepotException, ExtraDepotsException {
-        Warehouse warehouse = new Warehouse(game.currentPlayer());
+        Warehouse warehouse = game.currentPlayer().test_getPB().warehouse;
 
         warehouse.insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildServant(3));
         warehouse.moveBetweenDepot(DepotSlot.BOTTOM, DepotSlot.BUFFER, ResourceBuilder.buildServant());
@@ -490,7 +489,7 @@ public class WarehouseTest {
 
     @Test
     public void totalResourcesTest() throws IllegalTypeInProduction, ExtraDepotsException, WrongDepotException {
-        Warehouse warehouse = new Warehouse(game.currentPlayer());
+        Warehouse warehouse = game.currentPlayer().test_getPB().warehouse;
         Depot special1 = new SpecialDepot(ResourceBuilder.buildCoin());
         Depot special2 = new SpecialDepot(ResourceBuilder.buildServant());
 
