@@ -38,12 +38,21 @@ public class VirtualSocket implements Runnable{
 
     private boolean connected = true;
 
+// securing connection
+
+    private final int timeout = 10000;
+
+    Timer timer = new Timer();
+
+    private DisconnectionNotifier notifier;
+
     /**
      * Create a virtual socket to sort received packet in channels
      * @param socket the real socket
      */
     public VirtualSocket(Socket socket) throws IOException {
         this.socket = socket;
+        this.socket.setSoTimeout(timeout);
 
         for (ChannelTypes ch : ChannelTypes.values()) {
             this.channelsQueue.put(ch, new LinkedList<>());
@@ -65,9 +74,16 @@ public class VirtualSocket implements Runnable{
             e.printStackTrace();
             return;
         }
+        String serializedPacket;
 
         while (connected) {
-            String serializedPacket = in.nextLine();
+            try {
+                serializedPacket = in.nextLine();
+            } catch (NoSuchElementException timeout) {
+                disconnect();
+                return;
+            }
+
             try {
                 Packet packet = new ObjectMapper()
                         .readerFor(Packet.class)
@@ -128,31 +144,16 @@ public class VirtualSocket implements Runnable{
         return result;
     }
 
-    /**
-     * Return the last packet received in the passed channel
-     * @param ch the channel where look at
-     * @return the packet
-     */
-    public Packet pollPacketFrom(ChannelTypes ch, long timeout) {
-        if(!connected) return new Packet(HeaderTypes.INVALID, ch, "connection closed");
+    public void pinger(Disconnectable disconnectable) {
+        Pinger pinger = new Pinger(this, disconnectable);
+        notifier = pinger;
+        timer.scheduleAtFixedRate(pinger, 0, timeout - 2000);
+    }
 
-
-        long time = System.currentTimeMillis();
-        Packet result;
-        synchronized (this.waitingZone.get(ch)) {
-            while ((result = this.channelsQueue.get(ch).poll()) == null) {
-                try {
-                    this.waitingZone.get(ch).wait(timeout);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (System.currentTimeMillis() - time > timeout) return new Packet(HeaderTypes.INVALID, ch, "connection closed");
-
-                if (!connected) return new Packet(HeaderTypes.INVALID, ch, "connection closed");
-            }
-        }
-        return result;
+    public void ponger(Disconnectable disconnectable) {
+        Ponger ponger = new Ponger(this, disconnectable);
+        notifier = ponger;
+        timer.scheduleAtFixedRate(ponger, 0, timeout - 2000);
     }
 
     /**
@@ -160,11 +161,72 @@ public class VirtualSocket implements Runnable{
      */
     public void disconnect() {
         this.connected = false;
+        timer.cancel();
+        notifier.notifyDisconnection();
 
         for (ChannelTypes ch : ChannelTypes.values()) {
             synchronized (this.waitingZone.get(ch)) {
                 this.waitingZone.get(ch).notifyAll();
             }
+        }
+    }
+}
+
+interface DisconnectionNotifier {
+    void notifyDisconnection();
+}
+
+class Ponger extends TimerTask implements DisconnectionNotifier {
+    private final VirtualSocket socket;
+    private final Disconnectable thread;
+
+    public Ponger(VirtualSocket socket, Disconnectable thread) {
+        this.socket = socket;
+        this.thread = thread;
+    }
+
+    @Override
+    public void notifyDisconnection() {
+        thread.handleDisconnection();
+    }
+
+    /**
+     * The action to be performed by this timer task.
+     */
+    @Override
+    public void run() {
+        if (socket.pollPacketFrom(ChannelTypes.CONNECTION_STATUS).header != HeaderTypes.PING) {
+            thread.handleDisconnection();
+            return;
+        }
+
+        socket.send(new Packet(HeaderTypes.PONG, ChannelTypes.CONNECTION_STATUS, "Al right, keep pinging me"));
+    }
+}
+
+class Pinger extends TimerTask implements DisconnectionNotifier {
+    private final VirtualSocket socket;
+    private final Disconnectable thread;
+
+    public Pinger(VirtualSocket socket, Disconnectable thread) {
+        this.socket = socket;
+        this.thread = thread;
+    }
+
+    @Override
+    public void notifyDisconnection() {
+        thread.handleDisconnection();
+    }
+
+    /**
+     * The action to be performed by this timer task.
+     */
+    @Override
+    public void run() {
+        socket.send(new Packet(HeaderTypes.PING, ChannelTypes.CONNECTION_STATUS, "I'm in, bitch"));
+
+        if (socket.pollPacketFrom(ChannelTypes.CONNECTION_STATUS).header != HeaderTypes.PONG) {
+            thread.handleDisconnection();
         }
     }
 }

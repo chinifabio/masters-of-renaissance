@@ -25,12 +25,12 @@ public class Controller implements Runnable, Disconnectable {
 
     private boolean disconnected = false;
 
-    public
-    Controller(VirtualSocket socket, Server server) {
+    public Controller(VirtualSocket socket, Server server) {
         this.socket = socket;
         this.server = server;
 
-        this.server.executor.submit(SecureConnection.ponger(this));
+        this.socket.ponger(this);
+        //SecureConnection.ponger(this);
     }
 
     void setState(ControllerState newState) {
