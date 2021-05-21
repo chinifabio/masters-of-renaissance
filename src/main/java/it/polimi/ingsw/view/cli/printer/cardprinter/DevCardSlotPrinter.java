@@ -3,7 +3,6 @@ package it.polimi.ingsw.view.cli.printer.cardprinter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
-import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +15,7 @@ public class DevCardSlotPrinter {
     private static final int HEIGHT = 11; //rows.
     private static final int WIDTH = 46; //cols.
 
-    public static void printDevCardPersonalBoard(List<LiteDevCard> toShow){
+    public static void printDevCardSlots(List<LiteDevCard> toShow){
         String[][] devCards = new String[HEIGHT][WIDTH];
         for (int i = 0; i< HEIGHT-1; i++){
             for (int j = 0; j<WIDTH-1; j++){
@@ -38,6 +37,14 @@ public class DevCardSlotPrinter {
         System.out.println();
     }
 
+    public static void createDevCardSlot(String[][] display, List<LiteDevCard> toShow, int x, int y){
+        int index = y;
+        for (LiteDevCard card : toShow) {
+            DevCardPrinter.createDevCard(display, card, x, index);
+            index = index + 14;
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         List<LiteDevCard> dev = new ArrayList<>();
         List<List<LiteDevCard>> cardFile;
@@ -53,7 +60,7 @@ public class DevCardSlotPrinter {
         dev.add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
 
 
-        printDevCardPersonalBoard(dev);
+        printDevCardSlots(dev);
     }
 
 

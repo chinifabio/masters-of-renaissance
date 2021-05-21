@@ -50,7 +50,7 @@ public class LeaderCardPrinter {
 
         int z = y;
         for (LiteRequisite requisite : toPrint.getRequirements()) {
-            requisite.printRequisite(display, 0, z);
+            requisite.printRequisite(display, x, z);
             z = z + 3;
         }
     }

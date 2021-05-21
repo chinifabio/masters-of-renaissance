@@ -37,6 +37,14 @@ public class ShowLeaderCards {
         System.out.println();
     }
 
+    public static void createLeaderCardsSlot(String[][] display, List<LiteLeaderCard> toShow, int x, int y){
+        int index = y;
+        for (LiteLeaderCard card : toShow) {
+            LeaderCardPrinter.createLeaderCard(display, card, x, index);
+            index = index + 14;
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         List<LiteLeaderCard> names = new ArrayList<>();
         List<LiteLeaderCard> leaderCards;

@@ -20,7 +20,7 @@ public class CLI implements View {
         put(ResourceType.SHIELD, TextColors.colorText(TextColors.BLUE_BRIGHT,"▼"));
         put(ResourceType.SERVANT, TextColors.colorText(TextColors.PURPLE,"Õ"));
         put(ResourceType.STONE, TextColors.colorText(TextColors.WHITE,"■"));
-        put(ResourceType.EMPTY,"l");
+        put(ResourceType.EMPTY," ");
         put(ResourceType.UNKNOWN,TextColors.colorText(TextColors.WHITE_BRIGHT,"?"));
         put(ResourceType.FAITHPOINT, TextColors.colorText(TextColors.RED,"┼"));
     }};

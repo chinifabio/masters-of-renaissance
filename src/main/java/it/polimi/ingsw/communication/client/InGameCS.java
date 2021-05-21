@@ -18,6 +18,7 @@ import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.*;
 import it.polimi.ingsw.view.cli.printer.FaithTrackPrinter;
 import it.polimi.ingsw.view.cli.printer.MarketTrayPrinter;
+import it.polimi.ingsw.view.cli.printer.PersonalBoardPrinter;
 import it.polimi.ingsw.view.cli.printer.WarehousePrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevCardSlotPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
@@ -75,7 +76,7 @@ public class InGameCS extends ClientState {
                 WarehousePrinter.printWarehouse(model, model.getMe());
                 return view;
             case "viewdevcards":
-                DevCardSlotPrinter.printDevCardPersonalBoard(model.getDevelop(model.getMe()));
+                DevCardSlotPrinter.printDevCardSlots(model.getDevelop(model.getMe()));
                 return view;
             case "viewleader":
                 try {
@@ -95,11 +96,14 @@ public class InGameCS extends ClientState {
                     System.out.println("Something's wrong... I can feel it");
                 }
                 return view;
-            case "viewdevsetup":
+            case "viewcardsgrid":
                 DevSetupPrinter.printDevSetup(model.getDevSetup());
                 return view;
             case "viewplayer":
                 // metodo view per vedere un altro player
+                return view;
+            case "viewpersonalboard":
+                PersonalBoardPrinter.printPersonalBoard(model, model.getMe(), model.getLeader(model.getMe()), model.getDevelop(model.getMe()));
                 return view;
             case "help":
                 printHelp();
@@ -302,7 +306,7 @@ public class InGameCS extends ClientState {
         System.out.println(TextColors.colorText(TextColors.YELLOW,"\nPossible actions:"));
         System.out.println("discardleader, chooseres, activateleader, buydevcard, paintmarble, usemarket, moveres, moveinproduction, setnormalproduction, activateproduction, endturn.");
         System.out.println(TextColors.colorText(TextColors.YELLOW,"Possible views:"));
-        System.out.println("viewtrack, viewdevsetup, viewplayer, viewmarket, viewdepots, viewleader.");
+        System.out.println("viewtrack, viewcardsgrid, viewplayer, viewmarket, viewdepots, viewleader, viewpersonalboard");
     }
 
     //-----------------------HELPER METHODS--------------------------
