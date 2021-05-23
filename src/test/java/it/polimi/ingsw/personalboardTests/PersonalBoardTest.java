@@ -39,6 +39,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -49,12 +50,18 @@ public class PersonalBoardTest {
     Player player2;
 
     Dispatcher view = new Dispatcher();
-    Match game = new MultiplayerMatch(2, view);
+    Match game;
 
     List<Player> order = new ArrayList<>();
 
     @BeforeEach
     public void initialization() {
+        try {
+            game = new MultiplayerMatch(2, view);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+
         assertDoesNotThrow(()->player1 = new Player("gino", game, view));
         assertTrue(game.playerJoin(player1));
         order.add(player1);
@@ -96,9 +103,10 @@ public class PersonalBoardTest {
         DevCardSlot Left = DevCardSlot.LEFT;
         DevCardSlot Center = DevCardSlot.CENTER;
 
-        PersonalBoard finalPersonalBoard = new PersonalBoard(player1);
 
         assertDoesNotThrow(()->{
+            PersonalBoard finalPersonalBoard = new PersonalBoard(player1);
+
             if (finalPersonalBoard.addDevCard(Left, c1)) {
                 assertEquals(c1, finalPersonalBoard.viewDevCards().get(Left));
             }
@@ -174,7 +182,12 @@ public class PersonalBoardTest {
         LeaderCard c1 = new LeaderCard(ID1, new AddExtraProductionEffect(p), 1, req);
         LeaderCard c2 = new LeaderCard(ID2, new AddExtraProductionEffect(p), 2, req);
 
-        PersonalBoard personalBoard =  new PersonalBoard(game.currentPlayer());
+        PersonalBoard personalBoard = null;
+        try {
+            personalBoard = new PersonalBoard(game.currentPlayer());
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
 
         personalBoard.addLeaderCard(c1);
         assertEquals(personalBoard.viewLeaderCard().peekFirstCard(), c1);
@@ -217,7 +230,12 @@ public class PersonalBoardTest {
         LeaderCard c1 = new LeaderCard(ID1, new AddProductionEffect(p), 1, req);
         LeaderCard c2 = new LeaderCard(ID2, new AddProductionEffect(p), 2, req);
 
-        PersonalBoard personalBoard = new PersonalBoard(game.currentPlayer());
+        PersonalBoard personalBoard = null;
+        try {
+            personalBoard = new PersonalBoard(game.currentPlayer());
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
 
         assertNotNull(personalBoard);
         for (LeaderCard leaderCard : Arrays.asList(c1, c2)) {
@@ -257,7 +275,12 @@ public class PersonalBoardTest {
      */
     @Test
     void Resources() throws IllegalTypeInProduction, NegativeResourcesDepotException, UnobtainableResourceException, WrongDepotException {
-        PersonalBoard personalBoard = new PersonalBoard(player1);
+        PersonalBoard personalBoard = null;
+        try {
+            personalBoard = new PersonalBoard(player1);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
 
         Resource twoStone = ResourceBuilder.buildStone(2);
         Resource oneStone = ResourceBuilder.buildStone(1);
@@ -357,35 +380,34 @@ public class PersonalBoardTest {
 
         DevCard nothing = new DevCard("DC8", new AddDiscountEffect(ResourceType.SERVANT), 1, LevelDevCard.LEVEL3, ColorDevCard.BLUE, new ArrayList<>());
 
-        PersonalBoard finalBoard = board;
         assertDoesNotThrow(()->{
-            assertTrue(finalBoard.addDevCard(DevCardSlot.LEFT, devCard1));
-            assertTrue(finalBoard.addDevCard(DevCardSlot.RIGHT, devCard2));
+            assertTrue(board.addDevCard(DevCardSlot.LEFT, devCard1));
+            assertTrue(board.addDevCard(DevCardSlot.RIGHT, devCard2));
 
-            assertEquals(8, finalBoard.getVictoryPointsDevCards());
+            assertEquals(8, board.getVictoryPointsDevCards());
 
-            assertTrue(finalBoard.addDevCard(DevCardSlot.CENTER, devCard3));
-            assertEquals(10, finalBoard.getVictoryPointsDevCards());
+            assertTrue(board.addDevCard(DevCardSlot.CENTER, devCard3));
+            assertEquals(10, board.getVictoryPointsDevCards());
 
-            assertTrue(finalBoard.addDevCard(DevCardSlot.CENTER, devCard4));
-            finalBoard.addDevCard(DevCardSlot.LEFT, devCard5);
+            assertTrue(board.addDevCard(DevCardSlot.CENTER, devCard4));
+            board.addDevCard(DevCardSlot.LEFT, devCard5);
 
-            assertEquals(19, finalBoard.getVictoryPointsDevCards());
+            assertEquals(19, board.getVictoryPointsDevCards());
 
-            assertTrue(finalBoard.addDevCard(DevCardSlot.RIGHT, devCard6));
-            assertEquals(29, finalBoard.getVictoryPointsDevCards());
+            assertTrue(board.addDevCard(DevCardSlot.RIGHT, devCard6));
+            assertEquals(29, board.getVictoryPointsDevCards());
 
             //Obtaining the seventh card ends the turn of the Player and starts the EndGameLogic
             try {
-                assertTrue(finalBoard.addDevCard(DevCardSlot.LEFT, devCard7));
+                assertTrue(board.addDevCard(DevCardSlot.LEFT, devCard7));
             } catch (EndGameException ignore) {}
-            assertEquals(54, finalBoard.getVictoryPointsDevCards());
+            assertEquals(54, board.getVictoryPointsDevCards());
 
             //Do nothing
             try {
-                assertTrue(finalBoard.addDevCard(DevCardSlot.LEFT, nothing));
+                assertTrue(board.addDevCard(DevCardSlot.LEFT, nothing));
             } catch (EndGameException ignore) {}
-            assertEquals(54, finalBoard.getVictoryPointsDevCards());
+            assertEquals(54, board.getVictoryPointsDevCards());
         });
     }
 

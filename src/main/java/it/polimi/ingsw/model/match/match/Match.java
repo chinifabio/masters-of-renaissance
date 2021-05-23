@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.App;
 import it.polimi.ingsw.communication.packet.updates.DevSetupUpdater;
 import it.polimi.ingsw.communication.packet.updates.TrayUpdater;
 import it.polimi.ingsw.model.Dispatcher;
@@ -23,7 +24,6 @@ import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -72,24 +72,21 @@ public abstract class Match implements PlayerToMatch {
      * @param gameSize indicates the number of players that can play this match
      * @param view the view on which notify all changes
      */
-    protected Match(int gameSize, Dispatcher view) {
+    protected Match(int gameSize, Dispatcher view) throws IOException {
         this.gameSize = gameSize;
 
         this.view = view;
 
         gameOnAir = false;
 
-        this.marketTray = new MarketTray();
+        this.marketTray = new ObjectMapper()
+                .readerFor(MarketTray.class)
+                .readValue(getClass().getResourceAsStream("/MarketTray.json"));
 
-        List<LeaderCard> init = new ArrayList<>();
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            init = objectMapper.readValue(
-                    new File("src/resources/LeaderCards.json"),
-                    new TypeReference<List<LeaderCard>>(){});
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
+        List<LeaderCard> init = new ObjectMapper().readValue(
+                getClass().getResourceAsStream("/LeaderCards.json"),
+                new TypeReference<List<LeaderCard>>(){}
+        );
 
         this.leaderCardDeck = new Deck<>(init);
         this.leaderCardDeck.shuffle();

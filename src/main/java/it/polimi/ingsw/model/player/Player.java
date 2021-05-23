@@ -32,6 +32,7 @@ import it.polimi.ingsw.model.resource.*;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.util.Pair;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -100,7 +101,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param nickname (type String) identifies the player
      * @throws IllegalTypeInProduction if the Basic Production of the PersonalBoard has IllegalResources
      */
-    public Player(String nickname, PlayerToMatch match, Dispatcher view) throws IllegalTypeInProduction {
+    public Player(String nickname, PlayerToMatch match, Dispatcher view) throws IllegalTypeInProduction, IOException {
         this.view = view;
         this.nickname = nickname;
 

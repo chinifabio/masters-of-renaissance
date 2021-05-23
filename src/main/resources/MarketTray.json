@@ -1,0 +1,68 @@
+{
+  "row": 3,
+  "col": 4,
+  "marbles":
+  [
+    {
+      "type": "White",
+      "color": "WHITE"
+    },
+    {
+      "type": "White",
+      "color": "WHITE"
+    },
+    {
+      "type": "White",
+      "color": "WHITE"
+    },
+    {
+      "type": "White",
+      "color": "WHITE"
+    },
+    {
+      "type": "Normal",
+      "color": "BLUE",
+      "toResource": "SHIELD"
+    },
+    {
+      "type": "Normal",
+      "color": "BLUE",
+      "toResource": "SHIELD"
+    },
+    {
+      "type": "Normal",
+      "color": "GRAY",
+      "toResource": "STONE"
+    },
+    {
+      "type": "Normal",
+      "color": "GRAY",
+      "toResource": "STONE"
+    },
+    {
+      "type": "Normal",
+      "color": "YELLOW",
+      "toResource": "COIN"
+    },
+    {
+      "type": "Normal",
+      "color": "YELLOW",
+      "toResource": "COIN"
+    },
+    {
+      "type": "Normal",
+      "color": "PURPLE",
+      "toResource": "SERVANT"
+    },
+    {
+      "type": "Normal",
+      "color": "PURPLE",
+      "toResource": "SERVANT"
+    },
+    {
+      "type": "Normal",
+      "color": "RED",
+      "toResource": "FAITHPOINT"
+    }
+  ]
+}

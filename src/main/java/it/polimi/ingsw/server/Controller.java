@@ -12,6 +12,8 @@ import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.Command;
 import it.polimi.ingsw.model.Model;
 
+import java.io.IOException;
+
 public class Controller implements Runnable, Disconnectable {
 
     public final Server server;
@@ -144,6 +146,8 @@ class CreatorState implements ControllerState {
 
         } catch (NumberFormatException e) {
             return context.invalid("invalid number format: " + packet.body);
+        } catch (IOException e) {
+            return context.invalid("fail while creating mach");
         }
     }
 }

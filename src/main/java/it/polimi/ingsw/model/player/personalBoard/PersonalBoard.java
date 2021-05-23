@@ -33,6 +33,7 @@ import it.polimi.ingsw.model.requisite.RequisiteType;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -75,7 +76,7 @@ public class PersonalBoard {
      * This method is the constructor of the class
      * @param player the player who own this personal board
      */
-    public PersonalBoard(Player player) throws IllegalTypeInProduction {
+    public PersonalBoard(Player player) throws IllegalTypeInProduction, IOException {
         this.leaderDeck = new Deck<>();
 
         this.devDeck = new EnumMap<>(DevCardSlot.class);

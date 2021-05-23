@@ -12,6 +12,7 @@ import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.server.Controller;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,7 +88,7 @@ public class Model {
         }
     }
 
-    public void createMatch(int size) {
+    public void createMatch(int size) throws IOException {
         this.gameSize = size;
 
         this.match = size == 1 ?

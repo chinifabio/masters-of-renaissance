@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.App;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
 import it.polimi.ingsw.model.MappableToLiteVersion;
@@ -27,16 +28,11 @@ public class DevSetup implements MappableToLiteVersion {
     /**
      * This is the constructor of the devSetup class.
      */
-    public DevSetup(){
-        List<List<DevCard>> init = new ArrayList<>();
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            init = objectMapper.readValue(
-                    new File("src/resources/DevCards.json"),
-                    new TypeReference<List<List<DevCard>>>(){});
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
+    public DevSetup() throws IOException {
+        List<List<DevCard>> init = new ObjectMapper().readValue(
+                getClass().getResourceAsStream("/DevCards.json"),
+                new TypeReference<List<List<DevCard>>>(){});
+
         this.devDeckGrid = new ArrayList<>();
         for(List<DevCard> deck : init){
             Deck<DevCard> temp = new Deck<>(deck);

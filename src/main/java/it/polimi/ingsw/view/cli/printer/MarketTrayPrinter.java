@@ -1,4 +1,5 @@
 package it.polimi.ingsw.view.cli.printer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarketTray;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
@@ -73,7 +74,9 @@ public class MarketTrayPrinter {
     }
 
     public static void main(String[] args) throws EmptyDeckException, IOException {
-        MarketTray marketTray = new MarketTray();
+        MarketTray marketTray = new ObjectMapper()
+                .readerFor(MarketTray.class)
+                .readValue(MarketTrayPrinter.class.getResourceAsStream("/MarketTray.json"));
         LiteMarketTray liteTray = marketTray.liteVersion();
         printMarketTray(liteTray);
     }

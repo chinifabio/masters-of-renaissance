@@ -27,13 +27,19 @@ public class SingleplayerMatchTest {
     private Player gino;
 
     Dispatcher view = new Dispatcher();
-    private Match singleplayer = new SingleplayerMatch(view);
+    private Match singleplayer;
 
     int oldLorenzoPos = 0;
     int oldNumDiscarded = 0;
 
     @BeforeEach
-    public void initializeMatch() throws IllegalTypeInProduction {
+    public void initializeMatch() throws IllegalTypeInProduction, IOException {
+        try {
+            singleplayer = new SingleplayerMatch(view);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+
         gino = new Player("gino", singleplayer, view);
         assertTrue(singleplayer.playerJoin(gino));
 
@@ -73,14 +79,12 @@ public class SingleplayerMatchTest {
         Deck<SoloActionToken> soloToken;
         List<SoloActionToken> init = new ArrayList<>();
 
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            init = objectMapper.readValue(
-                    new File("src/resources/SoloActionTokens.json"),
+            init = new ObjectMapper().readValue(
+                    getClass().getResourceAsStream("/SoloActionTokens.json"),
                     new TypeReference<List<SoloActionToken>>(){});
         }catch (IOException e){
-            e.printStackTrace();
-            System.out.println("The file to create the SoloActionTokens wasn't found");
+            fail("can't find solo token file");
         }
         soloToken = new Deck<>(init);
 

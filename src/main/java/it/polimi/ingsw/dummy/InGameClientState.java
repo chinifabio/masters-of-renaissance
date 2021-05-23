@@ -93,7 +93,7 @@ public class InGameClientState extends ClientState {
 
                 case "track":
                     try {
-                        new FaithTrackPrinter(model).printTrack();
+                        new FaithTrackPrinter().printTrack(model);
                     } catch (IOException e) {
                         System.out.println("something wrong...");
                     }

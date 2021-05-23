@@ -43,7 +43,7 @@ public class DeckTest {
 
 
         DevCard c1 = new DevCard(ID, new AddProductionEffect(null), 3, LevelDevCard.LEVEL3, ColorDevCard.BLUE,requisite);
-        DevCard c3 = new DevCard("100", new AddProductionEffect(null), 3, LevelDevCard.LEVEL3, ColorDevCard.BLUE,requisite);;
+        DevCard c3 = new DevCard("100", new AddProductionEffect(null), 3, LevelDevCard.LEVEL3, ColorDevCard.BLUE,requisite);
         LeaderCard c2 = new LeaderCard(ID1, new AddProductionEffect(null),6,requisite);
         SoloActionToken token = new SoloActionToken(ID2, new AddProductionEffect(null));
 
@@ -228,9 +228,7 @@ public class DeckTest {
         for(int i=0;i<n-1;i++){
             try {
                 d1.insertCard(cards.get(i));
-            } catch (AlreadyInDeckException e) {
-                e.printStackTrace();
-            }
+            } catch (AlreadyInDeckException ignore){}
         }
 
         assertEquals(n-1,d1.getNumberOfCards());
@@ -267,15 +265,12 @@ public class DeckTest {
         try {
             d1.draw();
             fail();
-        } catch (EmptyDeckException e) {
-            e.printStackTrace();
-        }
+        } catch (EmptyDeckException ignore) {}
         try {
             DevCard cTop = d2.draw();
             assertEquals(2,d2.getNumberOfCards());
             assertEquals("002",cTop.getCardID());
         } catch (EmptyDeckException e) {
-            e.printStackTrace();
             fail();
         }
     }
@@ -309,14 +304,11 @@ public class DeckTest {
         try {
             d1.discard();
             fail();
-        } catch (EmptyDeckException e) {
-            e.printStackTrace();
-        }
+        } catch (EmptyDeckException ignore) {}
         try {
             d2.discard();
             assertEquals(2,d2.getNumberOfCards());
         } catch (EmptyDeckException e) {
-            e.printStackTrace();
             fail();
         }
     }
@@ -393,25 +385,25 @@ public class DeckTest {
             d.discard();
             assertEquals(6,d.getNumberOfCards());
         } catch (EmptyDeckException e) {
-            e.printStackTrace();
+            fail(e.getMessage());
         }
         try {
             d.discard();
             assertEquals(5,d.getNumberOfCards());
         } catch (EmptyDeckException e) {
-            e.printStackTrace();
+            fail(e.getMessage());
         }
         try {
             d.discard();
             assertEquals(4,d.getNumberOfCards());
         } catch (EmptyDeckException e) {
-            e.printStackTrace();
+            fail(e.getMessage());
         }
         try {
             d.discard();
             assertEquals(3,d.getNumberOfCards());
         } catch (EmptyDeckException e) {
-            e.printStackTrace();
+            fail(e.getMessage());
         }
         d.shuffle();
         assertEquals(7,d.getNumberOfCards());
@@ -475,8 +467,13 @@ public class DeckTest {
     }
 
     @RepeatedTest(10)
-    public void cardsFromJSONTest() throws EmptyDeckException {
-        DevSetup devSetup = new DevSetup();
+    public void cardsFromJSONTest() {
+        DevSetup devSetup = null;
+        try {
+            devSetup = new DevSetup();
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
 
         String Card1 = "";
         String Card2 = "";
@@ -507,14 +504,11 @@ public class DeckTest {
         Deck<LeaderCard> deckLeader;
         List<LeaderCard> init = new ArrayList<>();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-
         try {
-            init = objectMapper.readValue(
-                    new File("src/resources/LeaderCards.json"),
+            init = new ObjectMapper().readValue(
+                    getClass().getResourceAsStream("/LeaderCards.json"),
                     new TypeReference<List<LeaderCard>>(){});
         }catch (IOException e){
-            e.printStackTrace();
             fail();
         }
         deckLeader = new Deck<>(init);

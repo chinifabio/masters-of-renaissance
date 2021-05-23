@@ -35,7 +35,7 @@ public class SPInGameClientState extends ClientState {
     /**
      * Do some stuff that generate a packet to send to the server
      *
-     * @param model
+     * @param model the model of the client
      * @return packet to send to the server
      */
     @Override
@@ -102,7 +102,7 @@ public class SPInGameClientState extends ClientState {
 
                     case "track":
                         try {
-                            new FaithTrackPrinter(model).printTrack();
+                            new FaithTrackPrinter().printTrack(model);
                         } catch (IOException e) {
                             System.out.println("something wrong...");
                         }

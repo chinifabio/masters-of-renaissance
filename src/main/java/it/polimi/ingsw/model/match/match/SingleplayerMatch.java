@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.App;
 import it.polimi.ingsw.communication.packet.updates.FaithTrackUpdater;
 import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
 import it.polimi.ingsw.communication.packet.updates.TokenUpdater;
@@ -16,7 +17,6 @@ import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.util.Pair;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -66,19 +66,12 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     /**
      * Build a single player game instance: the number of player that the game accept is 1 and the minimum 1
      */
-    public SingleplayerMatch(Dispatcher view) {
+    public SingleplayerMatch(Dispatcher view) throws IOException {
         super(1, view);
 
-        List<SoloActionToken> init = new ArrayList<>();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            init = objectMapper.readValue(
-                    new File("src/resources/SoloActionTokens.json"),
-                    new TypeReference<List<SoloActionToken>>(){});
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
+        List<SoloActionToken> init = new ObjectMapper().readValue(
+                getClass().getResourceAsStream("/SoloActionTokens.json"),
+                new TypeReference<List<SoloActionToken>>(){});
 
         this.soloToken = new Deck<>(init);
         this.soloToken.shuffle();
@@ -324,7 +317,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
     /**
      * Used to obtain the current player in the match
-     * @return
+     * @return the current player
      */
     public Player currentPlayer(){
         return this.player;

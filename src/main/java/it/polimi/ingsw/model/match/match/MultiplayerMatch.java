@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.util.Pair;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,7 +44,7 @@ public class MultiplayerMatch extends Match{
      * and require at least 2 player to be started
      * @param number the game size of the match
      */
-    public MultiplayerMatch(int number, Dispatcher view) {
+    public MultiplayerMatch(int number, Dispatcher view) throws IOException {
         super(number, view);
     }
 
@@ -185,7 +186,9 @@ public class MultiplayerMatch extends Match{
      */
     @Override
     public Player reconnectPlayer(String nickname) {
-        Player reconnecting = connectedPlayers.stream().filter(player -> player.getNickname().equals(nickname)).findAny().orElseThrow();
+        Player reconnecting = connectedPlayers.stream().filter(player -> player.getNickname().equals(nickname)).findAny().orElse(null);
+        assert reconnecting != null;
+
         reconnecting.reconnect();
         return reconnecting;
     }

@@ -21,6 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,12 +36,18 @@ public class LeaderTest {
     Player player2;
 
     Dispatcher view = new Dispatcher();
-    Match game = new MultiplayerMatch(2, view);
+    Match game;
 
     List<Player> order = new ArrayList<>();
 
     @BeforeEach
     public void initialization() {
+        try {
+            game = new MultiplayerMatch(2, view);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+
         assertDoesNotThrow(()->player1 = new Player("gino", game, view));
         assertTrue(game.playerJoin(player1));
         order.add(player1);

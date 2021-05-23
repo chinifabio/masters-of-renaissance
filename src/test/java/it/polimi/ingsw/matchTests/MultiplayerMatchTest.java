@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,10 +33,16 @@ public class MultiplayerMatchTest {
     List<Player> order = new ArrayList<>();
 
     Dispatcher view = new Dispatcher();
-    private final Match multiplayer = new MultiplayerMatch(4, view);
+    Match multiplayer;
 
     @BeforeEach
-    public void initializeMatch() throws IllegalTypeInProduction {
+    public void initializeMatch() throws IllegalTypeInProduction, IOException {
+        try {
+            multiplayer = new MultiplayerMatch(4, view);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+
         pino = new Player("pino", multiplayer, view);
         assertTrue(multiplayer.playerJoin(pino));
         order.add(pino);

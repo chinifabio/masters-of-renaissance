@@ -51,16 +51,11 @@ public class FaithTrack implements MappableToLiteVersion {
      * This method is the constructor of the class, it reads from a file the details of the track and creates a list of cells,
      * also it initialize the Player position to 0.
      */
-    public FaithTrack(Dispatcher view, String nickname) {
+    public FaithTrack(Dispatcher view, String nickname) throws IOException {
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            this.track = objectMapper.readValue(
-                    new File("src/resources/FaithTrack.json"),
+        this.track = new ObjectMapper().readValue(
+                    getClass().getResourceAsStream("/FaithTrack.json"),
                     new TypeReference<List<Cell>>(){});
-        }catch (IOException e){
-            System.out.println("The file to create the faith track wasn't found");
-        }
 
         this.playerPosition = 0;
 
@@ -177,25 +172,5 @@ public class FaithTrack implements MappableToLiteVersion {
     //Only for testing
     public int victoryPointCellPlayer(){
         return track.get(playerPosition).getVictoryPoint();
-    }
-
-    //For CLI
-    public boolean isVaticanSpace(int cell){
-        return track.get(cell).vaticanSpace != VaticanSpace.NONE;
-    }
-
-    //For CLI
-    public boolean isPopeSpace(int cell){
-        return track.get(cell).isPopeSpace();
-    }
-
-    //For CLI
-    public int getSizeTrack(){
-        return this.track.size();
-    }
-
-    //For CLI
-    public int getVictoryPointCell(int cell){
-        return this.track.get(cell).victoryPoint;
     }
 }

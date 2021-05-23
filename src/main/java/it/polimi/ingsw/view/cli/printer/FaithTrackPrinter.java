@@ -32,11 +32,6 @@ public class FaithTrackPrinter {
     private final String[] colors = {TextColors.RED_BRIGHT, TextColors.BLUE_BRIGHT, TextColors.YELLOW_BRIGHT, TextColors.GREEN_BRIGHT};
 
     /**
-     * This attribute is the FaithTrack to print
-     */
-    private final LiteModel model;
-
-    /**
      * This track is the sample for all players
      */
     private final List<LiteCell> track;
@@ -49,12 +44,10 @@ public class FaithTrackPrinter {
     /**
      * This method is the constructor of the class
      */
-    public FaithTrackPrinter(LiteModel model) throws IOException {
-        this.model = model;
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        this.track = objectMapper.readValue(
-                new File("src/resources/FaithTrack.json"),
+    public FaithTrackPrinter(/*LiteModel model*/) throws IOException {
+        //this.model = model;
+        this.track = new ObjectMapper().readValue(
+                getClass().getResourceAsStream("/FaithTrack.json"),
                 new TypeReference<List<LiteCell>>(){});
 
         this.popeTilesPoints = new HashMap<>();
@@ -250,21 +243,21 @@ public class FaithTrackPrinter {
     /**
      * This method prints the complete FaithTrack with all the infos
      */
-    public void printTrack(){
-        Map<String, Integer> players = this.model.getPlayerPosition();
-        Map<String, Map<String, Boolean>> popetiles = this.model.getPopeTilesPlayer();
+    public void printTrack(LiteModel model){
+        Map<String, Integer> players = model.getPlayerPosition();
+        Map<String, Map<String, Boolean>> popetiles = model.getPopeTilesPlayer();
 
         List<String> nicknames = new ArrayList<>(players.keySet());
         List<Integer> positions = new ArrayList<>(players.values());
         List<Map<String, Boolean>> popeTiles = new ArrayList<>(popetiles.values());
 
-
-        int vert = MAX_VERT+this.model.playersInGame()+3;
+        System.out.println("ok");
+        int vert = MAX_VERT+model.playersInGame()+3;
         String[][] faithTrack = new String[vert][MAX_HORIZ_CELL*(this.track.size())];
 
         System.out.println(createLegend(nicknames, popeTiles));
-        createTrack(this.model.playersInGame(), faithTrack);
-        insertPlayerPos(nicknames,positions, faithTrack);
+        createTrack(model.playersInGame(), faithTrack);
+        insertPlayerPos(nicknames, positions, faithTrack);
         for (int r = 0; r < (vert); r++){
             System.out.println();
             for (int c = 0; c < (MAX_HORIZ_CELL*this.track.size()); c++){
@@ -294,7 +287,7 @@ public class FaithTrackPrinter {
         model.flipPopeTile("Lorenzo il Magnifico", "THIRD");
 
 
-        FaithTrackPrinter printer = new FaithTrackPrinter(model);
+        FaithTrackPrinter printer = new FaithTrackPrinter(/*model*/);
 
         Random numbers = new Random();
 
@@ -303,7 +296,7 @@ public class FaithTrackPrinter {
         model.movePlayer("LastBuddy", numbers.nextInt(24));
         model.movePlayer("Lorenzo il Magnifico", numbers.nextInt(24));
 
-        printer.printTrack();
+        printer.printTrack(model);
 
     }
 

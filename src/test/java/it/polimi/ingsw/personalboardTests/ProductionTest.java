@@ -13,6 +13,7 @@ import it.polimi.ingsw.model.resource.ResourceBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ProductionTest {
@@ -22,14 +23,13 @@ public class ProductionTest {
     @Test
     public void normalProductionCreation() throws UnknownUnspecifiedException {
         List<Resource> req = Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildShield());
-        List<Resource> out = Arrays.asList(ResourceBuilder.buildFaithPoint());
+        List<Resource> out = Collections.singletonList(ResourceBuilder.buildFaithPoint());
 
         Production production = null;
         try {
             production = new NormalProduction(req, out);
         } catch (IllegalTypeInProduction e) {
-            e.printStackTrace();
-            fail();
+            fail(e.getMessage());
         }
 
         assertTrue(production.insertResource(ResourceBuilder.buildCoin()));
@@ -68,40 +68,33 @@ public class ProductionTest {
         try {
             test = new UnknownProduction(
                     Arrays.asList(ResourceBuilder.buildCoin(), ResourceBuilder.buildEmpty()),
-                    Arrays.asList(ResourceBuilder.buildFaithPoint())
+                    Collections.singletonList(ResourceBuilder.buildFaithPoint())
             );
             fail();
-        } catch (IllegalTypeInProduction illegalTypeInProduction) {
-            illegalTypeInProduction.printStackTrace();
-        }
+        } catch (IllegalTypeInProduction ignore) {}
 
         try {
             test = new UnknownProduction(
                     Arrays.asList(ResourceBuilder.buildCoin(), ResourceBuilder.buildUnknown()),
-                    Arrays.asList(ResourceBuilder.buildFaithPoint())
+                    Collections.singletonList(ResourceBuilder.buildFaithPoint())
             );
-        } catch (IllegalTypeInProduction illegalTypeInProduction) {
-            illegalTypeInProduction.printStackTrace();
-            fail();
-        }
+        } catch (IllegalTypeInProduction ignore) {}
 
         try{
+            assert test != null;
             test.insertResource(ResourceBuilder.buildShield());
             test.insertResource(ResourceBuilder.buildCoin());
             fail();
-        } catch (UnknownUnspecifiedException e){
-            assertTrue(true);
-        }
+        } catch (UnknownUnspecifiedException ignore) {}
 
         // normal production ok to be added
         try {
             ok = new NormalProduction(
-                    Arrays.asList(ResourceBuilder.buildCoin(2)),
-                    Arrays.asList(ResourceBuilder.buildFaithPoint())
+                    Collections.singletonList(ResourceBuilder.buildCoin(2)),
+                    Collections.singletonList(ResourceBuilder.buildFaithPoint())
             );
         } catch (IllegalTypeInProduction illegalTypeInProduction) {
-            illegalTypeInProduction.printStackTrace();
-            fail();
+            fail(illegalTypeInProduction.getMessage());
         }
 
         assertFalse(test.activate());
@@ -109,58 +102,48 @@ public class ProductionTest {
 // ----- try new illegal production -----
         try {
             illegal = new NormalProduction(
-                    Arrays.asList(ResourceBuilder.buildCoin(3)),
-                    Arrays.asList(ResourceBuilder.buildFaithPoint())
+                    Collections.singletonList(ResourceBuilder.buildCoin(3)),
+                    Collections.singletonList(ResourceBuilder.buildFaithPoint())
             );
         } catch (IllegalTypeInProduction illegalTypeInProduction) {
-            illegalTypeInProduction.printStackTrace();
-            fail();
+            fail(illegalTypeInProduction.getMessage());
         }
         try {
             assertTrue(test.setNormalProduction(illegal));
             fail();
-        } catch (IllegalNormalProduction illegalNormalProduction) {
-            illegalNormalProduction.printStackTrace();
-        }
+        } catch (IllegalNormalProduction ignore) {}
 
 // ----- try new illegal production -----
         try {
             illegal = new NormalProduction(
                     Arrays.asList(ResourceBuilder.buildCoin(), ResourceBuilder.buildShield(2)),
-                    Arrays.asList(ResourceBuilder.buildFaithPoint())
+                    Collections.singletonList(ResourceBuilder.buildFaithPoint())
             );
         } catch (IllegalTypeInProduction illegalTypeInProduction) {
-            illegalTypeInProduction.printStackTrace();
-            fail();
+            fail(illegalTypeInProduction.getMessage());
         }
         try {
             test.setNormalProduction(illegal);
             fail();
-        } catch (IllegalNormalProduction illegalNormalProduction) {
-            illegalNormalProduction.printStackTrace();
-        }
+        } catch (IllegalNormalProduction ignore) {}
 
 // ----- try new illegal production -----
         try {
             illegal = new NormalProduction(
-                    Arrays.asList(ResourceBuilder.buildCoin(2)),
-                    Arrays.asList(ResourceBuilder.buildFaithPoint(2))
+                    Collections.singletonList(ResourceBuilder.buildCoin(2)),
+                    Collections.singletonList(ResourceBuilder.buildFaithPoint(2))
             );
         } catch (IllegalTypeInProduction illegalTypeInProduction) {
-            illegalTypeInProduction.printStackTrace();
             fail();
         }
         try {
             test.setNormalProduction(illegal);
             fail();
-        } catch (IllegalNormalProduction illegalNormalProduction) {
-            illegalNormalProduction.printStackTrace();
-        }
+        } catch (IllegalNormalProduction ignore) {}
 
         try {
             assertTrue(test.setNormalProduction(ok));
         } catch (IllegalNormalProduction illegalNormalProduction) {
-            illegalNormalProduction.printStackTrace();
             fail();
         }
 

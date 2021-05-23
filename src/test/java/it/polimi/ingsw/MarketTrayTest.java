@@ -2,6 +2,7 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
@@ -21,6 +22,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.*;
 
 public class MarketTrayTest {
@@ -28,12 +30,18 @@ public class MarketTrayTest {
     Player player2;
 
     Dispatcher view = new Dispatcher();
-    Match game = new MultiplayerMatch(2, view);
+    Match game;
 
     List<Player> order = new ArrayList<>();
 
     @BeforeEach
     public void initialization() {
+        try {
+            game = new MultiplayerMatch(2, view);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+
         assertDoesNotThrow(()->player1 = new Player("gino", game, view));
         assertTrue(game.playerJoin(player1));
         order.add(player1);
@@ -66,7 +74,14 @@ public class MarketTrayTest {
         int row = 3;
         int col = 4;
 
-        MarketTray tray = new MarketTray();
+        MarketTray tray = null;
+        try {
+            tray = new ObjectMapper()
+                    .readerFor(MarketTray.class)
+                    .readValue(getClass().getResourceAsStream("/MarketTray.json"));
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
 
         List<Marble> beforePush;
         Marble slide;
@@ -109,7 +124,14 @@ public class MarketTrayTest {
         int row = 3;
         int col = 4;
 
-        MarketTray tray = new MarketTray();
+        MarketTray tray = null;
+        try {
+            tray = new ObjectMapper()
+                    .readerFor(MarketTray.class)
+                    .readValue(getClass().getResourceAsStream("/MarketTray.json"));
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
 
         List<Marble> beforePush;
         Marble slide;
@@ -144,7 +166,15 @@ public class MarketTrayTest {
      */
     @Test
     public void viewTray() {
-        MarketTray tray = new MarketTray();
+        MarketTray tray = null;
+
+        try {
+            tray = new ObjectMapper()
+                    .readerFor(MarketTray.class)
+                    .readValue(getClass().getResourceAsStream("/MarketTray.json"));
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
 
         Map<MarbleColor, Integer> map = new EnumMap<>(MarbleColor.class);
 
@@ -179,7 +209,14 @@ public class MarketTrayTest {
 
     @Test
     public void testMarblePainting() {
-        MarketTray tray = new MarketTray();
+        MarketTray tray = null;
+        try {
+            tray = new ObjectMapper()
+                    .readerFor(MarketTray.class)
+                    .readValue(getClass().getResourceAsStream("/MarketTray.json"));
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
 
         Marble conversion = MarbleBuilder.buildGray();
 

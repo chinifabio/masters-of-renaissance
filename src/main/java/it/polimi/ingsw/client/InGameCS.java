@@ -91,9 +91,9 @@ public class InGameCS extends ClientState {
                 return view;
             case "viewtrack":
                 try {
-                    new FaithTrackPrinter(model).printTrack();
+                    new FaithTrackPrinter().printTrack(model);
                 } catch (IOException e) {
-                    System.out.println("Something's wrong... I can feel it");
+                    System.out.println("Something's wrong... I can feel it: " + e.getMessage());
                 }
                 return view;
             case "viewcardgrid":
@@ -130,6 +130,7 @@ public class InGameCS extends ClientState {
         Resource res;
         res = resConv(resPick());
 
+        assert res != null;
         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ChooseResourceCommand(DepotSlot.MIDDLE,res.type()).jsonfy());
     }
 

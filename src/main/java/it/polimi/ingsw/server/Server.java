@@ -36,7 +36,7 @@ public class Server implements Runnable{
 
     public static void main(String[] args) {
         // todo ugly but works
-        if (args.length > 0 && args[0].equals("--port")) port = Integer.parseInt(args[1]);
+        // if (args.length > 0 && args[0].equals("--port")) port = Integer.parseInt(args[1]);
 
         Thread serverWorker;
         try {

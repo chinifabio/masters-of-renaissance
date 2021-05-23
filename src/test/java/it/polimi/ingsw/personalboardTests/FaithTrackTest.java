@@ -15,6 +15,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,12 +25,18 @@ public class FaithTrackTest {
     Player player2;
 
     Dispatcher view = new Dispatcher();
-    Match game = new MultiplayerMatch(2, view);
+    Match game;
 
     List<Player> order = new ArrayList<>();
 
     @BeforeEach
     public void initialization() {
+        try {
+            game = new MultiplayerMatch(2, view);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+
         assertDoesNotThrow(()->player1 = new Player("gino", game, view));
         assertTrue(game.playerJoin(player1));
         order.add(player1);
@@ -53,7 +60,7 @@ public class FaithTrackTest {
     }
 
     @Test
-    public void infoFaithTrack() {
+    public void infoFaithTrack() throws IOException {
 
         FaithTrack track = new FaithTrack(this.game.currentPlayer().view, this.game.currentPlayer().getNickname());
         Resource point = ResourceBuilder.buildFaithPoint();
@@ -94,7 +101,7 @@ public class FaithTrackTest {
     }
 
     @Test
-    public void checkPlayerPosition() throws EndGameException {
+    public void checkPlayerPosition() throws EndGameException, IOException {
 
         Resource first = ResourceBuilder.buildFaithPoint(1);
         Resource second = ResourceBuilder.buildFaithPoint(2);
@@ -129,7 +136,7 @@ public class FaithTrackTest {
      * Testing if the model calls an exception when the player try to pass the last cell of the FaithTrack
      */
     @Test
-    public void callExceptionsPlayer() {
+    public void callExceptionsPlayer() throws IOException {
         FaithTrack track = new FaithTrack(this.game.currentPlayer().view, this.game.currentPlayer().getNickname());
 
         assertDoesNotThrow(()->{

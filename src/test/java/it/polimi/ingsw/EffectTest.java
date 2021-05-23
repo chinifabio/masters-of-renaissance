@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,10 +39,16 @@ public class EffectTest {
     private Player gino;
 
     Dispatcher view = new Dispatcher();
-    private SingleplayerMatch singleplayer = new SingleplayerMatch(view);
+    private SingleplayerMatch singleplayer;
 
     @BeforeEach
-    public void initializeMatch() throws IllegalTypeInProduction {
+    public void initializeMatch() throws IllegalTypeInProduction, IOException {
+        try {
+            singleplayer = new SingleplayerMatch(view);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+
         gino = new Player("gino", singleplayer, view);
         assertTrue(singleplayer.playerJoin(gino));
 
@@ -55,7 +62,7 @@ public class EffectTest {
     }
 
     @Test
-    void addProductionEffect() throws IllegalTypeInProduction {
+    void addProductionEffect() throws IllegalTypeInProduction, IOException {
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -145,7 +152,7 @@ public class EffectTest {
 
     //TODO adjust when buyDevCard will works
     @Test
-    void addDiscountEffect() throws IllegalTypeInProduction {
+    void addDiscountEffect() throws IllegalTypeInProduction, IOException {
         List<Requisite> req = new ArrayList<>();
         Resource coin = ResourceBuilder.buildCoin(2);
         ResourceRequisite rr = new ResourceRequisite(coin);
@@ -157,12 +164,18 @@ public class EffectTest {
 
         assertTrue(player1.test_getDiscount().isEmpty());
         c.useEffect(player1);
-        assertEquals(Arrays.asList(ResourceBuilder.buildCoin()),player1.test_getDiscount());
+        assertEquals(Collections.singletonList(ResourceBuilder.buildCoin()),player1.test_getDiscount());
     }
 
     @RepeatedTest(10)
     void shuffleMoveOne() throws EmptyDeckException {
-        SingleplayerMatch match = new SingleplayerMatch(view);
+        SingleplayerMatch match = null;
+        try {
+            match = new SingleplayerMatch(view);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+
         SoloActionToken token = new SoloActionToken("505", new ShuffleMoveOneEffect());
 
         assertEquals(7,match.obtainSoloTokens().getNumberOfCards());

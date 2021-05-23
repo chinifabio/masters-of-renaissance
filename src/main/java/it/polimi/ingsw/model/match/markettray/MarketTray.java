@@ -1,10 +1,10 @@
 package it.polimi.ingsw.model.match.markettray;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import it.polimi.ingsw.App;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarketTray;
 import it.polimi.ingsw.model.MappableToLiteVersion;
@@ -60,41 +60,13 @@ public class MarketTray implements MappableToLiteVersion {
      * the constructor read from a json file the size of the tray and instantiate the right amount and type of marble, saved in the json.
      * then it shuffle the order of the marbles and insert them all in the tray
      */
-    public MarketTray(){
+    @JsonCreator
+    public MarketTray(@JsonProperty("row") int row, @JsonProperty("col") int col, @JsonProperty("marbles") List<Marble> marbleBuilder) throws IOException {
         Random rand = new Random();
 
-        //Reading the Dimensions of the MarketTray
-        DimensionReader dim;
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson dimension = gsonBuilder.create();
-        try {
-            BufferedReader brD = new BufferedReader(new FileReader("src/resources/MarketTrayDimension.json"));
-            dim = dimension.fromJson(brD, DimensionReader.class);
-        } catch (FileNotFoundException ex){
-            System.out.println("The JSON file to set the MarketTray dimensions was not found!");
-            dim = new DimensionReader(0,0);
-        }
-
-
-        //Reading the Marbles
-        List<Marble> marbleBuilder = new ArrayList<>();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            marbleBuilder = objectMapper.readValue(
-                    new File("src/resources/Marble.json"),
-                    new TypeReference<List<Marble>>(){});
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("The file to create the marbles list wasn't found");
-            // todo exception to model
-        }
-
-
-        row = dim.row;
-        col = dim.col;
-
         marbles = new Marble[row][col];
+        this.col = col;
+        this.row = row;
 
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {

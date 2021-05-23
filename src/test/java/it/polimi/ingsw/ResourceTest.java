@@ -11,6 +11,8 @@ import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 public class ResourceTest {
     @Test
     public void createAndCheckType() {
@@ -64,7 +66,7 @@ public class ResourceTest {
     }
 
     @Test
-    public void nonObtainable() throws IllegalTypeInProduction {
+    public void nonObtainable() throws IllegalTypeInProduction, IOException {
         Resource unknown = ResourceBuilder.buildUnknown();
         PlayableCardReaction player = new Player("dummy", null, new Dispatcher());
 
