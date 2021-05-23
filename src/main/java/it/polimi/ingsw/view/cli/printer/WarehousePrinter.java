@@ -196,15 +196,6 @@ public class WarehousePrinter {
         createWarehouse(warehouse, model, nickname, 0, 0);
         createBuffer(buffer, model, nickname, 0 ,0);
 
-
-        //Printing Legend
-        String legend =
-                TextColors.colorText(TextColors.YELLOW_BRIGHT, "©") + " = " + TextColors.colorText(TextColors.YELLOW_BRIGHT, "Coin\n") +
-                TextColors.colorText(TextColors.BLUE_BRIGHT, "▼") + " = " + TextColors.colorText(TextColors.BLUE_BRIGHT, "Shield\n") +
-                TextColors.colorText(TextColors.PURPLE, "Õ") + " = " + TextColors.colorText(TextColors.PURPLE, "Servant\n") +
-                TextColors.colorText(TextColors.WHITE, "■") + " = " + TextColors.colorText(TextColors.WHITE, "Stone\n");
-        System.out.println(legend);
-
         for (int r = 0; r < (MAX_VERT); r++) {
             System.out.println();
             for (int c = 0; c < (MAX_HORIZ); c++) {
@@ -219,6 +210,15 @@ public class WarehousePrinter {
             }
         }
         System.out.println();
+    }
+
+    public static void printResourcesLegend(){
+        String legend =
+                TextColors.colorText(TextColors.YELLOW_BRIGHT, "©") + " = " + TextColors.colorText(TextColors.YELLOW_BRIGHT, "Coin\n") +
+                        TextColors.colorText(TextColors.BLUE_BRIGHT, "▼") + " = " + TextColors.colorText(TextColors.BLUE_BRIGHT, "Shield\n") +
+                        TextColors.colorText(TextColors.PURPLE, "Õ") + " = " + TextColors.colorText(TextColors.PURPLE, "Servant\n") +
+                        TextColors.colorText(TextColors.WHITE, "■") + " = " + TextColors.colorText(TextColors.WHITE, "Stone\n");
+        System.out.println(legend);
     }
 
     public static void main(String[] args){

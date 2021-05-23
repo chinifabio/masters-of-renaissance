@@ -14,6 +14,7 @@ import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.util.Tuple;
 
@@ -136,6 +137,10 @@ public class LiteModel {
 
     public synchronized void flipPopeTile(String nickname, String popeTile) {
         this.players.get(nickname).flipPopeTile(popeTile);
+    }
+
+    public synchronized Map<ProductionID, LiteProduction> getAllProductions(String nickname){
+        return this.players.get(nickname).getWarehouse().getAllProductions();
     }
 
     public synchronized int playersInGame() {

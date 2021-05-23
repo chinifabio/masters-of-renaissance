@@ -16,10 +16,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalPro
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.*;
-import it.polimi.ingsw.view.cli.printer.FaithTrackPrinter;
-import it.polimi.ingsw.view.cli.printer.MarketTrayPrinter;
-import it.polimi.ingsw.view.cli.printer.PersonalBoardPrinter;
-import it.polimi.ingsw.view.cli.printer.WarehousePrinter;
+import it.polimi.ingsw.view.cli.printer.*;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevCardSlotPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
@@ -67,12 +64,21 @@ public class InGameCS extends ClientState {
             case "moveres":
                 WarehousePrinter.printWarehouse(model, model.getMe());
                 return moveDepot(model);
-            case "moveinproduction": return moveInProduction(model);
-            case "setnormalproduction": return setNormalProduction(model);
-            case "activateproduction": return activateProduction(model);
+            case "moveinproduction":
+                ProductionPrinter.printProductions(model.getAllProductions(model.getMe()));
+                WarehousePrinter.printWarehouse(model, model.getMe());
+                return moveInProduction(model);
+            case "setnormalproduction":
+                ProductionPrinter.printProductions(model.getAllProductions(model.getMe()));
+                return setNormalProduction(model);
+            case "activateproduction":
+                ProductionPrinter.printProductions(model.getAllProductions(model.getMe()));
+                return activateProduction(model);
+
             case "endturn": return endTurn(model);
             //---------VIEW METHODS---------
             case "viewdepots":
+                WarehousePrinter.printResourcesLegend();
                 WarehousePrinter.printWarehouse(model, model.getMe());
                 return view;
             case "viewdevcards":
@@ -96,13 +102,13 @@ public class InGameCS extends ClientState {
                     System.out.println("Something's wrong... I can feel it");
                 }
                 return view;
-            case "viewcardgrid":
+            case "viewcardsgrid":
                 DevSetupPrinter.printDevSetup(model.getDevSetup());
                 return view;
             case "viewplayers":
                 //model.getPlayers().forEach((nick,pb)->PersonalBoardPrinter.printPersonalBoard(model, nick, model.getLeader(nick), model.getDevelop(nick)));
                 return view;
-            case "viewpersonalboard":
+            case "viewboard":
                 PersonalBoardPrinter.printPersonalBoard(model, model.getMe(), model.getLeader(model.getMe()), model.getDevelop(model.getMe()));
                 return view;
             case "help":
@@ -308,7 +314,7 @@ public class InGameCS extends ClientState {
         System.out.println(TextColors.colorText(TextColors.YELLOW,"\nPossible actions:"));
         System.out.println("discardleader, chooseres, activateleader, buydevcard, paintmarble, usemarket, moveres, moveinproduction, setnormalproduction, activateproduction, endturn.");
         System.out.println(TextColors.colorText(TextColors.YELLOW,"Possible views:"));
-        System.out.println("viewtrack, viewcardsgrid, viewplayer, viewmarket, viewdepots, viewleader, viewpersonalboard");
+        System.out.println("viewtrack, viewcardsgrid, viewplayer, viewmarket, viewdepots, viewleader, viewboard");
     }
 
     //-----------------------HELPER METHODS--------------------------
