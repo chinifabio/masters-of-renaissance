@@ -177,4 +177,9 @@ public class ResourceBuilder {
     public static List<LiteResource> mapResource(List<Resource> in) {
         return in.stream().filter(x -> x.amount() > 0).map(Resource::liteVersion).collect(Collectors.toList());
     }
+
+    public static List<LiteResource> mapStorableResource() {
+        List<Resource> in = ResourceBuilder.buildListOfStorable();
+        return in.stream().map(Resource::liteVersion).collect(Collectors.toList());
+    }
 }

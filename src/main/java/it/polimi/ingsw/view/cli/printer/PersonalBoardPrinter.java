@@ -59,7 +59,7 @@ public class PersonalBoardPrinter {
 
         WarehousePrinter.createWarehouse(personalBoard, model, nickname,8,12);
         WarehousePrinter.createBuffer(personalBoard, model, nickname,15,12);
-        ShowLeaderCards.createLeaderCardsSlot(personalBoard, leaderCards, 3, 75);
+        ShowLeaderCards.createLeaderCardsSlot(personalBoard, leaderCards, 3, 68);
         DevCardSlotPrinter.createDevCardSlot(personalBoard, devCards, 15, 68 );
 
         for (int i = 0; i< HEIGHT-1; i++){

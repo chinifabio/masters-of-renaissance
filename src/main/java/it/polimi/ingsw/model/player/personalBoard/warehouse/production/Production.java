@@ -86,6 +86,7 @@ public abstract class Production implements MappableToLiteVersion {
 
         this.addedResource = ResourceBuilder.buildListOfResource();
 
+
         this.activated = false;
         this.selected = false;
     }

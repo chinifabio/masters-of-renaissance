@@ -89,6 +89,7 @@ public class Warehouse {
               updateDepot(slot);
           }
       }
+      updateProduction(ProductionID.BASIC);
     }
 
     /**

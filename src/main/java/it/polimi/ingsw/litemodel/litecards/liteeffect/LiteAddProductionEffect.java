@@ -23,10 +23,12 @@ public class LiteAddProductionEffect extends LiteEffect{
     @Override
     public void printEffect(String[][] leaderCard, int x, int y) {
 
-        int initcol = y + 1;
+        int initcol;
         if (this.prod.getRequired().size() == 1){
             initcol = y + 5;
         } else if (this.prod.getRequired().size() == 2){
+            initcol = y + 3;
+        } else {
             initcol = y + 3;
         }
         for (LiteResource type : this.prod.getRequired()){

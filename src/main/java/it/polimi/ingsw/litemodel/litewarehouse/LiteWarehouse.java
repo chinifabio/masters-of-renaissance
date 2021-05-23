@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.util.Tuple;
@@ -36,6 +35,11 @@ public class LiteWarehouse {
     @JsonIgnore
     public LiteProduction getProductions(ProductionID id) {
         return this.productions.get(id);
+    }
+
+    @JsonIgnore
+    public Map<ProductionID, LiteProduction> getAllProductions(){
+        return this.productions;
     }
 
     @JsonGetter("depots")
