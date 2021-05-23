@@ -408,11 +408,25 @@ public class PersonalBoard {
     private void updateDevCard() {
         DevCard nullCard = new DevCard("Empty", new AddDiscountEffect(ResourceType.SERVANT), 0, LevelDevCard.NOLEVEL, ColorDevCard.NOCOLOR,  new ArrayList<>());
 
-        List<LiteDevCard> deck = new ArrayList<>();
-        for (DevCardSlot slot : DevCardSlot.values()) {
-            DevCard card = this.devDeck.get(slot).peekFirstCard();
-            deck.add( card == null ? nullCard.liteVersion() : card.liteVersion());
+        HashMap<DevCardSlot, List<LiteDevCard>> deck = new HashMap<DevCardSlot, List<LiteDevCard>>(){{
+            put(DevCardSlot.LEFT, new ArrayList<>());
+            put(DevCardSlot.CENTER, new ArrayList<>());
+            put(DevCardSlot.RIGHT, new ArrayList<>());
+        }};
+        deck.get(DevCardSlot.LEFT).add(nullCard.liteVersion());
+        deck.get(DevCardSlot.CENTER).add(nullCard.liteVersion());
+        deck.get(DevCardSlot.RIGHT).add(nullCard.liteVersion());
+
+
+        for (DevCardSlot slot : DevCardSlot.values()){
+            if (this.devDeck.get(slot).peekFirstCard() != null){
+                deck.get(slot).clear();
+                for (DevCard card : this.devDeck.get(slot).getCards()){
+                    deck.get(slot).add(card.liteVersion());
+                }
+            }
         }
+
         this.player.view.publish(new DevelopUpdater(this.player.getNickname(), deck));
     }
     

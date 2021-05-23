@@ -18,6 +18,7 @@ import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.*;
 import it.polimi.ingsw.view.cli.printer.*;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevCardSlotPrinter;
+import it.polimi.ingsw.view.cli.printer.cardprinter.DevDecksPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
 
@@ -82,7 +83,7 @@ public class InGameCS extends ClientState {
                 WarehousePrinter.printWarehouse(model, model.getMe());
                 return view;
             case "viewdevcards":
-                DevCardSlotPrinter.printDevCardSlots(model.getDevelop(model.getMe()));
+                DevDecksPrinter.printDevDecks(model.getDevelop(model.getMe()));
                 return view;
             case "viewleaders":
                 try {

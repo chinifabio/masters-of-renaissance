@@ -22,11 +22,7 @@ public class DevCardSlotPrinter {
                 devCards[i][j] = " ";
             }
         }
-        int index = 0;
-        for (LiteDevCard card : toShow) {
-            DevCardPrinter.createDevCard(devCards, card, 0, index);
-            index = index + 14;
-        }
+        createDevCardSlot(devCards, toShow, 0, 0);
 
         for (int i = 0; i< HEIGHT-1; i++){
             System.out.println();

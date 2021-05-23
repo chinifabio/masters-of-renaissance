@@ -7,24 +7,26 @@ import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
+import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceType;
-import it.polimi.ingsw.view.cli.printer.cardprinter.DevCardSlotPrinter;
+import it.polimi.ingsw.view.cli.printer.cardprinter.DevDecksPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
 public class PersonalBoardPrinter {
 
 
-    private static final int HEIGHT = 27; //rows.
-    private static final int WIDTH = 130; //cols.
+    private static final int HEIGHT = 33; //rows.
+    private static final int WIDTH = 133; //cols.
 
-    public static void printPersonalBoard(LiteModel model, String nickname, List<LiteLeaderCard> leaderCards, List<LiteDevCard> devCards){
+    public static void printPersonalBoard(LiteModel model, String nickname, List<LiteLeaderCard> leaderCards, HashMap<DevCardSlot, List<LiteDevCard>> devCards){
         String[][] personalBoard = new String[HEIGHT][WIDTH];
 
         for (int i = 0; i< HEIGHT; i++){
@@ -60,7 +62,8 @@ public class PersonalBoardPrinter {
         WarehousePrinter.createWarehouse(personalBoard, model, nickname,8,12);
         WarehousePrinter.createBuffer(personalBoard, model, nickname,15,12);
         ShowLeaderCards.createLeaderCardsSlot(personalBoard, leaderCards, 3, 68);
-        DevCardSlotPrinter.createDevCardSlot(personalBoard, devCards, 15, 68 );
+        //DevCardSlotPrinter.createDevCardSlot(personalBoard, devCards, 15, 68 );
+        DevDecksPrinter.createDevCardSlot(personalBoard, devCards, 15, 68);
 
         for (int i = 0; i< HEIGHT-1; i++){
             System.out.println();
@@ -86,17 +89,24 @@ public class PersonalBoardPrinter {
         names.add(leaderCards.get(rd.nextInt(16)));
 
         //Devcards
-        List<LiteDevCard> dev = new ArrayList<>();
         List<List<LiteDevCard>> cardFile;
+        HashMap<DevCardSlot, List<LiteDevCard>> deck = new HashMap<DevCardSlot, List<LiteDevCard>>(){{
+            put(DevCardSlot.LEFT, new ArrayList<>());
+            put(DevCardSlot.CENTER, new ArrayList<>());
+            put(DevCardSlot.RIGHT, new ArrayList<>());
+        }};
         ObjectMapper mapper = new ObjectMapper();
 
         cardFile = mapper.readValue(
                 new File("src/resources/DevCards.json"),
                 new TypeReference<List<List<LiteDevCard>>>(){});
 
-        dev.add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
-        dev.add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
-        dev.add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
+
+        deck.get(DevCardSlot.LEFT).add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
+        deck.get(DevCardSlot.LEFT).add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
+        deck.get(DevCardSlot.CENTER).add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
+        deck.get(DevCardSlot.CENTER).add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
+        deck.get(DevCardSlot.RIGHT).add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
 
         //Warehouse
         LiteModel model = new LiteModel();
@@ -132,6 +142,6 @@ public class PersonalBoardPrinter {
         model.setDepot("gino", DepotSlot.STRONGBOX, strongbox);
         model.setDepot("gino", DepotSlot.BUFFER, buffer);
 
-        PersonalBoardPrinter.printPersonalBoard(model, "gino", names, dev );
+        PersonalBoardPrinter.printPersonalBoard(model, "gino", names, deck );
     }
 }
