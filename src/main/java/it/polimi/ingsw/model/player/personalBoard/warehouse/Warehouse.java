@@ -354,18 +354,13 @@ public class Warehouse {
      */
     public List<Resource> getTotalResources(){
         List<Resource> totalResource = ResourceBuilder.buildListOfStorable();
+
+        // cycling on depots
         for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()){
-            if (!(entry.getValue() == null || entry.getKey() == DepotSlot.STRONGBOX || entry.getKey() == DepotSlot.BUFFER)){
-                for (Resource resource : totalResource){
-                    if (resource.equalsType(entry.getValue().viewResources().get(0))){
-                        resource.merge(entry.getValue().viewResources().get(0));
-                    }
-                }
-            }
-        }
-        for (Resource res : viewResourcesInDepot(DepotSlot.STRONGBOX)){
-            for (Resource res2 : totalResource){
-                res2.merge(res);
+            // cycling on resource in depot only if it is not null
+            Depot depot = entry.getValue();
+            if (depot != null) for (Resource resource : depot.viewResources()) {
+                totalResource.stream().filter(res -> res.equalsType(resource)).findAny().ifPresent(res -> res.merge(resource));
             }
         }
 

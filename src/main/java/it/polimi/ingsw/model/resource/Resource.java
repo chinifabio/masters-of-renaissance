@@ -134,12 +134,11 @@ public class Resource implements MappableToLiteVersion {
 
     /**
      * Indicates whether some other object is "equal type to" this one.
-     * @param obj the reference object with which to compare.
+     * @param res the reference object with which to compare.
      * @return {@code true} if this object is the same as the obj
      */
-    public boolean equalsType(Object obj) {
-        if (obj instanceof Resource) return (((Resource) obj).type() == this.type);
-        else return false;
+    public boolean equalsType(Resource res) {
+        return res.type() == this.type;
     }
 
     /**

@@ -31,6 +31,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Productio
 import it.polimi.ingsw.model.requisite.Requisite;
 import it.polimi.ingsw.model.requisite.RequisiteType;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.io.IOException;
@@ -156,36 +157,54 @@ public class PersonalBoard {
      * @throws EmptyDeckException if the Deck is empty
      * @throws LootTypeException if a ResourceRequisite is compared to a CardRequisite
      */
-    public boolean activateLeaderCard(String selected) throws MissingCardException, EmptyDeckException, LootTypeException, WrongDepotException {    //TODO implementation - effect
+    public boolean activateLeaderCard(String selected) throws MissingCardException, EmptyDeckException, LootTypeException {
         LeaderCard card = this.leaderDeck.peekCard(selected);
+        //this.warehouse.
 
         for (Requisite req : card.getRequirements()) {
-            if (req.getRequisiteType() == RequisiteType.RESOURCE) {
-                for (Resource resource : warehouse.getTotalResources()) {
-                    if (resource.equalsType(req) && resource.amount() < req.getAmount()) return false;
-                }
-            } else if (req.getRequisiteType() == RequisiteType.CARD) {
-                int pbAmountCard = 0;
-                for (Map.Entry<DevCardSlot, Deck<DevCard>> entry : devDeck.entrySet()) {
-                    for (DevCard devCard : entry.getValue().getCards()) {
-                        if (devCard.getColor().equals(req.getColor()) && devCard.getLevel().equals(req.getLevel())) {
-                            pbAmountCard++;
+            switch (req.getRequisiteType()) {
+
+                case RESOURCE:
+                    Resource inWarehouse = warehouse.getTotalResources().stream().filter(x-> {
+                        try {
+                            return req.getType()==x.type();
+                        } catch (LootTypeException e) {
+                            return false;
+                        }
+                    }).findAny().orElse(ResourceBuilder.buildEmpty());
+
+                    if (req.getAmount() > inWarehouse.amount()) return false;
+                    //for (Resource resource : warehouse.getTotalResources()) {
+                    //    if (resource.equalsType(req.) && resource.amount() < req.getAmount()) return false;
+                    //}
+                    break;
+
+                case COLOR:
+                    int pbAmountColor = 0;
+                    for (Map.Entry<DevCardSlot, Deck<DevCard>> entry : devDeck.entrySet()) {
+                        for (DevCard devCard : entry.getValue().getCards()) {
+                            if (devCard.getColor().equals(req.getColor())) {
+                                pbAmountColor++;
+                            }
                         }
                     }
-                }
-                if (pbAmountCard < req.getAmount()) return false;
-            } else if (req.getRequisiteType() == RequisiteType.COLOR){
-                int pbAmountColor = 0;
-                for (Map.Entry<DevCardSlot, Deck<DevCard>> entry : devDeck.entrySet()) {
-                    for (DevCard devCard : entry.getValue().getCards()) {
-                        if (devCard.getColor().equals(req.getColor())) {
-                            pbAmountColor++;
+                    if (pbAmountColor < req.getAmount()) return false;
+                    break;
+
+                case CARD:
+                    int pbAmountCard = 0;
+                    for (Map.Entry<DevCardSlot, Deck<DevCard>> entry : devDeck.entrySet()) {
+                        for (DevCard devCard : entry.getValue().getCards()) {
+                            if (devCard.getColor().equals(req.getColor()) && devCard.getLevel().equals(req.getLevel())) {
+                                pbAmountCard++;
+                            }
                         }
                     }
-                }
-                if (pbAmountColor < req.getAmount()) return false;
+                    if (pbAmountCard < req.getAmount()) return false;
+                    break;
             }
         }
+
         card.activate();
         card.useEffect(this.player);
         this.updateLeader();
