@@ -7,17 +7,12 @@ import static it.polimi.ingsw.TextColors.*;
 public class IllegalTypeInProduction extends Exception{
 
     /**
-     * the required resource list of wrong production
-     */
-    private final Resource illegal;
-
-    /**
      * Constructs a new exception with {@code null} as its detail message.
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      */
     public IllegalTypeInProduction(Resource x) {
-        this.illegal = x;
+        super("NormalProduction received an ILLEGAL res: " + RESET + x);
     }
 
     /**
@@ -26,6 +21,6 @@ public class IllegalTypeInProduction extends Exception{
      */
     @Override
     public void printStackTrace() {
-        System.out.println(colorText(RED_BRIGHT, "NormalProduction got an ILLEGAL res: " + RESET + this.illegal));
+        System.out.println(super.getMessage());
     }
 }

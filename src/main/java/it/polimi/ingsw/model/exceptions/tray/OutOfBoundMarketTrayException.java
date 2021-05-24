@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model.exceptions.tray;
 
-import static it.polimi.ingsw.TextColors.*;
-import static it.polimi.ingsw.TextColors.RED_BRIGHT;
-
 public class OutOfBoundMarketTrayException extends Exception{
 
     /**
@@ -10,7 +7,9 @@ public class OutOfBoundMarketTrayException extends Exception{
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      */
-    public OutOfBoundMarketTrayException() {}
+    public OutOfBoundMarketTrayException() {
+        super("The limit of the Market Tray has been exceeded");
+    }
 
     /**
      * Prints this throwable and its backtrace to the
@@ -18,6 +17,6 @@ public class OutOfBoundMarketTrayException extends Exception{
      */
     @Override
     public void printStackTrace() {
-        System.out.println(colorText(RED_BRIGHT, "The limit of the Market Tray has been exceeded"));
+        System.out.println(super.getMessage());
     }
 }

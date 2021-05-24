@@ -10,7 +10,9 @@ public class UnknownUnspecifiedException extends Exception{
          * The cause is not initialized, and may subsequently be initialized by a
          * call to {@link #initCause}.
          */
-        public UnknownUnspecifiedException() {}
+        public UnknownUnspecifiedException() {
+                super("This production is unspecified");
+        }
 
         /**
          * Prints this throwable and its backtrace to the
@@ -18,6 +20,6 @@ public class UnknownUnspecifiedException extends Exception{
          */
         @Override
         public void printStackTrace() {
-            System.out.println(colorText(RED_BRIGHT, "This production is unspecified"));
+            System.out.println(super.getMessage());
         }
 }

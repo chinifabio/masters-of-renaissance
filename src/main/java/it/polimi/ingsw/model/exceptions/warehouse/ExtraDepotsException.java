@@ -1,15 +1,14 @@
 package it.polimi.ingsw.model.exceptions.warehouse;
 
-import static it.polimi.ingsw.TextColors.*;
-import static it.polimi.ingsw.TextColors.RED_BRIGHT;
-
 public class ExtraDepotsException extends Exception {
     /**
      * Constructs a new exception with {@code null} as its detail message.
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      */
-    public ExtraDepotsException() {}
+    public ExtraDepotsException() {
+        super("All the extra depots have already been built");
+    }
 
     /**
      * Prints this throwable and its backtrace to the
@@ -17,6 +16,6 @@ public class ExtraDepotsException extends Exception {
      */
     @Override
     public void printStackTrace() {
-        System.out.println(colorText(RED_BRIGHT, "All the extra depots have already been built" ));
+        System.out.println(super.getMessage());
     }
 }

@@ -115,10 +115,10 @@ public class UnknownProduction extends Production{
         for(int i = 0; i < this.required.size(); i++) {
             tempSum = lnorm.get(i).amount() - lthis.get(i).amount();
             if(lthis.get(i).type() == ResourceType.UNKNOWN) tempSum = 0;
-            if(tempSum < 0) throw new IllegalNormalProduction(normalProduction, TextColors.colorText(TextColors.RED_BRIGHT,"There are too few requirements"));
+            if(tempSum < 0) throw new IllegalNormalProduction("too few required resources");
             counter += tempSum;
         }
-        if(counter > this.unknownInRequired) throw new IllegalNormalProduction(normalProduction, TextColors.colorText(TextColors.RED_BRIGHT,"There are too many requirements"));
+        if(counter > this.unknownInRequired) throw new IllegalNormalProduction("too many required resources");
 
         counter = 0;
         lnorm = ResourceBuilder.rearrangeResourceList(normalProduction.viewOutput());
@@ -126,10 +126,10 @@ public class UnknownProduction extends Production{
         for(int i = 0; i < this.required.size(); i++) {
             tempSum = lnorm.get(i).amount() - lthis.get(i).amount();
             if(lthis.get(i).type() == ResourceType.UNKNOWN) tempSum = 0;
-            if(tempSum < 0 && lthis.get(i).type() != ResourceType.UNKNOWN) throw new IllegalNormalProduction(normalProduction, "too low out");
+            if(tempSum < 0 && lthis.get(i).type() != ResourceType.UNKNOWN) throw new IllegalNormalProduction( "too few out resources");
             counter += tempSum;
         }
-        if(counter > this.unknownInOutput) throw new IllegalNormalProduction(normalProduction, TextColors.colorText(TextColors.RED_BRIGHT,"There are too many requirements"));
+        if(counter > this.unknownInOutput) throw new IllegalNormalProduction("too many output resources");
 
         this.normal = Optional.of(normalProduction);
         return true;

@@ -10,6 +10,7 @@ public class WrongDepotException extends Exception {
      * call to {@link #initCause}.
      */
     public WrongDepotException() {
+        super("Illegal moves in depots detected");
     }
 
     /**
@@ -18,6 +19,6 @@ public class WrongDepotException extends Exception {
      */
     @Override
     public void printStackTrace() {
-        System.out.println(colorText(RED_BRIGHT, "This Depot cannot be used"));
+        System.out.println(super.getMessage());
     }
 }

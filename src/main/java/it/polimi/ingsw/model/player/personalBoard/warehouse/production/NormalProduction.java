@@ -83,7 +83,7 @@ public class NormalProduction extends Production {
      */
     @Override
     public boolean setNormalProduction(NormalProduction normalProduction) throws IllegalNormalProduction {
-        throw new IllegalNormalProduction(this,"This production can't use this method");
+        throw new IllegalNormalProduction("Normal production can't be normalized");
     }
 
     /**

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.exceptions.card;
 
-import static it.polimi.ingsw.TextColors.*;
-
 public class EmptyDeckException extends Exception{
     /**
      * Constructs a new exception with {@code null} as its detail message.
@@ -9,7 +7,7 @@ public class EmptyDeckException extends Exception{
      * call to {@link #initCause}.
      */
     public EmptyDeckException() {
-        super(colorText(RED_BRIGHT, "This Deck is empty!"));
+        super("This Deck is empty!");
     }
 
     /**
@@ -18,6 +16,6 @@ public class EmptyDeckException extends Exception{
      */
     @Override
     public void printStackTrace() {
-        System.out.println(colorText(RED_BRIGHT, "This Deck is empty!"));
+        System.out.println(super.getMessage());
     }
 }

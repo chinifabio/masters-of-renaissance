@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.exceptions.faithtrack;
 
-import static it.polimi.ingsw.TextColors.*;
-
 public class EndGameException extends Exception {
 
     /**
@@ -9,7 +7,9 @@ public class EndGameException extends Exception {
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      */
-    public EndGameException() {}
+    public EndGameException() {
+        super("The player can't do this move!");
+    }
 
     /**
      * Prints this throwable and its backtrace to the
@@ -17,6 +17,6 @@ public class EndGameException extends Exception {
      */
     @Override
     public void printStackTrace() {
-        System.out.println(colorText(RED_BRIGHT, "The player can't do this move!" ));
+        System.out.println(super.getMessage());
     }
 }

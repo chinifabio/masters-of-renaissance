@@ -1,15 +1,14 @@
 package it.polimi.ingsw.model.exceptions.requisite;
 
-import static it.polimi.ingsw.TextColors.*;
-import static it.polimi.ingsw.TextColors.RED_BRIGHT;
-
 public class LootTypeException extends Exception {
     /**
      * Constructs a new exception with {@code null} as its detail message.
      * The cause is not initialized, and may subsequently be initialized by a
      * call to {@link #initCause}.
      */
-    public LootTypeException() {}
+    public LootTypeException() {
+        super("This attribute cannot be obtained from this Requisite");
+    }
 
     /**
      * Prints this throwable and its backtrace to the
@@ -17,6 +16,6 @@ public class LootTypeException extends Exception {
      */
     @Override
     public void printStackTrace() {
-        System.out.println(colorText(RED_BRIGHT, "This attribute cannot be obtained from this Requisite"));
+        System.out.println(super.getMessage());
     }
 }

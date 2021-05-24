@@ -289,13 +289,9 @@ public class Warehouse {
      * @throws IllegalNormalProduction if the production isn't an UnknownProduction
      */
     public boolean setNormalProduction(ProductionID id, NormalProduction normalProduction) throws IllegalNormalProduction {
-        try {
-            availableProductions.get(id).setNormalProduction(normalProduction);
-            updateProduction(id);
-            return true;
-        } catch (IllegalNormalProduction e) {
-            throw new IllegalNormalProduction(normalProduction, "The method to set this production to normal failed");
-        }
+        availableProductions.get(id).setNormalProduction(normalProduction);
+        updateProduction(id);
+        return true;
     }
 
     /**

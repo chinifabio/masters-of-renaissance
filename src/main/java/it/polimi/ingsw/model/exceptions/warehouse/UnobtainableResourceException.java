@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model.exceptions.warehouse;
 
-import static it.polimi.ingsw.TextColors.*;
-import static it.polimi.ingsw.TextColors.RED_BRIGHT;
-
 public class UnobtainableResourceException extends Exception{
 
     /**
@@ -11,6 +8,7 @@ public class UnobtainableResourceException extends Exception{
      * call to {@link #initCause}.
      */
     public UnobtainableResourceException() {
+        super("The Player can't store this resource");
     }
 
     /**
@@ -19,6 +17,6 @@ public class UnobtainableResourceException extends Exception{
      */
     @Override
     public void printStackTrace() {
-        System.out.println(colorText(RED_BRIGHT, "The Player can't receive this resource"));
+        System.out.println(super.getMessage());
     }
 }

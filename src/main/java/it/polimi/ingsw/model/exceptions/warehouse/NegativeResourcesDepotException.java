@@ -11,6 +11,7 @@ public class NegativeResourcesDepotException extends Exception {
      * call to {@link #initCause}.
      */
     public NegativeResourcesDepotException() {
+        super("This Depot will have a negative number of resources!");
     }
 
     /**
@@ -19,6 +20,6 @@ public class NegativeResourcesDepotException extends Exception {
      */
     @Override
     public void printStackTrace() {
-        System.out.println(colorText(RED_BRIGHT, "This Depot will have a negative number of resources!"));
+        System.out.println(super.getMessage());
     }
 }
