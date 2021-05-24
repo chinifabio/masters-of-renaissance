@@ -102,7 +102,7 @@ public class InitialSelectionPlayerState extends PlayerState {
             try {
                 this.context.personalBoard.discardLeaderCard(leaderId);
                 discarded ++;
-                return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Operation done successfully! (ɔ◔‿◔)ɔ ♥");
+                return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You discarded " + leaderId + " | " + "discarded leader " + discarded + "/" + toDiscard+"; chosen resources " + chosen + "/" + toChoose);
             } catch (Exception e) {
                 return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
             }
@@ -123,7 +123,7 @@ public class InitialSelectionPlayerState extends PlayerState {
             return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "Initial phase done!");
 
         } else
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "(*෴*) You have to complete your job: discarded leader " + discarded + "/" + toDiscard+"; chosen resources " + chosen + "/" + toChoose +"}");
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "<.(*_*).> You have to complete your job: discarded leader " + discarded + "/" + toDiscard+"; chosen resources " + chosen + "/" + toChoose);
     }
 
     /**
@@ -134,19 +134,19 @@ public class InitialSelectionPlayerState extends PlayerState {
     @Override
     public Packet chooseResource(DepotSlot slot, ResourceType chosen) {
         if (slot == DepotSlot.STRONGBOX || slot == DepotSlot.BUFFER)
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "invalid destination");
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "Invalid destination");
         if (this.chosen < this.toChoose) {
             try {
                 if (this.context.obtainResource(slot, ResourceBuilder.buildFromType(chosen, 1))) {
                     this.chosen++;
-                    return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
+                    return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You obtained " + chosen.name().toLowerCase() + " | " + "discarded leader " + discarded + "/" + toDiscard+"; chosen resources " + chosen + "/" + toChoose);
                 } else
-                    return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "can't override resource");
+                    return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "Can't override resource");
 
             } catch (Exception e) {
                 return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
             }
-        } else return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "you already chose " + toChoose + " resources");
+        } else return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You already chose " + toChoose + " resources");
     }
 
     /**

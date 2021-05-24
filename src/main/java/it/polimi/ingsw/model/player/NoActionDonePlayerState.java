@@ -77,7 +77,7 @@ public class NoActionDonePlayerState extends PlayerState {
         }
 
         this.context.setState(new MainActionDonePlayerState(this.context));
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Used market tray successfully");
     }
 
     /**
@@ -94,7 +94,7 @@ public class NoActionDonePlayerState extends PlayerState {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
 
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Marble painted successfully");
     }
 
     /**
@@ -118,8 +118,8 @@ public class NoActionDonePlayerState extends PlayerState {
             this.context.setState(new MainActionDonePlayerState(this.context));
         }
         return res ?
-                new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully"):
-                new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "you have no requisite to buy this card");
+                new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You bought the develop card requested"):
+                new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You have no requisite to buy the card");
     }
 
     /**
@@ -142,7 +142,7 @@ public class NoActionDonePlayerState extends PlayerState {
         }
 
         this.context.setState(new MainActionDonePlayerState(this.context));
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You activated the production");
     }
 
     /**
@@ -160,7 +160,7 @@ public class NoActionDonePlayerState extends PlayerState {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
 
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You have normalized the " + id.name().toLowerCase() + " production");
     }
 
     /**
@@ -178,7 +178,7 @@ public class NoActionDonePlayerState extends PlayerState {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
 
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Resources moved in production");
     }
 
     /**
@@ -195,7 +195,7 @@ public class NoActionDonePlayerState extends PlayerState {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
 
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Resource moved successfully");
     }
 
     /**
@@ -204,14 +204,13 @@ public class NoActionDonePlayerState extends PlayerState {
      */
     @Override
     public Packet activateLeaderCard(String leaderId) {
-        boolean res;
         try {
-            res = this.context.personalBoard.activateLeaderCard(leaderId);
+            return this.context.personalBoard.activateLeaderCard(leaderId) ?
+                    new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You have activate "+leaderId):
+                    new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You have no requisite to activate the leader");
         } catch (Exception e) {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
-
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
     }
 
     /**
@@ -222,6 +221,11 @@ public class NoActionDonePlayerState extends PlayerState {
     public Packet discardLeader(String leaderId) {
         try {
             this.context.personalBoard.discardLeaderCard(leaderId);
+        } catch (Exception e) {
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+        }
+
+        try {
             this.context.personalBoard.moveFaithMarker(1, this.context.match);
         } catch (EndGameException e) {
 
@@ -229,12 +233,9 @@ public class NoActionDonePlayerState extends PlayerState {
             this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
             return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
 
-        } catch (Exception e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
 
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
-                //new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "you have no requisite to activate the leader");
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You discarded " + leaderId);
     }
 
     /**
@@ -246,7 +247,7 @@ public class NoActionDonePlayerState extends PlayerState {
         this.context.personalBoard.flushBufferDepot(this.context.match);
         this.context.setState(new NotHisTurnPlayerState(this.context));
         this.context.match.turnDone();
-        return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "your turn is ended");
+        return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "Your turn is ended");
     }
 
     /**

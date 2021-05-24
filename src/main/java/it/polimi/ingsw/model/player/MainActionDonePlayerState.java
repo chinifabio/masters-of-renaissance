@@ -60,7 +60,7 @@ public class MainActionDonePlayerState extends PlayerState {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
 
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Resource moved successfully");
     }
 
     /**
@@ -69,16 +69,13 @@ public class MainActionDonePlayerState extends PlayerState {
      */
     @Override
     public Packet activateLeaderCard(String leaderId) {
-        boolean res;
         try {
-            res = this.context.personalBoard.activateLeaderCard(leaderId);
+            return this.context.personalBoard.activateLeaderCard(leaderId) ?
+                    new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You have activate "+leaderId):
+                    new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You have no requisite to activate the leader");
         } catch (Exception e) {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
-
-        return res ?
-                new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully"):
-                new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "you have no requisite to activate the leader");
     }
 
     /**
@@ -103,7 +100,7 @@ public class MainActionDonePlayerState extends PlayerState {
 
         }
 
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You discarded " + leaderId);
     }
 
     /**
@@ -115,7 +112,7 @@ public class MainActionDonePlayerState extends PlayerState {
         this.context.personalBoard.flushBufferDepot(this.context.match);
         this.context.setState(new NotHisTurnPlayerState(this.context));
         this.context.match.turnDone();
-        return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "your turn is ended");
+        return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "Your turn is ended");
     }
 
     /**
