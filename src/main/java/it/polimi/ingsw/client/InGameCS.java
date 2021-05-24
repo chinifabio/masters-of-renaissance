@@ -17,10 +17,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Productio
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.*;
 import it.polimi.ingsw.view.cli.printer.*;
-import it.polimi.ingsw.view.cli.printer.cardprinter.DevCardSlotPrinter;
-import it.polimi.ingsw.view.cli.printer.cardprinter.DevDecksPrinter;
-import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
-import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
+import it.polimi.ingsw.view.cli.printer.cardprinter.*;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -153,7 +150,7 @@ public class InGameCS extends ClientState {
     public Packet buyDevCard(LiteModel model) {
         if(!model.getPlayerState(model.getMe()).canDoAction(Actions.BUY_DEV_CARD)) return invalid;
 
-        System.out.println("The devsetup:");
+        System.out.println("The grid of Development Cards:");
         DevSetupPrinter.printDevSetup(model.getDevSetup());
 
         LevelDevCard level;
@@ -235,6 +232,7 @@ public class InGameCS extends ClientState {
             return view;
         }
 
+        MarketTrayPrinter.printMarketTray(model.getTray());
         String conversion, index;
         Scanner scanner = new Scanner(System.in);
         System.out.print("Choose the index of the white marble to convert:\n>");
@@ -295,7 +293,7 @@ public class InGameCS extends ClientState {
     public Packet setNormalProduction(LiteModel model) { //todo da fare
         if(!model.getPlayerState(model.getMe()).canDoAction(Actions.SET_NORMAL_PRODUCTION)) return invalid;
 
-        ProductionID prod=ProductionID.BASIC;
+        ProductionID prod = ProductionID.BASIC;
         NormalProduction normal = null;
         try {
             normal = new NormalProduction(Collections.singletonList(ResourceBuilder.buildCoin()), Collections.singletonList(ResourceBuilder.buildCoin()));
@@ -308,7 +306,6 @@ public class InGameCS extends ClientState {
 
     public Packet endTurn(LiteModel model) {
         if(!model.getPlayerState(model.getMe()).canDoAction(Actions.END_TURN)) return invalid;
-
         return new Packet(HeaderTypes.DO_ACTION,ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy());
     }
 

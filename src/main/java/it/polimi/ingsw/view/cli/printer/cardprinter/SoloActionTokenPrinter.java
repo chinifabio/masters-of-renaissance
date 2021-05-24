@@ -70,7 +70,7 @@ public class SoloActionTokenPrinter {
         ObjectMapper objectMapper = new ObjectMapper();
 
         tokens = objectMapper.readValue(
-                new File("src/resources/SoloActionTokens.json"),
+                SoloActionTokenPrinter.class.getResourceAsStream("/SoloActionTokens.json"),
                 new TypeReference<List<SoloActionToken>>(){});
         for (SoloActionToken token : tokens){
             printSoloActionToken(token.liteVersion());

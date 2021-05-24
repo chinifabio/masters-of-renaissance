@@ -9,6 +9,7 @@ import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevDecksPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
@@ -82,7 +83,7 @@ public class PersonalBoardPrinter {
         Random rd = new Random();
 
         leaderCards = objectMapper.readValue(
-                new File("src/resources/LeaderCards.json"),
+                PersonalBoardPrinter.class.getResourceAsStream("/LeaderCards.json"),
                 new TypeReference<List<LiteLeaderCard>>(){});
 
         names.add(leaderCards.get(rd.nextInt(16)));
@@ -98,7 +99,7 @@ public class PersonalBoardPrinter {
         ObjectMapper mapper = new ObjectMapper();
 
         cardFile = mapper.readValue(
-                new File("src/resources/DevCards.json"),
+                PersonalBoardPrinter.class.getResourceAsStream("/DevCards.json"),
                 new TypeReference<List<List<LiteDevCard>>>(){});
 
 
@@ -112,10 +113,10 @@ public class PersonalBoardPrinter {
         LiteModel model = new LiteModel();
         model.createPlayer("gino");
 
-        LiteResource coin = new LiteResource(ResourceType.COIN, 1);
+        LiteResource coin = new LiteResource(ResourceType.COIN, 2);
         LiteResource shield = new LiteResource(ResourceType.SHIELD, 1);
-        LiteResource stone = new LiteResource(ResourceType.EMPTY, 0);
-        LiteResource servant = new LiteResource(ResourceType.EMPTY, 0);
+        LiteResource stone = new LiteResource(ResourceType.STONE, 3);
+        LiteResource servant = new LiteResource(ResourceType.SERVANT, 5);
 
         List<LiteResource> resourcesTop = new ArrayList<>();
         resourcesTop.add(shield);
@@ -123,6 +124,9 @@ public class PersonalBoardPrinter {
         resourcesMiddle.add(coin);
         List<LiteResource> resourcesBottom = new ArrayList<>();
         resourcesBottom.add(stone);
+
+        List<LiteResource> resourceSpecial = new ArrayList<>();
+        resourceSpecial.add(ResourceBuilder.buildEmpty().liteVersion());
 
         List<LiteResource> resourcesStrongbox = new ArrayList<>();
         resourcesStrongbox.add(new LiteResource(ResourceType.COIN, 20));
@@ -135,12 +139,16 @@ public class PersonalBoardPrinter {
         LiteDepot depotMiddle = new LiteDepot(resourcesMiddle);
         LiteDepot strongbox = new LiteDepot(resourcesStrongbox);
         LiteDepot buffer = new LiteDepot(resourcesStrongbox);
+        LiteDepot special1 = new LiteDepot(resourcesMiddle);
+        LiteDepot special2 = new LiteDepot(resourceSpecial);
 
         model.setDepot("gino", DepotSlot.TOP, depotTop);
         model.setDepot("gino", DepotSlot.MIDDLE, depotMiddle);
         model.setDepot("gino", DepotSlot.BOTTOM, depotBottom);
         model.setDepot("gino", DepotSlot.STRONGBOX, strongbox);
         model.setDepot("gino", DepotSlot.BUFFER, buffer);
+        model.setDepot("gino", DepotSlot.SPECIAL1, special1);
+        model.setDepot("gino", DepotSlot.SPECIAL2, special2);
 
         PersonalBoardPrinter.printPersonalBoard(model, "gino", names, deck );
     }

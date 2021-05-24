@@ -561,4 +561,65 @@ public class PersonalBoardTest {
         }
 
     }
+
+    @Test
+    public void activateLeaderAllRequisite() throws IllegalTypeInProduction, WrongDepotException, AlreadyInDeckException, MissingCardException, LootTypeException {
+        String ID1="000", ID2="111";
+        List<Resource> sample = new ArrayList<>();
+        Warehouse warehouse = new Warehouse(this.game.currentPlayer());
+
+        Production p = new NormalProduction( sample, sample);
+
+        List<Requisite> req = new ArrayList<>();
+        List<Requisite> req2 = new ArrayList<>();
+        Resource coin = ResourceBuilder.buildCoin(3);
+        Resource shield = ResourceBuilder.buildShield(1);
+        Resource servant = ResourceBuilder.buildServant(2);
+        ResourceRequisite rr = new ResourceRequisite(coin);
+        ResourceRequisite rr1 = new ResourceRequisite(shield);
+        ResourceRequisite rr2 = new ResourceRequisite(servant);
+        ColorCardRequisite cr = new ColorCardRequisite(ColorDevCard.GREEN, 2);
+        req.add(rr);
+        req.add(rr1);
+        req.add(rr2);
+        req2.add(cr);
+
+
+        this.game.currentPlayer().test_getPB().insertInDepot(DepotSlot.BOTTOM,ResourceBuilder.buildCoin(3));
+        this.game.currentPlayer().test_getPB().insertInDepot(DepotSlot.MIDDLE,ResourceBuilder.buildServant(2));
+        this.game.currentPlayer().test_getPB().insertInDepot(DepotSlot.TOP,ResourceBuilder.buildShield(1));
+
+        //Adding DevCards
+        DevCard devCard1 = new DevCard("DC1", new AddDiscountEffect(ResourceType.SERVANT), 1, LevelDevCard.LEVEL1, ColorDevCard.GREEN, new ArrayList<>());
+        DevCard devCard2 = new DevCard("DC2", new AddDiscountEffect(ResourceType.SERVANT), 1, LevelDevCard.LEVEL1, ColorDevCard.GREEN, new ArrayList<>());
+        DevCard devCard3 = new DevCard("DC3", new AddDiscountEffect(ResourceType.SERVANT), 1, LevelDevCard.LEVEL1, ColorDevCard.YELLOW, new ArrayList<>());
+        DevCard devCard4 = new DevCard("DC4", new AddDiscountEffect(ResourceType.SERVANT),1, LevelDevCard.LEVEL2, ColorDevCard.BLUE, new ArrayList<>());
+
+
+
+        LeaderCard c1 = new LeaderCard(ID1, new AddExtraProductionEffect(p), 1, req);
+        LeaderCard c2 = new LeaderCard(ID2, new AddExtraProductionEffect(p), 2, req);
+
+        PersonalBoard personalBoard = this.game.currentPlayer().test_getPB();
+
+        assertDoesNotThrow(()->{
+            personalBoard.addDevCard(DevCardSlot.LEFT, devCard1);
+            personalBoard.addDevCard(DevCardSlot.CENTER, devCard2);
+            personalBoard.addDevCard(DevCardSlot.RIGHT, devCard3);
+            personalBoard.addDevCard(DevCardSlot.LEFT, devCard4);
+        });
+
+        personalBoard.addLeaderCard(c1);
+        assertEquals(personalBoard.viewLeaderCard().peekFirstCard(), c1);
+
+        assertFalse(personalBoard.viewLeaderCard().peekCard(ID1).isActivated());
+
+        try {
+            personalBoard.activateLeaderCard(ID1);
+        } catch (EmptyDeckException | LootTypeException | MissingCardException e) {
+            fail();
+        }
+
+        assertTrue(personalBoard.viewLeaderCard().peekCard(ID1).isActivated());
+    }
 }

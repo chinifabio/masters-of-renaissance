@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.cli.printer;
 
 import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 import it.polimi.ingsw.litemodel.LiteModel;
@@ -14,28 +15,33 @@ import java.util.List;
 public class WarehousePrinter {
 
     private static final int MAX_VERT = 7; //rows.
-    private static final int MAX_HORIZ = 29; //cols.
+    private static final int MAX_HORIZ = 40; //cols.
 
     private static final int MAX_VERT_BUFFER = 3; //cols.
 
 
     public static void createWarehouse(String[][] display, LiteModel model, String nickname, int x, int y) {
 
+        for (int i = x; i< MAX_VERT; i++){
+            for (int j = y; j<MAX_HORIZ; j++){
+                display[i][j] = " ";
+            }
+        }
 
 
         //creating Depots
         display[x][y] = "╔";
-        for (int i = y + 1; i < y + MAX_HORIZ - 1; i++) {
+        for (int i = y + 1; i < y + 28; i++) {
             display[x][i] = "═";
         }
-        display[x][y + MAX_HORIZ - 1] = "╗";
+        display[x][y + 28] = "╗";
 
         for (int i = x + 1; i < x + 4; i++) {
             display[i][y] = "║";
-            for (int r = y + 1; r < y + MAX_HORIZ - 1; r++) {
+            for (int r = y + 1; r < y + 28; r++) {
                 display[i][r] = " ";
             }
-            display[i][y + MAX_HORIZ - 1] = "║";
+            display[i][y + 28] = "║";
         }
 
 
@@ -85,7 +91,7 @@ public class WarehousePrinter {
 
         //Adding the lines
         for (int i = x + 1; i < x + 4; i++){
-            for (int r = y + 1; r < y + MAX_HORIZ -1; r++){
+            for (int r = y + 1; r < y + 28; r++){
                 if (display[i][r].equals("[")){
                     while (!display[i][r].equals("]")){
                         r++;
@@ -99,12 +105,12 @@ public class WarehousePrinter {
 
         int reset = x + 4;
         display[reset][y] = TextColors.colorText(TextColors.YELLOW,"╔");
-        display[reset][y + MAX_HORIZ - 1] = TextColors.colorText(TextColors.YELLOW,"╗");
+        display[reset][y + 28] = TextColors.colorText(TextColors.YELLOW,"╗");
         display[x + MAX_VERT-1][y] = TextColors.colorText(TextColors.YELLOW,"╚");
-        display[x + MAX_VERT-1][y + MAX_HORIZ-1] = TextColors.colorText(TextColors.YELLOW,"╝");
+        display[x + MAX_VERT-1][y + 28] = TextColors.colorText(TextColors.YELLOW,"╝");
 
-        for (int i = y + 1; i < y + MAX_HORIZ - 1; i++) {
-            if (i == (y + (MAX_HORIZ - 1) / 2)){
+        for (int i = y + 1; i < y + 28; i++) {
+            if (i == (y + (28 / 2))){
                 display[reset][i] = TextColors.colorText(TextColors.WHITE_BRIGHT,"0");
             } else {
                 display[reset][i] = TextColors.colorText(TextColors.YELLOW,"═");
@@ -113,10 +119,10 @@ public class WarehousePrinter {
         }
         for (int i = reset+1; i < x + MAX_VERT-1; i++) {
             display[i][y] = TextColors.colorText(TextColors.YELLOW,"║");
-            for (int r = y + 1; r < y + MAX_HORIZ - 1; r++) {
+            for (int r = y + 1; r < y + 28; r++) {
                 display[i][r] = " ";
             }
-            display[i][y + MAX_HORIZ - 1] = TextColors.colorText(TextColors.YELLOW,"║");
+            display[i][y + 28] = TextColors.colorText(TextColors.YELLOW,"║");
         }
 
         //Insert resources in Strongbox
@@ -138,18 +144,96 @@ public class WarehousePrinter {
             init = init + 4;
         }
 
+        int initSpecialY = y + 29;
+        int initSpecialX = x;
+        //Inserting special Depot
+        List<LiteDepot> special = new ArrayList<>();
+        if (model.getDepot(nickname, DepotSlot.SPECIAL1) != null) {
+            special.add(model.getDepot(nickname, DepotSlot.SPECIAL1));
+        }
+        if (model.getDepot(nickname, DepotSlot.SPECIAL2) != null) {
+            special.add(model.getDepot(nickname, DepotSlot.SPECIAL2));
+        }
+        int index = 1;
+        int initString = 0;
+        String special1 = "SPECIAL";
+        char firstletter;
+        for (LiteDepot depot : special){
+            display[initSpecialX][initSpecialY] = "╔";
+            display[initSpecialX][initSpecialY+10] = "╗";
+            display[initSpecialX+2][initSpecialY] = "╚";
+            display[initSpecialX+2][initSpecialY+10] = "╝";
+            display[initSpecialX][initSpecialY+1] = CLI.colorResource.get(depot.getResourcesInside().get(0).getType());
+            display[initSpecialX+2][initSpecialY+1] = "═";
+            for (int i = initSpecialY + 2; i < initSpecialY+9 ; i++){
+                firstletter = special1.charAt(initString);
+                display[initSpecialX][i] = Character.toString(firstletter);
+                display[initSpecialX+2][i] = "═";
+                initString++;
+            }
+            display[initSpecialX][initSpecialY+9] = CLI.colorResource.get(depot.getResourcesInside().get(0).getType());
+            display[initSpecialX+2][initSpecialY+9] = "═";
+            for (int j = initSpecialX + 1; j < initSpecialX + 2; j++){
+                display[j][initSpecialY] = "║";
+                display[j][initSpecialY+10] = "║";
+            }
+
+            initSpecialX++;
+            initSpecialY = initSpecialY + 2;
+            //Adding special Resources
+            display[initSpecialX][initSpecialY] = "[";
+            for (LiteResource resource : depot.getResourcesInside()) {
+                display[initSpecialX][initSpecialY+1] = " ";
+                for (int i = initSpecialY+2; i < (initSpecialY+2) + (resource.getAmount() * 2); i++) {
+                    if (initSpecialX != x + 2) {
+                        if (i % 2 == 1) {
+                            display[initSpecialX][i] = CLI.colorResource.get(resource.getType());
+                        } else {
+                            display[initSpecialX][i] = " ";
+                        }
+                    } else {
+                        if (i % 2 == 0) {
+                            display[initSpecialX][i] = CLI.colorResource.get(resource.getType());
+                        } else {
+                            display[initSpecialX][i] = " ";
+                        }
+                    }
+                }
+
+                int z = resource.getAmount();
+                if (resource.getType() == ResourceType.EMPTY){
+                    z = initSpecialX - x;
+                }
+
+                while (z < (initSpecialX - x)) {
+                    z++;
+                }
+                display[initSpecialX][initSpecialY + 6] = "]";
+            }
+            initString = 0;
+            index++;
+            initSpecialY = y + 29;
+            initSpecialX = x + 3;
+        }
+
+
 
     }
 
     public static void createBuffer(String[][] buffer, LiteModel model, String nickname, int x, int y){
 
+        for (int i = x; i< MAX_VERT_BUFFER; i++){
+            for (int j = y; j<MAX_HORIZ; j++){
+                buffer[i][j] = " ";
+            }
+        }
 
         buffer[x][y] = TextColors.colorText(TextColors.CYAN,"╔");
-        buffer[x][y + MAX_HORIZ - 1] = TextColors.colorText(TextColors.CYAN,"╗");
+        buffer[x][y + 28] = TextColors.colorText(TextColors.CYAN,"╗");
         buffer[x + MAX_VERT_BUFFER-1][y] = TextColors.colorText(TextColors.CYAN,"╚");
-        buffer[x + MAX_VERT_BUFFER-1][y + MAX_HORIZ-1] = TextColors.colorText(TextColors.CYAN,"╝");
+        buffer[x + MAX_VERT_BUFFER-1][y + 28] = TextColors.colorText(TextColors.CYAN,"╝");
 
-        for (int i = y + 1; i < y + MAX_HORIZ - 1; i++) {
+        for (int i = y + 1; i < y + 28; i++) {
             if (i == y + 12){
                 buffer[x][i] = TextColors.colorText(TextColors.CYAN,"BUFFER");
             } else {
@@ -164,10 +248,10 @@ public class WarehousePrinter {
         }
         for (int i = x + 1; i < x + MAX_VERT_BUFFER-1; i++) {
             buffer[i][y] = TextColors.colorText(TextColors.CYAN,"║");
-            for (int r = y + 1; r < y + MAX_HORIZ - 1; r++) {
+            for (int r = y + 1; r < y + 28; r++) {
                 buffer[i][r] = " ";
             }
-            buffer[i][y + MAX_HORIZ - 1] = TextColors.colorText(TextColors.CYAN,"║");
+            buffer[i][y + 28] = TextColors.colorText(TextColors.CYAN,"║");
         }
 
         int initBuffer = y + 4;
@@ -237,6 +321,9 @@ public class WarehousePrinter {
         List<LiteResource> resourcesBottom = new ArrayList<>();
         resourcesBottom.add(stone);
 
+        List<LiteResource> resourceSpecial = new ArrayList<>();
+        resourceSpecial.add(ResourceBuilder.buildServant(1).liteVersion());
+
         List<LiteResource> resourcesStrongbox = new ArrayList<>();
         resourcesStrongbox.add(new LiteResource(ResourceType.COIN, 20));
         resourcesStrongbox.add(servant);
@@ -248,12 +335,16 @@ public class WarehousePrinter {
         LiteDepot depotMiddle = new LiteDepot(resourcesMiddle);
         LiteDepot strongbox = new LiteDepot(resourcesStrongbox);
         LiteDepot buffer = new LiteDepot(resourcesStrongbox);
+        LiteDepot special1 = new LiteDepot(resourcesMiddle);
+        LiteDepot special2 = new LiteDepot(resourceSpecial);
 
         model.setDepot("gino", DepotSlot.TOP, depotTop);
         model.setDepot("gino", DepotSlot.MIDDLE, depotMiddle);
         model.setDepot("gino", DepotSlot.BOTTOM, depotBottom);
         model.setDepot("gino", DepotSlot.STRONGBOX, strongbox);
         model.setDepot("gino", DepotSlot.BUFFER, buffer);
+        model.setDepot("gino", DepotSlot.SPECIAL1, special1);
+        model.setDepot("gino", DepotSlot.SPECIAL2, special2);
 
         printWarehouse(model, "gino");
     }

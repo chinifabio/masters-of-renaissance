@@ -75,7 +75,7 @@ public class LeaderCardPrinter {
         ObjectMapper objectMapper = new ObjectMapper();
 
         leaderCards = objectMapper.readValue(
-                new File("src/resources/LeaderCards.json"),
+                LeaderCardPrinter.class.getResourceAsStream("/LeaderCards.json"),
                 new TypeReference<List<LiteLeaderCard>>(){});
 
         for (LiteLeaderCard card: leaderCards){

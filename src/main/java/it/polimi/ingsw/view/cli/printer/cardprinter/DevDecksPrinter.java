@@ -59,7 +59,7 @@ public class DevDecksPrinter {
         Random rd = new Random();
 
         cardFile = objectMapper.readValue(
-                new File("src/resources/DevCards.json"),
+                DevDecksPrinter.class.getResourceAsStream("/DevCards.json"),
                 new TypeReference<List<List<LiteDevCard>>>(){});
 
 

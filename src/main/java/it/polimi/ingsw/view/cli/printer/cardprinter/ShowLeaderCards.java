@@ -52,7 +52,7 @@ public class ShowLeaderCards {
         Random rd = new Random();
 
         leaderCards = objectMapper.readValue(
-                new File("src/resources/LeaderCards.json"),
+                ShowLeaderCards.class.getResourceAsStream("/LeaderCards.json"),
                 new TypeReference<List<LiteLeaderCard>>(){});
 
         names.add(leaderCards.get(rd.nextInt(16)));

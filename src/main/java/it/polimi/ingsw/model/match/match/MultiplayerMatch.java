@@ -121,6 +121,7 @@ public class MultiplayerMatch extends Match{
     @Override
     public void turnDone() {
         this.marketTray.unPaint();
+        updateTray();
 
         // if the cur player is the right player of inkwell player the match ends
         if (endGameLogic && curPlayer == (connectedPlayers.size() - 1)) {

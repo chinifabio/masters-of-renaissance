@@ -1,7 +1,9 @@
 package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceType;
 
@@ -38,6 +40,7 @@ public class PaintableMarble extends Marble{
      * paints this marble
      * @return true because white marble is paintable
      */
+    @JsonIgnore
     @Override
     public boolean isPaintable() {
         return true;
@@ -81,5 +84,15 @@ public class PaintableMarble extends Marble{
     @Override
     public Marble copy() {
         return new PaintableMarble(MarbleColor.WHITE, this.marble);
+    }
+
+    /**
+     * Create a lite version of the class and serialize it in json
+     *
+     * @return the json representation of the lite version of the class
+     */
+    @Override
+    public LiteMarble liteVersion() {
+        return this.marble.map(value -> new LiteMarble(value.color(), value.toResource().type())).orElseGet(super::liteVersion);
     }
 }

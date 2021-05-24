@@ -251,7 +251,6 @@ public class FaithTrackPrinter {
         List<Integer> positions = new ArrayList<>(players.values());
         List<Map<String, Boolean>> popeTiles = new ArrayList<>(popetiles.values());
 
-        System.out.println("ok");
         int vert = MAX_VERT+model.playersInGame()+3;
         String[][] faithTrack = new String[vert][MAX_HORIZ_CELL*(this.track.size())];
 

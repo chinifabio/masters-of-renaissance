@@ -102,7 +102,7 @@ public class DevCardPrinter {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             devCardsList = objectMapper.readValue(
-                    new File("src/resources/DevCards.json"),
+                    DevCardPrinter.class.getResourceAsStream("/DevCards.json"),
                     new TypeReference<List<List<LiteDevCard>>>(){});
         }catch (IOException e) {
             e.printStackTrace();

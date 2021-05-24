@@ -60,6 +60,7 @@ public class Marble implements MappableToLiteVersion {
         return ResourceBuilder.buildFromType(toResource, 1);
     }
 
+    @JsonIgnore
     public boolean isPaintable(){
         return false;
     }
@@ -106,9 +107,7 @@ public class Marble implements MappableToLiteVersion {
     /**
      * reset the paint of this marble
      */
-    public void unPaint() {
-
-    }
+    public void unPaint() {}
 
     /**
      * Create a lite version of the class and serialize it in json

@@ -48,7 +48,7 @@ public class DevCardSlotPrinter {
         Random rd = new Random();
 
         cardFile = objectMapper.readValue(
-                new File("src/resources/DevCards.json"),
+                DevCardSlotPrinter.class.getResourceAsStream("/DevCards.json"),
                 new TypeReference<List<List<LiteDevCard>>>(){});
 
         dev.add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));

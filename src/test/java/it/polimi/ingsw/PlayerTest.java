@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.cards.effects.AddDiscountEffect;
 import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
 import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotException;
@@ -113,23 +114,21 @@ public class PlayerTest{
     }
 
     @Test
-    public void ActivateLeaderCard() throws EmptyDeckException {
+    public void ActivateLeaderCard() throws EmptyDeckException, WrongDepotException, MissingCardException {
 
         List<Requisite> req = new ArrayList<>();
-        Resource coin = ResourceBuilder.buildCoin(2);
-        ResourceRequisite rr = new ResourceRequisite(coin);
+        ResourceRequisite rr = new ResourceRequisite(ResourceBuilder.buildCoin(2));
         req.add(rr);
 
         LeaderCard c1 = new LeaderCard("111", new AddDiscountEffect(ResourceType.COIN), 1, req);
 
-        assertTrue(game.currentPlayer().canDoStuff());
-        game.currentPlayer().test_discardLeader();
-        game.currentPlayer().test_discardLeader();
-        game.currentPlayer().endThisTurn();
-        assertTrue(game.currentPlayer().canDoStuff());
+        game.currentPlayer().test_getPB().getWH_forTest().insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildCoin(2));
+        game.currentPlayer().test_getPB().getWH_forTest().insertInDepot(DepotSlot.STRONGBOX, ResourceBuilder.buildCoin(2));
+
+
         game.currentPlayer().addLeader(c1);
         game.currentPlayer().activateLeaderCard(c1.getCardID());
-        assertTrue(game.currentPlayer().test_getLeader(0).isActivated());
+        assertTrue(game.currentPlayer().test_getPB().viewLeaderCard().peekCard(c1.getCardID()).isActivated());
     }
 
     @Test

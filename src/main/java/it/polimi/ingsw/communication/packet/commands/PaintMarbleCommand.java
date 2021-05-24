@@ -1,6 +1,8 @@
 package it.polimi.ingsw.communication.packet.commands;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.player.PlayerAction;
 
@@ -23,7 +25,8 @@ public class PaintMarbleCommand extends Command {
      * @param conversion the id of the conversion
      * @param index the index of the mable
      */
-    public PaintMarbleCommand(int conversion, int index) {
+    @JsonCreator
+    public PaintMarbleCommand(@JsonProperty("conversion") int conversion,@JsonProperty("index") int index) {
         this.conversion = conversion;
         this.index = index;
     }

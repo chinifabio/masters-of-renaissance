@@ -152,6 +152,7 @@ public abstract class Match implements PlayerToMatch {
     @Override
     public void paintMarbleInTray(Marble newColor, int marbleIndex) throws UnpaintableMarbleException {
         this.marketTray.paintMarble(newColor, marbleIndex);
+        updateTray();
     }
 
     /**
