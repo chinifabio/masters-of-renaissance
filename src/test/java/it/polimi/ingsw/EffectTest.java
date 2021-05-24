@@ -194,7 +194,7 @@ public class EffectTest {
         for( int i=0 ; i<7 ; i++ ) {
             if(array[i].equals(match.obtainSoloTokens().getCards().get(i))) flag++;
         }
-        assertNotEquals(7,flag);
+        assertNotEquals(7,flag); // if fail is because casually the shuffle turn out equals
         assertEquals(pos+1,match.lorenzoPosition());
     }
 }

@@ -167,7 +167,6 @@ public class PersonalBoardTest {
     void ActivateLeaderCard() throws MissingCardException, AlreadyInDeckException, IllegalTypeInProduction, WrongDepotException {
         String ID1="000", ID2="111";
         List<Resource> sample = new ArrayList<>();
-        Warehouse warehouse = new Warehouse(this.game.currentPlayer());
 
         Production p = new NormalProduction( sample, sample);
 
@@ -176,29 +175,24 @@ public class PersonalBoardTest {
         ResourceRequisite rr = new ResourceRequisite(coin);
         req.add(rr);
 
-        warehouse.insertInDepot(DepotSlot.BOTTOM,ResourceBuilder.buildCoin(2));
+        this.game.currentPlayer().test_getPB().getWH_forTest().insertInDepot(DepotSlot.BOTTOM, ResourceBuilder.buildCoin(2));
 
 
         LeaderCard c1 = new LeaderCard(ID1, new AddExtraProductionEffect(p), 1, req);
         LeaderCard c2 = new LeaderCard(ID2, new AddExtraProductionEffect(p), 2, req);
 
-        PersonalBoard personalBoard = null;
-        try {
-            personalBoard = new PersonalBoard(game.currentPlayer());
-        } catch (IOException e) {
-            fail(e.getMessage());
-        }
+        PersonalBoard personalBoard = game.currentPlayer().personalBoard;
 
         personalBoard.addLeaderCard(c1);
         assertEquals(personalBoard.viewLeaderCard().peekFirstCard(), c1);
 
         //personalBoard.addLeaderCard(c1);
 
-        assertEquals(1,personalBoard.viewLeaderCard().getNumberOfCards());
+        assertEquals(3,personalBoard.viewLeaderCard().getNumberOfCards());
 
         personalBoard.addLeaderCard(c2);
 
-        assertEquals(2,personalBoard.viewLeaderCard().getNumberOfCards());
+        assertEquals(4,personalBoard.viewLeaderCard().getNumberOfCards());
 
         assertFalse(personalBoard.viewLeaderCard().peekCard(ID1).isActivated());
 
@@ -209,7 +203,6 @@ public class PersonalBoardTest {
         }
 
         assertTrue(personalBoard.viewLeaderCard().peekCard(ID1).isActivated());
-
     }
 
     /**
