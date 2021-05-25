@@ -2,9 +2,8 @@ package it.polimi.ingsw.client;
 
 public enum Actions {
     USE_MARKET_TRAY("usemarket"),
-
     PAINT_MARBLE_IN_TRAY("paintmarble"),
-    BUY_DEV_CARD("buydevcard"),
+    BUY_DEV_CARD("buycard"),
     ACTIVATE_PRODUCTION("activateproduction"),
     MOVE_IN_PRODUCTION("moveinproduction"),
     SET_NORMAL_PRODUCTION("normalizeproduction"),
@@ -16,12 +15,14 @@ public enum Actions {
 
     VIEW_MARKET_TRAY("market"),
     VIEW_DEV_SETUP("cardmarket"),
-    VIEW_FAITH_TRACK("track"),
+    VIEW_FAITH_TRACK("faithtrack"),
     VIEW_PERSONAL_BOARD("personalboard"),
     VIEW_LEADER_CARD("leadercards"),
     VIEW_PRODUCTIONS("productions"),
-    VIEW_WAREHOUSE("wawrehosue"),
+    VIEW_WAREHOUSE("warehosue"),
     VIEW_PLAYERS("players"),
+    VIEW_MARBLE_CONVERSION("conversions"),
+    VIEW_DISCOUNTS("discounts"),
 
     RETURN_HOME("home"),
     HELP("help"),

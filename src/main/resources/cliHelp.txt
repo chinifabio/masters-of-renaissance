@@ -1,0 +1,82 @@
+you can enter the following commands:
+
+    view methods
+
+        market
+            - show the market tray
+
+        cardmarket
+            - show the develop card market where you can buy develop cards
+
+        faithtrack
+            - show the faith track and the position of all other players
+
+        personalboard [player name]
+            - show the personal board of the given player
+            - if you put no nickname it will show you your personalboard
+
+        leadercards
+            - show you leader cards
+
+        productions
+            - show you your productions
+
+        warehouse
+            - show you your warehouse
+
+        discounts
+            - show your available discounts in the card market
+
+        conversion
+            - show your available white marble conversion for the market tray
+
+        players
+            - show you a list of player in game
+
+    commands
+
+        usemarket [row; col] [index]
+            - push the specified row or col
+            - index is the number of the row or col to push
+
+        paintmarble [conversion index] [marble index]
+            - paint a marble in the tray with an available marble conversion
+            - to view you conversion you can use the view method "conversions"
+
+        buycard [level] [color]
+            - buy a card in the card market if you have enough resources
+            - // fare nel codice "LEVEL" + parse int
+            - // mettere i colori
+
+        activateproduction
+            - activate the production
+
+        moveinproduction [depot source] [production destination] [resource type] [amount]
+            - move the given resource from the source depot to the destination production
+            - listare i depot
+            - listare le produzioni
+            - listare i tipi di risorse
+
+        normalizeproduction [] x [] x
+            - create a normal production to replace an unknown production
+            - dire della lista
+
+        moveindepot [depot source] [depot destination] [resource type] [amount]
+            - move the given resource from the source depot to the destination production
+            - listare i depot
+            - listare i tipi di risorse
+
+        activateleader [leader ID]
+            - activare the leader card with the given id
+            - number of the id of the leader card
+
+        discardleader [leader ID]
+            - discard the leader card with the given id
+            - number of the id of the leader card
+
+        chooseresource [depot destination] [resource type] [amount]
+            - in the initial game phase you receive a resource given
+            - destinantion is where the resource will be placed
+
+        done
+            - you end your turn

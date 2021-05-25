@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +51,7 @@ public class ShowLeaderCards {
         Random rd = new Random();
 
         leaderCards = objectMapper.readValue(
-                ShowLeaderCards.class.getResourceAsStream("/LeaderCards.json"),
+                ShowLeaderCards.class.getResourceAsStream("/json/LeaderCards.json"),
                 new TypeReference<List<LiteLeaderCard>>(){});
 
         names.add(leaderCards.get(rd.nextInt(16)));

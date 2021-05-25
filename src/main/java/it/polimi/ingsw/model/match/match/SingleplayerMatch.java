@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.App;
 import it.polimi.ingsw.communication.packet.updates.FaithTrackUpdater;
 import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
 import it.polimi.ingsw.communication.packet.updates.TokenUpdater;
@@ -70,7 +69,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
         super(1, view);
 
         List<SoloActionToken> init = new ObjectMapper().readValue(
-                getClass().getResourceAsStream("/SoloActionTokens.json"),
+                getClass().getResourceAsStream("/json/SoloActionTokens.json"),
                 new TypeReference<List<SoloActionToken>>(){});
 
         this.soloToken = new Deck<>(init);

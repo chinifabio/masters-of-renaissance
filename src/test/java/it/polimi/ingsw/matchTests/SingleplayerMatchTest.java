@@ -18,7 +18,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +80,7 @@ public class SingleplayerMatchTest {
 
         try {
             init = new ObjectMapper().readValue(
-                    getClass().getResourceAsStream("/SoloActionTokens.json"),
+                    getClass().getResourceAsStream("/json/SoloActionTokens.json"),
                     new TypeReference<List<SoloActionToken>>(){});
         }catch (IOException e){
             fail("can't find solo token file");

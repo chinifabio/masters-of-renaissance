@@ -16,7 +16,6 @@ import it.polimi.ingsw.model.resource.*;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -506,7 +505,7 @@ public class DeckTest {
 
         try {
             init = new ObjectMapper().readValue(
-                    getClass().getResourceAsStream("/LeaderCards.json"),
+                    getClass().getResourceAsStream("/json/LeaderCards.json"),
                     new TypeReference<List<LeaderCard>>(){});
         }catch (IOException e){
             fail();

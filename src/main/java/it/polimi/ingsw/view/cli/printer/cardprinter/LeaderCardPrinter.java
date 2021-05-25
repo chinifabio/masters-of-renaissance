@@ -6,7 +6,6 @@ import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequisite;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -75,7 +74,7 @@ public class LeaderCardPrinter {
         ObjectMapper objectMapper = new ObjectMapper();
 
         leaderCards = objectMapper.readValue(
-                LeaderCardPrinter.class.getResourceAsStream("/LeaderCards.json"),
+                LeaderCardPrinter.class.getResourceAsStream("/json/LeaderCards.json"),
                 new TypeReference<List<LiteLeaderCard>>(){});
 
         for (LiteLeaderCard card: leaderCards){

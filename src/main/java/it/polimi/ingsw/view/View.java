@@ -84,4 +84,9 @@ public interface View extends Runnable{
      * @param s the waring message
      */
     void notifyPlayerWarning(String s);
+
+    /**
+     * Render a list of available commands
+     */
+    void renderHelp();
 }

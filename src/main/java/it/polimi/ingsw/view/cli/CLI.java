@@ -202,4 +202,32 @@ public class CLI implements View {
     public void renderWarehouse(String nickname) {
         WarehousePrinter.printWarehouse(model, nickname);
     }
+
+    /**
+     * Render a list of available commands
+     */
+    @Override
+    public void renderHelp() {
+        synchronized (this.lock) {
+            Scanner scanner = null;
+            try {
+                scanner = new Scanner(getClass().getResourceAsStream("/cliHelp.txt"));
+            } catch (NullPointerException nulll) {
+                System.out.println("no help sorry");
+                return;
+            }
+
+            String line = "";
+            boolean print = true;
+            while (print) {
+                try {
+                    line = scanner.nextLine();
+                } catch (NoSuchElementException end) {
+                    print = false;
+                } finally {
+                    System.out.println(line);
+                }
+            }
+        }
+    }
 }

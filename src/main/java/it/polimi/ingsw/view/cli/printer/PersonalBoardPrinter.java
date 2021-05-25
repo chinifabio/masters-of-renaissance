@@ -14,7 +14,6 @@ import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevDecksPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,7 +82,7 @@ public class PersonalBoardPrinter {
         Random rd = new Random();
 
         leaderCards = objectMapper.readValue(
-                PersonalBoardPrinter.class.getResourceAsStream("/LeaderCards.json"),
+                PersonalBoardPrinter.class.getResourceAsStream("/json/LeaderCards.json"),
                 new TypeReference<List<LiteLeaderCard>>(){});
 
         names.add(leaderCards.get(rd.nextInt(16)));
@@ -99,7 +98,7 @@ public class PersonalBoardPrinter {
         ObjectMapper mapper = new ObjectMapper();
 
         cardFile = mapper.readValue(
-                PersonalBoardPrinter.class.getResourceAsStream("/DevCards.json"),
+                PersonalBoardPrinter.class.getResourceAsStream("/json/DevCards.json"),
                 new TypeReference<List<List<LiteDevCard>>>(){});
 
 

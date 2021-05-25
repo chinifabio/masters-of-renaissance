@@ -7,7 +7,6 @@ import it.polimi.ingsw.litemodel.litecards.LiteSoloActionToken;
 import it.polimi.ingsw.model.cards.SoloActionToken;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -70,7 +69,7 @@ public class SoloActionTokenPrinter {
         ObjectMapper objectMapper = new ObjectMapper();
 
         tokens = objectMapper.readValue(
-                SoloActionTokenPrinter.class.getResourceAsStream("/SoloActionTokens.json"),
+                SoloActionTokenPrinter.class.getResourceAsStream("/json/SoloActionTokens.json"),
                 new TypeReference<List<SoloActionToken>>(){});
         for (SoloActionToken token : tokens){
             printSoloActionToken(token.liteVersion());

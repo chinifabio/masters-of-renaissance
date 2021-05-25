@@ -7,7 +7,6 @@ import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.litemodel.litefaithtrack.LiteCell;
 import it.polimi.ingsw.litemodel.LiteModel;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -47,7 +46,7 @@ public class FaithTrackPrinter {
     public FaithTrackPrinter(/*LiteModel model*/) throws IOException {
         //this.model = model;
         this.track = new ObjectMapper().readValue(
-                getClass().getResourceAsStream("/FaithTrack.json"),
+                getClass().getResourceAsStream("/json/FaithTrack.json"),
                 new TypeReference<List<LiteCell>>(){});
 
         this.popeTilesPoints = new HashMap<>();

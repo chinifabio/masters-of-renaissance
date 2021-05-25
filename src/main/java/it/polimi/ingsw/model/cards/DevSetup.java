@@ -2,13 +2,11 @@ package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.App;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
 import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +28,7 @@ public class DevSetup implements MappableToLiteVersion {
      */
     public DevSetup() throws IOException {
         List<List<DevCard>> init = new ObjectMapper().readValue(
-                getClass().getResourceAsStream("/DevCards.json"),
+                getClass().getResourceAsStream("/json/DevCards.json"),
                 new TypeReference<List<List<DevCard>>>(){});
 
         this.devDeckGrid = new ArrayList<>();

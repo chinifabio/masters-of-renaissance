@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -59,7 +58,7 @@ public class DevDecksPrinter {
         Random rd = new Random();
 
         cardFile = objectMapper.readValue(
-                DevDecksPrinter.class.getResourceAsStream("/DevCards.json"),
+                DevDecksPrinter.class.getResourceAsStream("/json/DevCards.json"),
                 new TypeReference<List<List<LiteDevCard>>>(){});
 
 

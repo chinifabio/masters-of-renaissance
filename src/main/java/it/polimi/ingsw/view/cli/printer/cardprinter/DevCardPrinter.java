@@ -8,7 +8,6 @@ import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequisite;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +101,7 @@ public class DevCardPrinter {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             devCardsList = objectMapper.readValue(
-                    DevCardPrinter.class.getResourceAsStream("/DevCards.json"),
+                    DevCardPrinter.class.getResourceAsStream("/json/DevCards.json"),
                     new TypeReference<List<List<LiteDevCard>>>(){});
         }catch (IOException e) {
             e.printStackTrace();

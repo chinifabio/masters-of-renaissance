@@ -78,7 +78,7 @@ public class MarketTrayTest {
         try {
             tray = new ObjectMapper()
                     .readerFor(MarketTray.class)
-                    .readValue(getClass().getResourceAsStream("/MarketTray.json"));
+                    .readValue(getClass().getResourceAsStream("/json/MarketTray.json"));
         } catch (IOException e) {
             fail(e.getMessage());
         }
@@ -128,7 +128,7 @@ public class MarketTrayTest {
         try {
             tray = new ObjectMapper()
                     .readerFor(MarketTray.class)
-                    .readValue(getClass().getResourceAsStream("/MarketTray.json"));
+                    .readValue(getClass().getResourceAsStream("/json/MarketTray.json"));
         } catch (IOException e) {
             fail(e.getMessage());
         }
@@ -171,7 +171,7 @@ public class MarketTrayTest {
         try {
             tray = new ObjectMapper()
                     .readerFor(MarketTray.class)
-                    .readValue(getClass().getResourceAsStream("/MarketTray.json"));
+                    .readValue(getClass().getResourceAsStream("/json/MarketTray.json"));
         } catch (IOException e) {
             fail(e.getMessage());
         }
@@ -213,7 +213,7 @@ public class MarketTrayTest {
         try {
             tray = new ObjectMapper()
                     .readerFor(MarketTray.class)
-                    .readValue(getClass().getResourceAsStream("/MarketTray.json"));
+                    .readValue(getClass().getResourceAsStream("/json/MarketTray.json"));
         } catch (IOException e) {
             fail(e.getMessage());
         }

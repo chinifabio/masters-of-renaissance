@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.App;
 import it.polimi.ingsw.communication.packet.updates.DevSetupUpdater;
 import it.polimi.ingsw.communication.packet.updates.TrayUpdater;
 import it.polimi.ingsw.model.Dispatcher;
@@ -81,10 +80,10 @@ public abstract class Match implements PlayerToMatch {
 
         this.marketTray = new ObjectMapper()
                 .readerFor(MarketTray.class)
-                .readValue(getClass().getResourceAsStream("/MarketTray.json"));
+                .readValue(getClass().getResourceAsStream("/json/MarketTray.json"));
 
         List<LeaderCard> init = new ObjectMapper().readValue(
-                getClass().getResourceAsStream("/LeaderCards.json"),
+                getClass().getResourceAsStream("/json/LeaderCards.json"),
                 new TypeReference<List<LeaderCard>>(){}
         );
 

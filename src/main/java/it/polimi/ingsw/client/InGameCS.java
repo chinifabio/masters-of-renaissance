@@ -37,7 +37,7 @@ public class InGameCS extends ClientState {
 
             switch (Actions.fromString(data.get(0))) {
                 case HELP:
-                    //
+                    view.renderHelp();
                     break;
 
                 case RETURN_HOME:

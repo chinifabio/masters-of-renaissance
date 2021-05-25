@@ -8,10 +8,8 @@ import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.match.PlayerToMatch;
-import it.polimi.ingsw.model.player.Player;
 
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -54,7 +52,7 @@ public class FaithTrack implements MappableToLiteVersion {
     public FaithTrack(Dispatcher view, String nickname) throws IOException {
 
         this.track = new ObjectMapper().readValue(
-                    getClass().getResourceAsStream("/FaithTrack.json"),
+                    getClass().getResourceAsStream("/json/FaithTrack.json"),
                     new TypeReference<List<Cell>>(){});
 
         this.playerPosition = 0;

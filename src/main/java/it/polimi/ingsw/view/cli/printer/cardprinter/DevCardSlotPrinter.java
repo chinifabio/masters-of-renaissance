@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,7 @@ public class DevCardSlotPrinter {
         Random rd = new Random();
 
         cardFile = objectMapper.readValue(
-                DevCardSlotPrinter.class.getResourceAsStream("/DevCards.json"),
+                DevCardSlotPrinter.class.getResourceAsStream("/json/DevCards.json"),
                 new TypeReference<List<List<LiteDevCard>>>(){});
 
         dev.add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
