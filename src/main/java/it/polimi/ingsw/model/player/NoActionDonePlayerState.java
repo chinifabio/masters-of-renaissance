@@ -66,13 +66,15 @@ public class NoActionDonePlayerState extends PlayerState {
             // using market tray
             this.context.match.useMarketTray(rc, index);
 
-        } catch (EndGameException e) {
+        }
 
+        catch (EndGameException e) {
             this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
             this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
-            return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
+            return new Packet(HeaderTypes.END_GAME, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
+        }
 
-        } catch (Exception e) {
+        catch (Exception e) {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
 
@@ -110,7 +112,15 @@ public class NoActionDonePlayerState extends PlayerState {
         boolean res;
         try {
             res = this.context.match.buyDevCard(row, col);
-        } catch (Exception e) {
+        }
+
+        catch (EndGameException e) {
+            this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
+            this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
+            return new Packet(HeaderTypes.END_GAME, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
+        }
+
+        catch (Exception e) {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
 
@@ -131,13 +141,15 @@ public class NoActionDonePlayerState extends PlayerState {
     public Packet activateProductions() {
         try {
             this.context.personalBoard.activateProductions();
-        } catch (EndGameException e) {
+        }
 
+        catch (EndGameException e) {
             this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
             this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
-            return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
+            return new Packet(HeaderTypes.END_GAME, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
+        }
 
-        } catch (Exception e) {
+        catch (Exception e) {
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
 
@@ -228,11 +240,9 @@ public class NoActionDonePlayerState extends PlayerState {
         try {
             this.context.personalBoard.moveFaithMarker(1, this.context.match);
         } catch (EndGameException e) {
-
             this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
             this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
-            return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
-
+            return new Packet(HeaderTypes.END_GAME, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
         }
 
         return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You discarded " + leaderId);
@@ -244,10 +254,7 @@ public class NoActionDonePlayerState extends PlayerState {
      */
     @Override
     public Packet endThisTurn() {
-        this.context.personalBoard.flushBufferDepot(this.context.match);
-        this.context.setState(new NotHisTurnPlayerState(this.context));
-        this.context.match.turnDone();
-        return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "Your turn is ended");
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "Your can't end your turn until you do the main action!");
     }
 
     /**

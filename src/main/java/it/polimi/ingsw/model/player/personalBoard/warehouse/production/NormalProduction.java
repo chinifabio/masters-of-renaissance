@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse.production;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
@@ -91,6 +92,7 @@ public class NormalProduction extends Production {
      * It is legal because in the warehouse we store only Production and this is a NormalProduction method
      * @return copy of the output
      */
+    @JsonGetter("output")
     public List<Resource> viewOutput() {
         List<Resource> clone = new ArrayList<>(this.output.size());
         for (Resource item : this.output) if (item.amount() > 0) clone.add(item);
@@ -101,8 +103,11 @@ public class NormalProduction extends Production {
      * This method return the list of the Resources added by the Player
      * @return the list of resources
      */
+    @JsonGetter("resourceAdded")
     public List<Resource> viewResourcesAdded(){
-        return addedResource;
+        List<Resource> clone = new ArrayList<>(this.addedResource.size());
+        for (Resource item : this.addedResource) if (item.amount() > 0) clone.add(item);
+        return clone;
     }
 
     /**

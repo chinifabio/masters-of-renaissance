@@ -134,14 +134,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     }
 
     /**
-     * This method start the end game logic. The player state is set to counting points so
-     * you can call only the countPoint method on a player with this state
-     */
-    public void setCountingPoints() {
-        this.playerState = new CountingPointsPlayerState(this);
-    }
-
-    /**
      * Indicates whether some other object is "equal to" this one.
      *
      * @param obj the reference object with which to compare.
@@ -179,12 +171,8 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param prod is the production to add
      */
     @Override
-    public void addExtraProduction(Production prod) {
-        try {
-            this.personalBoard.addExtraProduction(prod);
-        } catch (ExtraProductionException e) {
-            // todo exception to player handler
-        }
+    public void addExtraProduction(Production prod) throws ExtraProductionException {
+        this.personalBoard.addExtraProduction(prod);
     }
 
     /**
@@ -192,12 +180,8 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param res new depot type to be added to Warehouse depots
      */
     @Override
-    public void addDepot(ResourceType res) {
-        try {
-            this.personalBoard.addDepot(res);
-        } catch (ExtraDepotsException e) {
-            // todo exception to player handler
-        }
+    public void addDepot(ResourceType res) throws ExtraDepotsException {
+        this.personalBoard.addDepot(res);
     }
 
     /**
@@ -508,4 +492,10 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     //for testing
     public LeaderCard test_getLeader(int x){ return this.personalBoard.test_getLeader(x); }
+
+    // for testing
+    public void test_endTurnNoMain() {
+        this.playerState = new MainActionDonePlayerState(this);
+        this.endThisTurn();
+    }
 }

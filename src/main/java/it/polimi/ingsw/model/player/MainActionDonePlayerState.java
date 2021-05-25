@@ -92,12 +92,12 @@ public class MainActionDonePlayerState extends PlayerState {
 
         try {
             this.context.personalBoard.moveFaithMarker(1, this.context.match);
-        } catch (EndGameException e) {
+        }
 
+        catch (EndGameException e) {
             this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
             this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
-            return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
-
+            return new Packet(HeaderTypes.END_GAME, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
         }
 
         return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You discarded " + leaderId);
@@ -112,7 +112,7 @@ public class MainActionDonePlayerState extends PlayerState {
         this.context.personalBoard.flushBufferDepot(this.context.match);
         this.context.setState(new NotHisTurnPlayerState(this.context));
         this.context.match.turnDone();
-        return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "Your turn is ended");
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Your turn is ended");
     }
 
     /**

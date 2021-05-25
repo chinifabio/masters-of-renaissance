@@ -1,6 +1,8 @@
 package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.TextColors;
+import it.polimi.ingsw.client.Actions;
+import it.polimi.ingsw.client.InputHandler;
 import it.polimi.ingsw.communication.ServerReply;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
@@ -9,12 +11,13 @@ import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.cli.printer.FaithTrackPrinter;
 import it.polimi.ingsw.view.cli.printer.MarketTrayPrinter;
 import it.polimi.ingsw.view.cli.printer.PersonalBoardPrinter;
+import it.polimi.ingsw.view.cli.printer.WarehousePrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
+import it.polimi.ingsw.view.cli.printer.cardprinter.LeaderCardPrinter;
+import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
 
 import java.io.IOException;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class CLI implements View {
 
@@ -39,6 +42,7 @@ public class CLI implements View {
 
     private LiteModel model;
     private final FaithTrackPrinter faithTrackPrinter;
+    private List<String> data;
 
     public CLI() throws IOException {
         faithTrackPrinter = new FaithTrackPrinter();
@@ -87,10 +91,14 @@ public class CLI implements View {
      * @return the input string submitted by the player
      */
     @Override
-    public String askToPlayer(String request) {
-        System.out.println(request);
-        System.out.print("> ");
-        return new Scanner(System.in).nextLine();
+    public List<String> pollData(String request) throws InterruptedException {
+        synchronized (lock) {
+            System.out.println(request);
+            lock.notifyAll();
+            lock.wait();
+        }
+
+        return data;
     }
 
     /**
@@ -100,7 +108,9 @@ public class CLI implements View {
      */
     @Override
     public void notifyPlayer(String message) {
-        System.out.println(message);
+        synchronized (this.lock) {
+            System.out.println(message);
+        }
     }
 
     /**
@@ -124,12 +134,72 @@ public class CLI implements View {
     }
 
     /**
-     * return the locking object on which synchronize to print
-     *
-     * @return the lock object
+     * Render the homepage of the cli
      */
     @Override
-    public Object obtainLock() {
-        return lock;
+    public void renderHomePage() {
+        PersonalBoardPrinter.printPersonalBoard(model, model.getMe(), model.getLeader(model.getMe()), model.getDevelop(model.getMe()));
+    }
+
+    /**
+     * read data from command line when needed
+     */
+    @Override
+    public void run() {
+        while (true) {
+            synchronized (lock) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    System.out.println("miseriaccia harry");
+                    return;
+                }
+
+                System.out.print("> ");
+                data = Arrays.asList(new Scanner(System.in).nextLine().split(" "));
+
+                lock.notifyAll();
+            }
+        }
+    }
+
+    /**
+     * Render a view of the leader cards of the player
+     */
+    @Override
+    public void renderLeaderCards() {
+        ShowLeaderCards.printLeaderCardsPlayer(model.getLeader(model.getMe()));
+    }
+
+    /**
+     * show an error to the player
+     *
+     * @param errorMessage the error message
+     */
+    @Override
+    public void notifyPlayerError(String errorMessage) {
+        synchronized (this.lock) {
+            System.out.println(TextColors.colorText(TextColors.RED_BRIGHT, errorMessage));
+        }
+    }
+
+    /**
+     * notify a warning message to the player
+     *
+     * @param s the waring message
+     */
+    @Override
+    public void notifyPlayerWarning(String s) {
+        synchronized (this.lock) {
+            System.out.println(TextColors.colorText(TextColors.YELLOW_BRIGHT, s));
+        }
+    }
+
+    /**
+     * Render a view of the warehouse
+     */
+    @Override
+    public void renderWarehouse(String nickname) {
+        WarehousePrinter.printWarehouse(model, nickname);
     }
 }

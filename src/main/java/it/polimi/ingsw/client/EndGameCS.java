@@ -2,6 +2,7 @@ package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.view.View;
 
 import java.util.Scanner;
 
@@ -12,7 +13,7 @@ public class EndGameCS extends ClientState {
     }
 
     @Override
-    protected Packet doStuff(LiteModel model) {
+    protected Packet doStuff(LiteModel model, View view) {
 
         System.out.println("The game has finished! The final leaderboard:");
         //printa la leaderboard

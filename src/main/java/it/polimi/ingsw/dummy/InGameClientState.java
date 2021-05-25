@@ -5,7 +5,7 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.*;
 import it.polimi.ingsw.litemodel.LiteModel;
-import it.polimi.ingsw.litemodel.liteplayer.Actions;
+import it.polimi.ingsw.client.Actions;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -25,7 +25,7 @@ public class InGameClientState extends ClientState {
         super();
         this.nextState.put(HeaderTypes.OK, this);
         this.nextState.put(HeaderTypes.INVALID, this);
-        this.nextState.put(HeaderTypes.END_TURN, this);
+        //this.nextState.put(HeaderTypes.END_TURN, this);
         this.nextState.put(HeaderTypes.END_GAME, new ErrorClientState());
     }
 

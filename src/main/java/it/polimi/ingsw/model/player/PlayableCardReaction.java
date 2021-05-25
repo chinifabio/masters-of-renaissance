@@ -1,7 +1,9 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.cards.effects.CardReaction;
+import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.exceptions.warehouse.ExtraDepotsException;
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
@@ -23,13 +25,13 @@ public interface PlayableCardReaction extends CardReaction {
     /**
      * This method adds an extra Production to the list of available productions
      */
-    void addExtraProduction(Production prod);
+    void addExtraProduction(Production prod) throws ExtraProductionException;
 
     /**
      * This method adds an extra Depot in the Warehouse
      * @param res new depot type to be added to Warehouse depots
      */
-    void addDepot(ResourceType res);
+    void addDepot(ResourceType res) throws ExtraDepotsException;
 
     /**
      * This method gives a discount to the player when buying DevCards

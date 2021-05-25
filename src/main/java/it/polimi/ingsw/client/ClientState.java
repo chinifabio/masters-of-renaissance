@@ -5,6 +5,7 @@ import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.view.View;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -16,29 +17,24 @@ public abstract class ClientState {
      */
     protected final Map<HeaderTypes, ClientState> nextState = new EnumMap<>(HeaderTypes.class);
 
-    protected final InputHandler inputHandler = new InputHandler(false);    //flase o true in base a cosa voglio fare
 
     /**
      * Do some stuff that generate a packet to send to the server
      * @return packet to send to the server
      */
-    protected abstract Packet doStuff(LiteModel model);
+    protected abstract Packet doStuff(LiteModel model, View view) throws InterruptedException;
 
-    public void start(Client context){
-        Packet temp = this.doStuff(context.liteModel);
-        if(!temp.header.equals(HeaderTypes.INVALID)){
-            context.socket.send(temp);
-            Packet response = context.socket.pollPacketFrom(ChannelTypes.PLAYER_ACTIONS);
-            printServerResponse(response.body);
+    public void start(Client context, View view) throws InterruptedException {
+        Packet temp = this.doStuff(context.liteModel, view);
 
-            context.setState(this.nextState.containsKey(response.header) ?
-                    this.nextState.get(response.header):
-                    new ErrorCS()
-            );
-        }
-        else if(temp.body.equals("Invalid")){
-            System.out.println(TextColors.colorText(TextColors.RED_BRIGHT,"You can't do that!"));
-        }
+        context.socket.send(temp);
+        Packet response = context.socket.pollPacketFrom(ChannelTypes.PLAYER_ACTIONS);
+        printServerResponse(response.body);
+
+        context.setState(this.nextState.containsKey(response.header) ?
+                this.nextState.get(response.header):
+                new ErrorCS()
+        );
     }
 
     /**
@@ -46,6 +42,6 @@ public abstract class ClientState {
      * @param r the server response
      */
     protected void printServerResponse(String r) {
-        System.out.println(TextColors.colorText(TextColors.BLUE, "[server] ") + r);
+        System.out.println(TextColors.colorText(TextColors.BLUE, r));
     }
 }

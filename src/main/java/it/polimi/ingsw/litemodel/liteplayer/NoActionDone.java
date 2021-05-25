@@ -1,9 +1,9 @@
 package it.polimi.ingsw.litemodel.liteplayer;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import it.polimi.ingsw.client.Actions;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class NoActionDone extends LiteState {
 

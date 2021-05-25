@@ -73,20 +73,20 @@ public class MultiplayerMatchTest {
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
         Packet p = order.get(0).endThisTurn();
         System.out.println(p.body);
-        assertEquals(HeaderTypes.END_TURN, p.header);
+        assertEquals(HeaderTypes.OK, p.header);
 
         assertDoesNotThrow(()-> order.get(1).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(() -> assertEquals(order.get(1).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
-        assertEquals(HeaderTypes.END_TURN, order.get(1).endThisTurn().header);
+        assertEquals(HeaderTypes.OK, order.get(1).endThisTurn().header);
 
         assertDoesNotThrow(()-> order.get(2).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> order.get(2).test_discardLeader());
         assertDoesNotThrow(()-> order.get(2).test_discardLeader());
         assertEquals(1, order.get(2).test_getPB().getFT_forTest().getPlayerPosition());
         assertDoesNotThrow(() -> assertEquals(order.get(2).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
-        assertEquals(HeaderTypes.END_TURN, order.get(2).endThisTurn().header);
+        assertEquals(HeaderTypes.OK, order.get(2).endThisTurn().header);
 
         assertDoesNotThrow(()-> assertEquals(HeaderTypes.OK, order.get(3).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN).header));
         assertDoesNotThrow(()-> assertEquals(HeaderTypes.INVALID, order.get(3).chooseResource(DepotSlot.BOTTOM, ResourceType.STONE).header));
@@ -96,7 +96,7 @@ public class MultiplayerMatchTest {
         assertEquals(1, order.get(3).test_getPB().getFT_forTest().getPlayerPosition());
         assertDoesNotThrow(() -> assertEquals(order.get(3).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         assertDoesNotThrow(() -> assertEquals(order.get(3).test_getPB().getDepots().get(DepotSlot.MIDDLE).viewResources().get(0), ResourceBuilder.buildStone()));
-        assertEquals(HeaderTypes.END_TURN, order.get(3).endThisTurn().header);
+        assertEquals(HeaderTypes.OK, order.get(3).endThisTurn().header);
 
         // creating a list of the players in order to have player(0) = inkwell player
         Collections.rotate(order, -order.indexOf(multiplayer.currentPlayer()));
@@ -104,18 +104,25 @@ public class MultiplayerMatchTest {
 
     @RepeatedTest(5)
     public void endMatchByEndFaithTrack() {
-        for(int i = 0; i < 24; i++ ) {
+
+        int i = 0;
+        while (true) {
             try {
                 order.get(0).obtainResource(DepotSlot.STRONGBOX, MarbleBuilder.buildRed().toResource());
             } catch (EndGameException e) {
                 multiplayer.startEndGameLogic();
+                break;
             }
             catch (Exception e) {fail();}
+            finally {
+                i++;
+            }
         }
+        assertEquals(24, i);
 
-        assertEquals(HeaderTypes.END_TURN, order.get(1).endThisTurn().header);
-        assertEquals(HeaderTypes.END_TURN, order.get(2).endThisTurn().header);
-        assertEquals(HeaderTypes.END_TURN, order.get(3).endThisTurn().header);
+        order.get(1).test_endTurnNoMain();
+        order.get(2).test_endTurnNoMain();
+        order.get(3).test_endTurnNoMain();
 
         assertFalse(multiplayer.isGameOnAir());
     }
@@ -130,7 +137,7 @@ public class MultiplayerMatchTest {
         for(int i = 0; i < this.multiplayer.playerInGame(); i++){
             assertEquals(order.get(i).useMarketTray(RowCol.COL, 2).header, HeaderTypes.OK);
             assertEquals(order.get(i).useMarketTray(RowCol.COL, 2).header, HeaderTypes.INVALID);
-            assertEquals(order.get(i).endThisTurn().header, HeaderTypes.END_TURN);
+            assertEquals(order.get(i).endThisTurn().header, HeaderTypes.OK);
         }
     }
 }

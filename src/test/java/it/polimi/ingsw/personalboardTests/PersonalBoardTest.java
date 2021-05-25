@@ -75,13 +75,13 @@ public class PersonalBoardTest {
 
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
-        assertEquals(HeaderTypes.END_TURN, order.get(0).endThisTurn().header);
+        assertEquals(HeaderTypes.OK, order.get(0).endThisTurn().header);
 
         assertEquals(HeaderTypes.OK, order.get(1).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN).header);
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(() -> assertEquals(order.get(1).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
-        assertEquals(HeaderTypes.END_TURN, order.get(1).endThisTurn().header);
+        assertEquals(HeaderTypes.OK, order.get(1).endThisTurn().header);
     }
 
     /**
@@ -563,7 +563,7 @@ public class PersonalBoardTest {
     }
 
     @Test
-    public void activateLeaderAllRequisite() throws IllegalTypeInProduction, WrongDepotException, AlreadyInDeckException, MissingCardException, LootTypeException {
+    public void activateLeaderAllRequisite() throws IllegalTypeInProduction, WrongDepotException, AlreadyInDeckException, MissingCardException {
         String ID1="000", ID2="111";
         List<Resource> sample = new ArrayList<>();
         Warehouse warehouse = new Warehouse(this.game.currentPlayer());

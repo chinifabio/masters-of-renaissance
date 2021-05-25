@@ -5,6 +5,9 @@ import it.polimi.ingsw.communication.Disconnectable;
 import it.polimi.ingsw.communication.VirtualSocket;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.LiteModelUpdater;
+import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.cli.CLI;
+import it.polimi.ingsw.view.cli.printer.NamePrinter;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -27,20 +30,25 @@ public class Client implements Runnable, Disconnectable {
 
     private boolean connected;
 
-    public Client() throws IOException {
-        this.socket = new VirtualSocket(new Socket(address, port));
-        this.executor.submit(this.socket);
+    private final View view;
+
+    public Client(View view) throws IOException {
         this.clientState = new InitialCS();
         this.connected = true;
 
+        this.socket = new VirtualSocket(new Socket(address, port));
+        this.view = view; this.view.receiveModel(this.liteModel);
         this.executor.submit(new LiteModelUpdater(this.socket, this.liteModel));
-        //SecureConnection.pinger(this);
+
         this.socket.pinger(this);
+        this.executor.submit(this.view);
+        this.executor.submit(this.socket);
     }
 
     public static void main(String[] args) {
         try {
-            Thread client = new Thread(new Client());
+            CLI cli  = new CLI();
+            Thread client = new Thread(new Client(cli));
             client.setDaemon(true);
             client.start();
             client.join();
@@ -57,11 +65,20 @@ public class Client implements Runnable, Disconnectable {
 
     @Override
     public void run() {
+        NamePrinter.titleName(); // todo change for the gui
+        view.notifyPlayerWarning("\nAt the start of the game, you have to discard two leader cards and, based on your position in the sequence, you can select up to 2 initial resources.\nAfter that, end your turn. You can type \"help\" to see again the possible moves.\n");
+
         while(connected){
-            this.clientState.start(this);
+            try {
+                this.clientState.start(this, this.view);
+            } catch (InterruptedException e) {
+                System.out.println("miseriaccia harry... thread fail");
+                return;
+            }
         }
+
         this.executor.shutdownNow();
-        System.out.println(TextColors.colorText(TextColors.WHITE, "Disconnection"));
+        System.out.println(TextColors.colorText(TextColors.WHITE, "Quitting..."));
     }
 
     @Override

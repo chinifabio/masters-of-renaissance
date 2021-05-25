@@ -1,22 +1,15 @@
 package it.polimi.ingsw.client;
 
-import java.util.Scanner;
+import it.polimi.ingsw.view.View;
 
-public class InputHandler {
-    private boolean gui = false;
+import java.util.LinkedList;
 
-    public InputHandler(boolean gui) {
-        this.gui = gui;
-    }
+public abstract class InputHandler implements Runnable {
 
-    public String getNick(){
-        if(gui) {
-            String nick = "pippo";
-            //GUI
-            return nick;
-        }
-        else return new Scanner(System.in).nextLine();
-    }
+    private final LinkedList<String> data = new LinkedList<>();
 
+    public final Object dataLock = new Object();
+
+    //public final View view;
 
 }

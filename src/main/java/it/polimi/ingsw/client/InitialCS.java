@@ -1,10 +1,10 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.cli.printer.NamePrinter;
 
 public class InitialCS extends ClientState{
@@ -17,15 +17,20 @@ public class InitialCS extends ClientState{
     }
 
     @Override
-    protected Packet doStuff(LiteModel model) {
-        //metodo della gui/cli per settare il nick
-        NamePrinter.titleName();
-        System.out.print(TextColors.colorText(TextColors.YELLOW, "Choose your nickname:\n>"));
+    protected Packet doStuff(LiteModel model, View view) throws InterruptedException {
+        boolean illegal = true;
+        String nick = "";
 
-        String nick = inputHandler.getNick();
+        while (illegal) {
+            try {
+                nick = view.pollData("Choose your nickname:").get(0);
+            } catch (IndexOutOfBoundsException out) {
+                view.notifyPlayerError("You have to insert a nickname");
+            } finally {
+                illegal = false;
+            }
+        }
 
-        //Scanner scanner = new Scanner(System.in);
-        //String nick = scanner.nextLine();
         model.setMyNickname(nick);
         return new Packet(HeaderTypes.HELLO, ChannelTypes.PLAYER_ACTIONS, nick);
     }

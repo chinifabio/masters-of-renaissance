@@ -64,13 +64,13 @@ public class SingleplayerMatchTest {
         //assertEquals(singleplayer.currentPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.OK);
         //assertEquals(singleplayer.currentPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.INVALID);
 
-        singleplayer.currentPlayer().endThisTurn();
+        singleplayer.currentPlayer().test_endTurnNoMain();
         this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).obtainSoloTokens().getDiscarded().getCardID());
 
         //assertEquals(singleplayer.currentPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.OK);
         //assertEquals(singleplayer.currentPlayer().useMarketTray(RowCol.ROW, 0).header, HeaderTypes.INVALID);
 
-        singleplayer.currentPlayer().endThisTurn();
+        singleplayer.currentPlayer().test_endTurnNoMain();
         this.testLorenzoAction(((SingleplayerMatch) this.singleplayer).obtainSoloTokens().getDiscarded().getCardID());
     }
 
@@ -97,7 +97,8 @@ public class SingleplayerMatchTest {
     public void endGameByLorenzo() {
         assertDoesNotThrow(()-> {
             while (singleplayer.isGameOnAir()) {
-                singleplayer.currentPlayer().endThisTurn();
+                assertEquals(HeaderTypes.OK, singleplayer.currentPlayer().useMarketTray(RowCol.ROW, 1).header);
+                singleplayer.currentPlayer().test_endTurnNoMain();
             }
         });
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteAddDepotEffect;
 import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteAddDiscountEffect;
 import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
+import it.polimi.ingsw.model.exceptions.warehouse.ExtraDepotsException;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder;
 import it.polimi.ingsw.model.resource.*;
@@ -36,7 +37,11 @@ public class AddDepotEffect extends Effect{
      */
     @Override
     public void use(CardReaction p) {
-        ((PlayableCardReaction) p).addDepot(this.res);
+        try {
+            ((PlayableCardReaction) p).addDepot(this.res);
+        } catch (ExtraDepotsException e) {
+            // todo delete this exception so you can add infinite depot
+        }
     }
 
     /**

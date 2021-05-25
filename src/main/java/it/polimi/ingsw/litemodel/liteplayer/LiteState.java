@@ -3,6 +3,7 @@ package it.polimi.ingsw.litemodel.liteplayer;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import it.polimi.ingsw.client.Actions;
 
 import java.util.ArrayList;
 import java.util.List;

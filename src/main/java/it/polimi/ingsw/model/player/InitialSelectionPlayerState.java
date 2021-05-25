@@ -120,7 +120,7 @@ public class InitialSelectionPlayerState extends PlayerState {
 
             this.context.setState(new PendingMatchStartPlayerState(this.context));
             this.context.match.initialSelectionDone();
-            return new Packet(HeaderTypes.END_TURN, ChannelTypes.PLAYER_ACTIONS, "Initial phase done!");
+            return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Initial phase done!");
 
         } else
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "<.(*_*).> You have to complete your job: discarded leader " + discarded + "/" + toDiscard+"; chosen resources " + chosen + "/" + toChoose);

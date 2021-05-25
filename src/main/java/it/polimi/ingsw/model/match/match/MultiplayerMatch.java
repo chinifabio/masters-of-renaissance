@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.match.match;
 
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
+import it.polimi.ingsw.model.player.CountingPointsPlayerState;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.util.Pair;
@@ -110,6 +111,7 @@ public class MultiplayerMatch extends Match{
                     try {
                         p.moveFaithMarker(amount);
                     } catch (EndGameException e) {
+                        p.setState(new CountingPointsPlayerState(p));
                         startEndGameLogic();
                     }
                 });
@@ -124,13 +126,20 @@ public class MultiplayerMatch extends Match{
         updateTray();
 
         // if the cur player is the right player of inkwell player the match ends
-        if (endGameLogic && curPlayer == (connectedPlayers.size() - 1)) {
-            gameOnAir = false;
-            connectedPlayers.forEach(Player::setCountingPoints);
+        if (endGameLogic) {
+            if (curPlayer == (gameSize - 1)) {
+                gameOnAir = false;
+                // todo launch endgame in model and server
+                return;
+            }
+
+            curPlayer = (curPlayer + 1) % connectedPlayers.size();
+            currentPlayer().setState(new CountingPointsPlayerState(currentPlayer()));
+            return;
         }
 
         curPlayer = (curPlayer + 1) % connectedPlayers.size();
-        connectedPlayers.get(curPlayer).startHisTurn();
+        currentPlayer().startHisTurn();
     }
 
     /**
@@ -150,7 +159,7 @@ public class MultiplayerMatch extends Match{
     @Override
     public void startEndGameLogic() {
         endGameLogic = true;
-        connectedPlayers.get(curPlayer).endThisTurn();
+        turnDone();
     }
 
     /**

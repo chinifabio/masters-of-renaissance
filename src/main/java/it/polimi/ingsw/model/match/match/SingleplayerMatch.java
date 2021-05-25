@@ -201,7 +201,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
         this.marketTray.unPaint();
         updateTray();
-        player.startHisTurn();
+        if (gameOnAir) player.startHisTurn();
     }
 
     /**

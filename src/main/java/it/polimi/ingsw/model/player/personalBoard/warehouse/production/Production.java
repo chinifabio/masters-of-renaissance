@@ -25,6 +25,7 @@ public abstract class Production implements MappableToLiteVersion {
     /**
      * this list contains all the input resource not allowed in the production
      */
+    @JsonIgnore
     protected List<ResourceType> illegalType;
 
     /**
@@ -95,7 +96,7 @@ public abstract class Production implements MappableToLiteVersion {
      * This method returns the List of Resources requests
      */
     public List<Resource> getRequired() {
-        List<Resource> clone = new ArrayList<>(this.required.size());
+        List<Resource> clone = new ArrayList<>();
         for(Resource item : this.required) if (item.amount() > 0) clone.add(item);
         return clone;
     }
@@ -105,7 +106,7 @@ public abstract class Production implements MappableToLiteVersion {
      */
     public List<Resource> getOutput() {
         if(this.activated) {
-            List<Resource> clone = new ArrayList<>(this.output.size());
+            List<Resource> clone = new ArrayList<>();
             for (Resource item : this.output) if (item.amount() > 0) clone.add(item);
             return clone;
         } else return null;

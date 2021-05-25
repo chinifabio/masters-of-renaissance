@@ -12,7 +12,7 @@ public class CountingPointsPlayerState extends PlayerState {
      * the player holdings are passed to not share it out of the player states and do information hiding
      * @param context the context
      */
-    protected CountingPointsPlayerState(Player context) {
+    public CountingPointsPlayerState(Player context) {
         super(context, "match ended");
     }
 
@@ -33,6 +33,14 @@ public class CountingPointsPlayerState extends PlayerState {
     @Override
     public PlayerState reconnectionState() {
         return this;
+    }
+
+    /**
+     * Receive the input to start the turn
+     */
+    @Override
+    public void starTurn() {
+        this.context.match.turnDone();
     }
 
     // --------------------- PLAYER ACTION IMPLEMENTATIONS ---------------------------

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteAddProductionEffect;
 import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
+import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 
@@ -33,7 +34,11 @@ public class AddExtraProductionEffect extends Effect{
      */
     @Override
     public void use(CardReaction p) {
-        ((PlayableCardReaction) p).addExtraProduction(this.prod);
+        try {
+            ((PlayableCardReaction) p).addExtraProduction(this.prod);
+        } catch (ExtraProductionException e) {
+            // todo delete this exception so you can add infinite extra production
+        }
     }
 
     /**

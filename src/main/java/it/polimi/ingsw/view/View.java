@@ -1,12 +1,16 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.client.Actions;
+import it.polimi.ingsw.client.InputHandler;
 import it.polimi.ingsw.communication.ServerReply;
 import it.polimi.ingsw.litemodel.LiteModel;
+
+import java.util.List;
 
 /**
  * This interface is the View
  */
-public interface View {
+public interface View extends Runnable{
 
     /**
      * This method prints the current status of the FaithTrack
@@ -30,11 +34,16 @@ public interface View {
     void renderDevSetup();
 
     /**
+     * Render the homepage of the cli
+     */
+    void renderHomePage();
+
+    /**
      * Ask to the player something
      * @param request the message to show
      * @return the input string submitted by the player
      */
-    String askToPlayer(String request);
+    List<String> pollData(String request) throws InterruptedException;
 
     /**
      * Tell something to the player
@@ -55,9 +64,24 @@ public interface View {
     void receiveModel(LiteModel model);
 
     /**
-     * return the locking object on which synchronize to print
-     * @return the lock object
+     * Render a view of the leader cards of the player
      */
-    Object obtainLock();
+    void renderLeaderCards();
 
+    /**
+     * show an error to the player
+     * @param errorMessage the error message
+     */
+    void notifyPlayerError(String errorMessage);
+
+    /**
+     * Render a view of the warehouse
+     */
+    void renderWarehouse(String nickname);
+
+    /**
+     * notify a warning message to the player
+     * @param s the waring message
+     */
+    void notifyPlayerWarning(String s);
 }

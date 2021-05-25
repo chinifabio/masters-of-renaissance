@@ -15,7 +15,7 @@ public class ShowLeaderCards {
     private static final int HEIGHT = 11; //rows.
     private static final int WIDTH = 60; //cols.
 
-    public static void printLeaderCardsPlayer(List<LiteLeaderCard> toShow) throws IOException {
+    public static void printLeaderCardsPlayer(List<LiteLeaderCard> toShow) {
         String[][] leaderCards = new String[HEIGHT][WIDTH];
         for (int i = 0; i< HEIGHT-1; i++){
             for (int j = 0; j<WIDTH-1; j++){
