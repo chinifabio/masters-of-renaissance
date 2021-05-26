@@ -212,7 +212,7 @@ public class CLI implements View {
             Scanner scanner = null;
             try {
                 scanner = new Scanner(getClass().getResourceAsStream("/cliHelp.txt"));
-            } catch (NullPointerException nulll) {
+            } catch (NullPointerException e) {
                 System.out.println("no help sorry");
                 return;
             }

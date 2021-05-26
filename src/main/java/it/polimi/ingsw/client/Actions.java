@@ -19,7 +19,7 @@ public enum Actions {
     VIEW_PERSONAL_BOARD("personalboard"),
     VIEW_LEADER_CARD("leadercards"),
     VIEW_PRODUCTIONS("productions"),
-    VIEW_WAREHOUSE("warehosue"),
+    VIEW_WAREHOUSE("warehouse"),
     VIEW_PLAYERS("players"),
     VIEW_MARBLE_CONVERSION("conversions"),
     VIEW_DISCOUNTS("discounts"),
