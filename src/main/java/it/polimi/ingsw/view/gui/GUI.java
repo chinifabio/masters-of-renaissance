@@ -3,10 +3,18 @@ package it.polimi.ingsw.view.gui;
 import it.polimi.ingsw.communication.ServerReply;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.gui.panels.*;
 
+import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GUI implements View {
+
+
+    private final JPanel mainPanel = new JPanel();
+    private final ArrayList<JPanel> panels = new ArrayList<>();
+
     /**
      * This method prints the current status of the FaithTrack
      */
@@ -57,6 +65,7 @@ public class GUI implements View {
      */
     @Override
     public List<String> pollData(String request) throws InterruptedException {
+        switchPanels(mainPanel, panels.get(0));
         return null;
     }
 
@@ -150,5 +159,33 @@ public class GUI implements View {
     @Override
     public void run() {
 
+    }
+
+    public GUI() {
+
+        JFrame gameWindow = new JFrame();
+
+        panels.add(new LogoPanel());
+        panels.add(new FaithTrackPanel());
+        panels.add(new CardsGridPanel());
+        panels.add(new MarketTrayPanel());
+        panels.add(new WarehousePanel());
+        panels.add(new PersonalBoardPanel());
+
+        for (JPanel panel : panels){
+            mainPanel.add(panel);
+        }
+
+        gameWindow.add(mainPanel);
+        gameWindow.setSize(1920-380, 1080-230);
+        gameWindow.setLayout(null);
+        gameWindow.setVisible(true);
+    }
+
+    public static void switchPanels(JPanel mainPanel , JPanel toSee){
+        mainPanel.removeAll();
+        mainPanel.add(toSee);
+        mainPanel.repaint();
+        mainPanel.revalidate();
     }
 }
