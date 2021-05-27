@@ -155,7 +155,6 @@ public class CLI implements View {
                     return;
                 }
 
-                System.out.print("> ");
                 data = Arrays.asList(new Scanner(System.in).nextLine().split(" "));
 
                 lock.notifyAll();
@@ -209,7 +208,7 @@ public class CLI implements View {
     @Override
     public void renderHelp() {
         synchronized (this.lock) {
-            Scanner scanner = null;
+            Scanner scanner;
             try {
                 scanner = new Scanner(getClass().getResourceAsStream("/cliHelp.txt"));
             } catch (NullPointerException e) {
@@ -217,15 +216,15 @@ public class CLI implements View {
                 return;
             }
 
-            String line = "";
+            String line;
             boolean print = true;
+
             while (print) {
                 try {
                     line = scanner.nextLine();
+                    System.out.println(line);
                 } catch (NoSuchElementException end) {
                     print = false;
-                } finally {
-                    System.out.println(line);
                 }
             }
         }

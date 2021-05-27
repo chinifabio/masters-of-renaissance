@@ -1,5 +1,4 @@
 package it.polimi.ingsw.client;
-import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
@@ -19,8 +18,6 @@ import it.polimi.ingsw.view.View;
 import java.util.*;
 
 public class InGameCS extends ClientState {
-
-    private boolean introduction = false;
 
     public InGameCS() {
         super();
@@ -92,32 +89,32 @@ public class InGameCS extends ClientState {
                 case MOVE_IN_PRODUCTION:
                     try {
                         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveInProductionCommand(
-                                DepotSlot.valueOf(data.get(1).toUpperCase()),
-                                ProductionID.valueOf(data.get(2).toUpperCase()),
-                                ResourceBuilder.buildFromType(ResourceType.valueOf(data.get(3).toUpperCase()), Integer.parseInt(data.get(4)))
+                                DepotSlot.valueOf(data.get(i++).toUpperCase()),
+                                ProductionID.valueOf(data.get(i++).toUpperCase()),
+                                ResourceBuilder.buildFromType(ResourceType.valueOf(data.get(i++).toUpperCase()), Integer.parseInt(data.get(i)))
                         ).jsonfy());
                     } catch (NumberFormatException number) {
-                        view.notifyPlayerError(data.get(4) + " is not a number");
+                        view.notifyPlayerError(data.get(4) + " Is not a number");
                     } catch (IllegalArgumentException arg) {
-                        view.notifyPlayerError("some parameter in the command is not correct");
+                        view.notifyPlayerError(data.get(i) + " Doesn't exist. Type help for accepted values");
                     } catch (IndexOutOfBoundsException out) {
-                        view.notifyPlayerError("you missed some parameter");
+                        view.notifyPlayerError("You missed some parameter");
                     }
                     break;
 
                 case MOVE_BETWEEN_DEPOT:
                     try {
                         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(
-                                DepotSlot.valueOf(data.get(1).toUpperCase()),
-                                DepotSlot.valueOf(data.get(2).toUpperCase()),
-                                ResourceBuilder.buildFromType(ResourceType.valueOf(data.get(3).toUpperCase()), Integer.parseInt(data.get(4)))
+                                DepotSlot.valueOf(data.get(i++).toUpperCase()),
+                                DepotSlot.valueOf(data.get(i++).toUpperCase()),
+                                ResourceBuilder.buildFromType(ResourceType.valueOf(data.get(i++).toUpperCase()), Integer.parseInt(data.get(i)))
                         ).jsonfy());
                     } catch (IndexOutOfBoundsException out) {
-                        view.notifyPlayerError("you missed some parameter ...");
+                        view.notifyPlayerError("You missed some parameter ...");
                     } catch (NumberFormatException number) {
-                        view.notifyPlayerError(data.get(4) + " is not a number!");
+                        view.notifyPlayerError(data.get(4) + " Is not a number!");
                     } catch (IllegalArgumentException arg) {
-                        view.notifyPlayerError("some parameter in the command is not correct");
+                        view.notifyPlayerError(data.get(i) + " Doesn't exist. Type help for accepted values");
                     }
                     break;
 
@@ -130,7 +127,7 @@ public class InGameCS extends ClientState {
                     } catch (IndexOutOfBoundsException out) {
                         view.notifyPlayerError("you need to insert the leader id");
                     } catch (NumberFormatException number) {
-                        view.notifyPlayerError(data.get(1) + " is not a number!");
+                        view.notifyPlayerError(data.get(1) + " Is not a number!");
                     }
                     break;
 
@@ -138,9 +135,9 @@ public class InGameCS extends ClientState {
                     try {
                         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ActivateLeaderCommand("LC" + Integer.parseInt(data.get(1))).jsonfy());
                     } catch (IndexOutOfBoundsException out) {
-                        view.notifyPlayerError("you need to insert the leader id");
+                        view.notifyPlayerError("You need to insert the leader id");
                     } catch (NumberFormatException number) {
-                        view.notifyPlayerError(data.get(1) + " is not a number!");
+                        view.notifyPlayerError(data.get(1) + " Is not a number!");
                     }
                     break;
 
@@ -172,11 +169,11 @@ public class InGameCS extends ClientState {
                     } catch (IllegalTypeInProduction ill) {
                         view.notifyPlayerError(ill.getMessage());
                     } catch (IndexOutOfBoundsException out) {
-                        view.notifyPlayerError("you missed some parameter ...");
+                        view.notifyPlayerError("You missed some parameter ...");
                     } catch (NumberFormatException number) {
-                        view.notifyPlayerError(data.get(i - 1) + " is not a number!");
+                        view.notifyPlayerError(data.get(i - 1) + " Is not a number!");
                     } catch (IllegalArgumentException arg) {
-                        view.notifyPlayerError(data.get(i - 1) + "is not mappable");
+                        view.notifyPlayerError(data.get(i - 1) + " Doesn't exist. Type help for accepted values");
                     }
                     break;
 
@@ -187,9 +184,9 @@ public class InGameCS extends ClientState {
                                 Integer.parseInt(data.get(i))
                         ).jsonfy());
                     } catch (IndexOutOfBoundsException out) {
-                        view.notifyPlayerError("you missed some parameter ...");
+                        view.notifyPlayerError("You missed some parameter ...");
                     } catch (NumberFormatException number) {
-                        view.notifyPlayerError(data.get(i) + " is not a number!");
+                        view.notifyPlayerError(data.get(i) + " Is not a number!");
                     }
                     break;
 
@@ -202,6 +199,8 @@ public class InGameCS extends ClientState {
                         view.renderPersonalBoard(data.get(1));
                     } catch (IndexOutOfBoundsException out) {
                         view.renderPersonalBoard(model.getMe());
+                    } catch (NullPointerException n) {
+                        view.notifyPlayerError(data.get(i) + " player doesn't exist");
                     }
                     break;
 
