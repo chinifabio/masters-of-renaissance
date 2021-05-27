@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.gui;
+package it.polimi.ingsw.view.gui.panels;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -8,12 +8,12 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class LogoFrame extends JFrame {
+public class LogoPanel extends JPanel{
 
 
     public void paint(Graphics g){
         myDrawImage("LogoMasters.png", g);
-        g.drawString("Insert your nickname:", 660, 670);
+        g.drawString("Insert your nickname:", 680, 640);
     }
 
     public void myDrawImage(String image, Graphics g){
@@ -27,15 +27,17 @@ public class LogoFrame extends JFrame {
             e.printStackTrace();
             return;
         }
-        g.drawImage(img, 5, 29, 1920-380, 1080-265, null);
+
+        int width = 1920-380;
+        int height = 1080-230;
+        g.drawImage(img, 0, -1,width,height, null);
     }
 
-    public void printIntro(){
-
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH); //Make Fullscreen
-        //f.setSize(1007,720);
-
+    /**
+     * Creates a new <code>JPanel</code> with a double buffer
+     * and a flow layout.
+     */
+    public LogoPanel() {
         JTextField name = new JTextField(20);
         name.setHorizontalAlignment(SwingConstants.CENTER);
         name.setBounds(650,650,200,20);
@@ -52,10 +54,8 @@ public class LogoFrame extends JFrame {
 
         name.addActionListener(action);
         this.add(name, BorderLayout.CENTER);
-
         this.setLayout(null);
-        this.pack();
         this.setVisible(true);
-    }
 
+    }
 }
