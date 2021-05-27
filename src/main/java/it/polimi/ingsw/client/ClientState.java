@@ -1,6 +1,8 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.TextColors;
+import it.polimi.ingsw.communication.ReplyType;
+import it.polimi.ingsw.communication.ServerReply;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
@@ -29,7 +31,7 @@ public abstract class ClientState {
 
         context.socket.send(temp);
         Packet response = context.socket.pollPacketFrom(ChannelTypes.PLAYER_ACTIONS);
-        printServerResponse(response.body);
+        view.notifyServerReply(new ServerReply(response.body, ReplyType.OK));
 
         context.setState(this.nextState.containsKey(response.header) ?
                 this.nextState.get(response.header):
@@ -37,11 +39,4 @@ public abstract class ClientState {
         );
     }
 
-    /**
-     * Print the server response in a preformatted mode
-     * @param r the server response
-     */
-    protected void printServerResponse(String r) {
-        System.out.println(TextColors.colorText(TextColors.BLUE, r));
-    }
 }

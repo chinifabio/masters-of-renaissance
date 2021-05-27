@@ -1,17 +1,29 @@
 package it.polimi.ingsw.view.gui;
 
+import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.communication.ServerReply;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.cli.CLI;
 import it.polimi.ingsw.view.gui.panels.*;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class GUI implements View {
 
 
+    private LiteModel model;
+    public HashMap<String, JPanel> panelContainer = new HashMap<>();
+    public final Object userInteractionWait = new Object();
+    public String userInput = "";
     private final JPanel mainPanel = new JPanel();
     private final ArrayList<JPanel> panels = new ArrayList<>();
 
@@ -54,7 +66,7 @@ public class GUI implements View {
      */
     @Override
     public void renderHomePage() {
-
+        viewPanel("Homepage");
     }
 
     /**
@@ -65,8 +77,30 @@ public class GUI implements View {
      */
     @Override
     public List<String> pollData(String request) throws InterruptedException {
-        switchPanels(mainPanel, panels.get(0));
-        return null;
+        synchronized (userInteractionWait){
+            userInteractionWait.wait();
+            synchronized (userInput){
+                return Arrays.asList(userInput.split(" "));
+            }
+        }
+    }
+
+
+    /**
+     * Ask to the player something
+     *
+     * @param request the message to show
+     * @return the input string submitted by the player
+     */
+    @Override
+    public String askUser(String request) throws InterruptedException {
+        viewPanel("RequestPanel");
+        synchronized (userInteractionWait){
+            userInteractionWait.wait();
+            synchronized (userInput){
+                return userInput;
+            }
+        }
     }
 
     /**
@@ -86,7 +120,30 @@ public class GUI implements View {
      */
     @Override
     public void notifyServerReply(ServerReply reply) {
+        JFrame popUp = new JFrame();
+        popUp.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        JButton ok = new JButton("OK");
+        JLabel text = new JLabel();
+        text.setText(reply.obtainMessage());
+        text.setBounds(100, 30, 400,50);
+        ok.setBounds(100, 100,250,30);
+        ok.setHorizontalAlignment(SwingConstants.CENTER);
+        ok.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                popUp.dispose();
+            }
+        });
+        text.setVisible(true);
 
+        popUp.setForeground(new Color(50,50,50));
+        popUp.setSize(500, 200);
+        popUp.setResizable(false);
+
+        popUp.add(text);
+        popUp.add(ok);
+        popUp.setLayout(null);
+        popUp.setVisible(true);
     }
 
     /**
@@ -96,7 +153,7 @@ public class GUI implements View {
      */
     @Override
     public void receiveModel(LiteModel model) {
-
+        this.model = model;
     }
 
     /**
@@ -104,7 +161,10 @@ public class GUI implements View {
      */
     @Override
     public void renderLeaderCards() {
+        JPanel temp = panelContainer.get("Leader");
+        ((JLabel) temp.getComponent(0)).setText(model.getLeader(model.getMe()).toString());
 
+        viewPanel("Leader");
     }
 
     /**
@@ -164,17 +224,70 @@ public class GUI implements View {
     public GUI() {
 
         JFrame gameWindow = new JFrame();
+        //Panel for UserInput
+        JPanel panel = new JPanel();
+        panel.setName("RequestPanel");
+        JTextField textArea = new JTextField(50);
+        textArea.setBounds(10,30, 50, 10);
 
-        panels.add(new LogoPanel());
-        panels.add(new FaithTrackPanel());
-        panels.add(new CardsGridPanel());
-        panels.add(new MarketTrayPanel());
-        panels.add(new WarehousePanel());
-        panels.add(new PersonalBoardPanel());
+        textArea.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                synchronized (userInteractionWait){
+                    synchronized (userInput) {
+                        userInput = textArea.getText();
+                        textArea.setText("");
+                    }
+                    userInteractionWait.notifyAll();
+                }
+            }
+        });
+        panel.setBounds(200,200,1920-380-200,1080-230-200);
+        panel.setBackground(Color.gray);
+        textArea.setVisible(true);
+        panel.add(textArea);
 
-        for (JPanel panel : panels){
-            mainPanel.add(panel);
+
+        //Panel for Homepage
+        JPanel homepage = new JPanel();
+        homepage.setName("Homepage");
+        homepage.setOpaque(true);
+        homepage.setBackground(Color.yellow);
+        JButton viewLeader = new JButton();
+        viewLeader.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                synchronized (userInteractionWait){
+                    synchronized (userInput) {
+                        userInput = "leadercards";
+                    }
+                    userInteractionWait.notifyAll();
+                }
+            }
+        });
+        homepage.setBounds(0,0,1920-380,1080-230);
+        homepage.add(viewLeader);
+
+
+        JPanel leader = new JPanel();
+        leader.setName("Leader");
+        JLabel label = new JLabel();
+        leader.setBounds(0,0,1920-380,1080-230);
+        label.setBounds(10, 10, 300, 200);
+
+        leader.add(label);
+
+        panelContainer.put(panel.getName(), panel);
+        panelContainer.put(leader.getName(), leader);
+        panelContainer.put(homepage.getName(), homepage);
+
+
+        mainPanel.setBounds(0,0,1920-380,1080-230);;
+        mainPanel.setLayout(null);
+        for (JPanel panels : panelContainer.values()){
+            mainPanel.add(panels);
         }
+
 
         gameWindow.add(mainPanel);
         gameWindow.setSize(1920-380, 1080-230);
@@ -187,5 +300,25 @@ public class GUI implements View {
         mainPanel.add(toSee);
         mainPanel.repaint();
         mainPanel.revalidate();
+    }
+
+    public void viewPanel(String string){
+        System.out.println("--------------------");
+        for (JPanel p : panelContainer.values()){
+            System.out.println(p.getName().equals(string));
+            p.setVisible(p.getName().equals(string));
+        }
+    }
+
+    public static void main(String[] args){
+        try {
+            GUI gui  = new GUI();
+            Thread client = new Thread(new Client(gui));
+            client.setDaemon(true);
+            client.start();
+            client.join();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

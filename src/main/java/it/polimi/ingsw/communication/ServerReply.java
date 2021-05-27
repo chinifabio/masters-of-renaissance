@@ -14,6 +14,6 @@ public class ServerReply {
     }
 
     public String obtainMessage() {
-        return "server: " + TextColors.colorText(type.color, message);
+        return "server: " + message; //+ TextColors.colorText(type.color, message);
     }
 }

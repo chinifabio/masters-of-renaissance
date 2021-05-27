@@ -45,17 +45,7 @@ public class Client implements Runnable, Disconnectable {
         this.executor.submit(this.socket);
     }
 
-    public static void main(String[] args) {
-        try {
-            CLI cli  = new CLI();
-            Thread client = new Thread(new Client(cli));
-            client.setDaemon(true);
-            client.start();
-            client.join();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
+
 
     /**
      * Receive a state and set it as current state
