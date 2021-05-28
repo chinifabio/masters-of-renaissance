@@ -1,17 +1,15 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.model.Pair;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.litemodel.liteplayer.InitSelection;
-import it.polimi.ingsw.litemodel.liteplayer.LiteState;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
-import it.polimi.ingsw.util.Pair;
 
 import java.util.Optional;
 
@@ -158,14 +156,6 @@ public class InitialSelectionPlayerState extends PlayerState {
     public String toString() {
         return "LeaderSelection state";
     }
-
-    /**
-     * Create a lite version of the class and serialize it in json
-     *
-     * @return the json representation of the lite version of the class
-     */
-    @Override
-    public LiteState liteVersion() {
-        return new InitSelection();
-    }
 }
+
+

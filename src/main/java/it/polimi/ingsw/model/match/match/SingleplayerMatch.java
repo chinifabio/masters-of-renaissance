@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.model.Pair;
 import it.polimi.ingsw.communication.packet.updates.FaithTrackUpdater;
 import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
 import it.polimi.ingsw.communication.packet.updates.TokenUpdater;
@@ -14,7 +15,6 @@ import it.polimi.ingsw.model.match.SoloTokenReaction;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
-import it.polimi.ingsw.util.Pair;
 
 import java.io.IOException;
 import java.util.*;
@@ -51,11 +51,6 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      * This attribute indicates if Lorenzo is the winner of the Match
      */
     private boolean lorenzoWinner = false;
-
-    /**
-     * This flag indicates if the actually is the turn of lorenzo
-     */
-    private boolean lorenzoTurn = false;
 
     /**
      * the player who are playing the game
@@ -188,7 +183,6 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      */
     @Override
     public void turnDone() {
-        lorenzoTurn = true;
         try {
             SoloActionToken s = this.soloToken.useAndDiscard();
             s.useEffect(this);
@@ -196,7 +190,6 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
         } catch (EmptyDeckException ignore) {
             System.out.println(">.<");
         }
-        lorenzoTurn = false;
 
         this.marketTray.unPaint();
         updateTray();

@@ -3,8 +3,6 @@ package it.polimi.ingsw.model.player;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.litemodel.liteplayer.BuyDevCard;
-import it.polimi.ingsw.litemodel.liteplayer.LiteState;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
 
@@ -57,17 +55,4 @@ public class BuyDevCardPlayerState extends PlayerState{
         //rollback delle azioni
         return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "operation done successfully");
     }
-
-
-
-    /**
-     * Create a lite version of the class and serialize it in json
-     *
-     * @return the json representation of the lite version of the class
-     */
-    @Override
-    public LiteState liteVersion() {
-        return new BuyDevCard();
-    }
-
 }

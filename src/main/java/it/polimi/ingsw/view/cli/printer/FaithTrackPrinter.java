@@ -2,10 +2,10 @@ package it.polimi.ingsw.view.cli.printer;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 import it.polimi.ingsw.litemodel.litefaithtrack.LiteCell;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.view.cli.Colors;
 
 import java.io.IOException;
 import java.util.*;
@@ -28,7 +28,7 @@ public class FaithTrackPrinter {
     /**
      * This attribute is an array of colors that will indicates different players
      */
-    private final String[] colors = {TextColors.RED_BRIGHT, TextColors.BLUE_BRIGHT, TextColors.YELLOW_BRIGHT, TextColors.GREEN_BRIGHT};
+    private final String[] colors = {Colors.RED_BRIGHT, Colors.BLUE_BRIGHT, Colors.YELLOW_BRIGHT, Colors.GREEN_BRIGHT};
 
     /**
      * This track is the sample for all players
@@ -65,49 +65,49 @@ public class FaithTrackPrinter {
         int number = 0;
         int row = 0;
         int column = 0;
-        String color = TextColors.RESET;
+        String color = Colors.RESET;
 
         while (column < (MAX_HORIZ_CELL * this.track.size())) {
             int col = column;
             if (this.isVaticanSpace(number)) {
-                color = TextColors.YELLOW;
+                color = Colors.YELLOW;
             }
             if (this.isPopeSpace(number)){
-                color = TextColors.CYAN;
+                color = Colors.CYAN;
             }
-            faithTrack[row][col] = TextColors.colorText(color, "╔");
+            faithTrack[row][col] = Colors.color(color, "╔");
             for (int i = col + 1; i < col + (MAX_HORIZ_CELL - 1); i++) {
                 if (i == (col + 2)) {
-                    faithTrack[row][i] = TextColors.colorText(color, String.valueOf(number));
+                    faithTrack[row][i] = Colors.color(color, String.valueOf(number));
                 } else {
-                    faithTrack[row][i] = TextColors.colorText(color, "═");
+                    faithTrack[row][i] = Colors.color(color, "═");
                 }
             }
             if (number > 9 && number < 100) {
-                faithTrack[row][col + (MAX_HORIZ_CELL - 2)] = TextColors.colorText(color, "╗");
+                faithTrack[row][col + (MAX_HORIZ_CELL - 2)] = Colors.color(color, "╗");
                 faithTrack[row][col + (MAX_HORIZ_CELL - 1)] = "";
             } else if (number > 99){
-                faithTrack[row][col + (MAX_HORIZ_CELL - 3)] = TextColors.colorText(color, "╗");
+                faithTrack[row][col + (MAX_HORIZ_CELL - 3)] = Colors.color(color, "╗");
                 faithTrack[row][col + (MAX_HORIZ_CELL - 2)] = "";
                 faithTrack[row][col + (MAX_HORIZ_CELL - 1)] = "";
             } else{
-                faithTrack[row][col + (MAX_HORIZ_CELL - 1)] = TextColors.colorText(color, "╗");
+                faithTrack[row][col + (MAX_HORIZ_CELL - 1)] = Colors.color(color, "╗");
             }
 
             for (int r = 1; r < (MAX_VERT+players); r++) {
-                faithTrack[r][col] = TextColors.colorText(color, "║");
+                faithTrack[r][col] = Colors.color(color, "║");
                 for (int c = col + 1; c < col + (MAX_HORIZ_CELL - 1); c++) {
                     faithTrack[r][c] = " ";
                 }
-                faithTrack[r][col + (MAX_HORIZ_CELL - 1)] = TextColors.colorText(color, "║");
+                faithTrack[r][col + (MAX_HORIZ_CELL - 1)] = Colors.color(color, "║");
             }
 
-            faithTrack[(MAX_VERT+players) - 1][col] = TextColors.colorText(color, "╚");
+            faithTrack[(MAX_VERT+players) - 1][col] = Colors.color(color, "╚");
             for (int c = col + 1; c < col + (MAX_HORIZ_CELL - 1); c++) {
-                faithTrack[(MAX_VERT+players) - 1][c] = TextColors.colorText(color, "═");
+                faithTrack[(MAX_VERT+players) - 1][c] = Colors.color(color, "═");
             }
 
-            faithTrack[(MAX_VERT+players) - 1][col + (MAX_HORIZ_CELL - 1)] = TextColors.colorText(color, "╝");
+            faithTrack[(MAX_VERT+players) - 1][col + (MAX_HORIZ_CELL - 1)] = Colors.color(color, "╝");
 
             for (int r = MAX_VERT+players; r < (MAX_VERT+players+3); r++) {
                 faithTrack[r][col] = " ";
@@ -119,7 +119,7 @@ public class FaithTrackPrinter {
 
         column = column + MAX_HORIZ_CELL;
         number++;
-        color = TextColors.RESET;
+        color = Colors.RESET;
         }
         insertFaithPoints(faithTrack);
 
@@ -128,24 +128,24 @@ public class FaithTrackPrinter {
         int col = 0;
         for (int i = 0; i < this.track.size(); i++){
             if (this.isPopeSpace(i)){
-                faithTrack[r][col] = TextColors.colorText(TextColors.CYAN_BRIGHT,"╔");
-                faithTrack[r+1][col] = TextColors.colorText(TextColors.CYAN_BRIGHT,"║");
-                faithTrack[r+2][col] = TextColors.colorText(TextColors.CYAN_BRIGHT,"╚");
+                faithTrack[r][col] = Colors.color(Colors.CYAN_BRIGHT,"╔");
+                faithTrack[r+1][col] = Colors.color(Colors.CYAN_BRIGHT,"║");
+                faithTrack[r+2][col] = Colors.color(Colors.CYAN_BRIGHT,"╚");
                 for (int j = 1; j<5; j++){
-                    faithTrack[r][col+j] = TextColors.colorText(TextColors.CYAN_BRIGHT,"═");
-                    faithTrack[r+2][col+j] = TextColors.colorText(TextColors.CYAN_BRIGHT,"═");
+                    faithTrack[r][col+j] = Colors.color(Colors.CYAN_BRIGHT,"═");
+                    faithTrack[r+2][col+j] = Colors.color(Colors.CYAN_BRIGHT,"═");
                 }
                 int tilePoints = getPopeTilesPoint(getVaticanSpaceCell(i));
                 if (tilePoints < 10) {
-                    faithTrack[r + 1][col + 2] = TextColors.colorText(TextColors.PURPLE_BRIGHT, String.valueOf(tilePoints));
+                    faithTrack[r + 1][col + 2] = Colors.color(Colors.PURPLE_BRIGHT, String.valueOf(tilePoints));
                 } else {
-                    faithTrack[r + 1][col + 2] = TextColors.colorText(TextColors.PURPLE_BRIGHT, String.valueOf(tilePoints));
+                    faithTrack[r + 1][col + 2] = Colors.color(Colors.PURPLE_BRIGHT, String.valueOf(tilePoints));
                     faithTrack[r + 1][col + 3] = "";
                 }
 
-                faithTrack[r][col+5] = TextColors.colorText(TextColors.CYAN_BRIGHT,"╗");
-                faithTrack[r+1][col+5] = TextColors.colorText(TextColors.CYAN_BRIGHT,"║");
-                faithTrack[r+2][col+5] = TextColors.colorText(TextColors.CYAN_BRIGHT,"╝");
+                faithTrack[r][col+5] = Colors.color(Colors.CYAN_BRIGHT,"╗");
+                faithTrack[r+1][col+5] = Colors.color(Colors.CYAN_BRIGHT,"║");
+                faithTrack[r+2][col+5] = Colors.color(Colors.CYAN_BRIGHT,"╝");
             }
             col = col + MAX_HORIZ_CELL;
         }
@@ -163,7 +163,7 @@ public class FaithTrackPrinter {
         int col = 2;
         for (int i = 0; i < this.track.size(); i++){
             if (this.getVictoryPointCell(i) != 0){
-                faithTrack[row][col] = TextColors.colorText(TextColors.PURPLE_BRIGHT,String.valueOf(this.getVictoryPointCell(i)));
+                faithTrack[row][col] = Colors.color(Colors.PURPLE_BRIGHT,String.valueOf(this.getVictoryPointCell(i)));
             }
             if (this.getVictoryPointCell(i) > 9 && this.getVictoryPointCell(i) < 100){
                 faithTrack[row][col+1] = "";
@@ -189,25 +189,25 @@ public class FaithTrackPrinter {
 
         for (String name : nicknames){
             lenght = 0;
-            popeTiles.append(TextColors.colorText(colors[i % 4], name)).append(": ");
+            popeTiles.append(Colors.color(colors[i % 4], name)).append(": ");
             lenght = lenght + name.length();
             while (lenght < 20){
                 popeTiles.append(" ");
                 lenght++;
             }
 
-            popeTiles.append(TextColors.colorText(colors[i%4],"┼" + name.charAt(0))).append( " - PopeTiles: " );
+            popeTiles.append(Colors.color(colors[i%4],"┼" + name.charAt(0))).append( " - PopeTiles: " );
             //for (Map.Entry<String, Boolean> entry : tiles.get(i).entrySet()){
             List<VaticanSpace> loop = new ArrayList<>(Arrays.asList(VaticanSpace.values()));
             loop.remove(VaticanSpace.NONE);
             for (VaticanSpace vs : loop){
-                popeTiles.append(TextColors.colorText(TextColors.CYAN_BRIGHT,"["));
+                popeTiles.append(Colors.color(Colors.CYAN_BRIGHT,"["));
                 if (tiles.get(i).get(vs.name())){
-                    popeTiles.append(TextColors.colorText(TextColors.GREEN,"X"));
+                    popeTiles.append(Colors.color(Colors.GREEN,"X"));
                 } else {
                     popeTiles.append(" ");
                 }
-                popeTiles.append(TextColors.colorText(TextColors.CYAN_BRIGHT,"]"));
+                popeTiles.append(Colors.color(Colors.CYAN_BRIGHT,"]"));
             }
             popeTiles.append("\n");
             i++;
@@ -224,14 +224,14 @@ public class FaithTrackPrinter {
      */
     private void insertPlayerPos(List<String> nicknames, List<Integer> positions, String[][] faithTrack){
 
-        String[] colors = {TextColors.RED_BRIGHT, TextColors.BLUE_BRIGHT, TextColors.YELLOW_BRIGHT, TextColors.GREEN_BRIGHT};
+        String[] colors = {Colors.RED_BRIGHT, Colors.BLUE_BRIGHT, Colors.YELLOW_BRIGHT, Colors.GREEN_BRIGHT};
         int row = 2;
         int i = 0;
         int ins;
         System.out.println();
         for (Integer pos: positions){
             ins = 2+(pos*MAX_HORIZ_CELL);
-            faithTrack[row][ins] = TextColors.colorText(colors[i%4],"┼" + nicknames.get(i).charAt(0));
+            faithTrack[row][ins] = Colors.color(colors[i%4],"┼" + nicknames.get(i).charAt(0));
             faithTrack[row][ins+1] = "";
             row++;
             i++;

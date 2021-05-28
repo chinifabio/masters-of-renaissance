@@ -1,7 +1,5 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.server.Server;
 import it.polimi.ingsw.view.cli.CLI;
 
@@ -22,7 +20,7 @@ public class Launcher
         try {
             switch (arguments.get(0)) {
                 case "cli":
-                    main = new Thread(new Client(new CLI()));
+                    main = new Thread(new CLI("localhost", 4444));
                     break;
                 case "server":
                     main = new Thread(new Server());

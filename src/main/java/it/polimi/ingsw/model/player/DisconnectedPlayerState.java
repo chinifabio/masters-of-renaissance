@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.litemodel.liteplayer.Disconnected;
-import it.polimi.ingsw.litemodel.liteplayer.LiteState;
-
 public class DisconnectedPlayerState extends PlayerState {
     /**
      * the constructor take the two final attribute of the state that are the personal board and the context.
@@ -40,15 +37,5 @@ public class DisconnectedPlayerState extends PlayerState {
     @Override
     public boolean doStuff() {
         return false;
-    }
-
-    /**
-     * Create a lite version of the class and serialize it in json
-     *
-     * @return the json representation of the lite version of the class
-     */
-    @Override
-    public LiteState liteVersion() {
-        return new Disconnected();
     }
 }

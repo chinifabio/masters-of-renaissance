@@ -1,30 +1,27 @@
 package it.polimi.ingsw.litemodel;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.litemodel.litecards.LiteSoloActionToken;
 import it.polimi.ingsw.litemodel.litefaithtrack.LiteFaithTrack;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarketTray;
-import it.polimi.ingsw.litemodel.liteplayer.LiteState;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
-import it.polimi.ingsw.util.Tuple;
 
 import java.util.*;
 
 public class LiteModel {
 
-    private final Map<String, LitePersonalBoard> players = new HashMap<>();
+    private final HashMap<String, LitePersonalBoard> players = new HashMap<>();
 
+    @JsonIgnore
     private String me;
 
     private LiteMarketTray tray;
@@ -33,14 +30,23 @@ public class LiteModel {
     private LiteSoloActionToken soloToken;
 
     @JsonCreator
-    public LiteModel(@JsonProperty("players") List<Tuple<String, LitePersonalBoard>> list) {
-        list.forEach(x->players.put(x.a, x.b));
-    }
-
     public LiteModel(){}
 
     public synchronized void createPlayer(String nickname) {
         this.players.put(nickname, new LitePersonalBoard());
+    }
+
+    /**
+     * replace all the model data with the given one
+     * @param model model of the view
+     */
+    public void replaceModel(LiteModel model) {
+        model.players.forEach(this.players::put);
+
+        this.tray = model.getTray();
+        this.devSetup = model.getDevSetup();
+
+        this.soloToken = model.soloToken;
     }
 
 // --------------- SETTER METHODS ------------------
@@ -98,10 +104,6 @@ public class LiteModel {
         this.players.get(nickname).setConversions(collect);
     }
 
-    public void setPlayerState(String nickname, LiteState state) {
-        players.get(nickname).setState(state);
-    }
-
 // ------------------- GETTER METHODS ------------------
 
     public synchronized List<LiteLeaderCard> getLeader(String nickname) {
@@ -154,32 +156,6 @@ public class LiteModel {
 
     public synchronized String getMe() {
         return this.me;
-    }
-
-    public LiteState getPlayerState(String nickname) {
-        return this.players.get(nickname).getState();
-    }
-
-    /**
-     * replace all the model data with the given one
-     * @param model
-     */
-    public void replaceModel(LiteModel model) {
-        //this.playerState = model.getPlayerState();
-
-        model.players.forEach(this.players::put);
-
-        this.tray = model.getTray();
-        this.devSetup = model.getDevSetup();
-    }
-
-    @JsonGetter("players")
-    public List<Tuple<String, LitePersonalBoard>> getValues() {
-        List<Tuple<String, LitePersonalBoard>> res = new ArrayList<>();
-
-        this.players.forEach((x, y)->res.add(new Tuple<>(x, y)));
-
-        return res;
     }
 
     public List<LiteResource> getDiscounts(String me) {

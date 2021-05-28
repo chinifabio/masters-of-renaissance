@@ -1,16 +1,17 @@
 package it.polimi.ingsw.model.cards;
 
-import it.polimi.ingsw.TextColors;
+
+import it.polimi.ingsw.view.cli.Colors;
 
 /**
  * This enumeration indicates the colors of the DevCards
  */
 public enum ColorDevCard {
-    GREEN(0, TextColors.GREEN,TextColors.GREEN_BACKGROUND),
-    YELLOW(1, TextColors.YELLOW, TextColors.YELLOW_BACKGROUND),
-    BLUE(2,TextColors.BLUE, TextColors.BLUE_BACKGROUND),
-    PURPLE(3, TextColors.PURPLE, TextColors.PURPLE_BACKGROUND),
-    NOCOLOR(-1, TextColors.WHITE, TextColors.WHITE);
+    GREEN(0, Colors.GREEN,Colors.GREEN_BACKGROUND),
+    YELLOW(1, Colors.YELLOW, Colors.YELLOW_BACKGROUND),
+    BLUE(2,Colors.BLUE, Colors.BLUE_BACKGROUND),
+    PURPLE(3, Colors.PURPLE, Colors.PURPLE_BACKGROUND),
+    NOCOLOR(-1, Colors.WHITE, Colors.WHITE);
 
     private final int devSetupIndex;
 
@@ -43,7 +44,7 @@ public enum ColorDevCard {
      */
     @Override
     public String toString() {
-        return TextColors.colorDevCard(this);
+        return Colors.colorDevCard(this);
     }
 
 

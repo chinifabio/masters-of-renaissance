@@ -1,7 +1,5 @@
 package it.polimi.ingsw.communication;
 
-import it.polimi.ingsw.TextColors;
-
 public class ServerReply {
 
     private final String message;

@@ -2,9 +2,6 @@ package it.polimi.ingsw.model.match.markettray;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.App;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarketTray;
 import it.polimi.ingsw.model.MappableToLiteVersion;

@@ -1,16 +1,15 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.Command;
-import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.server.Controller;
+import it.polimi.ingsw.view.cli.Colors;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -122,7 +121,7 @@ public class Model {
     public boolean reconnectPlayer(String nickname, Controller context) {
         this.players.put(context, this.match.reconnectPlayer(nickname));
         this.dispatcher.subscribe(nickname, context.socket);
-        System.out.println(TextColors.colorText(TextColors.GREEN_BRIGHT, nickname) + " reconnected");
+        System.out.println(Colors.color(Colors.GREEN_BRIGHT, nickname) + " reconnected");
         return true;
     }
 }

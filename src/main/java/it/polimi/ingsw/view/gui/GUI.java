@@ -1,12 +1,9 @@
 package it.polimi.ingsw.view.gui;
 
-import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.communication.ServerReply;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
-import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.view.View;
-import it.polimi.ingsw.view.cli.CLI;
 import it.polimi.ingsw.view.gui.panels.*;
 
 import javax.imageio.ImageIO;
@@ -23,7 +20,7 @@ import java.util.List;
 public class GUI implements View {
 
 
-    private LiteModel model;
+    private final LiteModel model = new LiteModel();
     public HashMap<String, JPanel> panelContainer = new HashMap<>();
     public final Object userInteractionWait = new Object();
     public String userInput = "";
@@ -33,7 +30,6 @@ public class GUI implements View {
     /**
      * This method prints the current status of the FaithTrack
      */
-    @Override
     public void renderFaithTrack() {
 
     }
@@ -41,7 +37,6 @@ public class GUI implements View {
     /**
      * Render the a view of the market tray
      */
-    @Override
     public void renderMarketTray() {
         JPanel panelTemp = panelContainer.get("Market");
 
@@ -78,7 +73,6 @@ public class GUI implements View {
      *
      * @param nickname the player to show personal board
      */
-    @Override
     public void renderPersonalBoard(String nickname) {
 
     }
@@ -86,7 +80,6 @@ public class GUI implements View {
     /**
      * Render a view of the devSetup
      */
-    @Override
     public void renderDevSetup() {
 
     }
@@ -94,7 +87,6 @@ public class GUI implements View {
     /**
      * Render the homepage of the cli
      */
-    @Override
     public void renderHomePage() {
         mainPanel.setBackground(Color.gray);
         viewPanel("Homepage");
@@ -106,7 +98,6 @@ public class GUI implements View {
      * @param request the message to show
      * @return the input string submitted by the player
      */
-    @Override
     public List<String> pollData(String request) throws InterruptedException {
         synchronized (userInteractionWait){
             userInteractionWait.wait();
@@ -123,7 +114,6 @@ public class GUI implements View {
      * @param request the message to show
      * @return the input string submitted by the player
      */
-    @Override
     public String askUser(String request) throws InterruptedException {
         //JPanel panelTemp = panelContainer.get("RequestPanel");
         //JLabel labelTemp = (JLabel) Arrays.stream(panelTemp.getComponents()).filter(p-> p.getName().equals("requestText")).findAny().get();
@@ -152,7 +142,6 @@ public class GUI implements View {
      *
      * @param reply the reply to show to the player
      */
-    @Override
     public void notifyServerReply(ServerReply reply) {
         JFrame popUp = new JFrame();
         JButton ok = new JButton("OK");
@@ -180,19 +169,8 @@ public class GUI implements View {
     }
 
     /**
-     * Save the lite model passed
-     *
-     * @param model the model to save
-     */
-    @Override
-    public void receiveModel(LiteModel model) {
-        this.model = model;
-    }
-
-    /**
      * Render a view of the leader cards of the player
      */
-    @Override
     public void renderLeaderCards() {
         JPanel temp = panelContainer.get("Leader");
         temp.removeAll();
@@ -230,7 +208,6 @@ public class GUI implements View {
      *
      * @param nickname
      */
-    @Override
     public void renderWarehouse(String nickname) {
 
     }
@@ -246,9 +223,19 @@ public class GUI implements View {
     }
 
     /**
-     * Render a list of available commands
+     * return the liteModel of the view
+     *
+     * @return
      */
     @Override
+    public LiteModel getModel() {
+        return this.model;
+    }
+
+    /**
+     * Render a list of available commands
+     */
+
     public void renderHelp() {
 
     }
@@ -411,7 +398,7 @@ public class GUI implements View {
     public static void main(String[] args){
         try {
             GUI gui  = new GUI();
-            Thread client = new Thread(new Client(gui));
+            Thread client = new Thread(gui);
             client.setDaemon(true);
             client.start();
             client.join();
@@ -486,21 +473,5 @@ public class GUI implements View {
         panel.setLayout(null);
         panel.setVisible(true);
         return panel;
-    }
-}
-
-class userInput implements ActionListener {
-
-    private final String string;
-    private final Client client;
-
-    public userInput(String string, Client client) {
-        this.client = client;
-        this.string = string;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 }

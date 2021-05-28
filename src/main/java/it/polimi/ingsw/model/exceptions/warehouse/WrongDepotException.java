@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model.exceptions.warehouse;
 
-import static it.polimi.ingsw.TextColors.*;
-import static it.polimi.ingsw.TextColors.RED_BRIGHT;
-
 public class WrongDepotException extends Exception {
     /**
      * Constructs a new exception with {@code null} as its detail message.

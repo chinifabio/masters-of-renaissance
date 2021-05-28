@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.cli.printer;
 
-import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -8,6 +7,7 @@ import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.view.cli.CLI;
+import it.polimi.ingsw.view.cli.Colors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,25 +104,25 @@ public class WarehousePrinter {
 
 
         int reset = x + 4;
-        display[reset][y] = TextColors.colorText(TextColors.YELLOW,"╔");
-        display[reset][y + 28] = TextColors.colorText(TextColors.YELLOW,"╗");
-        display[x + MAX_VERT-1][y] = TextColors.colorText(TextColors.YELLOW,"╚");
-        display[x + MAX_VERT-1][y + 28] = TextColors.colorText(TextColors.YELLOW,"╝");
+        display[reset][y] = Colors.color(Colors.YELLOW,"╔");
+        display[reset][y + 28] = Colors.color(Colors.YELLOW,"╗");
+        display[x + MAX_VERT-1][y] = Colors.color(Colors.YELLOW,"╚");
+        display[x + MAX_VERT-1][y + 28] = Colors.color(Colors.YELLOW,"╝");
 
         for (int i = y + 1; i < y + 28; i++) {
             if (i == (y + (28 / 2))){
-                display[reset][i] = TextColors.colorText(TextColors.WHITE_BRIGHT,"0");
+                display[reset][i] = Colors.color(Colors.WHITE_BRIGHT,"0");
             } else {
-                display[reset][i] = TextColors.colorText(TextColors.YELLOW,"═");
+                display[reset][i] = Colors.color(Colors.YELLOW,"═");
             }
-            display[x + MAX_VERT-1][i] = TextColors.colorText(TextColors.YELLOW,"═");
+            display[x + MAX_VERT-1][i] = Colors.color(Colors.YELLOW,"═");
         }
         for (int i = reset+1; i < x + MAX_VERT-1; i++) {
-            display[i][y] = TextColors.colorText(TextColors.YELLOW,"║");
+            display[i][y] = Colors.color(Colors.YELLOW,"║");
             for (int r = y + 1; r < y + 28; r++) {
                 display[i][r] = " ";
             }
-            display[i][y + 28] = TextColors.colorText(TextColors.YELLOW,"║");
+            display[i][y + 28] = Colors.color(Colors.YELLOW,"║");
         }
 
         //Insert resources in Strongbox
@@ -228,18 +228,18 @@ public class WarehousePrinter {
             }
         }
 
-        buffer[x][y] = TextColors.colorText(TextColors.CYAN,"╔");
-        buffer[x][y + 28] = TextColors.colorText(TextColors.CYAN,"╗");
-        buffer[x + MAX_VERT_BUFFER-1][y] = TextColors.colorText(TextColors.CYAN,"╚");
-        buffer[x + MAX_VERT_BUFFER-1][y + 28] = TextColors.colorText(TextColors.CYAN,"╝");
+        buffer[x][y] = Colors.color(Colors.CYAN,"╔");
+        buffer[x][y + 28] = Colors.color(Colors.CYAN,"╗");
+        buffer[x + MAX_VERT_BUFFER-1][y] = Colors.color(Colors.CYAN,"╚");
+        buffer[x + MAX_VERT_BUFFER-1][y + 28] = Colors.color(Colors.CYAN,"╝");
 
         for (int i = y + 1; i < y + 28; i++) {
             if (i == y + 12){
-                buffer[x][i] = TextColors.colorText(TextColors.CYAN,"BUFFER");
+                buffer[x][i] = Colors.color(Colors.CYAN,"BUFFER");
             } else {
-                buffer[x][i] = TextColors.colorText(TextColors.CYAN,"═");
+                buffer[x][i] = Colors.color(Colors.CYAN,"═");
             }
-            buffer[x + MAX_VERT_BUFFER-1][i] = TextColors.colorText(TextColors.CYAN,"═");
+            buffer[x + MAX_VERT_BUFFER-1][i] = Colors.color(Colors.CYAN,"═");
         }
         int j = y + 13;
         while (j != y + 18){
@@ -247,11 +247,11 @@ public class WarehousePrinter {
             j++;
         }
         for (int i = x + 1; i < x + MAX_VERT_BUFFER-1; i++) {
-            buffer[i][y] = TextColors.colorText(TextColors.CYAN,"║");
+            buffer[i][y] = Colors.color(Colors.CYAN,"║");
             for (int r = y + 1; r < y + 28; r++) {
                 buffer[i][r] = " ";
             }
-            buffer[i][y + 28] = TextColors.colorText(TextColors.CYAN,"║");
+            buffer[i][y + 28] = Colors.color(Colors.CYAN,"║");
         }
 
         int initBuffer = y + 4;
@@ -298,10 +298,10 @@ public class WarehousePrinter {
 
     public static void printResourcesLegend(){
         String legend =
-                TextColors.colorText(TextColors.YELLOW_BRIGHT, "©") + " = " + TextColors.colorText(TextColors.YELLOW_BRIGHT, "Coin\n") +
-                        TextColors.colorText(TextColors.BLUE_BRIGHT, "▼") + " = " + TextColors.colorText(TextColors.BLUE_BRIGHT, "Shield\n") +
-                        TextColors.colorText(TextColors.PURPLE, "Õ") + " = " + TextColors.colorText(TextColors.PURPLE, "Servant\n") +
-                        TextColors.colorText(TextColors.WHITE, "■") + " = " + TextColors.colorText(TextColors.WHITE, "Stone\n");
+                Colors.color(Colors.YELLOW_BRIGHT, "©") + " = " + Colors.color(Colors.YELLOW_BRIGHT, "Coin\n") +
+                        Colors.color(Colors.BLUE_BRIGHT, "▼") + " = " + Colors.color(Colors.BLUE_BRIGHT, "Shield\n") +
+                        Colors.color(Colors.PURPLE, "Õ") + " = " + Colors.color(Colors.PURPLE, "Servant\n") +
+                        Colors.color(Colors.WHITE, "■") + " = " + Colors.color(Colors.WHITE, "Stone\n");
         System.out.println(legend);
     }
 

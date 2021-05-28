@@ -2,9 +2,9 @@ package it.polimi.ingsw.litemodel.litecards.literequirements;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
+import it.polimi.ingsw.view.cli.Colors;
 
 public class LiteCardRequisite extends LiteRequisite {
 
@@ -36,6 +36,6 @@ public class LiteCardRequisite extends LiteRequisite {
     @Override
     public void printRequisite(String[][] leaderCard, int x, int y) {
         leaderCard[x + 1][y + 2] = String.valueOf(this.amount);
-        leaderCard[x + 1][y + 3] = TextColors.colorTextBackGround(TextColors.BLACK,color.getDevCardColorBackground(),String.valueOf(this.level.getLevelCard()));
+        leaderCard[x + 1][y + 3] = Colors.colorBackGround(Colors.BLACK,color.getDevCardColorBackground(),String.valueOf(this.level.getLevelCard()));
     }
 }

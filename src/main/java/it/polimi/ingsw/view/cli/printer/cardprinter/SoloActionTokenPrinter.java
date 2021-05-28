@@ -2,10 +2,10 @@ package it.polimi.ingsw.view.cli.printer.cardprinter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.litemodel.litecards.LiteSoloActionToken;
 import it.polimi.ingsw.model.cards.SoloActionToken;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
+import it.polimi.ingsw.view.cli.Colors;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,13 +32,13 @@ public class SoloActionTokenPrinter {
 
         for (int z = 1; z < HEIGHT-1; z++){
             for (int j = 2; j< WIDTH-1; j++){
-                display[z][j] = TextColors.colorText(TextColors.RED, display[z][j]);
+                display[z][j] = Colors.color(Colors.RED, display[z][j]);
             }
         }
 
         for (int z = 0; z < HEIGHT; z++){
             for (int j = 0; j< WIDTH; j++){
-                display[z][j] = TextColors.colorText(TextColors.YELLOW, display[z][j]);
+                display[z][j] = Colors.color(Colors.YELLOW, display[z][j]);
             }
         }
 

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 
-import it.polimi.ingsw.TextColors;
-
 /**
  * This enumeration represents the Marbles' colors
  */

@@ -1,10 +1,5 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.litemodel.liteplayer.LiteState;
-import it.polimi.ingsw.litemodel.liteplayer.NotHisTurn;
-import it.polimi.ingsw.litemodel.liteplayer.PendingStart;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
-
 /**
  * This class is the State where the Player waits for his turn
  */
@@ -46,18 +41,5 @@ public class NotHisTurnPlayerState extends PlayerState {
     @Override
     public PlayerState reconnectionState() {
         return this;
-    }
-
-    // ------------------------ PLAYER ACTION IMPLEMENTATIONS --------------------------------------
-
-
-    /**
-     * Create a lite version of the class and serialize it in json
-     *
-     * @return the json representation of the lite version of the class
-     */
-    @Override
-    public LiteState liteVersion() {
-        return new NotHisTurn();
     }
 }

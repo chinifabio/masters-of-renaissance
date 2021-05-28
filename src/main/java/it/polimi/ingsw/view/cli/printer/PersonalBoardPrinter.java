@@ -26,7 +26,11 @@ public class PersonalBoardPrinter {
     private static final int HEIGHT = 33; //rows.
     private static final int WIDTH = 133; //cols.
 
-    public static void printPersonalBoard(LiteModel model, String nickname, List<LiteLeaderCard> leaderCards, HashMap<DevCardSlot, List<LiteDevCard>> devCards){
+    public static void printPersonalBoard(LiteModel model, String nickname){
+        List<LiteLeaderCard> leaderCards = model.getLeader(nickname);
+        HashMap<DevCardSlot, List<LiteDevCard>> devCards = model.getDevelop(nickname);
+
+
         String[][] personalBoard = new String[HEIGHT][WIDTH];
 
         for (int i = 0; i< HEIGHT; i++){
@@ -149,6 +153,6 @@ public class PersonalBoardPrinter {
         model.setDepot("gino", DepotSlot.SPECIAL1, special1);
         model.setDepot("gino", DepotSlot.SPECIAL2, special2);
 
-        PersonalBoardPrinter.printPersonalBoard(model, "gino", names, deck );
+        //PersonalBoardPrinter.printPersonalBoard(model, "gino", names, deck );
     }
 }
