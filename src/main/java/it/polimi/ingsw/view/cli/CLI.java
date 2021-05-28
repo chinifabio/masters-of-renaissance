@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.InputHandler;
 import it.polimi.ingsw.communication.ServerReply;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.View;
@@ -139,6 +140,7 @@ public class CLI implements View {
      */
     @Override
     public void renderHomePage() {
+        //todo da fixare: chiede i dati prima che arrivnao
         //PersonalBoardPrinter.printPersonalBoard(model, model.getMe(), model.getLeader(model.getMe()), model.getDevelop(model.getMe()));
     }
 
@@ -169,7 +171,12 @@ public class CLI implements View {
      */
     @Override
     public void renderLeaderCards() {
-        ShowLeaderCards.printLeaderCardsPlayer(model.getLeader(model.getMe()));
+        List<LiteLeaderCard> temp = model.getLeader(model.getMe());
+        if(temp == null || temp.isEmpty()){
+            notifyPlayerError("You don't have any leader cards!");
+            return;
+        }
+        ShowLeaderCards.printLeaderCardsPlayer(temp);
     }
 
     /**
@@ -239,7 +246,6 @@ public class CLI implements View {
             lock.notifyAll();
             lock.wait();
         }
-
         return data.get(0);
     }
 

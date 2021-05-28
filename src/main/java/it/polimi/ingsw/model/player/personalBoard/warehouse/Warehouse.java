@@ -76,6 +76,7 @@ public class Warehouse {
         depots.put(DepotSlot.SPECIAL2, null);
         depots.put(DepotSlot.STRONGBOX, DepotBuilder.buildStrongBoxDepot());
         depots.put(DepotSlot.BUFFER, DepotBuilder.buildStrongBoxDepot());
+        depots.put(DepotSlot.DEVBUFFER, DepotBuilder.buildStrongBoxDepot());
 
 
         this.constraint = new ArrayList<>();

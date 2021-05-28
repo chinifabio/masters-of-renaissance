@@ -79,7 +79,7 @@ public class InGameCS extends ClientState {
                     try {
                         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new UseMarketTrayCommand(
                                 RowCol.valueOf(data.get(i++).toUpperCase()),
-                                Integer.parseInt(data.get(i))
+                                Integer.parseInt(data.get(i))-1
                         ).jsonfy());
                     } catch (IndexOutOfBoundsException out) {
                         view.notifyPlayerError("you missed some parameter");

@@ -140,7 +140,16 @@ class CreatorState implements ControllerState {
             return context.invalid("invalid packet: " + packet.header + "; expected " + HeaderTypes.SET_PLAYERS_NUMBER);
 
         try {
-            context.model.createMatch(Integer.parseInt(packet.body));
+            int n=-1;
+            try{
+              n = Integer.parseInt(packet.body);
+              if(n<1 || n>4) return context.invalid(n + " is not a legal game size.");
+            } catch (NumberFormatException e){
+                return context.invalid(n + " is not a number");
+            } catch (NullPointerException e){
+                return context.invalid("insert a number");
+            }
+            context.model.createMatch(n);
             context.setState(new InGameState());
             return context.model.login(context, context.nickname);
 

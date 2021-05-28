@@ -43,7 +43,34 @@ public class GUI implements View {
      */
     @Override
     public void renderMarketTray() {
+        JPanel panelTemp = panelContainer.get("Market");
 
+        //questa roba è orribile.
+        JLabel labelTemp0 = new JLabel();
+        JLabel labelTemp1 = new JLabel();
+        JLabel labelTemp2 = new JLabel();
+        String test0 = model.getTray().toString(0);
+        String test1 = model.getTray().toString(1);
+        String test2 = model.getTray().toString(2);
+        labelTemp0.setText(test0);
+        labelTemp1.setText(test1);
+        labelTemp2.setText(test2);
+        labelTemp0.setBounds(300,100,600,50);
+        labelTemp1.setBounds(300,125,600,50);
+        labelTemp2.setBounds(300,150,600,50);
+        panelTemp.add(labelTemp0);
+        panelTemp.add(labelTemp1);
+        panelTemp.add(labelTemp2);
+
+
+        //((JLabel) panelTemp.getComponent(0)).setText(model.getLeader(model.getMe()).toString());
+        JButton back = new JButton("Return to PB");
+        back.setBounds(20,20,150,40);
+        back.addActionListener(e -> viewPanel("Homepage"));
+
+        panelTemp.add(back);
+        panelTemp.setLayout(null);
+        viewPanel("Market");
     }
 
     /**
@@ -98,6 +125,9 @@ public class GUI implements View {
      */
     @Override
     public String askUser(String request) throws InterruptedException {
+        //JPanel panelTemp = panelContainer.get("RequestPanel");
+        //JLabel labelTemp = (JLabel) Arrays.stream(panelTemp.getComponents()).filter(p-> p.getName().equals("requestText")).findAny().get();
+        //labelTemp.setText(request);
         viewPanel("RequestPanel");
         synchronized (userInteractionWait){
             userInteractionWait.wait();
@@ -125,7 +155,6 @@ public class GUI implements View {
     @Override
     public void notifyServerReply(ServerReply reply) {
         JFrame popUp = new JFrame();
-        popUp.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JButton ok = new JButton("OK");
         JLabel text = new JLabel();
         text.setText(reply.obtainMessage());
@@ -169,20 +198,21 @@ public class GUI implements View {
         temp.removeAll();
         int i = 20;
         //((JLabel) temp.getComponent(0)).setText(model.getLeader(model.getMe()).toString());
-
+        temp.setLayout(null);
         JPanel tempCard;
         for (LiteLeaderCard card : model.getLeader(model.getMe())){
             tempCard = generateLeaderFromId(card.getCardID());
-            tempCard.setBounds(i, 50, 462/2+5,380);
+            tempCard.setBounds(i, 100, 462/2+5,380);
             temp.setVisible(true);
             temp.add(tempCard);
             i += 462/2+5+10;
-
         }
 
-        temp.setLayout(null);
+        JButton back = new JButton("Return to PB");
+        back.setBounds(20,20,150,40);
+        back.addActionListener(e -> viewPanel("Homepage"));
+        temp.add(back);
         viewPanel("Leader");
-
     }
 
     /**
@@ -242,13 +272,22 @@ public class GUI implements View {
     public GUI() {
 
         JFrame gameWindow = new JFrame();
+        gameWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //Panel for UserInput
         JPanel panel = new LogoPanel();
         panel.setName("RequestPanel");
+
+        JLabel nickLabel = new JLabel();
+        nickLabel.setName("requestText");
+        nickLabel.setBackground(Color.CYAN.darker());
+        nickLabel.setBounds(600,620,300,20);
+        nickLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        nickLabel.setOpaque(true);
+
+
         JTextField textArea = new JTextField(50);
         textArea.setBounds(650,650,200,20);
         textArea.setHorizontalAlignment(SwingConstants.CENTER);
-
         textArea.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -256,18 +295,33 @@ public class GUI implements View {
                     synchronized (userInput) {
                         userInput = textArea.getText();
                         textArea.setText("");
+                        //sotto è in testing
+                        nickLabel.setText("Insert the desired number of players: ");
+                        //testing finito
                     }
                     userInteractionWait.notifyAll();
                 }
             }
         });
+
+        JButton startGame = new JButton("Start Game!");
+        startGame.setBounds(700,50,150,30);
+        startGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                nickLabel.setText("Insert nickname:");
+                textArea.setText("");
+                panel.remove(startGame);
+                startGame.setVisible(false);
+            }
+        });
+
         panel.setBounds(0,0,1920-380,1080-230);
-
-        panel.setLayout(null);
-        textArea.setVisible(true);
-
+        panel.setBackground(Color.gray);
         panel.add(textArea, BorderLayout.SOUTH);
-
+        panel.add(nickLabel, BorderLayout.SOUTH);
+        panel.add(startGame);
+        panel.setLayout(null);
 
         //Panel for Homepage
         JPanel homepage = new PersonalBoardPanel();
@@ -284,24 +338,46 @@ public class GUI implements View {
                 }
             }
         });
+        JButton viewMarket = new JButton("View Market Tray");
+        viewMarket.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                synchronized (userInteractionWait){
+                    synchronized (userInput) {
+                        userInput = "market";
+                    }
+                    userInteractionWait.notifyAll();
+                }
+            }
+        });
         viewLeader.setBounds(1350, 50, 150, 50);
+        viewMarket.setBounds(1350, 150, 150, 50);
         homepage.setBounds(0,0,1920-380,1080-230);
         homepage.setLayout(null);
         homepage.add(viewLeader);
+        homepage.add(viewMarket);
         homepage.setVisible(false);
 
 
         JPanel leader = new JPanel();
         leader.setName("Leader");
-        JLabel label = new JLabel();
         leader.setBounds(0,0,1920-380,1080-230);
         //label.setBounds(10, 10, 300, 200);
         //leader.add(label);
         leader.setVisible(false);
 
+        JPanel market = new JPanel();
+        market.setName("Market");
+        JLabel marketLabel = new JLabel();
+        market.setBounds(0,0,1920-380,1080-230);
+        marketLabel.setBounds(10, 10, 300, 200);
+        market.add(marketLabel);
+        market.setVisible(false);
+
         panelContainer.put(panel.getName(), panel);
         panelContainer.put(leader.getName(), leader);
         panelContainer.put(homepage.getName(), homepage);
+        panelContainer.put(market.getName(), market);
 
 
         mainPanel.setBounds(0,0,1920-380,1080-230);;
@@ -410,5 +486,21 @@ public class GUI implements View {
         panel.setLayout(null);
         panel.setVisible(true);
         return panel;
+    }
+}
+
+class userInput implements ActionListener {
+
+    private final String string;
+    private final Client client;
+
+    public userInput(String string, Client client) {
+        this.client = client;
+        this.string = string;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
     }
 }
