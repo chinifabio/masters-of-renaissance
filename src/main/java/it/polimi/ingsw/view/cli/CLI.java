@@ -9,10 +9,7 @@ import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.View;
-import it.polimi.ingsw.view.cli.printer.FaithTrackPrinter;
-import it.polimi.ingsw.view.cli.printer.MarketTrayPrinter;
-import it.polimi.ingsw.view.cli.printer.PersonalBoardPrinter;
-import it.polimi.ingsw.view.cli.printer.WarehousePrinter;
+import it.polimi.ingsw.view.cli.printer.*;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.LeaderCardPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
@@ -46,6 +43,9 @@ public class CLI implements View {
     private List<String> data;
 
     public CLI() throws IOException {
+        NamePrinter.titleName();
+        System.out.println(TextColors.colorText(TextColors.YELLOW_BRIGHT, "\nAt the start of the game, you have to discard two leader cards and, based on your position in the sequence, you can select up to 2 initial resources.\nAfter that, end your turn. You can type \"help\" to see again the possible moves.\n"));
+
         faithTrackPrinter = new FaithTrackPrinter();
     }
 
@@ -139,7 +139,7 @@ public class CLI implements View {
      */
     @Override
     public void renderHomePage() {
-        PersonalBoardPrinter.printPersonalBoard(model, model.getMe(), model.getLeader(model.getMe()), model.getDevelop(model.getMe()));
+        //PersonalBoardPrinter.printPersonalBoard(model, model.getMe(), model.getLeader(model.getMe()), model.getDevelop(model.getMe()));
     }
 
     /**
@@ -233,7 +233,13 @@ public class CLI implements View {
 
     @Override
     public String askUser(String request) throws InterruptedException {
-        return null;
+        synchronized (lock) {
+            System.out.println(request);
+            lock.notifyAll();
+            lock.wait();
+        }
+
+        return data.get(0);
     }
 
     public static void main(String[] args) {
