@@ -101,6 +101,7 @@ public class dummyGUI {
 
         frame.add(bigPanel);
         frame.setSize(1920-380, 1080-230);
+        frame.setExtendedState(JFrame.MAXIMIZED_HORIZ);
         frame.setLayout(null);
         frame.setVisible(true);
 

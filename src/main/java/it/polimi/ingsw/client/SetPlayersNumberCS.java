@@ -23,16 +23,16 @@ public class SetPlayersNumberCS extends ClientState {
         boolean illegal = true;
 
         while (illegal) {
-            List<String> data = view.pollData("How many players?");
+            String data = view.askUser("How many players?");
 
             try {
-                number = Integer.parseInt(data.get(0));
+                number = Integer.parseInt(data);
             }
             catch (IndexOutOfBoundsException e) {
                 view.notifyPlayerError("You have to insert a number");
             }
             catch (NumberFormatException e) {
-                view.notifyPlayerError(data.get(0) + " is not a number");
+                view.notifyPlayerError(data + " is not a number");
             }
             finally {
                 illegal = false;

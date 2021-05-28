@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.client.Actions;
+import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.InputHandler;
 import it.polimi.ingsw.communication.ServerReply;
 import it.polimi.ingsw.litemodel.LiteModel;
@@ -227,6 +228,23 @@ public class CLI implements View {
                     print = false;
                 }
             }
+        }
+    }
+
+    @Override
+    public String askUser(String request) throws InterruptedException {
+        return null;
+    }
+
+    public static void main(String[] args) {
+        try {
+            CLI cli  = new CLI();
+            Thread client = new Thread(new Client(cli));
+            client.setDaemon(true);
+            client.start();
+            client.join();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 }

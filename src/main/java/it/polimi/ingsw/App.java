@@ -10,21 +10,6 @@ import java.util.List;
  * Hello world!
  *
  */
-public class App 
-{
-    public static void main(String[] arg){
-        List<String> arguments = Arrays.asList(arg);
+public class App{
 
-        if (arguments.contains("cli")) {
-            Client.main(arg);
-            return;
-        }
-
-        if (arguments.contains("server")) {
-            Server.main(arg);
-            return;
-        }
-
-        System.out.println("no use case passed, quitting...");
-    }
 }

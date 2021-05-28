@@ -28,6 +28,7 @@ public class InGameCS extends ClientState {
 
     @Override
     protected Packet doStuff(LiteModel model, View view) throws InterruptedException {
+        view.renderHomePage();
         while (true) {
             List<String> data = view.pollData("Choose an action");
             int i = 1;

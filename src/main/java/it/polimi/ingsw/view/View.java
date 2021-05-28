@@ -38,6 +38,8 @@ public interface View extends Runnable{
      */
     void renderHomePage();
 
+    String askUser(String request) throws InterruptedException;
+
     /**
      * Ask to the player something
      * @param request the message to show
