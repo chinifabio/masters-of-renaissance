@@ -55,8 +55,6 @@ public class Client implements Runnable, Disconnectable {
 
     @Override
     public void run() {
-        NamePrinter.titleName(); // todo change for the gui
-        view.notifyPlayerWarning("\nAt the start of the game, you have to discard two leader cards and, based on your position in the sequence, you can select up to 2 initial resources.\nAfter that, end your turn. You can type \"help\" to see again the possible moves.\n");
 
         while(connected){
             try {

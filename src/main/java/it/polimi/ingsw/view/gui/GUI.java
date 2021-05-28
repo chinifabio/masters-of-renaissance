@@ -3,18 +3,21 @@ package it.polimi.ingsw.view.gui;
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.communication.ServerReply;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.cli.CLI;
 import it.polimi.ingsw.view.gui.panels.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 import java.util.List;
 
 public class GUI implements View {
@@ -163,9 +166,23 @@ public class GUI implements View {
     @Override
     public void renderLeaderCards() {
         JPanel temp = panelContainer.get("Leader");
-        ((JLabel) temp.getComponent(0)).setText(model.getLeader(model.getMe()).toString());
+        temp.removeAll();
+        int i = 20;
+        //((JLabel) temp.getComponent(0)).setText(model.getLeader(model.getMe()).toString());
 
+        JPanel tempCard;
+        for (LiteLeaderCard card : model.getLeader(model.getMe())){
+            tempCard = generateLeaderFromId(card.getCardID());
+            tempCard.setBounds(i, 50, 462/2+5,380);
+            temp.setVisible(true);
+            temp.add(tempCard);
+            i += 462/2+5+10;
+
+        }
+
+        temp.setLayout(null);
         viewPanel("Leader");
+
     }
 
     /**
@@ -245,9 +262,10 @@ public class GUI implements View {
             }
         });
         panel.setBounds(0,0,1920-380,1080-230);
-        panel.setBackground(Color.gray);
+
         panel.setLayout(null);
         textArea.setVisible(true);
+
         panel.add(textArea, BorderLayout.SOUTH);
 
 
@@ -277,8 +295,8 @@ public class GUI implements View {
         leader.setName("Leader");
         JLabel label = new JLabel();
         leader.setBounds(0,0,1920-380,1080-230);
-        label.setBounds(10, 10, 300, 200);
-        leader.add(label);
+        //label.setBounds(10, 10, 300, 200);
+        //leader.add(label);
         leader.setVisible(false);
 
         panelContainer.put(panel.getName(), panel);
@@ -324,5 +342,73 @@ public class GUI implements View {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public static Image getScaledImage(Image srcImg, int w, int h){
+        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(srcImg, 0, 0, w, h, null);
+        g2.dispose();
+
+        return resizedImg;
+    }
+
+    private JPanel generateLeaderFromId(String name){
+        JPanel panel = new JPanel();
+        InputStream url = this.getClass().getResourceAsStream("/LeaderCardsImages/" + name + ".png");
+        BufferedImage img = null;
+        try {
+            assert url != null;
+            img = ImageIO.read(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Image scaledImage = getScaledImage(img, 462/2, 698/2);
+        ImageIcon icon1 = new ImageIcon(scaledImage);
+        JLabel label = new JLabel();
+        label.setBounds(0,0,462/2,698/2);
+
+        label.setIcon(icon1);
+
+        JButton activate = new JButton("Activate");
+        activate.setBounds(0, (698/2) + 5, 30, 20);
+        activate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                synchronized (userInteractionWait){
+                    synchronized (userInput) {
+                        userInput = "activateleader" + " " + name.replace("LC", "");
+                    }
+                    userInteractionWait.notifyAll();
+                }
+            }
+        });
+
+        JButton discard = new JButton("Discard");
+        discard.setBounds(40, (698/2) + 5, 30, 20);
+        discard.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                synchronized (userInteractionWait){
+                    synchronized (userInput) {
+                        userInput = "discardleader" + " " + name.replace("LC", "");
+                    }
+                    userInteractionWait.notifyAll();
+                }
+            }
+        });
+
+
+
+        label.setLayout(null);
+        panel.add(label);
+        panel.add(activate);
+        panel.add(discard);
+        panel.setLayout(null);
+        panel.setVisible(true);
+        return panel;
     }
 }
