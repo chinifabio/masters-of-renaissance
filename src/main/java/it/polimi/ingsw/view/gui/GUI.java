@@ -66,6 +66,7 @@ public class GUI implements View {
      */
     @Override
     public void renderHomePage() {
+        mainPanel.setBackground(Color.gray);
         viewPanel("Homepage");
     }
 
@@ -225,10 +226,11 @@ public class GUI implements View {
 
         JFrame gameWindow = new JFrame();
         //Panel for UserInput
-        JPanel panel = new JPanel();
+        JPanel panel = new LogoPanel();
         panel.setName("RequestPanel");
         JTextField textArea = new JTextField(50);
-        textArea.setBounds(10,30, 50, 10);
+        textArea.setBounds(650,650,200,20);
+        textArea.setHorizontalAlignment(SwingConstants.CENTER);
 
         textArea.addActionListener(new ActionListener() {
             @Override
@@ -242,18 +244,17 @@ public class GUI implements View {
                 }
             }
         });
-        panel.setBounds(200,200,1920-380-200,1080-230-200);
+        panel.setBounds(0,0,1920-380,1080-230);
         panel.setBackground(Color.gray);
+        panel.setLayout(null);
         textArea.setVisible(true);
-        panel.add(textArea);
+        panel.add(textArea, BorderLayout.SOUTH);
 
 
         //Panel for Homepage
-        JPanel homepage = new JPanel();
+        JPanel homepage = new PersonalBoardPanel();
         homepage.setName("Homepage");
-        homepage.setOpaque(true);
-        homepage.setBackground(Color.yellow);
-        JButton viewLeader = new JButton();
+        JButton viewLeader = new JButton("Show Leader Cards");
         viewLeader.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -265,8 +266,11 @@ public class GUI implements View {
                 }
             }
         });
+        viewLeader.setBounds(1350, 50, 150, 50);
         homepage.setBounds(0,0,1920-380,1080-230);
+        homepage.setLayout(null);
         homepage.add(viewLeader);
+        homepage.setVisible(false);
 
 
         JPanel leader = new JPanel();
@@ -274,8 +278,8 @@ public class GUI implements View {
         JLabel label = new JLabel();
         leader.setBounds(0,0,1920-380,1080-230);
         label.setBounds(10, 10, 300, 200);
-
         leader.add(label);
+        leader.setVisible(false);
 
         panelContainer.put(panel.getName(), panel);
         panelContainer.put(leader.getName(), leader);
@@ -288,7 +292,7 @@ public class GUI implements View {
             mainPanel.add(panels);
         }
 
-
+        gameWindow.setResizable(false);
         gameWindow.add(mainPanel);
         gameWindow.setSize(1920-380, 1080-230);
         gameWindow.setLayout(null);
