@@ -15,6 +15,7 @@ public class SetPlayersNumberCS extends ClientState {
     public SetPlayersNumberCS() {
         super();
         this.nextState.put(HeaderTypes.JOIN_LOBBY, new InGameCS());
+        this.nextState.put(HeaderTypes.INVALID, this);
     }
 
     @Override
@@ -26,16 +27,15 @@ public class SetPlayersNumberCS extends ClientState {
             String data = view.askUser("How many players?");
 
             try {
+                if(data.equals("")) throw new IndexOutOfBoundsException();
                 number = Integer.parseInt(data);
+                illegal = false;
             }
-            catch (IndexOutOfBoundsException e) {
+            catch (IndexOutOfBoundsException | NullPointerException e) {
                 view.notifyPlayerError("You have to insert a number");
             }
             catch (NumberFormatException e) {
                 view.notifyPlayerError(data + " is not a number");
-            }
-            finally {
-                illegal = false;
             }
         }
 

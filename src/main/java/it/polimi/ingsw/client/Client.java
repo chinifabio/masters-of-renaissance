@@ -73,6 +73,8 @@ public class Client implements Runnable, Disconnectable {
     public void handleDisconnection() {
         System.out.println("disconnected");
         this.connected = false;
+        //metodo cli/gui
+        System.exit(-1);
     }
 
     @Override

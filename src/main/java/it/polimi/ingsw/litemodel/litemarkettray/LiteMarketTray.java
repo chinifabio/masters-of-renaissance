@@ -3,6 +3,8 @@ package it.polimi.ingsw.litemodel.litemarkettray;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Arrays;
+
 public class LiteMarketTray {
 
     public final int col;
@@ -41,4 +43,20 @@ public class LiteMarketTray {
         return slideMarble;
     }
 
+
+
+    public String toString(int n) {
+        String temp = "";
+        //for(LiteMarble[] row : this.marbles){
+        //    for(LiteMarble marble : row){
+        //        temp = temp + marble.toString();
+        //    }
+        //    temp = temp + "\n";
+        //}
+
+        for(int i=0;i<4;i++){
+            temp = temp + " " + this.marbles[n][i];
+        }
+        return temp;
+    }
 }

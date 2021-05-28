@@ -123,4 +123,5 @@ public class NormalProduction extends Production {
                 ResourceBuilder.mapResource(this.output)
         );
     }
+
 }

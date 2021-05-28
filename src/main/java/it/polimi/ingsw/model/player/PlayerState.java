@@ -179,6 +179,8 @@ public abstract class PlayerState implements PlayerAction, MappableToLiteVersion
         return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 
+
+
     /**
      * Create a lite version of the class and serialize it in json
      *

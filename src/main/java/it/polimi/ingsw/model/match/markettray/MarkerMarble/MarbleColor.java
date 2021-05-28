@@ -15,6 +15,7 @@ public enum MarbleColor {
      */
     @Override
     public String toString() {
-        return TextColors.colorMarbleType(this);
+        return this.name();
+        //return TextColors.colorMarbleType(this);
     }
 }

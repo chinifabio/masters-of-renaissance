@@ -23,11 +23,10 @@ public class InitialCS extends ClientState{
 
         while (illegal) {
             try {
-                nick = view.askUser("Choose your nickname:");
+                nick = view.askUser("Choose your nickname: ");
+                illegal = false;
             } catch (IndexOutOfBoundsException out) {
                 view.notifyPlayerError("You have to insert a nickname");
-            } finally {
-                illegal = false;
             }
         }
 
