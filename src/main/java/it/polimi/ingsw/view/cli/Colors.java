@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.view.cli;
 
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
@@ -6,14 +6,13 @@ import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.*;
 
-public class TextColors {
-
-    public static String colorText(String textColors, String text){
-        return textColors + text + RESET ;
+public class Colors {
+    public static String color(String Colors, String text){
+        return Colors + text + RESET ;
     }
 
-    public static String colorTextBackGround(String textColors, String background, String text){
-        return textColors  + background + text + RESET ;
+    public static String colorBackGround(String Colors, String background, String text){
+        return Colors  + background + text + RESET ;
     }
 
 
@@ -144,5 +143,4 @@ public class TextColors {
     public static final String PURPLE_BACKGROUND_BRIGHT = "\033[0;105m"; // PURPLE
     public static final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m";  // CYAN
     public static final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m";   // WHITE
-
 }

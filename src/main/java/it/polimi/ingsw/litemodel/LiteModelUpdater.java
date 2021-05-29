@@ -2,12 +2,12 @@ package it.polimi.ingsw.litemodel;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.communication.VirtualSocket;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.updates.Updater;
+import it.polimi.ingsw.view.cli.Colors;
 
 public class LiteModelUpdater implements Runnable{
     private final VirtualSocket socket;
@@ -31,7 +31,7 @@ public class LiteModelUpdater implements Runnable{
                 Updater received = new ObjectMapper().readerFor(Updater.class).readValue(packet.body);
                 received.update(this.model);
             } catch (JsonProcessingException e) {
-                System.out.println(TextColors.colorText(TextColors.RED, "update view error: ") + e.getMessage());
+                System.out.println(Colors.color(Colors.RED, "update view error: ") + e.getMessage());
                 System.out.println(packet.body);
             }
         }

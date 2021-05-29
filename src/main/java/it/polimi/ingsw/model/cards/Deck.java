@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.cards;
 
-import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
-import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
@@ -183,8 +181,8 @@ public class Deck<T extends Card> {
     }
 
     //for testing
-    public T getDiscarded() {
-        if (this.discardedCards.isEmpty()) return (T) new SoloActionToken("empty", null);
-        return this.discardedCards.get(discardedCards.size()-1);
+    public SoloActionToken getDiscarded() {
+        if (this.discardedCards.isEmpty()) return new SoloActionToken("empty", null);
+        return (SoloActionToken) this.discardedCards.get(discardedCards.size()-1);
     }
 }

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 
-import it.polimi.ingsw.TextColors;
-
 /**
  * This enumeration represents the Marbles' colors
  */
@@ -15,6 +13,7 @@ public enum MarbleColor {
      */
     @Override
     public String toString() {
-        return TextColors.colorMarbleType(this);
+        return this.name();
+        //return TextColors.colorMarbleType(this);
     }
 }

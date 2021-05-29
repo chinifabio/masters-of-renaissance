@@ -2,15 +2,14 @@ package it.polimi.ingsw.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.communication.Disconnectable;
-import it.polimi.ingsw.communication.SecureConnection;
 import it.polimi.ingsw.communication.VirtualSocket;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.Command;
 import it.polimi.ingsw.model.Model;
+import it.polimi.ingsw.view.cli.Colors;
 
 import java.io.IOException;
 
@@ -51,7 +50,7 @@ public class Controller implements Runnable, Disconnectable {
         while (!this.disconnected) {
             // wait for a message to handle
             Packet received = socket.pollPacketFrom(ChannelTypes.PLAYER_ACTIONS);
-            System.out.println(TextColors.colorText(TextColors.CYAN, nickname) + ": " + received);
+            System.out.println(Colors.color(Colors.CYAN, nickname) + ": " + received);
 
             if (received.header == HeaderTypes.TIMEOUT) return;
 
@@ -62,7 +61,7 @@ public class Controller implements Runnable, Disconnectable {
 
     @Override
     public void handleDisconnection() {
-        System.out.println(TextColors.colorText(TextColors.RED, nickname) + " disconnected");
+        System.out.println(Colors.color(Colors.RED, nickname) + " disconnected");
         if (model.disconnectPlayer(this))                  // disconnection from model
             server.disconnect(nickname, this);        // disconnection from server
         else
@@ -121,7 +120,7 @@ class InitState implements ControllerState {
                 return context.model.login(context, context.nickname);
 
             default:
-                return context.invalid("pls change the nickname, " + TextColors.colorText(TextColors.RED_BRIGHT, packet.body) + " is invalid");
+                return context.invalid("pls change the nickname, " + Colors.color(Colors.RED_BRIGHT, packet.body) + " is invalid");
         }
     }
 }
@@ -140,7 +139,16 @@ class CreatorState implements ControllerState {
             return context.invalid("invalid packet: " + packet.header + "; expected " + HeaderTypes.SET_PLAYERS_NUMBER);
 
         try {
-            context.model.createMatch(Integer.parseInt(packet.body));
+            int n=-1;
+            try{
+              n = Integer.parseInt(packet.body);
+              if(n<1 || n>4) return context.invalid(n + " is not a legal game size.");
+            } catch (NumberFormatException e){
+                return context.invalid(n + " is not a number");
+            } catch (NullPointerException e){
+                return context.invalid("insert a number");
+            }
+            context.model.createMatch(n);
             context.setState(new InGameState());
             return context.model.login(context, context.nickname);
 

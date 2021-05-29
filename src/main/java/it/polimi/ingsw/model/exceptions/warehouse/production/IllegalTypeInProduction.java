@@ -2,8 +2,6 @@ package it.polimi.ingsw.model.exceptions.warehouse.production;
 
 import it.polimi.ingsw.model.resource.Resource;
 
-import static it.polimi.ingsw.TextColors.*;
-
 public class IllegalTypeInProduction extends Exception{
 
     /**
@@ -12,7 +10,7 @@ public class IllegalTypeInProduction extends Exception{
      * call to {@link #initCause}.
      */
     public IllegalTypeInProduction(Resource x) {
-        super("NormalProduction received an ILLEGAL res: " + RESET + x);
+        super("NormalProduction received an ILLEGAL res: " + x);
     }
 
     /**

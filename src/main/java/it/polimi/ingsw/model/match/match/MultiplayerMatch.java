@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model.match.match;
 
+import it.polimi.ingsw.model.Pair;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.player.CountingPointsPlayerState;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
-import it.polimi.ingsw.util.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;

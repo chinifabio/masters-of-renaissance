@@ -1,69 +1,44 @@
 package it.polimi.ingsw.litemodel.litewarehouse;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
-import it.polimi.ingsw.util.Tuple;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class LiteWarehouse {
 
-    private final Map<DepotSlot, LiteDepot> depots = new EnumMap<>(DepotSlot.class);
+    private final HashMap<String, LiteDepot> depots = new HashMap<>();
+    private final HashMap<String, LiteProduction> productions = new HashMap<>();
 
-    private final Map<ProductionID, LiteProduction> productions = new EnumMap<>(ProductionID.class);
+    @JsonCreator
+    public LiteWarehouse() {}
 
     public void setDepot(DepotSlot slot, LiteDepot depot) {
-        this.depots.put(slot, depot);
+        this.depots.put(slot.name(), depot);
     }
 
     @JsonIgnore
     public LiteDepot getDepots(DepotSlot slot) {
-        return this.depots.get(slot);
+        return this.depots.get(slot.name());
     }
 
     public void setProductions(ProductionID id, LiteProduction prod) {
-        this.productions.put(id, prod);
+        this.productions.put(id.name(), prod);
     }
 
     @JsonIgnore
     public LiteProduction getProductions(ProductionID id) {
-        return this.productions.get(id);
+        return this.productions.get(id.name());
     }
 
     @JsonIgnore
     public Map<ProductionID, LiteProduction> getAllProductions(){
-        return this.productions;
+        Map<ProductionID, LiteProduction> result = new HashMap<>();
+        this.productions.forEach((key, value) -> result.put(ProductionID.valueOf(key), value));
+        return result;
     }
-
-    @JsonGetter("depots")
-    public List<Tuple<DepotSlot,LiteDepot>> getDepots(){
-        List<Tuple<DepotSlot,LiteDepot>> res = new ArrayList<>();
-        depots.forEach((K,V)->res.add(new Tuple<>(K,V)));
-        return res;
-    }
-
-    @JsonGetter("productions")
-    public List<Tuple<DepotSlot,LiteDepot>> getProductions(){
-        List<Tuple<DepotSlot,LiteDepot>> res = new ArrayList<>();
-        depots.forEach((K,V)->res.add(new Tuple<>(K,V)));
-        return res;
-    }
-
-    public LiteWarehouse() {
-
-    }
-
-    @JsonCreator
-    public LiteWarehouse(@JsonProperty("depots") List<Tuple<DepotSlot,LiteDepot>> depots, @JsonProperty("productions") List<Tuple<DepotSlot,LiteDepot>> productions) {
-        depots.forEach(tuple->this.depots.put(tuple.a,tuple.b));
-        productions.forEach(tuple->this.depots.put(tuple.a,tuple.b));
-    }
-
 }

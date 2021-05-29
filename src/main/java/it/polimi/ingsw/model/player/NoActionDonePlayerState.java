@@ -3,8 +3,6 @@ package it.polimi.ingsw.model.player;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.litemodel.liteplayer.LiteState;
-import it.polimi.ingsw.litemodel.liteplayer.NoActionDone;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
@@ -255,15 +253,5 @@ public class NoActionDonePlayerState extends PlayerState {
     @Override
     public Packet endThisTurn() {
         return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "Your can't end your turn until you do the main action!");
-    }
-
-    /**
-     * Create a lite version of the class and serialize it in json
-     *
-     * @return the json representation of the lite version of the class
-     */
-    @Override
-    public LiteState liteVersion() {
-        return new NoActionDone();
     }
 }

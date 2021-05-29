@@ -1,12 +1,9 @@
 package it.polimi.ingsw.view.gui;
 
-import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.communication.ServerReply;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
-import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.view.View;
-import it.polimi.ingsw.view.cli.CLI;
 import it.polimi.ingsw.view.gui.panels.*;
 
 import javax.imageio.ImageIO;
@@ -23,7 +20,7 @@ import java.util.List;
 public class GUI implements View {
 
 
-    private LiteModel model;
+    private final LiteModel model = new LiteModel();
     public HashMap<String, JPanel> panelContainer = new HashMap<>();
     public final Object userInteractionWait = new Object();
     public String userInput = "";
@@ -33,7 +30,6 @@ public class GUI implements View {
     /**
      * This method prints the current status of the FaithTrack
      */
-    @Override
     public void renderFaithTrack() {
 
     }
@@ -41,9 +37,35 @@ public class GUI implements View {
     /**
      * Render the a view of the market tray
      */
-    @Override
     public void renderMarketTray() {
+        JPanel panelTemp = panelContainer.get("Market");
 
+        //questa roba è orribile.
+        JLabel labelTemp0 = new JLabel();
+        JLabel labelTemp1 = new JLabel();
+        JLabel labelTemp2 = new JLabel();
+        String test0 = model.getTray().toString(0);
+        String test1 = model.getTray().toString(1);
+        String test2 = model.getTray().toString(2);
+        labelTemp0.setText(test0);
+        labelTemp1.setText(test1);
+        labelTemp2.setText(test2);
+        labelTemp0.setBounds(300,100,600,50);
+        labelTemp1.setBounds(300,125,600,50);
+        labelTemp2.setBounds(300,150,600,50);
+        panelTemp.add(labelTemp0);
+        panelTemp.add(labelTemp1);
+        panelTemp.add(labelTemp2);
+
+
+        //((JLabel) panelTemp.getComponent(0)).setText(model.getLeader(model.getMe()).toString());
+        JButton back = new JButton("Return to PB");
+        back.setBounds(20,20,150,40);
+        back.addActionListener(e -> viewPanel("Homepage"));
+
+        panelTemp.add(back);
+        panelTemp.setLayout(null);
+        viewPanel("Market");
     }
 
     /**
@@ -51,7 +73,6 @@ public class GUI implements View {
      *
      * @param nickname the player to show personal board
      */
-    @Override
     public void renderPersonalBoard(String nickname) {
 
     }
@@ -59,7 +80,6 @@ public class GUI implements View {
     /**
      * Render a view of the devSetup
      */
-    @Override
     public void renderDevSetup() {
 
     }
@@ -67,7 +87,6 @@ public class GUI implements View {
     /**
      * Render the homepage of the cli
      */
-    @Override
     public void renderHomePage() {
         mainPanel.setBackground(Color.gray);
         viewPanel("Homepage");
@@ -79,7 +98,6 @@ public class GUI implements View {
      * @param request the message to show
      * @return the input string submitted by the player
      */
-    @Override
     public List<String> pollData(String request) throws InterruptedException {
         synchronized (userInteractionWait){
             userInteractionWait.wait();
@@ -96,8 +114,10 @@ public class GUI implements View {
      * @param request the message to show
      * @return the input string submitted by the player
      */
-    @Override
     public String askUser(String request) throws InterruptedException {
+        //JPanel panelTemp = panelContainer.get("RequestPanel");
+        //JLabel labelTemp = (JLabel) Arrays.stream(panelTemp.getComponents()).filter(p-> p.getName().equals("requestText")).findAny().get();
+        //labelTemp.setText(request);
         viewPanel("RequestPanel");
         synchronized (userInteractionWait){
             userInteractionWait.wait();
@@ -122,10 +142,8 @@ public class GUI implements View {
      *
      * @param reply the reply to show to the player
      */
-    @Override
     public void notifyServerReply(ServerReply reply) {
         JFrame popUp = new JFrame();
-        popUp.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JButton ok = new JButton("OK");
         JLabel text = new JLabel();
         text.setText(reply.obtainMessage());
@@ -151,38 +169,28 @@ public class GUI implements View {
     }
 
     /**
-     * Save the lite model passed
-     *
-     * @param model the model to save
-     */
-    @Override
-    public void receiveModel(LiteModel model) {
-        this.model = model;
-    }
-
-    /**
      * Render a view of the leader cards of the player
      */
-    @Override
     public void renderLeaderCards() {
         JPanel temp = panelContainer.get("Leader");
         temp.removeAll();
         int i = 20;
         //((JLabel) temp.getComponent(0)).setText(model.getLeader(model.getMe()).toString());
-
+        temp.setLayout(null);
         JPanel tempCard;
         for (LiteLeaderCard card : model.getLeader(model.getMe())){
             tempCard = generateLeaderFromId(card.getCardID());
-            tempCard.setBounds(i, 50, 462/2+5,380);
+            tempCard.setBounds(i, 100, 462/2+5,380);
             temp.setVisible(true);
             temp.add(tempCard);
             i += 462/2+5+10;
-
         }
 
-        temp.setLayout(null);
+        JButton back = new JButton("Return to PB");
+        back.setBounds(20,20,150,40);
+        back.addActionListener(e -> viewPanel("Homepage"));
+        temp.add(back);
         viewPanel("Leader");
-
     }
 
     /**
@@ -200,7 +208,6 @@ public class GUI implements View {
      *
      * @param nickname
      */
-    @Override
     public void renderWarehouse(String nickname) {
 
     }
@@ -216,9 +223,19 @@ public class GUI implements View {
     }
 
     /**
-     * Render a list of available commands
+     * return the liteModel of the view
+     *
+     * @return
      */
     @Override
+    public LiteModel getModel() {
+        return this.model;
+    }
+
+    /**
+     * Render a list of available commands
+     */
+
     public void renderHelp() {
 
     }
@@ -242,13 +259,22 @@ public class GUI implements View {
     public GUI() {
 
         JFrame gameWindow = new JFrame();
+        gameWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //Panel for UserInput
         JPanel panel = new LogoPanel();
         panel.setName("RequestPanel");
+
+        JLabel nickLabel = new JLabel();
+        nickLabel.setName("requestText");
+        nickLabel.setBackground(Color.CYAN.darker());
+        nickLabel.setBounds(600,620,300,20);
+        nickLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        nickLabel.setOpaque(true);
+
+
         JTextField textArea = new JTextField(50);
         textArea.setBounds(650,650,200,20);
         textArea.setHorizontalAlignment(SwingConstants.CENTER);
-
         textArea.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -256,18 +282,33 @@ public class GUI implements View {
                     synchronized (userInput) {
                         userInput = textArea.getText();
                         textArea.setText("");
+                        //sotto è in testing
+                        nickLabel.setText("Insert the desired number of players: ");
+                        //testing finito
                     }
                     userInteractionWait.notifyAll();
                 }
             }
         });
+
+        JButton startGame = new JButton("Start Game!");
+        startGame.setBounds(700,50,150,30);
+        startGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                nickLabel.setText("Insert nickname:");
+                textArea.setText("");
+                panel.remove(startGame);
+                startGame.setVisible(false);
+            }
+        });
+
         panel.setBounds(0,0,1920-380,1080-230);
-
-        panel.setLayout(null);
-        textArea.setVisible(true);
-
+        panel.setBackground(Color.gray);
         panel.add(textArea, BorderLayout.SOUTH);
-
+        panel.add(nickLabel, BorderLayout.SOUTH);
+        panel.add(startGame);
+        panel.setLayout(null);
 
         //Panel for Homepage
         JPanel homepage = new PersonalBoardPanel();
@@ -284,24 +325,46 @@ public class GUI implements View {
                 }
             }
         });
+        JButton viewMarket = new JButton("View Market Tray");
+        viewMarket.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                synchronized (userInteractionWait){
+                    synchronized (userInput) {
+                        userInput = "market";
+                    }
+                    userInteractionWait.notifyAll();
+                }
+            }
+        });
         viewLeader.setBounds(1350, 50, 150, 50);
+        viewMarket.setBounds(1350, 150, 150, 50);
         homepage.setBounds(0,0,1920-380,1080-230);
         homepage.setLayout(null);
         homepage.add(viewLeader);
+        homepage.add(viewMarket);
         homepage.setVisible(false);
 
 
         JPanel leader = new JPanel();
         leader.setName("Leader");
-        JLabel label = new JLabel();
         leader.setBounds(0,0,1920-380,1080-230);
         //label.setBounds(10, 10, 300, 200);
         //leader.add(label);
         leader.setVisible(false);
 
+        JPanel market = new JPanel();
+        market.setName("Market");
+        JLabel marketLabel = new JLabel();
+        market.setBounds(0,0,1920-380,1080-230);
+        marketLabel.setBounds(10, 10, 300, 200);
+        market.add(marketLabel);
+        market.setVisible(false);
+
         panelContainer.put(panel.getName(), panel);
         panelContainer.put(leader.getName(), leader);
         panelContainer.put(homepage.getName(), homepage);
+        panelContainer.put(market.getName(), market);
 
 
         mainPanel.setBounds(0,0,1920-380,1080-230);;
@@ -335,7 +398,7 @@ public class GUI implements View {
     public static void main(String[] args){
         try {
             GUI gui  = new GUI();
-            Thread client = new Thread(new Client(gui));
+            Thread client = new Thread(gui);
             client.setDaemon(true);
             client.start();
             client.join();

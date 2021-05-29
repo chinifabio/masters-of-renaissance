@@ -1,10 +1,10 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.model.Pair;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.updates.ConversionUpdater;
 import it.polimi.ingsw.communication.packet.updates.DiscountUpdater;
 import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
-import it.polimi.ingsw.communication.packet.updates.PlayerStateUpdater;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.ExtraProductionException;
@@ -30,7 +30,6 @@ import it.polimi.ingsw.model.requisite.ResourceRequisite;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.*;
 import it.polimi.ingsw.model.resource.ResourceType;
-import it.polimi.ingsw.util.Pair;
 
 import java.io.IOException;
 import java.util.*;
@@ -153,7 +152,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     public void setState(PlayerState newPlayerState) {
         this.playerState = newPlayerState;
-        updateState();
     }
 
     /**
@@ -429,10 +427,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     @Override
     public void startHisTurn() {
         this.playerState.starTurn();
-    }
-
-    private void updateState() {
-        this.view.publish(new PlayerStateUpdater(this.playerState.liteVersion(), this.nickname));
     }
 
     /**

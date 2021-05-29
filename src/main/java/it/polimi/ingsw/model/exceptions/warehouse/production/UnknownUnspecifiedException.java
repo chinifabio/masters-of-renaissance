@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.exceptions.warehouse.production;
 
-import static it.polimi.ingsw.TextColors.*;
-import static it.polimi.ingsw.TextColors.RED_BRIGHT;
 
 public class UnknownUnspecifiedException extends Exception{
 

@@ -3,7 +3,6 @@ package it.polimi.ingsw.model.player;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.litemodel.liteplayer.LiteState;
 import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
@@ -18,7 +17,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
 /**
  * abstract class that need to have basics of concrete player states
  */
-public abstract class PlayerState implements PlayerAction, MappableToLiteVersion {
+public abstract class PlayerState implements PlayerAction {
 
     /**
      * the context to refer for changing the current state of the player
@@ -178,13 +177,5 @@ public abstract class PlayerState implements PlayerAction, MappableToLiteVersion
     public Packet chooseResource(DepotSlot slot, ResourceType chosen) {
         return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
-
-    /**
-     * Create a lite version of the class and serialize it in json
-     *
-     * @return the json representation of the lite version of the class
-     */
-    @Override
-    public abstract LiteState liteVersion();
 
 }

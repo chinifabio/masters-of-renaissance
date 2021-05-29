@@ -3,8 +3,6 @@ package it.polimi.ingsw.model.player;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.litemodel.liteplayer.LiteState;
-import it.polimi.ingsw.litemodel.liteplayer.MainActionDone;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
@@ -113,15 +111,5 @@ public class MainActionDonePlayerState extends PlayerState {
         this.context.setState(new NotHisTurnPlayerState(this.context));
         this.context.match.turnDone();
         return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Your turn is ended");
-    }
-
-    /**
-     * Create a lite version of the class and serialize it in json
-     *
-     * @return the json representation of the lite version of the class
-     */
-    @Override
-    public LiteState liteVersion() {
-        return new MainActionDone();
     }
 }

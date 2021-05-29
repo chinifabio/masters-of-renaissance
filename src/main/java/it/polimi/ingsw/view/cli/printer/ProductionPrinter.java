@@ -1,11 +1,11 @@
 package it.polimi.ingsw.view.cli.printer;
 
-import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.cli.CLI;
+import it.polimi.ingsw.view.cli.Colors;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -29,23 +29,23 @@ public class ProductionPrinter {
                 display[i][j] = " ";
             }
         }
-        display[x][y] = TextColors.colorText(TextColors.GREEN, "╔");
+        display[x][y] = Colors.color(Colors.GREEN, "╔");
         for (int i = x + 1; i < x + HEIGHT-2; i++){
-            display[i][y] =TextColors.colorText(TextColors.GREEN,"║");
-            display[i][y + WIDTH-2] = TextColors.colorText(TextColors.GREEN,"║");
+            display[i][y] =Colors.color(Colors.GREEN,"║");
+            display[i][y + WIDTH-2] = Colors.color(Colors.GREEN,"║");
         }
-        display[x + HEIGHT-2][y] =TextColors.colorText(TextColors.GREEN,"╚");
-        display[x + HEIGHT-2][y + WIDTH-2] = TextColors.colorText(TextColors.GREEN,"╝");
-        display[x][y + WIDTH-2] = TextColors.colorText(TextColors.GREEN,"╗");
+        display[x + HEIGHT-2][y] =Colors.color(Colors.GREEN,"╚");
+        display[x + HEIGHT-2][y + WIDTH-2] = Colors.color(Colors.GREEN,"╝");
+        display[x][y + WIDTH-2] = Colors.color(Colors.GREEN,"╗");
         for (int i = y + 1; i < y + WIDTH-2; i++) {
             if (i > y + 3 && initProdname <= prod.length() - 1) {
                 prodFirstLetter = prod.charAt(initProdname);
                 display[x][i] = Character.toString(prodFirstLetter);
                 initProdname++;
             } else {
-                display[x][i] = TextColors.colorText(TextColors.GREEN, "═");
+                display[x][i] = Colors.color(Colors.GREEN, "═");
             }
-            display[x + HEIGHT-2][i] = TextColors.colorText(TextColors.GREEN,"═");
+            display[x + HEIGHT-2][i] = Colors.color(Colors.GREEN,"═");
         }
 
         int reset = y+3;
@@ -62,7 +62,7 @@ public class ProductionPrinter {
             for (int i = initcol+1; i < initcol + 11; i++ ){
                 if (i > initcol + 2 && initname <= entry.getKey().name().length() -1) {
                     firstLetter = name.charAt(initname);
-                    display[initrow - 1][i] = TextColors.colorText(TextColors.GREEN_BRIGHT,Character.toString(firstLetter));
+                    display[initrow - 1][i] = Colors.color(Colors.GREEN_BRIGHT,Character.toString(firstLetter));
                     initname++;
                 } else {
                     display[initrow - 1][i] = "═";
@@ -122,7 +122,7 @@ public class ProductionPrinter {
             for (int i = initcol+1; i < initcol + 11; i++ ){
                 if (i > initcol + 2 && initname <= add.length() -1) {
                     firstLetter = add.charAt(initname);
-                    display[initrow - 1][i] = TextColors.colorText(TextColors.GREEN_BRIGHT,Character.toString(firstLetter));
+                    display[initrow - 1][i] = Colors.color(Colors.GREEN_BRIGHT,Character.toString(firstLetter));
                     initname++;
                 } else {
                     display[initrow - 1][i] = "═";
@@ -190,7 +190,7 @@ public class ProductionPrinter {
 
 
     public  static void main(String[] args){
-        Map<ProductionID, LiteProduction> productionMap = new EnumMap<ProductionID, LiteProduction>(ProductionID.class);
+        Map<ProductionID, LiteProduction> productionMap = new EnumMap<>(ProductionID.class);
         List<LiteResource> required = new ArrayList<>();
         List<LiteResource> output = new ArrayList<>();
 

@@ -2,11 +2,11 @@ package it.polimi.ingsw.view.cli.printer.cardprinter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.TextColors;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequisite;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
+import it.polimi.ingsw.view.cli.Colors;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,42 +21,42 @@ public class DevCardPrinter {
         String colorCard;
         colorCard = toPrint.getColor().getDevCardColor();
 
-        display[x][y] = TextColors.colorText(colorCard,"╔");
-        display[x + HEIGHT -1][y] = TextColors.colorText(colorCard,"╚");
+        display[x][y] = Colors.color(colorCard,"╔");
+        display[x + HEIGHT -1][y] = Colors.color(colorCard,"╚");
         for (int i = y + 1; i< y + WIDTH -1; i++){
-            display[x][i] = TextColors.colorText(colorCard,"═");
-            display[x + HEIGHT -1][i] = TextColors.colorText(colorCard,"═");
+            display[x][i] = Colors.color(colorCard,"═");
+            display[x + HEIGHT -1][i] = Colors.color(colorCard,"═");
         }
         for (int i = y + 4; i < y + 8; i++){
             display[x][i] = "";
         }
-        display[x][y + 4] = TextColors.colorText(colorCard,toPrint.getId());
+        display[x][y + 4] = Colors.color(colorCard,toPrint.getId());
         if (toPrint.getId().length() < 4) {
-            display[x][y + 5] = TextColors.colorText(colorCard,"═");
+            display[x][y + 5] = Colors.color(colorCard,"═");
         } else if (toPrint.getId().length() > 4){
             display[x][y + 3] = "";
         }
 
-        display[x][y + WIDTH -1] = TextColors.colorText(colorCard,"╗");
+        display[x][y + WIDTH -1] = Colors.color(colorCard,"╗");
         for (int r = x + 1; r < x + HEIGHT -1; r++){
-            display[r][y] = (TextColors.colorText(colorCard,"║"));
+            display[r][y] = (Colors.color(colorCard,"║"));
             for (int c = y + 1; c < y + WIDTH -1; c++){
                 display[r][c] = " ";
             }
-            display[r][y + WIDTH - 1] = TextColors.colorText(colorCard,"║");
+            display[r][y + WIDTH - 1] = Colors.color(colorCard,"║");
         }
         if (notEmpty) {
-            display[x + HEIGHT - 2][y + WIDTH - 7] = TextColors.colorText(TextColors.PURPLE_BRIGHT, String.valueOf(toPrint.getVictoryPoint()));
+            display[x + HEIGHT - 2][y + WIDTH - 7] = Colors.color(Colors.PURPLE_BRIGHT, String.valueOf(toPrint.getVictoryPoint()));
             if (toPrint.getVictoryPoint() > 9) {
                 display[x + HEIGHT - 2][y + WIDTH - 6] = "";
             }
         }
-        display[x + HEIGHT -1][y + WIDTH -1] = TextColors.colorText(colorCard,"╝");
+        display[x + HEIGHT -1][y + WIDTH -1] = Colors.color(colorCard,"╝");
 
 
-        display[x + HEIGHT-1][y + 3] = TextColors.colorText(colorCard,"LEVEL");
+        display[x + HEIGHT-1][y + 3] = Colors.color(colorCard,"LEVEL");
         if (notEmpty) {
-            display[x + HEIGHT - 1][y + 4] = TextColors.colorText(colorCard, String.valueOf(toPrint.getLevel().getLevelCard()));
+            display[x + HEIGHT - 1][y + 4] = Colors.color(colorCard, String.valueOf(toPrint.getLevel().getLevelCard()));
         }
         for (int i = y + 5; i< y + WIDTH-3; i++){
             display[x + HEIGHT-1][i] = "";
@@ -65,8 +65,8 @@ public class DevCardPrinter {
         if (notEmpty) {
             toPrint.getEffect().printEffect(display, x, y);
             for (int i = y + 1; i < y + WIDTH - 1; i++) {
-                display[x + 2][i] = TextColors.colorText(TextColors.CYAN, "-");
-                display[x + HEIGHT - 3][i] = TextColors.colorText(TextColors.CYAN, "-");
+                display[x + 2][i] = Colors.color(Colors.CYAN, "-");
+                display[x + HEIGHT - 3][i] = Colors.color(Colors.CYAN, "-");
             }
 
             int z = y;

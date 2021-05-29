@@ -1,9 +1,9 @@
 package it.polimi.ingsw.communication;
 
-import it.polimi.ingsw.TextColors;
+import it.polimi.ingsw.view.cli.Colors;
 
 public enum ReplyType {
-    OK(TextColors.GREEN_BRIGHT), ERROR(TextColors.RED_BRIGHT), UPDATE(TextColors.CYAN_BRIGHT);
+    OK(Colors.GREEN_BRIGHT), ERROR(Colors.RED_BRIGHT), UPDATE(Colors.CYAN_BRIGHT);
 
     public final String color;
 
