@@ -59,7 +59,7 @@ public class dummyGUI {
 
 
         JPanel bigPanel = new JPanel();
-        LogoPanel logo = new LogoPanel();
+        //LogoPanel logo = new LogoPanel();
         FaithTrackPanel track = new FaithTrackPanel();
         JButton nameButton = new JButton();
         JButton trackButton = new JButton();
@@ -78,26 +78,26 @@ public class dummyGUI {
         frame.add(nameButton);
         //frame.add(logo);
         //logo.setVisible(true);
-        logo.setBounds(0,0,1920-380,1080-230);
+        //logo.setBounds(0,0,1920-380,1080-230);
         track.setBounds(0,0,1920-380,1080-230);
-        bigPanel.add(logo);
+       // bigPanel.add(logo);
         bigPanel.add(track);
 
 
 
-        trackButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GUI.switchPanels(bigPanel, track);
-            }
-        });
+        //trackButton.addActionListener(new ActionListener() {
+        //    @Override
+        //    public void actionPerformed(ActionEvent e) {
+        //        GUI.switchPanels(bigPanel, track);
+        //    }
+        //});
 
-        nameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GUI.switchPanels(bigPanel, logo);
-            }
-        });
+        //nameButton.addActionListener(new ActionListener() {
+        //    @Override
+        //    public void actionPerformed(ActionEvent e) {
+        //        GUI.switchPanels(bigPanel, logo);
+        //    }
+        //});
 
         frame.add(bigPanel);
         frame.setSize(1920-380, 1080-230);

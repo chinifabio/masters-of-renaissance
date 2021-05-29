@@ -1,31 +1,39 @@
 package it.polimi.ingsw.view.gui;
 
+import it.polimi.ingsw.communication.Disconnectable;
 import it.polimi.ingsw.communication.ServerReply;
+import it.polimi.ingsw.communication.VirtualSocket;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.litemodel.LiteModelUpdater;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.gui.panels.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 import java.util.*;
 import java.util.List;
 
-public class GUI implements View {
+public class GUI implements View, Disconnectable {
 
 
     private final LiteModel model = new LiteModel();
+    public final VirtualSocket socket;
+
     public HashMap<String, JPanel> panelContainer = new HashMap<>();
-    public final Object userInteractionWait = new Object();
-    public String userInput = "";
-    private final JPanel mainPanel = new JPanel();
-    private final ArrayList<JPanel> panels = new ArrayList<>();
+    private final JPanel mainPanel = new LogoPanel();
+    private final JFrame gameWindow = new JFrame("Master of Renaissance");
+
+    private final Dimension screenDimension = new Dimension();
+
 
     /**
      * This method prints the current status of the FaithTrack
@@ -92,21 +100,6 @@ public class GUI implements View {
         viewPanel("Homepage");
     }
 
-    /**
-     * Ask to the player something
-     *
-     * @param request the message to show
-     * @return the input string submitted by the player
-     */
-    public List<String> pollData(String request) throws InterruptedException {
-        synchronized (userInteractionWait){
-            userInteractionWait.wait();
-            synchronized (userInput){
-                return Arrays.asList(userInput.split(" "));
-            }
-        }
-    }
-
 
     /**
      * Ask to the player something
@@ -119,12 +112,13 @@ public class GUI implements View {
         //JLabel labelTemp = (JLabel) Arrays.stream(panelTemp.getComponents()).filter(p-> p.getName().equals("requestText")).findAny().get();
         //labelTemp.setText(request);
         viewPanel("RequestPanel");
-        synchronized (userInteractionWait){
-            userInteractionWait.wait();
-            synchronized (userInput){
-                return userInput;
-            }
-        }
+        //synchronized (userInteractionWait){
+        //    userInteractionWait.wait();
+        //    synchronized (userInput){
+        //        return userInput;
+        //    }
+        //}
+        return null;
     }
 
     /**
@@ -200,16 +194,24 @@ public class GUI implements View {
      */
     @Override
     public void notifyPlayerError(String errorMessage) {
+        JFrame popUp = new JFrame("Invalid!");
+        JButton ok = new JButton("OK");
+        JLabel text = new JLabel();
+        text.setText(errorMessage);
+        text.setBounds(100, 30, 400,50);
+        ok.setBounds(100, 100,250,30);
+        ok.setHorizontalAlignment(SwingConstants.CENTER);
+        ok.addActionListener(e -> popUp.dispose());
+        text.setVisible(true);
 
-    }
+        popUp.setForeground(new Color(50,50,50));
+        popUp.setSize(500, 200);
+        popUp.setResizable(false);
 
-    /**
-     * Render a view of the warehouse
-     *
-     * @param nickname
-     */
-    public void renderWarehouse(String nickname) {
-
+        popUp.add(text);
+        popUp.add(ok);
+        popUp.setLayout(null);
+        popUp.setVisible(true);
     }
 
     /**
@@ -225,19 +227,11 @@ public class GUI implements View {
     /**
      * return the liteModel of the view
      *
-     * @return
+     * @return the model of the view
      */
     @Override
     public LiteModel getModel() {
         return this.model;
-    }
-
-    /**
-     * Render a list of available commands
-     */
-
-    public void renderHelp() {
-
     }
 
     /**
@@ -253,97 +247,39 @@ public class GUI implements View {
      */
     @Override
     public void run() {
+        new Thread(socket).start();
+        socket.pinger(this);
+        new Thread(new LiteModelUpdater(socket, model)).start();
 
+        gameWindow.setVisible(true);
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.PAGE_END;
+
+        mainPanel.add(new AskNickname(this), c);
+
+        gameWindow.setSize(1920-380, 1080-230);
     }
 
-    public GUI() {
+    public GUI(String address, int port) throws IOException {
+        socket = new VirtualSocket(new Socket(address, port));
 
-        JFrame gameWindow = new JFrame();
         gameWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        gameWindow.setResizable(false);
+
+        mainPanel.setLayout(new GridBagLayout());
+        mainPanel.setSize(screenDimension.width, screenDimension.height);
+        gameWindow.add(mainPanel);
+
         //Panel for UserInput
-        JPanel panel = new LogoPanel();
-        panel.setName("RequestPanel");
-
-        JLabel nickLabel = new JLabel();
-        nickLabel.setName("requestText");
-        nickLabel.setBackground(Color.CYAN.darker());
-        nickLabel.setBounds(600,620,300,20);
-        nickLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        nickLabel.setOpaque(true);
-
-
-        JTextField textArea = new JTextField(50);
-        textArea.setBounds(650,650,200,20);
-        textArea.setHorizontalAlignment(SwingConstants.CENTER);
-        textArea.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                synchronized (userInteractionWait){
-                    synchronized (userInput) {
-                        userInput = textArea.getText();
-                        textArea.setText("");
-                        //sotto è in testing
-                        nickLabel.setText("Insert the desired number of players: ");
-                        //testing finito
-                    }
-                    userInteractionWait.notifyAll();
-                }
-            }
-        });
-
-        JButton startGame = new JButton("Start Game!");
-        startGame.setBounds(700,50,150,30);
-        startGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                nickLabel.setText("Insert nickname:");
-                textArea.setText("");
-                panel.remove(startGame);
-                startGame.setVisible(false);
-            }
-        });
-
-        panel.setBounds(0,0,1920-380,1080-230);
-        panel.setBackground(Color.gray);
-        panel.add(textArea, BorderLayout.SOUTH);
-        panel.add(nickLabel, BorderLayout.SOUTH);
-        panel.add(startGame);
-        panel.setLayout(null);
+        /*
+        JPanel panel = new LogoPanel(this);
 
         //Panel for Homepage
-        JPanel homepage = new PersonalBoardPanel();
-        homepage.setName("Homepage");
-        JButton viewLeader = new JButton("Show Leader Cards");
-        viewLeader.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                synchronized (userInteractionWait){
-                    synchronized (userInput) {
-                        userInput = "leadercards";
-                    }
-                    userInteractionWait.notifyAll();
-                }
-            }
-        });
-        JButton viewMarket = new JButton("View Market Tray");
-        viewMarket.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                synchronized (userInteractionWait){
-                    synchronized (userInput) {
-                        userInput = "market";
-                    }
-                    userInteractionWait.notifyAll();
-                }
-            }
-        });
-        viewLeader.setBounds(1350, 50, 150, 50);
-        viewMarket.setBounds(1350, 150, 150, 50);
-        homepage.setBounds(0,0,1920-380,1080-230);
-        homepage.setLayout(null);
-        homepage.add(viewLeader);
-        homepage.add(viewMarket);
-        homepage.setVisible(false);
+        JPanel homepage = new PersonalBoardPanel(this
+        );
+
 
 
         JPanel leader = new JPanel();
@@ -361,10 +297,10 @@ public class GUI implements View {
         market.add(marketLabel);
         market.setVisible(false);
 
-        panelContainer.put(panel.getName(), panel);
-        panelContainer.put(leader.getName(), leader);
-        panelContainer.put(homepage.getName(), homepage);
-        panelContainer.put(market.getName(), market);
+        //panelContainer.put(panel.getName(), panel);
+        //panelContainer.put(leader.getName(), leader);
+        //panelContainer.put(homepage.getName(), homepage);
+        //panelContainer.put(market.getName(), market);
 
 
         mainPanel.setBounds(0,0,1920-380,1080-230);;
@@ -372,15 +308,12 @@ public class GUI implements View {
         for (JPanel panels : panelContainer.values()){
             mainPanel.add(panels);
         }
+        */
 
-        gameWindow.setResizable(false);
-        gameWindow.add(mainPanel);
-        gameWindow.setSize(1920-380, 1080-230);
-        gameWindow.setLayout(null);
-        gameWindow.setVisible(true);
+        //gameWindow.setLayout(null);
     }
 
-    public static void switchPanels(JPanel mainPanel , JPanel toSee){
+    public void switchPanels(JPanel toSee){
         mainPanel.removeAll();
         mainPanel.add(toSee);
         mainPanel.repaint();
@@ -397,9 +330,7 @@ public class GUI implements View {
 
     public static void main(String[] args){
         try {
-            GUI gui  = new GUI();
-            Thread client = new Thread(gui);
-            client.setDaemon(true);
+            Thread client = new Thread(new GUI("localhost", 4444));
             client.start();
             client.join();
         } catch (Exception e) {
@@ -441,12 +372,12 @@ public class GUI implements View {
         activate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                synchronized (userInteractionWait){
-                    synchronized (userInput) {
-                        userInput = "activateleader" + " " + name.replace("LC", "");
-                    }
-                    userInteractionWait.notifyAll();
-                }
+                //synchronized (userInteractionWait){
+                //    synchronized (userInput) {
+                //        userInput = "activateleader" + " " + name.replace("LC", "");
+                //    }
+                //    userInteractionWait.notifyAll();
+                //}
             }
         });
 
@@ -455,12 +386,12 @@ public class GUI implements View {
         discard.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                synchronized (userInteractionWait){
-                    synchronized (userInput) {
-                        userInput = "discardleader" + " " + name.replace("LC", "");
-                    }
-                    userInteractionWait.notifyAll();
-                }
+                //synchronized (userInteractionWait){
+                //    synchronized (userInput) {
+                //        userInput = "discardleader" + " " + name.replace("LC", "");
+                //    }
+                //    userInteractionWait.notifyAll();
+                //}
             }
         });
 
@@ -473,5 +404,16 @@ public class GUI implements View {
         panel.setLayout(null);
         panel.setVisible(true);
         return panel;
+    }
+
+    @Override
+    public void handleDisconnection() {
+        System.out.println("disconnected");
+        System.exit(-1);
+    }
+
+    @Override
+    public VirtualSocket disconnectableSocket() {
+        return null;
     }
 }
