@@ -52,7 +52,8 @@ public class LeaderPanel extends GuiPanel {
     private JPanel generateLeaderFromId(String name){
 
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 
         InputStream url = this.getClass().getResourceAsStream("/LeaderCardsImages/" + name + ".png");
         BufferedImage img = null;
@@ -78,14 +79,17 @@ public class LeaderPanel extends GuiPanel {
         JButton discard = new JButton("Discard");
         discard.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new DiscardLeaderCommand(name).jsonfy())));
 
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(label);
 
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        buttons.add(Box.createHorizontalGlue());
         buttons.add(activate);
-
-        buttons.add(Box.createRigidArea(new Dimension(75,0)));
+        buttons.add(Box.createHorizontalGlue());
         buttons.add(discard);
+
+        buttons.setAlignmentX(Component.CENTER_ALIGNMENT);
+        buttons.setOpaque(false);
         panel.add(buttons);
 
         panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));

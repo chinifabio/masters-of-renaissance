@@ -41,7 +41,6 @@ public class AskNickname extends GuiPanel {
 
     @Override
     public void reactToPacket(Packet packet) throws IOException {
-        System.out.println(packet);
         switch (packet.header) {
             case JOIN_LOBBY -> gui.switchPanels(new PersonalBoardPanel(gui));
             case SET_PLAYERS_NUMBER -> gui.switchPanels(new AskPlayers(gui));
