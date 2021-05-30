@@ -1,62 +1,28 @@
 package it.polimi.ingsw.view.gui.panels;
 
 
+import it.polimi.ingsw.communication.packet.Packet;
+import it.polimi.ingsw.view.gui.GUI;
+
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-public class LogoPanel extends JPanel{
+public class LogoPanel extends GuiPanel{
     private final Image img;
 
-    public LogoPanel() throws IOException {
-        /*setName("RequestPanel");
-
-        JLabel nickLabel = new JLabel();
-        nickLabel.setName("requestText");
-        nickLabel.setBackground(Color.CYAN.darker());
-        nickLabel.setBounds(600,620,300,20);
-        nickLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        nickLabel.setOpaque(true);
-
-        JTextField textArea = new JTextField(50);
-        textArea.setBounds(650,650,200,20);
-        textArea.setHorizontalAlignment(SwingConstants.CENTER);
-        textArea.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //synchronized (userInteractionWait){
-                //    synchronized (userInput) {
-                //        userInput = textArea.getText();
-                //        textArea.setText("");
-                //        //sotto è in testing
-                //        nickLabel.setText("Insert the desired number of players: ");
-                //        //testing finito
-                //    }
-                //    userInteractionWait.notifyAll();
-                //}
-            }
-        });
-
-        JButton startGame = new JButton("Start Game!");
-        startGame.setBounds(700,50,150,30);
-        startGame.addActionListener(e -> {
-            nickLabel.setText("Insert nickname:");
-            textArea.setText("");
-            this.remove(startGame);
-            startGame.setVisible(false);
-        });
-        */
-        //setBounds(0,0,1920-380,1080-230);
-        //setBackground(Color.gray);
-        //add(textArea, BorderLayout.SOUTH);
-        //add(nickLabel, BorderLayout.SOUTH);
-        //add(startGame);
-
-
-
+    public LogoPanel(GUI gui) throws IOException {
+        super (gui);
+        setPreferredSize(new Dimension(1920-380-200, 1080-270));
         img = ImageIO.read(getClass().getResourceAsStream("/LogoMasters.png"));
+    }
 
+    @Override
+    public void reactToPacket(Packet packet) throws IOException {
+        switch (packet.header) {
+            case OK -> gui.switchPanels(new LeaderPanel(gui));
+            case INVALID -> gui.notifyPlayerError(packet.body);
+        }
     }
 
     /**

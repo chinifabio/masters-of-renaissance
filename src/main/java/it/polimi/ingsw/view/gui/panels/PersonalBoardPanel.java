@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.gui.panels;
 
+import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.view.gui.GUI;
 
 import javax.imageio.ImageIO;
@@ -11,8 +12,17 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class PersonalBoardPanel  extends JPanel {
-    public PersonalBoardPanel(GUI gui) {
+public class PersonalBoardPanel  extends GuiPanel {
+
+    private final Image personalBoard;
+
+    public PersonalBoardPanel(GUI gui) throws IOException {
+        super(gui);
+
+        InputStream is = getClass().getResourceAsStream("/board.png");
+        if (is == null) throw new IOException("board.png not found");
+        personalBoard = ImageIO.read(is);
+
         this.setForeground(Color.gray);
         repaint();
         revalidate();
@@ -20,38 +30,32 @@ public class PersonalBoardPanel  extends JPanel {
         setName("Homepage");
 
         JButton viewLeader = new JButton("Show Leader Cards");
-        viewLeader.addActionListener(e -> gui.renderLeaderCards());
+        viewLeader.addActionListener(e -> gui.switchPanels(new LeaderPanel(gui)));
 
         JButton viewMarket = new JButton("View Market Tray");
-        viewMarket.addActionListener(e -> gui.renderMarketTray());
+        viewMarket.addActionListener(e -> gui.switchPanels(new MarketPanel(gui)));
 
-        viewLeader.setBounds(1350, 50, 150, 50);
-        viewMarket.setBounds(1350, 150, 150, 50);
-        setBounds(0,0,1920-380,1080-230);
-        setLayout(null);
+        setPreferredSize(new Dimension(500, 500));
+
         add(viewLeader);
         add(viewMarket);
-        setVisible(false);
+        setVisible(true);
     }
 
-    public void paint(Graphics g){
-        myDrawImage("board.png", g);
+    /**
+     * Draw the background
+     */
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        int width = 1920-380;
+        int height = 1080-270;
+        g.drawImage(personalBoard, 0, 0,width,height, null);
     }
 
-    public void myDrawImage(String image, Graphics g){
-        ClassLoader cl = this.getClass().getClassLoader();
-        InputStream url = cl.getResourceAsStream(image);
-        BufferedImage img;
-        try{
-            assert url != null;
-            img = ImageIO.read(url);
-        } catch (IOException e){
-            e.printStackTrace();
-            return;
-        }
-
-        int width = 1920-580;
-        int height = 1080-450;
-        g.drawImage(img, 0, -1,width,height, null);
+    @Override
+    public void reactToPacket(Packet packet) {
+        System.out.println(packet);
     }
 }
