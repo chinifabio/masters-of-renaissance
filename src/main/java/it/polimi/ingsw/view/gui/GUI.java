@@ -48,6 +48,8 @@ public class GUI implements View, Disconnectable {
     public void renderMarketTray() {
         JPanel panelTemp = panelContainer.get("Market");
 
+
+
         //questa roba è orribile.
         JLabel labelTemp0 = new JLabel();
         JLabel labelTemp1 = new JLabel();
@@ -64,7 +66,6 @@ public class GUI implements View, Disconnectable {
         panelTemp.add(labelTemp0);
         panelTemp.add(labelTemp1);
         panelTemp.add(labelTemp2);
-
 
         //((JLabel) panelTemp.getComponent(0)).setText(model.getLeader(model.getMe()).toString());
         JButton back = new JButton("Return to PB");
@@ -279,8 +280,6 @@ public class GUI implements View, Disconnectable {
         //Panel for Homepage
         JPanel homepage = new PersonalBoardPanel(this
         );
-
-
 
         JPanel leader = new JPanel();
         leader.setName("Leader");
