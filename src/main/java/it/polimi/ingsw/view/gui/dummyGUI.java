@@ -2,16 +2,17 @@ package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.view.gui.panels.FaithTrackPanel;
 import it.polimi.ingsw.view.gui.panels.LogoPanel;
+import it.polimi.ingsw.view.gui.panels.NotifyPanel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class dummyGUI {
 
     public static void main (String[] args){
-        JFrame frame = new JFrame();
-
+        /*
         /*
         //Login panel
         LogoPanel namePanel = new LogoPanel();
@@ -55,8 +56,7 @@ public class dummyGUI {
         //frame.setLayout(null);
         frame.setVisible(true);
         */
-
-
+        /*
 
         JPanel bigPanel = new JPanel();
         //LogoPanel logo = new LogoPanel();
@@ -104,8 +104,67 @@ public class dummyGUI {
         frame.setExtendedState(JFrame.MAXIMIZED_HORIZ);
         frame.setLayout(null);
         frame.setVisible(true);
+        */
 
 
+        /*
+        // Create and set up a frame window
+        JFrame frame = new JFrame("Gino");
+        JPanel bigPanel = new JPanel();
+        bigPanel.setLayout(new GridBagLayout());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Define new buttons
+        JButton jb1 = new JButton("Button 1");
+        JTextField jb2 = new JTextField("Button 2");
+        JButton jb3 = new JButton("Button 3");
+
+
+        // Define the panel to hold the buttons
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
+        panel.add(jb1);
+        panel.add(jb2);
+        panel.add(jb3);
+
+        JPanel panel2 = new JPanel();
+        panel2.setLayout(new FlowLayout());
+        JButton button = new JButton("Button4");
+        panel2.add(button);
+
+        jb3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GUI.switchPanels(panel2);
+            }
+        });
+
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GUI.switchPanels(panel);
+            }
+        });
+
+        bigPanel.add(panel);
+        // Set the window to be visible as the default to be false
+        frame.add(bigPanel);
+        frame.pack();
+        frame.setVisible(true);
+
+         */
+        // Create and set up a frame window
+        JFrame frame = new JFrame("Gino");
+        JPanel bigPanel = new JPanel();
+        bigPanel.setLayout(new GridBagLayout());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        NotifyPanel notifyPanel = new NotifyPanel();
+        notifyPanel.appendMessage("Ciao");
+        notifyPanel.appendMessage("Prova");
+        bigPanel.add(notifyPanel);
+        frame.add(bigPanel);
+        frame.pack();
+        frame.setVisible(true);
 
     }
 }

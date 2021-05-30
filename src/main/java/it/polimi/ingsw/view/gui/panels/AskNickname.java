@@ -42,7 +42,7 @@ public class AskNickname extends JPanel {
             }
         });
 
-        add(Box.createRigidArea(new Dimension(0,400)));
+        add(Box.createRigidArea(new Dimension(0,550)));
         add(request);
         add(textField);
     }

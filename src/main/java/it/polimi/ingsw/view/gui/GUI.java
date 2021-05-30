@@ -11,7 +11,6 @@ import it.polimi.ingsw.view.gui.panels.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.util.*;
-import java.util.List;
 
 public class GUI implements View, Disconnectable {
 
@@ -29,10 +27,12 @@ public class GUI implements View, Disconnectable {
     public final VirtualSocket socket;
 
     public HashMap<String, JPanel> panelContainer = new HashMap<>();
-    private final JPanel mainPanel = new LogoPanel();
+    private final JPanel gamePanel = new LogoPanel();
+    private final JPanel mainPanel = new JPanel();
     private final JFrame gameWindow = new JFrame("Master of Renaissance");
+    private final NotifyPanel notifyPanel = new NotifyPanel();
 
-    private final Dimension screenDimension = new Dimension();
+    public static final Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
 
 
     /**
@@ -97,7 +97,7 @@ public class GUI implements View, Disconnectable {
      * Render the homepage of the cli
      */
     public void renderHomePage() {
-        mainPanel.setBackground(Color.gray);
+        gamePanel.setBackground(Color.gray);
         viewPanel("Homepage");
     }
 
@@ -129,7 +129,7 @@ public class GUI implements View, Disconnectable {
      */
     @Override
     public void notifyPlayer(String message) {
-
+        this.notifyPanel.appendMessage(message);
     }
 
     /**
@@ -254,23 +254,31 @@ public class GUI implements View, Disconnectable {
 
         gameWindow.setVisible(true);
 
-        GridBagConstraints c = new GridBagConstraints();
-        c.anchor = GridBagConstraints.PAGE_END;
+        //nickname.setBounds(0,0,screenDimension.width, screenDimension.height);
+        gamePanel.add(new AskNickname(this));
 
-        mainPanel.add(new AskNickname(this), c);
-
-        gameWindow.setSize(1920-380, 1080-230);
+        gameWindow.setSize(screenDimension.width, screenDimension.height-18);
     }
 
     public GUI(String address, int port) throws IOException {
+
         socket = new VirtualSocket(new Socket(address, port));
 
         gameWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
         gameWindow.setResizable(false);
+        mainPanel.setLayout(new BorderLayout());
+        //mainPanel.setLayout(null);
+        //mainPanel.setBounds(0,0,screenDimension.width-200, screenDimension.height);
+        //notifyPanel.setBounds(screenDimension.width-200, 0, 200, screenDimension.height);
+        //mainPanel.setSize(screenDimension.width, screenDimension.height);
+        gamePanel.setPreferredSize(new Dimension(screenDimension.width, screenDimension.height));
+        notifyPanel.setPreferredSize(new Dimension(180, screenDimension.height));
 
-        mainPanel.setLayout(new GridBagLayout());
-        mainPanel.setSize(screenDimension.width, screenDimension.height);
+
+        mainPanel.add(gamePanel);
+        mainPanel.add(notifyPanel, BorderLayout.LINE_END);
+
+
         gameWindow.add(mainPanel);
 
         //Panel for UserInput
@@ -313,10 +321,10 @@ public class GUI implements View, Disconnectable {
     }
 
     public void switchPanels(JPanel toSee){
-        mainPanel.removeAll();
-        mainPanel.add(toSee);
-        mainPanel.repaint();
-        mainPanel.revalidate();
+        gamePanel.removeAll();
+        gamePanel.add(toSee);
+        gamePanel.repaint();
+        gamePanel.revalidate();
     }
 
     public void viewPanel(String string){

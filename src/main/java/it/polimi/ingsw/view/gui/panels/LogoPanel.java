@@ -8,6 +8,7 @@ import java.io.IOException;
 
 public class LogoPanel extends JPanel{
     private final Image img;
+
     public LogoPanel() throws IOException {
         /*setName("RequestPanel");
 
@@ -45,16 +46,17 @@ public class LogoPanel extends JPanel{
             this.remove(startGame);
             startGame.setVisible(false);
         });
+        */
+        //setBounds(0,0,1920-380,1080-230);
+        //setBackground(Color.gray);
+        //add(textArea, BorderLayout.SOUTH);
+        //add(nickLabel, BorderLayout.SOUTH);
+        //add(startGame);
 
-        setBounds(0,0,1920-380,1080-230);
-        setBackground(Color.gray);
-        add(textArea, BorderLayout.SOUTH);
-        add(nickLabel, BorderLayout.SOUTH);
-        add(startGame);
-        setLayout(null);
 
-         */
+
         img = ImageIO.read(getClass().getResourceAsStream("/LogoMasters.png"));
+
     }
 
     /**
@@ -64,9 +66,10 @@ public class LogoPanel extends JPanel{
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        int width = 1920-380;
+        int width = 1920-380-200;
         int height = 1080-270;
         g.drawImage(img, 0, 0,width,height, null);
+
     }
 
 }
