@@ -48,4 +48,5 @@ public class AskNickname extends GuiPanel {
             case INVALID -> gui.notifyPlayerError(packet.body);
         }
     }
+
 }

@@ -16,11 +16,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class LeaderPanel extends GuiPanel {
+
     public LeaderPanel(GUI gui) {
         super(gui);
+        setOpaque(false);
 
         int i = 20;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+
 
         for (LiteLeaderCard card : gui.model.getLeader(gui.model.getMe())){
             add(generateLeaderFromId(card.getCardID()));
@@ -39,10 +42,15 @@ public class LeaderPanel extends GuiPanel {
 
     @Override
     public void reactToPacket(Packet packet) throws IOException {
+        switch (packet.header){
+            case OK -> gui.switchPanels(new LeaderPanel(gui));
 
+            case INVALID -> gui.notifyPlayerError(packet.body);
+        }
     }
 
     private JPanel generateLeaderFromId(String name){
+
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -72,11 +80,17 @@ public class LeaderPanel extends GuiPanel {
 
         panel.add(label);
 
+
+        buttons.add(Box.createHorizontalGlue());
         buttons.add(activate);
+
+        buttons.add(Box.createRigidArea(new Dimension(75,0)));
         buttons.add(discard);
         panel.add(buttons);
 
+        panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
         panel.setVisible(true);
+        panel.setOpaque(false);
         return panel;
     }
 }
