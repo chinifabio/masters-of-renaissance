@@ -43,10 +43,11 @@ you can enter the following commands:
             - paint a marble in the tray with an available marble conversion
             - to view you conversion you can use the view method "conversions"
 
-        buycard [level] [color]
+        buycard [level] [color] [slot]
             - buy a card in the card market if you have enough resources
             - // fare nel codice "LEVEL" + parse int
             - // mettere i colori
+            - // slot left center right
 
         activateproduction
             - activate the production
@@ -74,7 +75,7 @@ you can enter the following commands:
             - discard the leader card with the given id
             - number of the id of the leader card
 
-        chooseresource [depot destination] [resource type] [amount]
+        chooseresource [depot destination] [resource type]
             - in the initial game phase you receive a resource given
             - destinantion is where the resource will be placed
 

@@ -335,7 +335,7 @@ public class PersonalBoard {
      * @throws UnobtainableResourceException if the Player can't receive that Resource
      */
     public void moveResourceDepot(DepotSlot from, DepotSlot to, Resource resource) throws WrongDepotException, NegativeResourcesDepotException, UnobtainableResourceException {
-        warehouse.moveBetweenDepot(from,to, resource);
+        if(!warehouse.moveBetweenDepot(from,to, resource)) throw new WrongDepotException();
     }
 
     /**
