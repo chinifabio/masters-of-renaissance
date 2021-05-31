@@ -6,9 +6,6 @@ import it.polimi.ingsw.view.gui.GUI;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -26,16 +23,19 @@ public class PersonalBoardPanel  extends GuiPanel {
         this.setForeground(Color.gray);
         repaint();
         revalidate();
+        setLayout(new FlowLayout());
 
         setName("Homepage");
 
         JButton viewLeader = new JButton("Show Leader Cards");
+        viewLeader.setAlignmentY(Component.BOTTOM_ALIGNMENT);
         viewLeader.addActionListener(e -> gui.switchPanels(new LeaderPanel(gui)));
 
         JButton viewMarket = new JButton("View Market Tray");
+        viewLeader.setAlignmentY(Component.BOTTOM_ALIGNMENT);
         viewMarket.addActionListener(e -> gui.switchPanels(new MarketPanel(gui)));
 
-        setPreferredSize(new Dimension(500, 500));
+        setPreferredSize(new Dimension(1920, 1080));
 
         add(viewLeader);
         add(viewMarket);
@@ -49,9 +49,9 @@ public class PersonalBoardPanel  extends GuiPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        int width = 1920-380;
-        int height = 1080-270;
-        g.drawImage(personalBoard, 0, 0,width,height, null);
+        int width = 1920-380-100;
+        int height = 1080-270-100;
+        g.drawImage(personalBoard, 250, -10,width,height, null);
     }
 
     @Override
