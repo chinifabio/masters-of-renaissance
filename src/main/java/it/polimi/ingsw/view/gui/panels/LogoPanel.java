@@ -18,7 +18,7 @@ public class LogoPanel extends GuiPanel{
     }
 
     @Override
-    public void reactToPacket(Packet packet) throws IOException {
+    public void reactToPacket(Packet packet) {
         switch (packet.header) {
             case OK -> gui.switchPanels(new LeaderPanel(gui));
             case INVALID -> gui.notifyPlayerError(packet.body);
@@ -35,7 +35,6 @@ public class LogoPanel extends GuiPanel{
         int width = 1920-380-200;
         int height = 1080-270;
         g.drawImage(img, 0, 0,width,height, null);
-
     }
 
 }

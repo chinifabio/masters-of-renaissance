@@ -2,6 +2,7 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.server.Server;
 import it.polimi.ingsw.view.cli.CLI;
+import it.polimi.ingsw.view.gui.GUI;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -26,7 +27,7 @@ public class Launcher
                     main = new Thread(new Server());
                     break;
                 case "gui":
-                    main = new Thread(()-> System.out.println("work in progress"));
+                    main = new Thread(new GUI("localhost", 4444));
                     break;
                 case "--help":
                 case "-h":

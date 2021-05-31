@@ -42,9 +42,9 @@ public class LeaderPanel extends GuiPanel {
 
     @Override
     public void reactToPacket(Packet packet) throws IOException {
+        System.out.println("Leader received: " + packet);
         switch (packet.header){
             case OK -> gui.switchPanels(new LeaderPanel(gui));
-
             case INVALID -> gui.notifyPlayerError(packet.body);
         }
     }

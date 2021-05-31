@@ -4,6 +4,7 @@ import it.polimi.ingsw.communication.Disconnectable;
 import it.polimi.ingsw.communication.ServerReply;
 import it.polimi.ingsw.communication.VirtualSocket;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.LiteModelUpdater;
 import it.polimi.ingsw.view.View;
@@ -17,17 +18,18 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.Socket;
 
-public class GUI implements View, Disconnectable, ActionListener {
+public class GUI extends JFrame implements View, Disconnectable, ActionListener {
 
 
     public final LiteModel model = new LiteModel();
     public final VirtualSocket socket;
 
     private final JPanel gamePanel = new LogoPanel(this);
-    private final JFrame gameWindow = new JFrame("Master of Renaissance");
     private final NotifyPanel notifyPanel = new NotifyPanel();
 
-    public static final Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
+    public final int width = 1640;
+    public final int height = 810;
+
     private GuiPanel actualPanel;
 
     /**
@@ -37,7 +39,7 @@ public class GUI implements View, Disconnectable, ActionListener {
      */
     @Override
     public void notifyPlayer(String message) {
-        this.notifyPanel.appendMessage(message);
+        this.notifyPanel.appendMessage(message, Color.GRAY);
     }
 
     /**
@@ -56,24 +58,7 @@ public class GUI implements View, Disconnectable, ActionListener {
      */
     @Override
     public void notifyPlayerError(String errorMessage) {
-        JFrame popUp = new JFrame("Invalid!");
-        JButton ok = new JButton("OK");
-        JLabel text = new JLabel();
-        text.setText(errorMessage);
-        text.setBounds(100, 30, 400,50);
-        ok.setBounds(100, 100,250,30);
-        ok.setHorizontalAlignment(SwingConstants.CENTER);
-        ok.addActionListener(e -> popUp.dispose());
-        text.setVisible(true);
-
-        popUp.setForeground(new Color(50,50,50));
-        popUp.setSize(500, 200);
-        popUp.setResizable(false);
-
-        popUp.add(text);
-        popUp.add(ok);
-        popUp.setLayout(null);
-        popUp.setVisible(true);
+        notifyPanel.appendMessage(errorMessage, new Color(170, 20, 10));
     }
 
     /**
@@ -113,18 +98,14 @@ public class GUI implements View, Disconnectable, ActionListener {
         socket.pinger(this);
         new Thread(new LiteModelUpdater(socket, model)).start();
 
-        gameWindow.setVisible(true);
-
-        gameWindow.setSize(screenDimension.width, screenDimension.height-18);
-        actualPanel = new AskNickname(this);
-        gamePanel.add(actualPanel);
-
-        gameWindow.setSize(1920-380, 1080-230);
-
         boolean gino = true;
         while (gino) {
             try {
-                actualPanel.reactToPacket(socket.pollPacketFrom(ChannelTypes.PLAYER_ACTIONS));
+                Packet received = socket.pollPacketFrom(ChannelTypes.PLAYER_ACTIONS);
+                System.out.println("GUI " + actualPanel + " received: " + received);
+                synchronized (gamePanel) {
+                    actualPanel.reactToPacket(received);
+                }
             } catch (IOException e) {
                 notifyPlayerError(e.getMessage());
                 gino = false;
@@ -135,26 +116,37 @@ public class GUI implements View, Disconnectable, ActionListener {
     }
 
     public GUI(String address, int port) throws IOException {
+        super ("Master of Renaissance");
+        
         socket = new VirtualSocket(new Socket(address, port));
 
-        gameWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        gameWindow.setResizable(false);
-        gameWindow.setLayout(new BorderLayout());
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+        setLayout(new BorderLayout());
 
-        gamePanel.setPreferredSize(new Dimension(screenDimension.width, screenDimension.height));
-        notifyPanel.setPreferredSize(new Dimension(180, screenDimension.height));
+        gamePanel.setPreferredSize(new Dimension(width - 300, height));
 
-        gameWindow.add(gamePanel);
-        gameWindow.add(notifyPanel, BorderLayout.LINE_END);
+        notifyPanel.setPreferredSize(new Dimension(300, height));
+
+        add(gamePanel, BorderLayout.CENTER);
+        add(notifyPanel, BorderLayout.LINE_END);
+
+        actualPanel = new AskNickname(this);
+        gamePanel.add(actualPanel);
+
+        pack();
+        setVisible(true);
     }
 
     public void switchPanels(GuiPanel toSee){
-        gamePanel.remove(actualPanel);
-        gamePanel.add(toSee);
-        actualPanel = toSee;
+        synchronized (gamePanel) {
+            gamePanel.remove(actualPanel);
+            gamePanel.add(toSee);
+            actualPanel = toSee;
 
-        gamePanel.repaint();
-        gamePanel.revalidate();
+            gamePanel.repaint();
+            gamePanel.revalidate();
+        }
     }
 
     public static void main(String[] args){
