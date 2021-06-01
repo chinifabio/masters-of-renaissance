@@ -21,8 +21,8 @@ public class LeaderPanel extends GuiPanel {
         super(gui);
         setOpaque(false);
 
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         for (LiteLeaderCard card : gui.model.getLeader(gui.model.getMe())){
             add(new LeaderCardPanel(card.getCardID(), gui));
@@ -49,6 +49,7 @@ public class LeaderPanel extends GuiPanel {
 }
 
 class LeaderCardPanel extends JPanel {
+
     public LeaderCardPanel(String id, GUI gui) {
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));

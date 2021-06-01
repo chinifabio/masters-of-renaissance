@@ -3,7 +3,6 @@ package it.polimi.ingsw.view.gui.panels;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.communication.packet.commands.ActivateLeaderCommand;
 import it.polimi.ingsw.communication.packet.commands.EndTurnCommand;
 import it.polimi.ingsw.view.gui.GUI;
 
@@ -24,6 +23,35 @@ public class PersonalBoardPanel  extends GuiPanel {
         if (is == null) throw new IOException("board.png not found");
         personalBoard = ImageIO.read(is);
 
+        JPanel boardPanel = new JPanel();
+        boardPanel.setOpaque(false);
+        boardPanel.setLayout(new GridBagLayout());
+        JPanel warehousePanel = new WarehousePanel();
+        JPanel devSlot = new DevSlotPanel();
+        JPanel trackPanel = new FaithTrackPanel();
+
+        GridBagConstraints c = new GridBagConstraints();
+
+
+
+        c.gridy = 1;
+        boardPanel.add(warehousePanel, c);
+        JPanel base = new JPanel();
+        base.setOpaque(false);
+        base.setPreferredSize(new Dimension(200,400));
+
+        c.gridx = 1;
+        boardPanel.add(base, c);
+
+        c.gridx = 2;
+        boardPanel.add(devSlot, c);
+
+
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 3;
+        boardPanel.add(trackPanel, c);
+
 
         setName("Homepage");
         this.setLayout(new BorderLayout());
@@ -41,8 +69,11 @@ public class PersonalBoardPanel  extends GuiPanel {
         JButton viewPlayer = new JButton("View Other Player");
         viewPlayer.addActionListener(e -> gui.switchPanels(new OtherPlayersPanel(gui)));
 
-        JButton activateProduction = new JButton("Activate Productions");
+        JButton activateProduction = new JButton("Productions");
         activateProduction.addActionListener(e -> gui.switchPanels(new ProductionsPanel(gui)));
+
+        JButton moveResources = new JButton("Move Resources");
+        moveResources.addActionListener(e -> gui.switchPanels(new MoveResourcesPanel(gui)));
 
         JButton endTurn = new JButton("EndTurn");
         endTurn.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy())));
@@ -56,6 +87,7 @@ public class PersonalBoardPanel  extends GuiPanel {
         buttons.add(viewLeader);
         buttons.add(viewMarket);
         buttons.add(viewGrid);
+        buttons.add(moveResources);
         buttons.add(activateProduction);
         buttons.add(viewPlayer);
         buttons.add(endTurn);
@@ -63,7 +95,10 @@ public class PersonalBoardPanel  extends GuiPanel {
 
 
         buttons.setPreferredSize(new Dimension(1920, 100));
+
+        this.add(boardPanel);
         this.add(buttons, BorderLayout.SOUTH);
+
 
         repaint();
         revalidate();

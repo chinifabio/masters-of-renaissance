@@ -119,7 +119,7 @@ public class CardsGridPanel extends GuiPanel {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                DevCardSlot slot = (DevCardSlot) JOptionPane.showInputDialog(null, "Select Slot", "BuyCards",
+                DevCardSlot slot = (DevCardSlot) JOptionPane.showInputDialog(null, "Select the Slot of the PersonalBoard \n where the Development Card will be placed", "BuyCards",
                         JOptionPane.INFORMATION_MESSAGE, null,
                         possibleValues, possibleValues[0]);
                 gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyDevCardCommand( gui.model.getDevSetup().getDevSetup()[0][0].getLevel(),  gui.model.getDevSetup().getDevSetup()[0][0].getColor(), slot).jsonfy()));

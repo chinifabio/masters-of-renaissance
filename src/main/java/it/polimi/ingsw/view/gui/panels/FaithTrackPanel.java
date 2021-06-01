@@ -9,28 +9,12 @@ import java.io.InputStream;
 
 public class FaithTrackPanel extends JPanel {
 
-    public void paint(Graphics g){
-        myDrawImage("FaithTrackImages/FaithTrack.png", g);
+    /**
+     * Creates a new <code>JPanel</code> with a double buffer
+     * and a flow layout.
+     */
+    public FaithTrackPanel() {
+        this.setPreferredSize(new Dimension(1920-380-200,310));
+        this.setBackground(Color.red);
     }
-
-    public void myDrawImage(String image, Graphics g){
-        ClassLoader cl = this.getClass().getClassLoader();
-        InputStream url = cl.getResourceAsStream(image);
-        BufferedImage img;
-        try{
-            assert url != null;
-            img = ImageIO.read(url);
-        } catch (IOException e){
-            e.printStackTrace();
-            return;
-        }
-        g.drawImage(img, 5, 29, 1350, 600, null);
-    }
-
-    public void printTrack(){
-
-        this.setLayout(null);
-        this.setVisible(true);
-    }
-
 }
