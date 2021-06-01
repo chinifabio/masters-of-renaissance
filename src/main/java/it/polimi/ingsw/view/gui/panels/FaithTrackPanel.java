@@ -14,7 +14,7 @@ public class FaithTrackPanel extends JPanel {
      * and a flow layout.
      */
     public FaithTrackPanel() {
-        this.setPreferredSize(new Dimension(1920-380-200,310));
+        this.setPreferredSize(new Dimension(1920-380-200,285));
         this.setBackground(Color.red);
     }
 }

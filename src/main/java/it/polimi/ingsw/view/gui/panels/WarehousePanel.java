@@ -12,7 +12,32 @@ public class WarehousePanel  extends JPanel {
      */
     public WarehousePanel() {
         this.setPreferredSize(new Dimension(320,400));
+        this.setOpaque(false);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBackground(Color.yellow);
+
+        JPanel topDepot = new JPanel();
+        topDepot.setBackground(Color.yellow);
+
+        JPanel middleDepot = new JPanel();
+        middleDepot.setBackground(Color.pink);
+
+
+        JPanel bottomDepot = new JPanel();
+        bottomDepot.setBackground(Color.magenta);
+
+
+        JPanel strongbox = new JPanel();
+        strongbox.setPreferredSize(new Dimension(320, 150));
+        strongbox.setBackground(Color.blue.brighter());
+
+        this.add(topDepot);
+
+        this.add(middleDepot);
+
+        this.add(bottomDepot);
+
+        this.add(Box.createRigidArea(new Dimension(320, 20)));
+        this.add(strongbox);
+        this.add(Box.createRigidArea(new Dimension(320, 10)));
     }
 }

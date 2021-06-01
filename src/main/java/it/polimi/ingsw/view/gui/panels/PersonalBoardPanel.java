@@ -49,6 +49,9 @@ public class PersonalBoardPanel  extends GuiPanel {
         c.gridwidth = 3;
         boardPanel.add(trackPanel, c);
 
+        c.gridy = 2;
+        boardPanel.add(Box.createRigidArea(new Dimension(1920-380-200,25)), c);
+
 
         setName("Homepage");
         this.setLayout(new BorderLayout());
