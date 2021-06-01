@@ -1,6 +1,10 @@
 package it.polimi.ingsw.view.gui.panels;
 
+import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
+import it.polimi.ingsw.communication.packet.commands.ActivateLeaderCommand;
+import it.polimi.ingsw.communication.packet.commands.EndTurnCommand;
 import it.polimi.ingsw.view.gui.GUI;
 
 import javax.imageio.ImageIO;
@@ -20,26 +24,50 @@ public class PersonalBoardPanel  extends GuiPanel {
         if (is == null) throw new IOException("board.png not found");
         personalBoard = ImageIO.read(is);
 
-        this.setForeground(Color.gray);
-        repaint();
-        revalidate();
-        setLayout(new FlowLayout());
 
         setName("Homepage");
+        this.setLayout(new BorderLayout());
+        JPanel buttons = new JPanel();
 
-        JButton viewLeader = new JButton("Show Leader Cards");
-        viewLeader.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+        JButton viewLeader = new JButton("View Leader Cards");
         viewLeader.addActionListener(e -> gui.switchPanels(new LeaderPanel(gui)));
 
         JButton viewMarket = new JButton("View Market Tray");
-        viewLeader.setAlignmentY(Component.BOTTOM_ALIGNMENT);
         viewMarket.addActionListener(e -> gui.switchPanels(new MarketPanel(gui)));
 
-        setPreferredSize(new Dimension(1920, 1080));
+        JButton viewGrid = new JButton("View DevCard's grid");
+        viewGrid.addActionListener(e -> gui.switchPanels(new CardsGridPanel(gui)));
 
-        add(viewLeader);
-        add(viewMarket);
+        JButton viewPlayer = new JButton("View Other Player");
+        viewPlayer.addActionListener(e -> gui.switchPanels(new OtherPlayersPanel(gui)));
+
+        JButton activateProduction = new JButton("Activate Productions");
+        activateProduction.addActionListener(e -> gui.switchPanels(new ProductionsPanel(gui)));
+
+        JButton endTurn = new JButton("EndTurn");
+        endTurn.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy())));
+
+        buttons.setBackground(GUI.borderColor);
+
+
+
+        setPreferredSize(new Dimension(1920-380-200,  1080-270));
+        buttons.add(Box.createRigidArea(new Dimension(0,70)));
+        buttons.add(viewLeader);
+        buttons.add(viewMarket);
+        buttons.add(viewGrid);
+        buttons.add(activateProduction);
+        buttons.add(viewPlayer);
+        buttons.add(endTurn);
         setVisible(true);
+
+
+        buttons.setPreferredSize(new Dimension(1920, 100));
+        this.add(buttons, BorderLayout.SOUTH);
+
+        repaint();
+        revalidate();
+
     }
 
     /**
@@ -49,13 +77,15 @@ public class PersonalBoardPanel  extends GuiPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        int width = 1920-380-100;
+        int width = 1920-380-200;
         int height = 1080-270-100;
-        g.drawImage(personalBoard, 250, -10,width,height, null);
+        g.drawImage(personalBoard, 0, -10,width,height, null);
     }
 
     @Override
     public void reactToPacket(Packet packet) {
-        System.out.println(packet);
+        switch (packet.header){
+            case INVALID -> gui.notifyPlayerError(packet.body);
+        }
     }
 }

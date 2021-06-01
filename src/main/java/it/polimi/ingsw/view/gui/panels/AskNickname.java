@@ -21,7 +21,7 @@ public class AskNickname extends GuiPanel {
 
         JLabel request = new JLabel("Insert your username");
         request.setFont(new Font("Times New Roman",Font.ITALIC,26));
-        request.setForeground(new Color(220,179,120));
+        request.setForeground(GUI.borderColor);
 
         JTextField textField = new JTextField(20);
         textField.setHorizontalAlignment(SwingConstants.CENTER);

@@ -20,7 +20,7 @@ import java.net.Socket;
 
 public class GUI extends JFrame implements View, Disconnectable, ActionListener {
 
-
+    public static Color borderColor = new Color(220,179,120);
     public final LiteModel model = new LiteModel();
     public final VirtualSocket socket;
 

@@ -34,8 +34,6 @@ public class LiteDevSetup {
     }
 
     @JsonIgnore
-    public void setDevCard(LiteDevCard card, LevelDevCard row, ColorDevCard col) {
-        
-    }
+    public void setDevCard(LiteDevCard card, LevelDevCard row, ColorDevCard col) {}
 
 }

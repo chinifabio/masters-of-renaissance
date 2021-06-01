@@ -21,7 +21,6 @@ public class LeaderPanel extends GuiPanel {
         super(gui);
         setOpaque(false);
 
-        int i = 20;
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
 
