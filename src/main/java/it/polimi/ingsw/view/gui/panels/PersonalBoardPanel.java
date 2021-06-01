@@ -36,12 +36,9 @@ public class PersonalBoardPanel  extends GuiPanel {
 
         c.gridy = 1;
         boardPanel.add(warehousePanel, c);
-        JPanel base = new JPanel();
-        base.setOpaque(false);
-        base.setPreferredSize(new Dimension(200,400));
 
         c.gridx = 1;
-        boardPanel.add(base, c);
+        boardPanel.add(Box.createRigidArea(new Dimension(200,400)), c);
 
         c.gridx = 2;
         boardPanel.add(devSlot, c);
