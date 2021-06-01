@@ -13,5 +13,7 @@ public enum HeaderTypes {
     NOTIFY,
     PING,
     PONG,
-    TIMEOUT
+    TIMEOUT,
+    LOCK,
+    UNLOCK
 }

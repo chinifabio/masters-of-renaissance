@@ -102,10 +102,7 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
         while (gino) {
             try {
                 Packet received = socket.pollPacketFrom(ChannelTypes.PLAYER_ACTIONS);
-                System.out.println("GUI " + actualPanel + " received: " + received);
-                synchronized (gamePanel) {
-                    actualPanel.reactToPacket(received);
-                }
+                actualPanel.reactToPacket(received);
             } catch (IOException e) {
                 notifyPlayerError(e.getMessage());
                 gino = false;

@@ -25,7 +25,7 @@ public class LeaderPanel extends GuiPanel {
 
 
         for (LiteLeaderCard card : gui.model.getLeader(gui.model.getMe())){
-            add(generateLeaderFromId(card.getCardID()));
+            add(new LeaderCardPanel(card.getCardID(), gui));
         }
 
         JButton back = new JButton("Return to PB");
@@ -41,20 +41,19 @@ public class LeaderPanel extends GuiPanel {
 
     @Override
     public void reactToPacket(Packet packet) throws IOException {
-        System.out.println("Leader received: " + packet);
         switch (packet.header){
             case OK -> gui.switchPanels(new LeaderPanel(gui));
             case INVALID -> gui.notifyPlayerError(packet.body);
         }
     }
+}
 
-    private JPanel generateLeaderFromId(String name){
+class LeaderCardPanel extends JPanel {
+    public LeaderCardPanel(String id, GUI gui) {
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
-        JPanel panel = new JPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-
-        InputStream url = this.getClass().getResourceAsStream("/LeaderCardsImages/" + name + ".png");
+        InputStream url = this.getClass().getResourceAsStream("/LeaderCardsImages/" + id + ".png");
         BufferedImage img = null;
         try {
             assert url != null;
@@ -73,15 +72,15 @@ public class LeaderPanel extends GuiPanel {
         buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 
         JButton activate = new JButton("Activate");
-        activate.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ActivateLeaderCommand(name).jsonfy())));
+        activate.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ActivateLeaderCommand(id).jsonfy())));
 
         JButton discard = new JButton("Discard");
-        discard.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new DiscardLeaderCommand(name).jsonfy())));
+        discard.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new DiscardLeaderCommand(id).jsonfy())));
 
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(label);
+        add(label);
 
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        add(Box.createRigidArea(new Dimension(0, 10)));
 
         buttons.add(activate);
         buttons.add(Box.createHorizontalGlue());
@@ -89,11 +88,10 @@ public class LeaderPanel extends GuiPanel {
 
         buttons.setAlignmentX(Component.CENTER_ALIGNMENT);
         buttons.setOpaque(false);
-        panel.add(buttons);
+        add(buttons);
 
-        panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-        panel.setVisible(true);
-        panel.setOpaque(false);
-        return panel;
+        setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        setVisible(true);
+        setOpaque(false);
     }
 }

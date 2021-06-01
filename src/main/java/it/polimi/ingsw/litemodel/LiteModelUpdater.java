@@ -24,16 +24,24 @@ public class LiteModelUpdater implements Runnable{
      */
     @Override
     public void run() {
+        Packet received;
         while (true) {
-            Packet packet = this.socket.pollPacketFrom(ChannelTypes.NOTIFY_VIEW);
-            if (packet.header == HeaderTypes.TIMEOUT) return;
-            try {
-                Updater received = new ObjectMapper().readerFor(Updater.class).readValue(packet.body);
-                received.update(this.model);
-            } catch (JsonProcessingException e) {
-                System.out.println(Colors.color(Colors.RED, "update view error: ") + e.getMessage());
-                System.out.println(packet.body);
+            received = socket.pollPacketFrom(ChannelTypes.NOTIFY_VIEW);
+            switch (received.header) {
+                case TIMEOUT: return;
+                case LOCK: socket.send(new Packet(HeaderTypes.UNLOCK, ChannelTypes.NOTIFY_VIEW, "ok")); break;
+                case NOTIFY: useUpdater(received.body); break;
+                default: System.out.println("[model updater] invalid packet received: " + received); break;
             }
+        }
+    }
+
+    private void useUpdater(String json) {
+        try {
+            Updater up = new ObjectMapper().readerFor(Updater.class).readValue(json);
+            up.update(this.model);
+        } catch (JsonProcessingException e) {
+            System.out.println(Colors.color(Colors.RED, "update view error: ") + e.getMessage());
         }
     }
 }

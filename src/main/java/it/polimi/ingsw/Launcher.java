@@ -4,6 +4,7 @@ import it.polimi.ingsw.server.Server;
 import it.polimi.ingsw.view.cli.CLI;
 import it.polimi.ingsw.view.gui.GUI;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +16,12 @@ import java.util.List;
 public class Launcher
 {
     public static void main(String[] arg){
+
+        if(System.getProperty("os.name").contains("Windows")){
+            System.out.println("You can't run this JAR on windows... To fix you can try to install WSL");
+            return;
+        }
+
         List<String> arguments = Arrays.asList(arg);
         Thread main;
 
@@ -39,9 +46,15 @@ public class Launcher
             }
         } catch (IOException e) {
             System.out.println("fail launching " + arguments.get(0));
+            System.out.println(e.getMessage());
             return;
         } catch (NullPointerException nul) {
             System.out.println("you missed some arguments... use --help to see all available accepted arguments");
+            System.out.println(nul.getMessage());
+            return;
+        } catch (HeadlessException he) {
+            System.out.println("To use the gui you need to enable the forwarding x11 display in your client");
+            System.out.println(he.getMessage());
             return;
         }
 

@@ -22,6 +22,9 @@ public class LiteModel {
     private final HashMap<String, LitePersonalBoard> players = new HashMap<>();
 
     @JsonIgnore
+    public final Object lock = new Object();
+
+    @JsonIgnore
     private String me;
 
     private LiteMarketTray tray;

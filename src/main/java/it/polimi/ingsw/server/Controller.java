@@ -51,11 +51,15 @@ public class Controller implements Runnable, Disconnectable {
             // wait for a message to handle
             Packet received = socket.pollPacketFrom(ChannelTypes.PLAYER_ACTIONS);
             System.out.println(Colors.color(Colors.CYAN, nickname) + ": " + received);
-
             if (received.header == HeaderTypes.TIMEOUT) return;
 
-            // handle the message and send back the response
-            socket.send(state.handleMessage(received, this));
+            // save the result of the operation
+            Packet done = state.handleMessage(received, this);
+
+            // wait model of clients has updated litemodel and then send the result
+            socket.send(new Packet(HeaderTypes.LOCK, ChannelTypes.NOTIFY_VIEW, "waiting ok"));
+            if (socket.pollPacketFrom(ChannelTypes.NOTIFY_VIEW).header == HeaderTypes.UNLOCK) socket.send(done);
+            else System.out.println(nickname + ": something wrong in the communication...");
         }
     }
 
