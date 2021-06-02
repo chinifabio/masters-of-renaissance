@@ -7,15 +7,18 @@ import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.updates.Updater;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.cli.Colors;
 
 public class LiteModelUpdater implements Runnable{
     private final VirtualSocket socket;
     private final LiteModel model;
+    private final View view;
 
-    public LiteModelUpdater(VirtualSocket socket, LiteModel model) {
+    public LiteModelUpdater(VirtualSocket socket, LiteModel model, View view) {
         this.socket = socket;
         this.model = model;
+        this.view = view;
     }
 
     /**
@@ -39,7 +42,7 @@ public class LiteModelUpdater implements Runnable{
     private void useUpdater(String json) {
         try {
             Updater up = new ObjectMapper().readerFor(Updater.class).readValue(json);
-            up.update(this.model);
+            up.update(this.model, this.view);
         } catch (JsonProcessingException e) {
             System.out.println(Colors.color(Colors.RED, "update view error: ") + e.getMessage());
         }

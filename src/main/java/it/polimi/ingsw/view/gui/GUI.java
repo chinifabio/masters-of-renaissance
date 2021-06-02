@@ -96,7 +96,7 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
     public void run() {
         new Thread(socket).start();
         socket.pinger(this);
-        new Thread(new LiteModelUpdater(socket, model)).start();
+        new Thread(new LiteModelUpdater(socket, model, this)).start();
 
         boolean gino = true;
         while (gino) {

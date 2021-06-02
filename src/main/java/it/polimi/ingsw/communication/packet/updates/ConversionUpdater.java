@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
+import it.polimi.ingsw.view.View;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ public class ConversionUpdater extends Updater {
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel) {
-        liteModel.setConversions(this.nickname, this.list.stream().map(x->x.color()).collect(Collectors.toList()));
+    public void update(LiteModel liteModel, View view) {
+        liteModel.setConversions(this.nickname, this.list.stream().map(Marble::color).collect(Collectors.toList()));
     }
 }

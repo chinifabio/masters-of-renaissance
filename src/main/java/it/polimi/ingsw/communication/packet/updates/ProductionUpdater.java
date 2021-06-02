@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
+import it.polimi.ingsw.view.View;
 
 public class ProductionUpdater extends Updater{
     private final String nickname;
@@ -26,7 +27,7 @@ public class ProductionUpdater extends Updater{
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel) {
+    public void update(LiteModel liteModel, View view) {
         liteModel.setProduction(nickname, prod, id);
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.litecards.LiteSoloActionToken;
+import it.polimi.ingsw.view.View;
 
 import java.util.List;
 
@@ -21,7 +22,8 @@ public class TokenUpdater extends Updater {
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel) {
+    public void update(LiteModel liteModel, View view) {
+        view.notifyPlayer("lorenzo used: " + token.getCardID());
         liteModel.setSoloToken(this.token);
     }
 }

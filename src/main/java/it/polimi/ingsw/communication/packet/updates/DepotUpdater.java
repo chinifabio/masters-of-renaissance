@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
+import it.polimi.ingsw.view.View;
 
 public class DepotUpdater extends Updater{
 
@@ -27,7 +28,7 @@ public class DepotUpdater extends Updater{
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel) {
+    public void update(LiteModel liteModel, View view) {
         liteModel.setDepot(this.nickname, slot, depot);
     }
 }

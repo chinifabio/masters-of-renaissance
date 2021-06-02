@@ -3,6 +3,7 @@ package it.polimi.ingsw.communication.packet.updates;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.view.View;
 
 public class ModelUpdater extends Updater {
     private final LiteModel model;
@@ -18,7 +19,7 @@ public class ModelUpdater extends Updater {
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel) {
+    public void update(LiteModel liteModel, View view) {
         liteModel.replaceModel(this.model);
     }
 }

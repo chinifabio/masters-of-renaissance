@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.view.View;
 
 /**
  * This class contains a method that take as input a lite model and than depending on the implementation update it
@@ -20,7 +21,6 @@ import it.polimi.ingsw.litemodel.LiteModel;
         @JsonSubTypes.Type(name = "Discount", value = DiscountUpdater.class),
         @JsonSubTypes.Type(name = "FaithTrack", value = FaithTrackUpdater.class),
         @JsonSubTypes.Type(name = "Leader", value = LeaderUpdater.class),
-        @JsonSubTypes.Type(name = "Lorenzo", value = LorenzoUpdater.class),
         @JsonSubTypes.Type(name = "NewPlayer", value = NewPlayerUpdater.class),
         @JsonSubTypes.Type(name = "Production", value = ProductionUpdater.class),
         @JsonSubTypes.Type(name = "Token", value = TokenUpdater.class),
@@ -33,7 +33,7 @@ public abstract class Updater {
      * Take a lite model as input and apply to the implementing function
      * @param liteModel the lite model on the client
      */
-    public abstract void update(LiteModel liteModel);
+    public abstract void update(LiteModel liteModel, View view);
 
     /**
      * Return a json representation of the command

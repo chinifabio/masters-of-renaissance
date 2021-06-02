@@ -155,7 +155,7 @@ public class CLI implements View, Disconnectable {
      */
     public void run() {
         new Thread(this.socket).start();
-        new Thread(new LiteModelUpdater(this.socket, this.model)).start();
+        new Thread(new LiteModelUpdater(this.socket, this.model, this)).start();
         socket.pinger(this);
 
         while(connected){

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.litefaithtrack.LiteFaithTrack;
+import it.polimi.ingsw.view.View;
 
 public class FaithTrackUpdater extends Updater{
 
@@ -25,7 +26,8 @@ public class FaithTrackUpdater extends Updater{
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel) {
+    public void update(LiteModel liteModel, View view) {
+        view.notifyPlayer(nickname + " moved on faith track");
         liteModel.updateFaithTrack(this.nickname, this.track);
     }
 }

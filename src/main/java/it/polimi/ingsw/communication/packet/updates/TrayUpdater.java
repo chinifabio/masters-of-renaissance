@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarketTray;
+import it.polimi.ingsw.view.View;
 
 import java.util.List;
 
@@ -24,7 +25,8 @@ public class TrayUpdater extends Updater {
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel) {
+    public void update(LiteModel liteModel, View view) {
+        view.notifyPlayer("tray updated");
         liteModel.setMarketTray(this.tray);
     }
 }

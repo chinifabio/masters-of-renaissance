@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.*;
+import it.polimi.ingsw.view.View;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class DiscountUpdater extends Updater{
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel) {
+    public void update(LiteModel liteModel, View view) {
         liteModel.setDiscounts(this.nickname, ResourceBuilder.mapResource(this.list));
     }
 }
