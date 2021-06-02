@@ -26,7 +26,7 @@ public class PersonalBoardPanel  extends GuiPanel {
         JPanel boardPanel = new JPanel();
         boardPanel.setOpaque(false);
         boardPanel.setLayout(new GridBagLayout());
-        JPanel warehousePanel = new WarehousePanel();
+        JPanel warehousePanel = new WarehousePanel(gui);
         JPanel devSlot = new DevSlotPanel();
         JPanel trackPanel = new FaithTrackPanel();
 

@@ -7,6 +7,7 @@ import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.LiteModelUpdater;
+import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.gui.panels.*;
 
@@ -17,8 +18,18 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
 
 public class GUI extends JFrame implements View, Disconnectable, ActionListener {
+
+    public static HashMap<ResourceType, String> resourceImages = new HashMap<>(){{
+        put(ResourceType.COIN, "WarehouseRes/coin.png");
+        put(ResourceType.SHIELD, "WarehouseRes/shield.png");
+        put(ResourceType.STONE, "WarehouseRes/stone.png" );
+        put(ResourceType.SERVANT, "WarehouseRes/servant.png");
+        put(ResourceType.EMPTY, "WarehouseRes/servant.png");
+        //put(ResourceType.EMPTY,"WarehouseRes/empty.png");
+    }};
 
     public static Color borderColor = new Color(220,179,120);
     public final LiteModel model = new LiteModel();
@@ -130,6 +141,7 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
 
         actualPanel = new AskNickname(this);
         gamePanel.add(actualPanel);
+
 
         pack();
         setVisible(true);
