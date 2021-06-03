@@ -492,4 +492,8 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         this.playerState = new MainActionDonePlayerState(this);
         this.endThisTurn();
     }
+
+    public Packet reconnectPacket() {
+        return this.playerState.reconnectPacket;
+    }
 }

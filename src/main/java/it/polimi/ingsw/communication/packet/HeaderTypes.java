@@ -2,10 +2,10 @@ package it.polimi.ingsw.communication.packet;
 
 public enum HeaderTypes {
     HELLO,
-    JOIN_LOBBY,
-    CREATE_LOBBY,
+    RECONNECTED,
+    GAME_INIT,
+    GAME_START,
     SET_PLAYERS_NUMBER,
-    WAIT_FOR_START,
     DO_ACTION,
     END_GAME,
     OK,

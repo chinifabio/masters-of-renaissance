@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
+import it.polimi.ingsw.communication.packet.Packet;
+
 public class PendingInitPlayerState extends PlayerState {
     /**
      * the constructor take the two final attribute of the state that are the personal board and the context.
@@ -8,7 +12,8 @@ public class PendingInitPlayerState extends PlayerState {
      * @param context is the context
      */
     protected PendingInitPlayerState(Player context) {
-        super(context, "wait other players join!");
+        super(context, "wait other players join!",
+                new Packet(HeaderTypes.RECONNECTED, ChannelTypes.PLAYER_ACTIONS, "reconnect"));
     }
 
     /**

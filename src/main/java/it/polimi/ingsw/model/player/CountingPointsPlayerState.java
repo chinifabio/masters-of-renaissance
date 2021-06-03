@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
+import it.polimi.ingsw.communication.packet.Packet;
+
 /**
  * This class is the State where are counted the VictoryPoints of the Player
  */
@@ -10,7 +14,8 @@ public class CountingPointsPlayerState extends PlayerState {
      * @param context the context
      */
     public CountingPointsPlayerState(Player context) {
-        super(context, "match ended");
+        super(context, "match ended",
+                new Packet(HeaderTypes.RECONNECTED, ChannelTypes.PLAYER_ACTIONS, "reconnect"));
     }
 
     /**

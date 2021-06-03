@@ -19,13 +19,13 @@ public class Dispatcher {
     private final EmptyView view = new EmptyView();
 
     public void subscribe(String nickname, VirtualSocket socket) {
-        socket.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.NOTIFY_VIEW, new ModelUpdater(this.model).jsonfy()));
+        socket.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.UPDATE_LITE_MODEL, new ModelUpdater(this.model).jsonfy()));
         this.listeners.put(nickname, socket);
     }
 
     public void publish(Updater updater) {
         updater.update(this.model, this.view);
-        for (VirtualSocket x : this.listeners.values()) x.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.NOTIFY_VIEW, updater.jsonfy()));
+        for (VirtualSocket x : this.listeners.values()) x.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.UPDATE_LITE_MODEL, updater.jsonfy()));
     }
 }
 

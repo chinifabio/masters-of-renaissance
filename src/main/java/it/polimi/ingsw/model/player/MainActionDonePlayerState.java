@@ -19,7 +19,8 @@ public class MainActionDonePlayerState extends PlayerState {
      * @param context the context
      */
     public MainActionDonePlayerState(Player context) {
-        super(context, "main action already done");
+        super(context, "main action already done",
+                new Packet(HeaderTypes.RECONNECTED, ChannelTypes.PLAYER_ACTIONS, "reconnect"));
     }
 
     /**

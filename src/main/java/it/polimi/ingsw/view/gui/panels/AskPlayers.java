@@ -5,13 +5,9 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.view.gui.GUI;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.function.Consumer;
 
 public class AskPlayers extends GuiPanel {
     public AskPlayers(GUI gui) {
@@ -58,11 +54,12 @@ public class AskPlayers extends GuiPanel {
     @Override
     public void reactToPacket(Packet packet) throws IOException {
         switch (packet.header) {
-            case JOIN_LOBBY -> gui.switchPanels(new PersonalBoardPanel(gui));
+            case RECONNECTED -> gui.switchPanels(new PersonalBoardPanel(gui));
             case INVALID -> {
                 gui.notifyPlayerError(packet.body);
                 gui.switchPanels(new AskPlayers(gui));
             }
+            case GAME_INIT -> gui.switchPanels(new InitGamePanel(gui));
         }
     }
 }

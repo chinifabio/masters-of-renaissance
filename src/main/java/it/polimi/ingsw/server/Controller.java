@@ -57,8 +57,8 @@ public class Controller implements Runnable, Disconnectable {
             Packet done = state.handleMessage(received, this);
 
             // wait model of clients has updated litemodel and then send the result
-            socket.send(new Packet(HeaderTypes.LOCK, ChannelTypes.NOTIFY_VIEW, "waiting ok"));
-            if (socket.pollPacketFrom(ChannelTypes.NOTIFY_VIEW).header == HeaderTypes.UNLOCK) socket.send(done);
+            socket.send(new Packet(HeaderTypes.LOCK, ChannelTypes.UPDATE_LITE_MODEL, "waiting ok"));
+            if (socket.pollPacketFrom(ChannelTypes.UPDATE_LITE_MODEL).header == HeaderTypes.UNLOCK) socket.send(done);
             else System.out.println(nickname + ": something wrong in the communication...");
         }
     }
@@ -106,7 +106,7 @@ class InitState implements ControllerState {
                 context.nickname = packet.body;
                 context.setState(new InGameState());
                 return context.model.reconnectPlayer(context.nickname, context) ?
-                        new Packet(HeaderTypes.JOIN_LOBBY, ChannelTypes.PLAYER_ACTIONS, "Reconnected ʕ•́ᴥ•̀ʔっ\""):
+                        context.model.reconnectPacket(context) : //new Packet(HeaderTypes.RECONNECTED, ChannelTypes.PLAYER_ACTIONS, "Reconnected"):
                         context.invalid("fail in reconnection");
 
             case Server.newPlayer: // the player has a valid nickname so he can join the lobby

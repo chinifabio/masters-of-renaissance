@@ -274,7 +274,8 @@ class CliInitialState extends CliState {
     public CliInitialState() {
         super();
         this.nextState.put(HeaderTypes.INVALID, this);
-        this.nextState.put(HeaderTypes.JOIN_LOBBY, new CliInGameState());
+        this.nextState.put(HeaderTypes.RECONNECTED, new CliInGameState());
+        this.nextState.put(HeaderTypes.GAME_INIT, new CliInitGameState());
         this.nextState.put(HeaderTypes.SET_PLAYERS_NUMBER, new CliSetPlayersNumberState());
     }
 
@@ -302,7 +303,8 @@ class CliSetPlayersNumberState extends CliState {
 
     public CliSetPlayersNumberState() {
         super();
-        this.nextState.put(HeaderTypes.JOIN_LOBBY, new CliInGameState());
+        this.nextState.put(HeaderTypes.RECONNECTED, new CliInGameState());
+        this.nextState.put(HeaderTypes.GAME_INIT, new CliInitGameState());
         this.nextState.put(HeaderTypes.INVALID, this);
     }
 
@@ -569,6 +571,74 @@ class CliInGameState extends CliState {
 
                 default:
                     context.notifyPlayerError("Unknown command, try again!");
+                    break;
+            }
+        }
+    }
+}
+
+class CliInitGameState extends CliState {
+
+    public CliInitGameState() {
+        super();
+        this.nextState.put(HeaderTypes.INVALID, this);
+        this.nextState.put(HeaderTypes.OK, this);
+        this.nextState.put(HeaderTypes.GAME_START, new CliInGameState());
+    }
+
+    /**
+     * Do some stuff that generate a packet to send to the server
+     *
+     * @param context
+     * @return packet to send to the server
+     */
+    @Override
+    protected Packet generatePacket(CLI context) {
+        while (true) {
+            context.notifyPlayer("You have to discard leader cards and choose resource");
+            List<String> data = Arrays.asList(new Scanner(System.in).nextLine().split(" "));
+
+            int i = 1;
+            switch (data.get(0).toLowerCase()) {
+                case "help":
+                    System.out.println("gino");
+                    break;
+
+                case "leader":
+                case "viewleader":
+                case "leadercards":
+                    List<LiteLeaderCard> temp = context.model.getLeader(context.model.getMe());
+                    if(temp == null || temp.isEmpty()){
+                        context.notifyPlayerError("You don't have any leader cards!");
+                        break;
+                    }
+                    ShowLeaderCards.printLeaderCardsPlayer(temp);
+                    break;
+
+                case "resource":
+                case "chooseres":
+                case "chooseresource":
+                    i = 0;
+                    try {
+                        DepotSlot dest = DepotSlot.valueOf(data.get(i++).toUpperCase());
+                        ResourceType res = ResourceType.valueOf(data.get(i++).toUpperCase());
+                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ChooseResourceCommand(dest, res).jsonfy());
+                    } catch (IndexOutOfBoundsException e) {
+                        context.notifyPlayerError("You missed some parameters");
+                    } catch (IllegalArgumentException e) {
+                        context.notifyPlayerError(data.get(i) + " is not mappable");
+                    }
+                    break;
+
+                case "discardleader":
+                case "discard":
+                    try {
+                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new DiscardLeaderCommand("LC" + Integer.parseInt(data.get(1))).jsonfy());
+                    } catch (IndexOutOfBoundsException out) {
+                        context.notifyPlayerError("you need to insert the leader id");
+                    } catch (NumberFormatException number) {
+                        context.notifyPlayerError(data.get(1) + " Is not a number!");
+                    }
                     break;
             }
         }

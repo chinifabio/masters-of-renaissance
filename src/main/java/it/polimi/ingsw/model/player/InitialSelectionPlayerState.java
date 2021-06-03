@@ -45,7 +45,8 @@ public class InitialSelectionPlayerState extends PlayerState {
      * @param context        the context
      */
     public InitialSelectionPlayerState(Player context) {
-        super(context, "You are in the game initialization phase, you need to discard leader card or choose resource");
+        super(context, "You are in the game initialization phase, you need to discard leader card or choose resource",
+                new Packet(HeaderTypes.GAME_INIT, ChannelTypes.PLAYER_ACTIONS, "reconnect"));
 
         Pair<Integer> initRes = Optional.of(context.initialSetup).orElse(new Pair<>(0,0));
         try { this.context.moveFaithMarker(initRes.two); } catch (EndGameException ignore) {}
@@ -118,7 +119,7 @@ public class InitialSelectionPlayerState extends PlayerState {
 
             this.context.setState(new PendingMatchStartPlayerState(this.context));
             this.context.match.initialSelectionDone();
-            return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Initial phase done!");
+            return new Packet(HeaderTypes.GAME_START, ChannelTypes.PLAYER_ACTIONS, "Initial phase done!");
 
         } else
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "<.(*_*).> You have to complete your job: discarded leader " + discarded + "/" + toDiscard+"; chosen resources " + chosen + "/" + toChoose);

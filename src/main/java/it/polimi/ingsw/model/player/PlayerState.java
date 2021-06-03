@@ -29,6 +29,11 @@ public abstract class PlayerState implements PlayerAction {
      */
     private final String errorMessage;
 
+    /**
+     * the packet to send to the user when someone reconnect
+     */
+    public final Packet reconnectPacket;
+
 
     /**
      * the constructor take the two final attribute of the state that are the personal board and the context.
@@ -36,9 +41,10 @@ public abstract class PlayerState implements PlayerAction {
      * @param context is the context
      * @param eMsg is the error message
      */
-    protected PlayerState(Player context, String eMsg) {
+    protected PlayerState(Player context, String eMsg, Packet reconnect) {
         this.context = context;
         this.errorMessage = eMsg;
+        this.reconnectPacket = reconnect;
     }
 
     /**

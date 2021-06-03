@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
+import it.polimi.ingsw.communication.packet.Packet;
+
 /**
  * This class is the State where the Player is waiting for Match to start
  */
@@ -12,7 +16,8 @@ public class PendingMatchStartPlayerState extends PlayerState {
      * @param context        the context
      */
     public PendingMatchStartPlayerState(Player context) {
-        super(context, "Wait that all the players complete the initial selection phase!");
+        super(context, "Wait that all the players complete the initial selection phase!",
+                new Packet(HeaderTypes.RECONNECTED, ChannelTypes.PLAYER_ACTIONS, "reconnect"));
     }
 
     /**

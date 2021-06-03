@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model.player;
 
+import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
+import it.polimi.ingsw.communication.packet.Packet;
+
 /**
  * This class is the State where the Player waits for his turn
  */
@@ -12,7 +16,8 @@ public class NotHisTurnPlayerState extends PlayerState {
      * @param context        the context
      */
     protected NotHisTurnPlayerState(Player context) {
-        super(context, "it is not your turn");
+        super(context, "it is not your turn",
+                new Packet(HeaderTypes.RECONNECTED, ChannelTypes.PLAYER_ACTIONS, "reconnect"));
     }
 
     /**

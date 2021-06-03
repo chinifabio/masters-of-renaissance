@@ -79,7 +79,7 @@ public class Model {
             Player p = new Player(nickname, this.match, this.dispatcher);
             this.players.put(client, p);
             return this.match.playerJoin(p) ?
-                    new Packet(HeaderTypes.JOIN_LOBBY, ChannelTypes.PLAYER_ACTIONS, "You joined a Lobby of " + this.gameSize + " players."):
+                    new Packet(HeaderTypes.GAME_INIT, ChannelTypes.PLAYER_ACTIONS, "You joined a Lobby of " + this.gameSize + " players."):
                     client.invalid("Can't join lobby \\(>_<)/");
 
         } catch (Exception e) {
@@ -87,6 +87,11 @@ public class Model {
         }
     }
 
+    /**
+     * Create a match of size player
+     * @param size the new size of the match
+     * @throws IOException if the thread can't wait
+     */
     public void createMatch(int size) throws IOException {
         this.gameSize = size;
 
@@ -99,10 +104,20 @@ public class Model {
         }
     }
 
+    /**
+     * Return the state of initialized flag
+     * @return true if the game is set, false if not
+     */
     public boolean initialized() {
         return this.init;
     }
 
+    /**
+     * Return the available seats of the game -1 if the game does not have a game size.
+     * If it has a game size return the available seats
+     * @return an int of available seats
+     * @throws InterruptedException throw when thread can't wait
+     */
     public int availableSeats() throws InterruptedException {
         if (!init) return -1;
 
@@ -113,15 +128,34 @@ public class Model {
         return this.match.gameSize - this.match.playerInGame();
     }
 
+    /**
+     * Disconnect the player associated whit the controller in the match
+     * @param controller the disconnected controller
+     * @return the succeed of the operation
+     */
     public boolean disconnectPlayer(Controller controller) {
-        //this.players.get(controller).disconnect();
         return this.match.disconnectPlayer(this.players.get(controller));
     }
 
+    /**
+     * Search the player from the given nickname and reconnect it with the passed controller
+     * @param nickname nickname of the player to reconnect
+     * @param context the controller to reconnect
+     * @return the succeed of the operation
+     */
     public boolean reconnectPlayer(String nickname, Controller context) {
         this.players.put(context, this.match.reconnectPlayer(nickname));
         this.dispatcher.subscribe(nickname, context.socket);
         System.out.println(Colors.color(Colors.GREEN_BRIGHT, nickname) + " reconnected");
         return true;
+    }
+
+    /**
+     * Return the packet to send back when a controller reconnect
+     * @param context the reconnecting controller
+     * @return the packet to send to the user
+     */
+    public Packet reconnectPacket(Controller context) {
+        return this.players.get(context).reconnectPacket();
     }
 }

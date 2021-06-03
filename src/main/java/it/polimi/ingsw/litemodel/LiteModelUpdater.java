@@ -29,10 +29,10 @@ public class LiteModelUpdater implements Runnable{
     public void run() {
         Packet received;
         while (true) {
-            received = socket.pollPacketFrom(ChannelTypes.NOTIFY_VIEW);
+            received = socket.pollPacketFrom(ChannelTypes.UPDATE_LITE_MODEL);
             switch (received.header) {
                 case TIMEOUT: return;
-                case LOCK: socket.send(new Packet(HeaderTypes.UNLOCK, ChannelTypes.NOTIFY_VIEW, "ok")); break;
+                case LOCK: socket.send(new Packet(HeaderTypes.UNLOCK, ChannelTypes.UPDATE_LITE_MODEL, "ok")); break;
                 case NOTIFY: useUpdater(received.body); break;
                 default: System.out.println("[model updater] invalid packet received: " + received); break;
             }

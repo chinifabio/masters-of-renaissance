@@ -15,7 +15,8 @@ public class BuyDevCardPlayerState extends PlayerState{
      * @param context is the context
      */
     protected BuyDevCardPlayerState(Player context) {
-        super(context, "buy dev card phase");
+        super(context, "buy dev card phase",
+                new Packet(HeaderTypes.RECONNECTED, ChannelTypes.PLAYER_ACTIONS, "reconnect"));
     }
 
     /**
