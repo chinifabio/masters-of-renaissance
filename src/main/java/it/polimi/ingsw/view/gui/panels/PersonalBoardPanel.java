@@ -27,7 +27,8 @@ public class PersonalBoardPanel  extends GuiPanel {
         boardPanel.setOpaque(false);
         boardPanel.setLayout(new GridBagLayout());
         JPanel warehousePanel = new WarehousePanel(gui);
-        JPanel devSlot = new DevSlotPanel();
+
+        JPanel devSlot = new DevSlotPanel(gui);
         JPanel trackPanel = new FaithTrackPanel();
 
         GridBagConstraints c = new GridBagConstraints();

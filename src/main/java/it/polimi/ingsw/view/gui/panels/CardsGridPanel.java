@@ -117,17 +117,20 @@ public class CardsGridPanel extends GuiPanel {
         ImageIcon icon1 = new ImageIcon(scaledImage);
         button.setIcon(icon1);
         button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                slot = null;
-                DevCardSlot slot = (DevCardSlot) JOptionPane.showInputDialog(null, "Select the Slot of the PersonalBoard \n where the Development Card will be placed", "BuyCards",
-                        JOptionPane.QUESTION_MESSAGE, null,
-                        possibleValues, possibleValues[0]);
-                if (slot != null) {
-                    gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyDevCardCommand(gui.model.getDevSetup().getDevSetup()[0][0].getLevel(), gui.model.getDevSetup().getDevSetup()[0][0].getColor(), slot).jsonfy()));
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    slot = null;
+                    DevCardSlot slot = (DevCardSlot) JOptionPane.showInputDialog(null, "Select the Slot of the PersonalBoard \n where the Development Card will be placed", "BuyCards",
+                            JOptionPane.QUESTION_MESSAGE, null,
+                            possibleValues, possibleValues[0]);
+                    if (slot != null) {
+                        gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyDevCardCommand(gui.model.getDevSetup().getDevSetup()[0][0].getLevel(), gui.model.getDevSetup().getDevSetup()[0][0].getColor(), slot).jsonfy()));
+                    }
                 }
-            }
         });
+        if (name.equals("EMPTY")){
+            button.setEnabled(false);
+        }
         return button;
     }
 }

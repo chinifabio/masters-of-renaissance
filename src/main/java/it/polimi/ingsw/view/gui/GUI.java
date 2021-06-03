@@ -27,8 +27,7 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
         put(ResourceType.SHIELD, "WarehouseRes/shield.png");
         put(ResourceType.STONE, "WarehouseRes/stone.png" );
         put(ResourceType.SERVANT, "WarehouseRes/servant.png");
-        put(ResourceType.EMPTY, "WarehouseRes/servant.png");
-        //put(ResourceType.EMPTY,"WarehouseRes/empty.png");
+        put(ResourceType.EMPTY,"WarehouseRes/empty.png");
     }};
 
     public static Color borderColor = new Color(220,179,120);

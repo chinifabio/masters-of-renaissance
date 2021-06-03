@@ -85,9 +85,7 @@ public class WarehousePanel  extends GuiPanel {
             image.setAlignmentY(0.55f);
             resource.add(image);
 
-            if (res.getAmount() == 0){
-                resource.setVisible(false);
-            }
+
             strongbox.add(resource);
         }
 
