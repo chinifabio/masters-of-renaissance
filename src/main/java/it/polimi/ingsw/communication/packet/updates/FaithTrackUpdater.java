@@ -26,8 +26,7 @@ public class FaithTrackUpdater extends Updater{
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel, View view) {
-        view.notifyPlayer(nickname + " moved on faith track");
+    public void update(LiteModel liteModel) {
         liteModel.updateFaithTrack(this.nickname, this.track);
     }
 }

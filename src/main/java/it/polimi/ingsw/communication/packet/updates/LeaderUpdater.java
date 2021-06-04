@@ -32,7 +32,7 @@ public class LeaderUpdater extends Updater{
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel, View view) {
+    public void update(LiteModel liteModel) {
         liteModel.setLeader(nickname, deck);
     }
 }

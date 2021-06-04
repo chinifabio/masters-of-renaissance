@@ -25,7 +25,7 @@ public class ConversionUpdater extends Updater {
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel, View view) {
+    public void update(LiteModel liteModel) {
         liteModel.setConversions(this.nickname, this.list.stream().map(Marble::color).collect(Collectors.toList()));
     }
 }

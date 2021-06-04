@@ -25,8 +25,7 @@ public class TrayUpdater extends Updater {
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel, View view) {
-        view.notifyPlayer("tray updated");
+    public void update(LiteModel liteModel) {
         liteModel.setMarketTray(this.tray);
     }
 }

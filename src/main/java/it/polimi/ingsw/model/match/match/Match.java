@@ -138,6 +138,8 @@ public abstract class Match implements PlayerToMatch {
             case ROW: this.marketTray.pushRow(index, currentPlayer()); break;
         }
 
+        view.sendMessage(currentPlayer().getNickname() + " used market tray");
+
         // update lite model
         this.updateTray();
     }
@@ -151,6 +153,8 @@ public abstract class Match implements PlayerToMatch {
     @Override
     public void paintMarbleInTray(Marble newColor, int marbleIndex) throws UnpaintableMarbleException {
         this.marketTray.paintMarble(newColor, marbleIndex);
+        view.sendMessage(currentPlayer().getNickname() + " painted a marble in market tray");
+
         updateTray();
     }
 
@@ -190,6 +194,7 @@ public abstract class Match implements PlayerToMatch {
         if (this.currentPlayer().hasRequisite(this.devSetup.showDevDeck(row, col).getCost(),row,col,this.devSetup.showDevDeck(row,col))) {
             this.currentPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
 
+            view.sendMessage(currentPlayer().getNickname() + " bought a card in the market");
             // update lite model
             this.updateDevSetup();
 

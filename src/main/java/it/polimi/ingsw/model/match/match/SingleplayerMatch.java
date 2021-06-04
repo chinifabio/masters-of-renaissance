@@ -91,7 +91,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
             lorenzoWinner = true;
             startEndGameLogic();
         }
-        // updateLorenzo(); useless cause faith track do it
+        view.sendMessage("Lorenzo moved " + i + " tiles in the faith track");
     }
 
     /**
@@ -100,6 +100,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     @Override
     public void shuffleToken() {
         this.soloToken.shuffle();
+        view.sendMessage("The solo token where shuffled");
     }
 
     /**
@@ -186,6 +187,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
         try {
             SoloActionToken s = this.soloToken.useAndDiscard();
             s.useEffect(this);
+            view.sendMessage("Lorenzo used " + s.getCardID());
             updateToken();
         } catch (EmptyDeckException ignore) {
             System.out.println(">.<");
@@ -194,6 +196,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
         this.marketTray.unPaint();
         updateTray();
         if (gameOnAir) player.startHisTurn();
+        view.sendMessage("It is you turn!");
     }
 
     /**
@@ -242,6 +245,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     @Override
     public Player reconnectPlayer(String nickname) {
         player.startHisTurn();
+        view.sendMessage("Welcome back");
         return player;
     }
 
@@ -272,11 +276,6 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
     private void updateToken() {
         this.view.publish(new TokenUpdater(this.soloToken.peekFirstCard().liteVersion()));
-    }
-
-    // useless
-    private void updateLorenzo() {
-        this.view.publish(new FaithTrackUpdater(lorenzoNickname, lorenzo.liteVersion()));
     }
 
     /**

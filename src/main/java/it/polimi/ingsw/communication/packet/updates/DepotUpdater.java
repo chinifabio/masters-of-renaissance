@@ -28,7 +28,7 @@ public class DepotUpdater extends Updater{
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel, View view) {
+    public void update(LiteModel liteModel) {
         liteModel.setDepot(this.nickname, slot, depot);
     }
 }

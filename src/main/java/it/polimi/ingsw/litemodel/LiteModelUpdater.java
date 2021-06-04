@@ -13,12 +13,10 @@ import it.polimi.ingsw.view.cli.Colors;
 public class LiteModelUpdater implements Runnable{
     private final VirtualSocket socket;
     private final LiteModel model;
-    private final View view;
 
-    public LiteModelUpdater(VirtualSocket socket, LiteModel model, View view) {
+    public LiteModelUpdater(VirtualSocket socket, LiteModel model) {
         this.socket = socket;
         this.model = model;
-        this.view = view;
     }
 
     /**
@@ -42,7 +40,7 @@ public class LiteModelUpdater implements Runnable{
     private void useUpdater(String json) {
         try {
             Updater up = new ObjectMapper().readerFor(Updater.class).readValue(json);
-            up.update(this.model, this.view);
+            up.update(this.model);
         } catch (JsonProcessingException e) {
             System.out.println(Colors.color(Colors.RED, "update view error: ") + e.getMessage());
         }

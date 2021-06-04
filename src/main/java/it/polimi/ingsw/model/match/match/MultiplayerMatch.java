@@ -135,11 +135,13 @@ public class MultiplayerMatch extends Match{
 
             curPlayer = (curPlayer + 1) % connectedPlayers.size();
             currentPlayer().setState(new CountingPointsPlayerState(currentPlayer()));
+            view.sendMessage("The turn of " + currentPlayer().getNickname() + " is started!");
             return;
         }
 
         curPlayer = (curPlayer + 1) % connectedPlayers.size();
         currentPlayer().startHisTurn();
+        view.sendMessage("The turn of " + currentPlayer().getNickname() + " is started!");
     }
 
     /**
@@ -150,6 +152,8 @@ public class MultiplayerMatch extends Match{
         initializedPlayers++;
         if (initializedPlayers == gameSize) {
             connectedPlayers.get(curPlayer).startHisTurn();
+            view.sendMessage("All players passed game initialization");
+            view.sendMessage("Is the turn of " + currentPlayer());
         }
     }
 
@@ -158,6 +162,7 @@ public class MultiplayerMatch extends Match{
      */
     @Override
     public void startEndGameLogic() {
+        view.sendMessage("End game logic started!");
         endGameLogic = true;
         turnDone();
     }
@@ -179,6 +184,7 @@ public class MultiplayerMatch extends Match{
      */
     @Override
     public boolean disconnectPlayer(Player player) {
+        view.sendMessage(player.getNickname() + " disconnected from the game");
         if (gameOnAir) {
             player.disconnect();
             return true;
@@ -200,6 +206,7 @@ public class MultiplayerMatch extends Match{
         assert reconnecting != null;
 
         reconnecting.reconnect();
+        view.sendMessage(nickname + " return in game!");
         return reconnecting;
     }
 

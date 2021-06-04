@@ -22,8 +22,7 @@ public class TokenUpdater extends Updater {
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel, View view) {
-        view.notifyPlayer("lorenzo used: " + token.getCardID());
+    public void update(LiteModel liteModel) {
         liteModel.setSoloToken(this.token);
     }
 }

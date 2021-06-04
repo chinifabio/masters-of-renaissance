@@ -33,7 +33,7 @@ public abstract class Updater {
      * Take a lite model as input and apply to the implementing function
      * @param liteModel the lite model on the client
      */
-    public abstract void update(LiteModel liteModel, View view);
+    public abstract void update(LiteModel liteModel);
 
     /**
      * Return a json representation of the command

@@ -21,6 +21,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Productio
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.view.Messanger;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.cli.printer.*;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
@@ -150,12 +151,18 @@ public class CLI implements View, Disconnectable {
         return this.model;
     }
 
+    @Override
+    public VirtualSocket getSocket() {
+        return this.socket;
+    }
+
     /**
      * read data from command line when needed
      */
     public void run() {
         new Thread(this.socket).start();
-        new Thread(new LiteModelUpdater(this.socket, this.model, this)).start();
+        new Thread(new LiteModelUpdater(this.socket, this.model)).start();
+        new Thread(new Messanger(this)).start();
         socket.pinger(this);
 
         while(connected){

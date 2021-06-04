@@ -21,8 +21,7 @@ public class DevSetupUpdater extends Updater {
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel, View view) {
-        view.notifyPlayer("card market modified");
+    public void update(LiteModel liteModel) {
         liteModel.setDevSetup(this.setup);
     }
 }

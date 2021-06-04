@@ -8,6 +8,7 @@ import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.LiteModelUpdater;
 import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.view.Messanger;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.gui.panels.*;
 
@@ -91,6 +92,11 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
         return this.model;
     }
 
+    @Override
+    public VirtualSocket getSocket() {
+        return this.socket;
+    }
+
     /**
      * When an object implementing interface {@code Runnable} is used
      * to create a thread, starting the thread causes the object's
@@ -105,8 +111,9 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
     @Override
     public void run() {
         new Thread(socket).start();
+        new Thread(new LiteModelUpdater(socket, model)).start();
+        new Thread(new Messanger(this)).start();
         socket.pinger(this);
-        new Thread(new LiteModelUpdater(socket, model, this)).start();
 
         boolean gino = true;
         while (gino) {

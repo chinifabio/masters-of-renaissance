@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view;
 
+import it.polimi.ingsw.communication.VirtualSocket;
 import it.polimi.ingsw.litemodel.LiteModel;
 
 /**
@@ -30,4 +31,6 @@ public interface View extends Runnable{
      * @return the model of the view
      */
     LiteModel getModel();
+
+    VirtualSocket getSocket();
 }

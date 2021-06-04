@@ -26,7 +26,7 @@ public class DiscountUpdater extends Updater{
      * @param liteModel the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel, View view) {
+    public void update(LiteModel liteModel) {
         liteModel.setDiscounts(this.nickname, ResourceBuilder.mapResource(this.list));
     }
 }
