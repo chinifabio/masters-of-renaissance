@@ -383,19 +383,6 @@ class CliInGameState extends CliState {
                     }
                     break;
 
-                case "chooseresource":
-                    i = 0;
-                    try {
-                        DepotSlot dest = DepotSlot.valueOf(data.get(i++).toUpperCase());
-                        ResourceType res = ResourceType.valueOf(data.get(i++).toUpperCase());
-                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ChooseResourceCommand(dest, res).jsonfy());
-                    } catch (IndexOutOfBoundsException e) {
-                        context.notifyPlayerError("You missed some parameters");
-                    } catch (IllegalArgumentException e) {
-                        context.notifyPlayerError(data.get(i) + " is not mappable");
-                    }
-                    break;
-
                 case "usemarket":
                     try {
                         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new UseMarketTrayCommand(
@@ -620,16 +607,12 @@ class CliInitGameState extends CliState {
                 case "chooseresource":
                     try {
                         DepotSlot dest = DepotSlot.valueOf(data.get(i++).toUpperCase());
-                        ResourceType res = ResourceType.valueOf(data.get(i++).toUpperCase());
+                        ResourceType res = ResourceType.valueOf(data.get(i).toUpperCase());
                         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ChooseResourceCommand(dest, res).jsonfy());
                     } catch (IndexOutOfBoundsException e) {
                         context.notifyPlayerError("You missed some parameters");
                     } catch (IllegalArgumentException e) {
-                        try{
-                            context.notifyPlayerError(data.get(i) + " is not mappable");
-                        }catch(ArrayIndexOutOfBoundsException e1){
-                            context.notifyPlayerError("You missed some parameters");
-                        }
+                        context.notifyPlayerError(data.get(--i) + " is not mappable");
                     }
                     break;
 

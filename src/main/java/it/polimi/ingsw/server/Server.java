@@ -12,9 +12,6 @@ import java.util.concurrent.Executors;
 
 public class Server implements Runnable{
 
-    private static int port = 4444;
-    private static String address = "127.0.0.1";
-
     public final ExecutorService executor = Executors.newCachedThreadPool();
     private final ServerSocket serverSocket;
 
@@ -29,14 +26,14 @@ public class Server implements Runnable{
     public final static int reconnect = 0;
     public final static int newPlayer = 1;
 
-    public Server() throws IOException {
+    public Server(int port) throws IOException {
         serverSocket = new ServerSocket(port);
     }
 
     public static void main(String[] args) {
         Thread serverWorker;
         try {
-            serverWorker = new Thread(new Server());
+            serverWorker = new Thread(new Server(4444));
         } catch (IOException e) {
             System.out.println(e.getMessage());
             return;

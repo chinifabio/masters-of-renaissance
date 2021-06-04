@@ -31,7 +31,7 @@ public class Launcher
                     main = new Thread(new CLI("localhost", 4444));
                     break;
                 case "server":
-                    main = new Thread(new Server());
+                    main = new Thread(new Server(4444));
                     break;
                 case "gui":
                     main = new Thread(new GUI("localhost", 4444));
