@@ -641,6 +641,9 @@ class CliInitGameState extends CliState {
                     }
                     break;
 
+                case "done":
+                    return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy());
+
                 default:
                     System.out.println(Colors.color(Colors.RED_BRIGHT, "unknown input, type help for available commands"));
             }
