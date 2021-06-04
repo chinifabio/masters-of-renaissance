@@ -69,7 +69,7 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
      */
     @Override
     public void notifyPlayerError(String errorMessage) {
-        notifyPanel.appendMessage(errorMessage, new Color(170, 20, 10));
+        notifyPanel.appendMessage(errorMessage, new Color(255, 110, 102));
     }
 
     /**

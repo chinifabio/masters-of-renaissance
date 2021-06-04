@@ -325,6 +325,5 @@ public class FaithTrackPanel extends GuiPanel {
 
     @Override
     public void reactToPacket(Packet packet) throws IOException {
-
     }
 }
