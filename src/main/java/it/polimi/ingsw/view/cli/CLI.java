@@ -601,7 +601,7 @@ class CliInitGameState extends CliState {
             int i = 1;
             switch (data.get(0).toLowerCase()) {
                 case "help":
-                    System.out.println("you can " + Colors.color(Colors.GREEN_BRIGHT, "discardleader") + " or " + Colors.color(Colors.GREEN_BRIGHT, "chooseres"));
+                    System.out.println("you can " + Colors.color(Colors.GREEN_BRIGHT, "discardleader [number]") + " or " + Colors.color(Colors.GREEN_BRIGHT, "chooseres [depot destination] [resource type]"));
                     break;
 
                 case "leader":
@@ -618,7 +618,6 @@ class CliInitGameState extends CliState {
                 case "resource":
                 case "chooseres":
                 case "chooseresource":
-                    i = 0;
                     try {
                         DepotSlot dest = DepotSlot.valueOf(data.get(i++).toUpperCase());
                         ResourceType res = ResourceType.valueOf(data.get(i++).toUpperCase());
@@ -626,7 +625,11 @@ class CliInitGameState extends CliState {
                     } catch (IndexOutOfBoundsException e) {
                         context.notifyPlayerError("You missed some parameters");
                     } catch (IllegalArgumentException e) {
-                        context.notifyPlayerError(data.get(i) + " is not mappable");
+                        try{
+                            context.notifyPlayerError(data.get(i) + " is not mappable");
+                        }catch(ArrayIndexOutOfBoundsException e1){
+                            context.notifyPlayerError("You missed some parameters");
+                        }
                     }
                     break;
 

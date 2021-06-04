@@ -100,10 +100,8 @@ public class PersonalBoardPanel  extends GuiPanel {
         this.add(boardPanel);
         this.add(buttons, BorderLayout.SOUTH);
 
-
         repaint();
         revalidate();
-
     }
 
     /**

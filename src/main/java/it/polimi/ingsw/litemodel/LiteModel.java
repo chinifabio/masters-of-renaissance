@@ -169,6 +169,30 @@ public class LiteModel {
         return this.players.get(me).getConversions();
     }
 
+    public MarbleColor[] getConversionArray(String me){
+        List<MarbleColor> list = this.players.get(me).getConversions();
+        MarbleColor[] colors = new MarbleColor[0];
+        if(convert(list, 0).isPresent()) {
+            colors = new MarbleColor[colors.length+1];
+            colors[0] = convert(list, 0).get();
+            if(convert(list, 1).isPresent()) {
+                MarbleColor temp = colors[0];
+                colors = new MarbleColor[colors.length+1];
+                colors[0] = temp;
+                colors[1] = convert(list, 0).get();
+            }
+        }
+        return colors;
+    }
+
+    private Optional<MarbleColor> convert(List<MarbleColor> list, int x){
+        if(list.isEmpty()) return Optional.empty();
+        if(list.size()==1 && x==1) return Optional.empty();
+        Optional<MarbleColor> temp;
+        temp = Optional.ofNullable(list.get(x));
+        return temp;
+    }
+
     public Map<String, LitePersonalBoard> getPlayers(){
         return this.players;
     }

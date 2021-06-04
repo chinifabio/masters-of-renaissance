@@ -67,7 +67,7 @@ public class Controller implements Runnable, Disconnectable {
     public void handleDisconnection() {
         System.out.println(Colors.color(Colors.RED, nickname) + " disconnected");
         if (model.disconnectPlayer(this))                  // disconnection from model
-            server.disconnect(nickname, this);        // disconnection from server
+            server.disconnect(nickname, this);             // disconnection from server
         else
             server.removeController(nickname);
         disconnected = true;
@@ -116,7 +116,6 @@ class InitState implements ControllerState {
                 } catch (InterruptedException e) {
                     return context.invalid("error in obtaining model");
                 }
-
                 context.setState(context.model.initialized() ?
                         new InGameState():
                         new CreatorState());
