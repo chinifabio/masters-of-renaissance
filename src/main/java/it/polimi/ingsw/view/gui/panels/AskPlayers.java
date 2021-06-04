@@ -5,16 +5,41 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.view.gui.GUI;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.InputStream;
+import java.util.function.Consumer;
 
 public class AskPlayers extends GuiPanel {
+
+    private Image background;
+
     public AskPlayers(GUI gui) {
         super(gui);
 
-        LayoutManager layout = new BoxLayout(this, BoxLayout.Y_AXIS);
-        setLayout(layout);
+        InputStream is = getClass().getResourceAsStream("/LogoMasters.png");
+        if (is == null) try {
+            throw new IOException("LogoMasters.png not found");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            background = ImageIO.read(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        this.setPreferredSize(new Dimension(gui.width-300, gui.height));
+
+        JPanel buttonPanel = new JPanel();
+
+        LayoutManager layout = new BoxLayout(buttonPanel, BoxLayout.Y_AXIS);
+
+        buttonPanel.setLayout(layout);
 
         setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 
@@ -44,11 +69,14 @@ public class AskPlayers extends GuiPanel {
         buttons.add(two);
         buttons.add(three);
         buttons.add(four);
-        add(Box.createRigidArea(new Dimension(0, 550)));
-        add(request);
-        add(buttons);
+        buttonPanel.add(Box.createRigidArea(new Dimension(0, 550)));
+        buttonPanel.add(request);
+        buttonPanel.add(buttons);
 
-        setOpaque(false);
+        buttonPanel.setOpaque(false);
+        this.add(buttonPanel);
+
+
     }
 
     @Override
@@ -61,5 +89,18 @@ public class AskPlayers extends GuiPanel {
             }
             case GAME_INIT -> gui.switchPanels(new InitGamePanel(gui));
         }
+    }
+
+
+    /**
+     * Draw the background
+     */
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        int width = gui.width-300;
+        int height = gui.height;
+        g.drawImage(background, 0, 0,width,height, null);
     }
 }

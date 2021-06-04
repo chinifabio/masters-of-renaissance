@@ -20,10 +20,27 @@ import java.io.InputStream;
 public class CardsGridPanel extends GuiPanel {
 
     private DevCardSlot slot;
+
     JOptionPane devSlot = new JOptionPane();
+
+    private Image background;
 
     public CardsGridPanel(GUI gui) {
         super(gui);
+
+        InputStream is = getClass().getResourceAsStream("/Background.png");
+        if (is == null) try {
+            throw new IOException("background.png not found");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            background = ImageIO.read(is);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         this.setPreferredSize(new Dimension(1920, 800));
         this.setBackground(GUI.borderColor);
 
@@ -132,5 +149,17 @@ public class CardsGridPanel extends GuiPanel {
             button.setEnabled(false);
         }
         return button;
+    }
+
+    /**
+     * Draw the background
+     */
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        int width = gui.width+100;
+        int height = gui.height;
+        g.drawImage(background, 0, -10,width,height, null);
     }
 }

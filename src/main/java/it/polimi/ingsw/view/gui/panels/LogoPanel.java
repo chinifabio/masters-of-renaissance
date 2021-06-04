@@ -14,7 +14,7 @@ public class LogoPanel extends GuiPanel{
     public LogoPanel(GUI gui) throws IOException {
         super (gui);
         setPreferredSize(new Dimension(1920-380-200, 1080-270));
-        img = ImageIO.read(getClass().getResourceAsStream("/LogoMasters.png"));
+        img = ImageIO.read(getClass().getResourceAsStream("/Background.png"));
     }
 
     @Override

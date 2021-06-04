@@ -29,7 +29,7 @@ public class PersonalBoardPanel  extends GuiPanel {
         JPanel warehousePanel = new WarehousePanel(gui);
 
         JPanel devSlot = new DevSlotPanel(gui);
-        JPanel trackPanel = new FaithTrackPanel();
+        JPanel trackPanel = new FaithTrackPanel(gui);
 
         GridBagConstraints c = new GridBagConstraints();
 
@@ -83,7 +83,7 @@ public class PersonalBoardPanel  extends GuiPanel {
 
 
 
-        setPreferredSize(new Dimension(1920-380-200,  1080-270));
+        setPreferredSize(new Dimension(gui.width-300,  gui.height));
         buttons.add(Box.createRigidArea(new Dimension(0,70)));
         buttons.add(viewLeader);
         buttons.add(viewMarket);
@@ -98,6 +98,8 @@ public class PersonalBoardPanel  extends GuiPanel {
         buttons.setPreferredSize(new Dimension(1920, 100));
 
         this.add(boardPanel);
+
+
         this.add(buttons, BorderLayout.SOUTH);
 
         repaint();
@@ -111,8 +113,8 @@ public class PersonalBoardPanel  extends GuiPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        int width = 1920-380-200;
-        int height = 1080-270-100;
+        int width = gui.width-250;
+        int height = gui.height-100;
         g.drawImage(personalBoard, 0, -10,width,height, null);
     }
 

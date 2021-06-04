@@ -19,8 +19,9 @@ public class LeaderPanel extends GuiPanel {
 
     public LeaderPanel(GUI gui) {
         super(gui);
-        setOpaque(false);
 
+        setOpaque(false);
+        this.add(Box.createRigidArea(new Dimension(0, 800)));
 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
@@ -46,6 +47,7 @@ public class LeaderPanel extends GuiPanel {
             case INVALID -> gui.notifyPlayerError(packet.body);
         }
     }
+
 }
 
 class LeaderCardPanel extends JPanel {
@@ -95,4 +97,5 @@ class LeaderCardPanel extends JPanel {
         setVisible(true);
         setOpaque(false);
     }
+
 }
