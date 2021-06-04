@@ -6,10 +6,7 @@ import it.polimi.ingsw.model.Model;
 import javax.naming.ldap.Control;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,6 +17,8 @@ public class Server implements Runnable{
 
     public final ExecutorService executor = Executors.newCachedThreadPool();
     private final ServerSocket serverSocket;
+
+    private final Queue<Controller> modelControllerQueue = new LinkedList<>();
 
     private final Map<String, Controller> connectedClient = new HashMap<>();
     private final Map<String, Controller> disconnectedClient = new HashMap<>();
@@ -35,9 +34,6 @@ public class Server implements Runnable{
     }
 
     public static void main(String[] args) {
-        // todo ugly but works
-        // if (args.length > 0 && args[0].equals("--port")) port = Integer.parseInt(args[1]);
-
         Thread serverWorker;
         try {
             serverWorker = new Thread(new Server());
@@ -56,7 +52,6 @@ public class Server implements Runnable{
 
     public void run() {
         System.out.println("Server ready");
-
         while (true) {
             try {
                 // accept the connection and start the virtual socket to sort the received packet

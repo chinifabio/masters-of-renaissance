@@ -61,13 +61,13 @@ public class LeaderTest {
 
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
-        assertEquals(HeaderTypes.OK, order.get(0).endThisTurn().header);
+        assertEquals(HeaderTypes.GAME_START, order.get(0).endThisTurn().header);
 
         assertEquals(HeaderTypes.OK, order.get(1).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN).header);
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(() -> assertEquals(order.get(1).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
-        assertEquals(HeaderTypes.OK, order.get(1).endThisTurn().header);
+        assertEquals(HeaderTypes.GAME_START, order.get(1).endThisTurn().header);
     }
 
     @Test
