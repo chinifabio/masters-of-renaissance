@@ -601,7 +601,7 @@ class CliInitGameState extends CliState {
             int i = 1;
             switch (data.get(0).toLowerCase()) {
                 case "help":
-                    System.out.println("gino");
+                    System.out.println("you can " + Colors.color(Colors.GREEN_BRIGHT, "discardleader") + " or " + Colors.color(Colors.GREEN_BRIGHT, "chooseres"));
                     break;
 
                 case "leader":
@@ -640,6 +640,9 @@ class CliInitGameState extends CliState {
                         context.notifyPlayerError(data.get(1) + " Is not a number!");
                     }
                     break;
+
+                default:
+                    System.out.println(Colors.color(Colors.RED_BRIGHT, "unknown input, type help for available commands"));
             }
         }
     }
