@@ -44,7 +44,10 @@ public class LeaderPanel extends GuiPanel {
     public void reactToPacket(Packet packet) throws IOException {
         switch (packet.header){
             case OK -> gui.switchPanels(new LeaderPanel(gui));
-            case INVALID -> gui.notifyPlayerError(packet.body);
+            case INVALID -> {
+                gui.switchPanels(new LeaderPanel(gui));
+                gui.notifyPlayerError(packet.body);
+            }
         }
     }
 
