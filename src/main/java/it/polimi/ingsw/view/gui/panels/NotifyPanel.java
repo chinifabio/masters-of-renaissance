@@ -6,13 +6,16 @@ import java.awt.*;
 
 public class NotifyPanel extends JPanel{
 
+    public static final int width = 300;
+
     public NotifyPanel() {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
     }
 
     public void appendMessage(String message, Color bg) {
-        JLabel toAdd = new MessageLabel(message, bg);
+        JTextArea toAdd = new MessageLabel(message, bg);
 
         toAdd.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -23,9 +26,17 @@ public class NotifyPanel extends JPanel{
 
 }
 
-class MessageLabel extends JLabel {
+class MessageLabel extends JTextArea {
     public MessageLabel(String text, Color bg) {
-        super(text);
+        super(5,20);
+
+        setEnabled(false);
+
+        setLineWrap(true);
+        setWrapStyleWord(true);
+
+        append(text);
+        setMaximumSize(new Dimension(NotifyPanel.width, 50));
 
         setOpaque(true);
         setBackground(bg);

@@ -17,32 +17,31 @@ public class Launcher
 {
     public static void main(String[] arg){
 
-        if(System.getProperty("os.name").contains("Windows")){
-            System.out.println("You can't run this JAR on windows... To fix you can try to install WSL");
-            return;
-        }
-
         List<String> arguments = Arrays.asList(arg);
         Thread main;
 
         try {
             switch (arguments.get(0)) {
-                case "cli":
+                case "cli" -> {
+                    if (System.getProperty("os.name").contains("Windows")) {
+                        System.out.println("You can't run this JAR on windows... To fix you can try to install WSL");
+                        return;
+                    }
                     main = new Thread(new CLI("localhost", 4444));
-                    break;
-                case "server":
+                }
+                case "server" -> {
+                    if (System.getProperty("os.name").contains("Windows")) {
+                        System.out.println("You can't run this JAR on windows... To fix you can try to install WSL");
+                        return;
+                    }
                     main = new Thread(new Server(4444));
-                    break;
-                case "gui":
-                    main = new Thread(new GUI("localhost", 4444));
-                    break;
-                case "--help":
-                case "-h":
-                    main = new Thread(()-> System.out.println("work in progress"));
-                    break;
-                default:
+                }
+                case "gui" -> main = new Thread(new GUI("localhost", 4444));
+                case "--help", "-h" -> main = new Thread(() -> System.out.println("work in progress"));
+                default -> {
                     System.out.println(arguments.get(0) + " is not a valid argument");
                     return;
+                }
             }
         } catch (IOException e) {
             System.out.println("fail launching " + arguments.get(0));

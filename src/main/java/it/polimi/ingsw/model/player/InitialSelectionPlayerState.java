@@ -128,17 +128,17 @@ public class InitialSelectionPlayerState extends PlayerState {
     /**
      * set a chosen resource attribute in player
      * @param slot the Depot where the Resources are taken from
-     * @param chosen the resource chosen
+     * @param res the resource chosen
      */
     @Override
-    public Packet chooseResource(DepotSlot slot, ResourceType chosen) {
+    public Packet chooseResource(DepotSlot slot, ResourceType res) {
         if (slot == DepotSlot.STRONGBOX || slot == DepotSlot.BUFFER)
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "Invalid destination");
         if (this.chosen < this.toChoose) {
             try {
-                if (this.context.obtainResource(slot, ResourceBuilder.buildFromType(chosen, 1))) {
+                if (this.context.obtainResource(slot, ResourceBuilder.buildFromType(res, 1))) {
                     this.chosen++;
-                    return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You obtained " + chosen.name().toLowerCase() + " | " + "discarded leader " + discarded + "/" + toDiscard+"; chosen resources " + chosen + "/" + toChoose);
+                    return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You obtained " + res.name().toLowerCase() + " | " + "discarded leader " + discarded + "/" + toDiscard+"; chosen resources " + chosen + "/" + toChoose);
                 } else
                     return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "Can't override resource");
 
