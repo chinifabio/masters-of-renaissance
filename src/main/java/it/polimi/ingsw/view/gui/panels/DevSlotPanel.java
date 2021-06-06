@@ -5,7 +5,6 @@ import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
-import it.polimi.ingsw.model.player.personalBoard.PersonalBoard;
 import it.polimi.ingsw.view.gui.GUI;
 
 import javax.imageio.ImageIO;
@@ -14,10 +13,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 
 public class DevSlotPanel extends GuiPanel {
     /**
@@ -43,7 +38,7 @@ public class DevSlotPanel extends GuiPanel {
         rightCard.setLayout(new OverlayLayout(rightCard));
         createDevSpace(rightCard, DevCardSlot.RIGHT);
 
-        this.add(Box.createRigidArea(new Dimension(10,0)));
+        this.add(Box.createRigidArea(new Dimension(50,0)));
         this.add(leftCard);
         this.add(Box.createRigidArea(new Dimension(90,0)));
         this.add(centerCard);
@@ -57,7 +52,6 @@ public class DevSlotPanel extends GuiPanel {
         float i = 0;
         for (LiteDevCard card : gui.model.getDevelop(gui.model.getMe()).get(slot)){
             if (card.getLevel() != LevelDevCard.NOLEVEL && card.getColor() != ColorDevCard.NOCOLOR && !card.getCardID().equals("Empty")) {
-                System.out.println(card.getCardID());
                 JLabel label = new JLabel();
                 InputStream url = this.getClass().getResourceAsStream("/DevCardsImage/" + card.getCardID() + ".png");
                 BufferedImage img = null;
@@ -76,6 +70,26 @@ public class DevSlotPanel extends GuiPanel {
                 i = i + 0.2f;
 
                 space.add(label);
+            } else {
+                JLabel label = new JLabel();
+                InputStream url = this.getClass().getResourceAsStream("/WarehouseRes/empty.png");
+                BufferedImage img = null;
+                try {
+                    assert url != null;
+                    img = ImageIO.read(url);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Image scaledImage = GUI.getScaledImage(img, (462 / 2)-50, (698 / 2)-50);
+                ImageIcon icon1 = new ImageIcon(scaledImage);
+                label.setIcon(icon1);
+
+                label.setAlignmentY(0.7f - i);
+                i = i + 0.2f;
+
+                space.add(label);
+                space.setOpaque(false);
             }
         }
     }

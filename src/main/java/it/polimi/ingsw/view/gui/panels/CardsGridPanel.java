@@ -54,29 +54,29 @@ public class CardsGridPanel extends GuiPanel {
         JPanel row3 = new JPanel();
 
         JButton r1c1 = new JButton();
-        generateDevCardButton(r1c1, gui.model.getDevSetup().getDevSetup()[0][0].getCardID(), possibleValues);
+        generateDevCardButton(r1c1, gui.model.getDevSetup().getDevSetup()[0][0].getCardID(), possibleValues, 0,0);
         JButton r1c2 = new JButton();
-        generateDevCardButton(r1c2, gui.model.getDevSetup().getDevSetup()[0][1].getCardID(), possibleValues);
+        generateDevCardButton(r1c2, gui.model.getDevSetup().getDevSetup()[0][1].getCardID(), possibleValues, 0, 1);
         JButton r1c3 = new JButton();
-        generateDevCardButton(r1c3, gui.model.getDevSetup().getDevSetup()[0][2].getCardID(), possibleValues);
+        generateDevCardButton(r1c3, gui.model.getDevSetup().getDevSetup()[0][2].getCardID(), possibleValues, 0, 2);
         JButton r1c4 = new JButton();
-        generateDevCardButton(r1c4, gui.model.getDevSetup().getDevSetup()[0][3].getCardID(), possibleValues);
+        generateDevCardButton(r1c4, gui.model.getDevSetup().getDevSetup()[0][3].getCardID(), possibleValues, 0, 3);
         JButton r2c1 = new JButton();
-        generateDevCardButton(r2c1, gui.model.getDevSetup().getDevSetup()[1][0].getCardID(), possibleValues);
+        generateDevCardButton(r2c1, gui.model.getDevSetup().getDevSetup()[1][0].getCardID(), possibleValues, 1, 0);
         JButton r2c2 = new JButton();
-        generateDevCardButton(r2c2, gui.model.getDevSetup().getDevSetup()[1][1].getCardID(), possibleValues);
+        generateDevCardButton(r2c2, gui.model.getDevSetup().getDevSetup()[1][1].getCardID(), possibleValues, 1, 1);
         JButton r2c3 = new JButton();
-        generateDevCardButton(r2c3, gui.model.getDevSetup().getDevSetup()[1][2].getCardID(), possibleValues);
+        generateDevCardButton(r2c3, gui.model.getDevSetup().getDevSetup()[1][2].getCardID(), possibleValues, 1, 2);
         JButton r2c4 = new JButton();
-        generateDevCardButton(r2c4, gui.model.getDevSetup().getDevSetup()[1][3].getCardID(), possibleValues);
+        generateDevCardButton(r2c4, gui.model.getDevSetup().getDevSetup()[1][3].getCardID(), possibleValues, 1, 3);
         JButton r3c1 = new JButton();
-        generateDevCardButton(r3c1, gui.model.getDevSetup().getDevSetup()[2][0].getCardID(), possibleValues);
+        generateDevCardButton(r3c1, gui.model.getDevSetup().getDevSetup()[2][0].getCardID(), possibleValues, 2, 0);
         JButton r3c2 = new JButton();
-        generateDevCardButton(r3c2, gui.model.getDevSetup().getDevSetup()[2][1].getCardID(), possibleValues);
+        generateDevCardButton(r3c2, gui.model.getDevSetup().getDevSetup()[2][1].getCardID(), possibleValues, 2, 1);
         JButton r3c3 = new JButton();
-        generateDevCardButton(r3c3, gui.model.getDevSetup().getDevSetup()[2][2].getCardID(), possibleValues);
+        generateDevCardButton(r3c3, gui.model.getDevSetup().getDevSetup()[2][2].getCardID(), possibleValues, 2, 2);
         JButton r3c4 = new JButton();
-        generateDevCardButton(r3c4, gui.model.getDevSetup().getDevSetup()[2][3].getCardID(), possibleValues);
+        generateDevCardButton(r3c4, gui.model.getDevSetup().getDevSetup()[2][3].getCardID(), possibleValues, 2, 3);
 
         row1.add(r1c1);
         row1.add(r1c2);
@@ -118,7 +118,7 @@ public class CardsGridPanel extends GuiPanel {
         }
     }
 
-    public JButton generateDevCardButton(JButton button, String name, DevCardSlot[] possibleValues){
+    public JButton generateDevCardButton(JButton button, String name, DevCardSlot[] possibleValues, int r, int c){
         InputStream url = this.getClass().getResourceAsStream("/DevCardsImage/" + name + ".png");
         BufferedImage img = null;
         try {
@@ -141,7 +141,7 @@ public class CardsGridPanel extends GuiPanel {
                             JOptionPane.QUESTION_MESSAGE, null,
                             possibleValues, possibleValues[0]);
                     if (slot != null) {
-                        gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyDevCardCommand(gui.model.getDevSetup().getDevSetup()[0][0].getLevel(), gui.model.getDevSetup().getDevSetup()[0][0].getColor(), slot).jsonfy()));
+                        gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyDevCardCommand(gui.model.getDevSetup().getDevSetup()[r][c].getLevel(), gui.model.getDevSetup().getDevSetup()[r][c].getColor(), slot).jsonfy()));
                     }
                 }
         });

@@ -5,6 +5,7 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.EndTurnCommand;
 import it.polimi.ingsw.view.gui.GUI;
+import it.polimi.ingsw.view.gui.panels.movePanels.MoveResourcesPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -26,7 +27,7 @@ public class PersonalBoardPanel  extends GuiPanel {
         JPanel boardPanel = new JPanel();
         boardPanel.setOpaque(false);
         boardPanel.setLayout(new GridBagLayout());
-        JPanel warehousePanel = new WarehousePanel(gui);
+        WarehousePanel warehousePanel = new WarehousePanel(gui);
 
         JPanel devSlot = new DevSlotPanel(gui);
         JPanel trackPanel = new FaithTrackPanel(gui);
@@ -56,6 +57,9 @@ public class PersonalBoardPanel  extends GuiPanel {
 
         setName("Homepage");
         this.setLayout(new BorderLayout());
+
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
         JPanel buttons = new JPanel();
 
         JButton viewLeader = new JButton("View Leader Cards");
@@ -77,9 +81,17 @@ public class PersonalBoardPanel  extends GuiPanel {
         moveResources.addActionListener(e -> gui.switchPanels(new MoveResourcesPanel(gui)));
 
         JButton endTurn = new JButton("EndTurn");
-        endTurn.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy())));
+        endTurn.addActionListener(e -> {
+            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy()));
+            try {
+                gui.switchPanels(new PersonalBoardPanel(gui));
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
 
-        buttons.setBackground(GUI.borderColor);
+        bottomPanel.setBackground(GUI.borderColor);
+        buttons.setOpaque(false);
 
 
 
@@ -95,12 +107,17 @@ public class PersonalBoardPanel  extends GuiPanel {
         setVisible(true);
 
 
-        buttons.setPreferredSize(new Dimension(1920, 100));
+        buttons.setPreferredSize(new Dimension(1720, 100));
 
         this.add(boardPanel);
 
+        JPanel buffer = new BufferPanel(gui);
+        buffer.setPreferredSize(new Dimension(400,100));
+        bottomPanel.add(Box.createRigidArea(new Dimension(30,0)));
+        bottomPanel.add(buffer);
+        bottomPanel.add(buttons);
 
-        this.add(buttons, BorderLayout.SOUTH);
+        this.add(bottomPanel, BorderLayout.SOUTH);
 
         repaint();
         revalidate();
