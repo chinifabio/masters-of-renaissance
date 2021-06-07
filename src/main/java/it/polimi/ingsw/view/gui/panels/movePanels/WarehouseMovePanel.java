@@ -19,17 +19,15 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class WarehouseMovePanel  extends GuiPanel {
 
-
-    private boolean toPaint = false;
-
     private DepotSlot destDepot;
 
-    DepotSlot[] possibleValuesDepots = { DepotSlot.TOP, DepotSlot.MIDDLE, DepotSlot.BOTTOM, DepotSlot.BUFFER, DepotSlot.SPECIAL1, DepotSlot.SPECIAL2};
-
-    DepotSlot[] possibleValuesStrongbox = {DepotSlot.BUFFER};
+    DepotSlot[] initValueDepot = { DepotSlot.TOP, DepotSlot.MIDDLE, DepotSlot.BOTTOM, DepotSlot.BUFFER};
 
     private Image warehouseImage;
 
@@ -185,13 +183,24 @@ public class WarehouseMovePanel  extends GuiPanel {
             JButton label = new JButton();
             createResourceLabel(label, GUI.resourceImages.get(tempRes.getType()));
             if (slot != DepotSlot.STRONGBOX){
+
                 label.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         destDepot = null;
-                        DepotSlot destDepot = (DepotSlot) JOptionPane.showInputDialog(null, "Where do you wanto to move this resource? ", "Move resources",
+
+                        List<DepotSlot> possibleValuesDepots = new ArrayList<>(Arrays.asList(initValueDepot));
+
+                        if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL1) != null){
+                            possibleValuesDepots.add(DepotSlot.SPECIAL1);
+                        }
+                        if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL2) != null){
+                            possibleValuesDepots.add(DepotSlot.SPECIAL2);
+                        }
+
+                        DepotSlot destDepot = (DepotSlot) JOptionPane.showInputDialog(null, "Where do you want to move this resource? ", "Move resources",
                                 JOptionPane.QUESTION_MESSAGE, null,
-                                possibleValuesDepots, possibleValuesDepots[0]);
+                                possibleValuesDepots.toArray(), possibleValuesDepots.get(0));
                         if (destDepot != null) {
                             gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(slot, destDepot, ResourceBuilder.buildFromType(tempRes.getType(), 1)).jsonfy()));
                         }
@@ -202,21 +211,15 @@ public class WarehouseMovePanel  extends GuiPanel {
         }
     }
 
-    public void setPainted(){
-        this.toPaint = true;
-    }
-
     /**
      * Draw the background
      */
     @Override
     protected void paintComponent(Graphics g) {
-        if (toPaint) {
             super.paintComponent(g);
 
             int width = 320;
             int height = 500;
             g.drawImage(warehouseImage, 0, -55, width, height, null);
-        }
     }
 }

@@ -27,10 +27,11 @@ public class PersonalBoardPanel  extends GuiPanel {
         JPanel boardPanel = new JPanel();
         boardPanel.setOpaque(false);
         boardPanel.setLayout(new GridBagLayout());
-        WarehousePanel warehousePanel = new WarehousePanel(gui);
+        WarehousePanel warehousePanel = new WarehousePanel(gui, gui.model.getMe());
 
         JPanel devSlot = new DevSlotPanel(gui);
         JPanel trackPanel = new FaithTrackPanel(gui);
+        JPanel extraDepot = new ExtraDepotPanel(gui);
 
         GridBagConstraints c = new GridBagConstraints();
 
@@ -40,7 +41,8 @@ public class PersonalBoardPanel  extends GuiPanel {
         boardPanel.add(warehousePanel, c);
 
         c.gridx = 1;
-        boardPanel.add(Box.createRigidArea(new Dimension(200,400)), c);
+        //boardPanel.add(Box.createRigidArea(new Dimension(200,400)), c);
+        boardPanel.add(extraDepot, c);
 
         c.gridx = 2;
         boardPanel.add(devSlot, c);

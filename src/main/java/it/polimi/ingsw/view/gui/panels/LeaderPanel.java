@@ -26,7 +26,7 @@ public class LeaderPanel extends GuiPanel {
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
         for (LiteLeaderCard card : gui.model.getLeader(gui.model.getMe())){
-            add(new LeaderCardPanel(card.getCardID(), gui));
+                add(new LeaderCardPanel(card.getCardID(), gui, card.isActivated()));
         }
 
         JButton back = new JButton("Return to PB");
@@ -55,7 +55,7 @@ public class LeaderPanel extends GuiPanel {
 
 class LeaderCardPanel extends JPanel {
 
-    public LeaderCardPanel(String id, GUI gui) {
+    public LeaderCardPanel(String id, GUI gui, boolean activated) {
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 
@@ -77,6 +77,7 @@ class LeaderCardPanel extends JPanel {
         JPanel buttons = new JPanel();
         buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 
+
         JButton activate = new JButton("Activate");
         activate.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ActivateLeaderCommand(id).jsonfy())));
 
@@ -88,9 +89,11 @@ class LeaderCardPanel extends JPanel {
 
         add(Box.createRigidArea(new Dimension(0, 10)));
 
-        buttons.add(activate);
-        buttons.add(Box.createHorizontalGlue());
-        buttons.add(discard);
+        if (!activated) {
+            buttons.add(activate);
+            buttons.add(Box.createHorizontalGlue());
+            buttons.add(discard);
+        }
 
         buttons.setAlignmentX(Component.CENTER_ALIGNMENT);
         buttons.setOpaque(false);

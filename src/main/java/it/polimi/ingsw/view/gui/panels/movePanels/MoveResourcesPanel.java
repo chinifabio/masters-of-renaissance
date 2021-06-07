@@ -23,6 +23,7 @@ public class MoveResourcesPanel extends GuiPanel {
 
 
         //--------BACK BUTTON----------
+        JPanel backPanel = new JPanel();
         JButton back = new JButton("Return to PB");
         back.addActionListener(e -> {
             try {
@@ -31,6 +32,10 @@ public class MoveResourcesPanel extends GuiPanel {
                 ioException.printStackTrace();
             }
         });
+        backPanel.add(back);
+        backPanel.add(Box.createRigidArea(new Dimension(900,0)));
+        backPanel.setOpaque(false);
+
 
         //------------BUFFER-------------
         JPanel bufferContainer = new JPanel();
@@ -41,18 +46,38 @@ public class MoveResourcesPanel extends GuiPanel {
         bufferContainer.add(Box.createRigidArea(new Dimension(0,200)));
         bufferContainer.add(buffer);
 
+        JPanel bufferPanel = new JPanel();
+        bufferPanel.add(bufferContainer);
+        bufferPanel.setOpaque(false);
+
         //----------WareHouse------------
+        JPanel warehousPanel = new JPanel();
         WarehouseMovePanel warehouse = new WarehouseMovePanel(gui);
         warehouse.setPreferredSize(new Dimension(350, 500));
-        warehouse.setPainted();
+        warehousPanel.add(warehouse);
+        warehousPanel.setOpaque(false);
+
+        //--------ExtraDepot------------
+        JPanel extraPanel = new JPanel();
+        ExtraDepotMovePanel extraDepotPanel = new ExtraDepotMovePanel(gui);
+        extraPanel.setPreferredSize(new Dimension(350,100));
+        extraDepotPanel.setOpaque(false);
+        extraPanel.add(extraDepotPanel);
+        extraPanel.setOpaque(false);
+
+        JPanel depotAndBufferPanel = new JPanel();
+        depotAndBufferPanel.setLayout(new BoxLayout(depotAndBufferPanel, BoxLayout.Y_AXIS));
+        depotAndBufferPanel.add(extraPanel);
+        depotAndBufferPanel.add(bufferPanel);
+        depotAndBufferPanel.setOpaque(false);
 
 
-
-        this.add(back);
         this.add(Box.createRigidArea(new Dimension(0, 100)));
-        middlePanel.add(warehouse);
+        this.add(backPanel);
+        this.add(Box.createRigidArea(new Dimension(0, 100)));
+        middlePanel.add(warehousPanel);
         middlePanel.add(Box.createRigidArea(new Dimension(100, 0)));
-        middlePanel.add(bufferContainer);
+        middlePanel.add(depotAndBufferPanel);
         this.add(middlePanel);
 
     }

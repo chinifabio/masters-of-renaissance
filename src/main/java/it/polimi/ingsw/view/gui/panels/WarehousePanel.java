@@ -15,29 +15,12 @@ import java.io.InputStream;
 
 public class WarehousePanel  extends GuiPanel {
 
-
-    private boolean toPaint = false;
-
-    private Image warehouseImage;
-
     /**
      * Creates a new <code>JPanel</code> with a double buffer
      * and a flow layout.
      */
-    public WarehousePanel(GUI gui){
+    public WarehousePanel(GUI gui, String player){
         super(gui);
-
-        InputStream is = getClass().getResourceAsStream("/warehouse.png");
-        if (is == null) try {
-            throw new IOException("warehouse.png not found");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            warehouseImage = ImageIO.read(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         this.setPreferredSize(new Dimension(320,400));
         this.setOpaque(false);
@@ -47,7 +30,7 @@ public class WarehousePanel  extends GuiPanel {
         JPanel topDepot = new JPanel();
         topDepot.setPreferredSize(new Dimension(75, 10));
 
-        insertResourceInDepot(topDepot, DepotSlot.TOP);
+        insertResourceInDepot(topDepot, DepotSlot.TOP, player);
 
         topDepot.setOpaque(false);
 
@@ -55,7 +38,7 @@ public class WarehousePanel  extends GuiPanel {
 
         JPanel middleDepot = new JPanel();
 
-        insertResourceInDepot(middleDepot, DepotSlot.MIDDLE);
+        insertResourceInDepot(middleDepot, DepotSlot.MIDDLE, player);
 
         middleDepot.setOpaque(false);
         middleDepot.setPreferredSize(new Dimension(75, 10));
@@ -64,7 +47,7 @@ public class WarehousePanel  extends GuiPanel {
 
         JPanel bottomDepot = new JPanel();
 
-        insertResourceInDepot(bottomDepot, DepotSlot.BOTTOM);
+        insertResourceInDepot(bottomDepot, DepotSlot.BOTTOM, player);
 
         bottomDepot.setOpaque(false);
         bottomDepot.setPreferredSize(new Dimension(75, 10));
@@ -78,7 +61,7 @@ public class WarehousePanel  extends GuiPanel {
         JPanel strongbox = new JPanel();
         strongbox.setLayout(new GridLayout(2,2));
 
-        for (LiteResource res : gui.model.getDepot(gui.model.getMe(), DepotSlot.STRONGBOX).getResourcesInside()){
+        for (LiteResource res : gui.model.getDepot(player, DepotSlot.STRONGBOX).getResourcesInside()){
             JPanel resource = new JPanel();
             resource.setLayout(new OverlayLayout(resource));
             resource.setOpaque(false);
@@ -134,32 +117,14 @@ public class WarehousePanel  extends GuiPanel {
         label.setIcon(icon1);
     }
 
-    public void insertResourceInDepot(JPanel depot, DepotSlot slot){
+    public void insertResourceInDepot(JPanel depot, DepotSlot slot, String player){
         depot.add(Box.createRigidArea(new Dimension(35,0)));
-        LiteResource tempRes = gui.model.getDepot(gui.getModel().getMe(), slot).getResourcesInside().get(0);
+        LiteResource tempRes = gui.model.getDepot(player, slot).getResourcesInside().get(0);
 
         for (int i = 0; i <  tempRes.getAmount(); i++){
             JLabel label = new JLabel();
             createResourceLabel(label, GUI.resourceImages.get(tempRes.getType()));
             depot.add(label);
-        }
-    }
-
-    public void setPainted(){
-        this.toPaint = true;
-    }
-
-    /**
-     * Draw the background
-     */
-    @Override
-    protected void paintComponent(Graphics g) {
-        if (toPaint) {
-            super.paintComponent(g);
-
-            int width = 320;
-            int height = 500;
-            g.drawImage(warehouseImage, 0, -55, width, height, null);
         }
     }
 

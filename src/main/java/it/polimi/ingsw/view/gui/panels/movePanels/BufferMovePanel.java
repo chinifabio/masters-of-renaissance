@@ -6,6 +6,7 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.MoveDepotCommand;
 import it.polimi.ingsw.litemodel.LiteResource;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -21,6 +22,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class BufferMovePanel extends GuiPanel {
 
@@ -43,7 +46,7 @@ public class BufferMovePanel extends GuiPanel {
             e.printStackTrace();
         }
 
-        DepotSlot[] possibleValues = { DepotSlot.TOP, DepotSlot.MIDDLE, DepotSlot.BOTTOM, DepotSlot.BUFFER, DepotSlot.STRONGBOX, DepotSlot.SPECIAL1, DepotSlot.SPECIAL2};
+        DepotSlot[] initValue = { DepotSlot.TOP, DepotSlot.MIDDLE, DepotSlot.BOTTOM, DepotSlot.BUFFER, DepotSlot.STRONGBOX };
 
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -80,13 +83,21 @@ public class BufferMovePanel extends GuiPanel {
                     slot = null;
                     int value = 0;
                     boolean valid = true;
+                    List<DepotSlot> possibleValues = new ArrayList<>(Arrays.asList(initValue));
+
+                    if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL1) != null){
+                        possibleValues.add(DepotSlot.SPECIAL1);
+                    }
+                    if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL2) != null){
+                        possibleValues.add(DepotSlot.SPECIAL2);
+                    }
 
                     DepotSlot slot = (DepotSlot) JOptionPane.showInputDialog(null, "Where do you wanto to move this resource? ", "Move resources",
                             JOptionPane.QUESTION_MESSAGE, null,
-                            possibleValues, possibleValues[0]);
+                            possibleValues.toArray(), possibleValues.get(0));
 
                     if (slot != null) {
-                        String str = JOptionPane.showInputDialog(null, "How many resources do you want to move?");
+                        String str = JOptionPane.showInputDialog(null, "How many resources do you want to move?", "1");
                         try {
                             value = Integer.parseInt(str);
                         } catch (Exception notParsable) {

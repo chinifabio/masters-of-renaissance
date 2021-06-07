@@ -23,6 +23,7 @@ public class MarketPanel extends GuiPanel {
 
     public MarketPanel(GUI gui) {
         super(gui);
+        this.setOpaque(false);
 
         setLayout(new FlowLayout());
 
@@ -47,6 +48,7 @@ public class MarketPanel extends GuiPanel {
 
         //--------BACK BUTTON----------
         JButton back = new JButton("Return to PB");
+
         back.addActionListener(e -> {
             try {
                 gui.switchPanels(new PersonalBoardPanel(gui));
@@ -58,6 +60,7 @@ public class MarketPanel extends GuiPanel {
 
         //--------BACK PANEL----------
         JPanel backPanel = new JPanel();
+        backPanel.setOpaque(false);
         backPanel.add(back);
         add(backPanel);
 
@@ -94,7 +97,6 @@ public class MarketPanel extends GuiPanel {
             button.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new UseMarketTrayCommand(RowCol.ROW, finalI).jsonfy())));
             button.setOpaque(false);
             button.setContentAreaFilled(false);
-            button.setBorderPainted(false);
             marblePanel.add(button);
 
         }
@@ -114,7 +116,6 @@ public class MarketPanel extends GuiPanel {
             button.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION,ChannelTypes.PLAYER_ACTIONS, new UseMarketTrayCommand(RowCol.COL, finalI).jsonfy())));
             button.setOpaque(false);
             button.setContentAreaFilled(false);
-            button.setBorderPainted(false);
             marblePanel.add(button);
         }
 
