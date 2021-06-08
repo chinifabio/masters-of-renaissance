@@ -11,7 +11,6 @@ public class NotifyPanel extends JPanel{
     public NotifyPanel() {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
     }
 
     public void appendMessage(String message, Color bg) {

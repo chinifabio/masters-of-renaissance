@@ -12,13 +12,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 
 public class ExtraDepotPanel extends GuiPanel{
 
-
-
-    public ExtraDepotPanel(GUI gui) {
+    public ExtraDepotPanel(GUI gui, String nickname) {
         super(gui);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setPreferredSize(new Dimension(200,400));
@@ -29,9 +26,9 @@ public class ExtraDepotPanel extends GuiPanel{
 
         JPanel firstDepot = new JPanel();
         firstDepot.setPreferredSize(new Dimension(200,50));
-        if (gui.model.getDepot(gui.model.getMe(), DepotSlot.SPECIAL1) != null) {
-            firstDepot = new LeaderDepotPanel(gui.model.getDepot(gui.getModel().getMe(), DepotSlot.SPECIAL1).getResourcesInside().get(0).getType());
-            insertResourceInDepot(firstDepot, DepotSlot.SPECIAL1, gui.model.getMe());
+        if (gui.model.getDepot(nickname, DepotSlot.SPECIAL1) != null) {
+            firstDepot = new LeaderDepotPanel(gui.model.getDepot(nickname, DepotSlot.SPECIAL1).getResourcesInside().get(0).getType());
+            insertResourceInDepot(firstDepot, DepotSlot.SPECIAL1, nickname);
         }
 
         firstDepot.setOpaque(false);
@@ -40,9 +37,9 @@ public class ExtraDepotPanel extends GuiPanel{
         JPanel secondDepot = new JPanel();
 
         secondDepot.setPreferredSize(new Dimension(200,50));
-        if (gui.model.getDepot(gui.model.getMe(), DepotSlot.SPECIAL2) != null) {
-            secondDepot = new LeaderDepotPanel(gui.model.getDepot(gui.getModel().getMe(), DepotSlot.SPECIAL2).getResourcesInside().get(0).getType());
-            insertResourceInDepot(secondDepot, DepotSlot.SPECIAL2, gui.model.getMe());
+        if (gui.model.getDepot(nickname, DepotSlot.SPECIAL2) != null) {
+            secondDepot = new LeaderDepotPanel(gui.model.getDepot(nickname, DepotSlot.SPECIAL2).getResourcesInside().get(0).getType());
+            insertResourceInDepot(secondDepot, DepotSlot.SPECIAL2, nickname);
 
         }
         secondDepot.setOpaque(false);

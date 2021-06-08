@@ -77,13 +77,15 @@ public class FaithTrackPanel extends GuiPanel {
         put(16,13);
     }};
 
-    int player = gui.model.getPlayerPosition().get(gui.model.getMe());
+    int player;
     /**
      * Creates a new <code>JPanel</code> with a double buffer
      * and a flow layout.
      */
-    public FaithTrackPanel(GUI gui) throws IOException {
+    public FaithTrackPanel(GUI gui, String nickname) throws IOException {
         super(gui);
+
+        this.player = gui.model.getPlayerPosition().get(nickname);
 
         InputStream url = this.getClass().getResourceAsStream("/WarehouseRes/faithpoint.png");
         BufferedImage img = null;

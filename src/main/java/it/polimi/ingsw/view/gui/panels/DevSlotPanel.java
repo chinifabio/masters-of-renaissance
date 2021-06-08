@@ -20,7 +20,7 @@ public class DevSlotPanel extends GuiPanel {
      * and a flow layout.
      */
 
-    public DevSlotPanel(GUI gui) {
+    public DevSlotPanel(GUI gui, String player) {
         super(gui);
 
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
@@ -28,15 +28,15 @@ public class DevSlotPanel extends GuiPanel {
 
         JPanel leftCard = new JPanel();
         leftCard.setLayout(new OverlayLayout(leftCard));
-        createDevSpace(leftCard, DevCardSlot.LEFT);
+        createDevSpace(leftCard, DevCardSlot.LEFT, player);
 
         JPanel centerCard = new JPanel();
         centerCard.setLayout(new OverlayLayout(centerCard));
-        createDevSpace(centerCard, DevCardSlot.CENTER);
+        createDevSpace(centerCard, DevCardSlot.CENTER, player);
 
         JPanel rightCard = new JPanel();
         rightCard.setLayout(new OverlayLayout(rightCard));
-        createDevSpace(rightCard, DevCardSlot.RIGHT);
+        createDevSpace(rightCard, DevCardSlot.RIGHT, player);
 
         this.add(Box.createRigidArea(new Dimension(50,0)));
         this.add(leftCard);
@@ -47,10 +47,10 @@ public class DevSlotPanel extends GuiPanel {
         this.setOpaque(false);
     }
 
-    public void createDevSpace(JPanel space, DevCardSlot slot){
+    public void createDevSpace(JPanel space, DevCardSlot slot, String player){
 
         float i = 0;
-        for (LiteDevCard card : gui.model.getDevelop(gui.model.getMe()).get(slot)){
+        for (LiteDevCard card : gui.model.getDevelop(player).get(slot)){
             if (card.getLevel() != LevelDevCard.NOLEVEL && card.getColor() != ColorDevCard.NOCOLOR && !card.getCardID().equals("Empty")) {
                 JLabel label = new JLabel();
                 InputStream url = this.getClass().getResourceAsStream("/DevCardsImage/" + card.getCardID() + ".png");

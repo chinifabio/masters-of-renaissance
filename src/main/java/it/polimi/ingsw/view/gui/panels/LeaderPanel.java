@@ -85,7 +85,7 @@ class LeaderCardPanel extends JPanel {
         discard.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new DiscardLeaderCommand(id).jsonfy())));
 
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        add(label);
+
 
         add(Box.createRigidArea(new Dimension(0, 10)));
 
@@ -93,7 +93,10 @@ class LeaderCardPanel extends JPanel {
             buttons.add(activate);
             buttons.add(Box.createHorizontalGlue());
             buttons.add(discard);
+        } else {
+            label.setBorder(BorderFactory.createLineBorder(Color.green, 5));
         }
+        add(label);
 
         buttons.setAlignmentX(Component.CENTER_ALIGNMENT);
         buttons.setOpaque(false);

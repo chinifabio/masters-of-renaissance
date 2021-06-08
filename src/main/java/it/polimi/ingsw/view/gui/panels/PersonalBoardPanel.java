@@ -4,6 +4,7 @@ import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.EndTurnCommand;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.movePanels.MoveResourcesPanel;
 
@@ -12,10 +13,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PersonalBoardPanel  extends GuiPanel {
 
-    private final Image personalBoard;
+    private  Image personalBoard;
 
     public PersonalBoardPanel(GUI gui) throws IOException {
         super(gui);
@@ -29,9 +32,9 @@ public class PersonalBoardPanel  extends GuiPanel {
         boardPanel.setLayout(new GridBagLayout());
         WarehousePanel warehousePanel = new WarehousePanel(gui, gui.model.getMe());
 
-        JPanel devSlot = new DevSlotPanel(gui);
-        JPanel trackPanel = new FaithTrackPanel(gui);
-        JPanel extraDepot = new ExtraDepotPanel(gui);
+        JPanel devSlot = new DevSlotPanel(gui, gui.model.getMe());
+        JPanel trackPanel = new FaithTrackPanel(gui, gui.model.getMe());
+        JPanel extraDepot = new ExtraDepotPanel(gui, gui.model.getMe());
 
         GridBagConstraints c = new GridBagConstraints();
 
@@ -41,7 +44,6 @@ public class PersonalBoardPanel  extends GuiPanel {
         boardPanel.add(warehousePanel, c);
 
         c.gridx = 1;
-        //boardPanel.add(Box.createRigidArea(new Dimension(200,400)), c);
         boardPanel.add(extraDepot, c);
 
         c.gridx = 2;
@@ -73,8 +75,7 @@ public class PersonalBoardPanel  extends GuiPanel {
         JButton viewGrid = new JButton("View DevCard's grid");
         viewGrid.addActionListener(e -> gui.switchPanels(new CardsGridPanel(gui)));
 
-        JButton viewPlayer = new JButton("View Other Player");
-        viewPlayer.addActionListener(e -> gui.switchPanels(new OtherPlayersPanel(gui)));
+
 
         JButton activateProduction = new JButton("Productions");
         activateProduction.addActionListener(e -> gui.switchPanels(new ProductionsPanel(gui)));
@@ -96,7 +97,6 @@ public class PersonalBoardPanel  extends GuiPanel {
         buttons.setOpaque(false);
 
 
-
         setPreferredSize(new Dimension(gui.width-300,  gui.height));
         buttons.add(Box.createRigidArea(new Dimension(0,70)));
         buttons.add(viewLeader);
@@ -104,7 +104,26 @@ public class PersonalBoardPanel  extends GuiPanel {
         buttons.add(viewGrid);
         buttons.add(moveResources);
         buttons.add(activateProduction);
-        buttons.add(viewPlayer);
+
+        List<String> players = new ArrayList<>(gui.model.getPlayers().keySet());
+        players.remove(gui.model.getMe());
+        players.remove("Lorenzo il Magnifico");
+
+        if (!players.isEmpty()){
+            JButton viewPlayer = new JButton("View other Player");
+            viewPlayer.addActionListener(e -> {
+                String toSee = (String) JOptionPane.showInputDialog(null, "Who do you want to see?", "View other player",
+                        JOptionPane.QUESTION_MESSAGE, null,
+                        players.toArray(), players.get(0));
+                if (toSee != null) {
+                    gui.switchPanels(new OtherPlayersPanel(gui, toSee));
+                }
+            });
+            buttons.add(viewPlayer);
+        } else {
+            buttons.add(Box.createRigidArea(new Dimension(100,0)));
+        }
+
         buttons.add(endTurn);
         setVisible(true);
 
@@ -120,6 +139,7 @@ public class PersonalBoardPanel  extends GuiPanel {
         bottomPanel.add(buttons);
 
         this.add(bottomPanel, BorderLayout.SOUTH);
+        this.setBackground(GUI.borderColor);
 
         repaint();
         revalidate();
@@ -143,4 +163,5 @@ public class PersonalBoardPanel  extends GuiPanel {
             case INVALID -> gui.notifyPlayerError(packet.body);
         }
     }
+
 }

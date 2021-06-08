@@ -1,15 +1,12 @@
 package it.polimi.ingsw.view.gui.panels;
-
-import it.polimi.ingsw.communication.packet.ChannelTypes;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.communication.packet.commands.EndTurnCommand;
 import it.polimi.ingsw.view.gui.GUI;
-import it.polimi.ingsw.view.gui.panels.movePanels.MoveResourcesPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -17,7 +14,7 @@ public class OtherPlayersPanel extends GuiPanel{
 
     private Image personalBoard;
 
-    public OtherPlayersPanel(GUI gui){
+    public OtherPlayersPanel(GUI gui, String player){
         super(gui);
 
 
@@ -35,11 +32,10 @@ public class OtherPlayersPanel extends GuiPanel{
         backPanel.setOpaque(false);
 
         this.add(backPanel);
-        this.setOpaque(false);
 
-        InputStream is = getClass().getResourceAsStream("/board.png");
+        InputStream is = getClass().getResourceAsStream("/otherBoard.png");
         if (is == null) try {
-            throw new IOException("board.png not found");
+            throw new IOException("otherBoard.png not found");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,13 +48,14 @@ public class OtherPlayersPanel extends GuiPanel{
         JPanel boardPanel = new JPanel();
         boardPanel.setOpaque(false);
         boardPanel.setLayout(new GridBagLayout());
-        //Mettere il player
-        WarehousePanel warehousePanel = new WarehousePanel(gui, gui.model.getMe());
 
-        JPanel devSlot = new DevSlotPanel(gui);
+        JPanel extraDepot = new ExtraDepotPanel(gui, player);
+        WarehousePanel warehousePanel = new WarehousePanel(gui, player);
+
+        JPanel devSlot = new DevSlotPanel(gui, player);
         JPanel trackPanel = null;
         try {
-            trackPanel = new FaithTrackPanel(gui);
+            trackPanel = new FaithTrackPanel(gui, player);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,7 +68,7 @@ public class OtherPlayersPanel extends GuiPanel{
         boardPanel.add(warehousePanel, c);
 
         c.gridx = 1;
-        boardPanel.add(Box.createRigidArea(new Dimension(200,400)), c);
+        boardPanel.add(extraDepot, c);
 
         c.gridx = 2;
         boardPanel.add(devSlot, c);
@@ -93,33 +90,15 @@ public class OtherPlayersPanel extends GuiPanel{
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
         JPanel buttons = new JPanel();
 
-        JButton viewLeader = new JButton("View Leader Cards");
-        viewLeader.addActionListener(e -> gui.switchPanels(new LeaderPanel(gui)));
-
-        JButton viewMarket = new JButton("View Market Tray");
-        viewMarket.addActionListener(e -> gui.switchPanels(new MarketPanel(gui)));
-
-        JButton viewGrid = new JButton("View DevCard's grid");
-        viewGrid.addActionListener(e -> gui.switchPanels(new CardsGridPanel(gui)));
-
-        JButton viewPlayer = new JButton("View Other Player");
-        viewPlayer.addActionListener(e -> gui.switchPanels(new OtherPlayersPanel(gui)));
-
-        JButton activateProduction = new JButton("Productions");
-        activateProduction.addActionListener(e -> gui.switchPanels(new ProductionsPanel(gui)));
-
-        JButton moveResources = new JButton("Move Resources");
-        moveResources.addActionListener(e -> gui.switchPanels(new MoveResourcesPanel(gui)));
-
-        JButton endTurn = new JButton("EndTurn");
-        endTurn.addActionListener(e -> {
-            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy()));
-            try {
-                gui.switchPanels(new PersonalBoardPanel(gui));
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
+        JButton otherLeader = new JButton("View " + player + "'s Leaders");
+        otherLeader.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gui.switchPanels(new OtherPlayerLeaderPanel(gui, player));
             }
         });
+        buttons.add(otherLeader);
+        buttons.add(backPanel);
 
         bottomPanel.setBackground(GUI.borderColor);
         buttons.setOpaque(false);
@@ -128,13 +107,7 @@ public class OtherPlayersPanel extends GuiPanel{
 
         setPreferredSize(new Dimension(gui.width-300,  gui.height));
         buttons.add(Box.createRigidArea(new Dimension(0,70)));
-        buttons.add(viewLeader);
-        buttons.add(viewMarket);
-        buttons.add(viewGrid);
-        buttons.add(moveResources);
-        buttons.add(activateProduction);
-        buttons.add(viewPlayer);
-        buttons.add(endTurn);
+
         setVisible(true);
 
 
@@ -142,13 +115,28 @@ public class OtherPlayersPanel extends GuiPanel{
 
         this.add(boardPanel);
 
+        JPanel panelText = new JPanel();
+        panelText.setOpaque(false);
+        panelText.setLayout(new BoxLayout(panelText,BoxLayout.Y_AXIS));
+        panelText.add(Box.createRigidArea(new Dimension(0,40)));
+        JTextArea text = new JTextArea();
+        text.setText("This is the Personal Board of " + player);
+        text.setOpaque(false);
+        text.setFont(new Font("Times New Roman",Font.ITALIC,18));
+        text.setEditable(false);
+        panelText.add(text);
+
         JPanel buffer = new BufferPanel(gui);
         buffer.setPreferredSize(new Dimension(400,100));
         bottomPanel.add(Box.createRigidArea(new Dimension(30,0)));
         bottomPanel.add(buffer);
+        bottomPanel.add(Box.createRigidArea(new Dimension(300,0)));
+        bottomPanel.add(panelText);
         bottomPanel.add(buttons);
 
         this.add(bottomPanel, BorderLayout.SOUTH);
+
+        this.setBackground(GUI.borderColor);
 
         repaint();
         revalidate();
