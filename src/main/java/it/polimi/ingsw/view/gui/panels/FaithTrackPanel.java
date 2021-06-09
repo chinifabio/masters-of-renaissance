@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Random;
 
 public class FaithTrackPanel extends GuiPanel {
 
@@ -108,6 +109,7 @@ public class FaithTrackPanel extends GuiPanel {
 
         c.gridx = 0;
         c.gridy = 0;
+
         for (int i = 0; i<20; i++){
 
             JPanel panel = new JPanel();
@@ -116,17 +118,40 @@ public class FaithTrackPanel extends GuiPanel {
                 panel.setPreferredSize(new Dimension(32, 52));
             }else if (i == 1){
                 panel.setPreferredSize(new Dimension(70, 52));
+            }else if(i == 10){
+                c.gridwidth = 2;
+                c.gridheight = 2;
+                panel.setPreferredSize(new Dimension(130, 104));
+                if (!gui.model.getPopeTilesPlayer().get(nickname).get("SECOND")){
+                    panel.setOpaque(false);
+                } else {
+
+                    InputStream urlPope = this.getClass().getResourceAsStream("/FaithTrackImages/Pope3.png");
+
+                    BufferedImage imgPope = null;
+
+                    try {
+                        assert urlPope != null;
+                        imgPope = ImageIO.read(urlPope);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Image scaledImagePope = GUI.getScaledImage(imgPope, 115, 90);
+                    ImageIcon iconPope = new ImageIcon(scaledImagePope);
+                    JLabel pope = new JLabel();
+                    pope.setIcon(iconPope);
+                    panel.add(pope);
+                }
             } else {
                 panel.setPreferredSize(new Dimension(65, 52));
             }
 
-            if (i == 7){
-                c.insets = new Insets(0,10,0,10);
-            } else if (i == 2){
-                c.insets = new Insets(0,0,0,10);
-            } else if (i == 12){
-                c.insets = new Insets(0,0,0,20);
+            switch (i){
+                case 7, 2, 4 -> c.insets = new Insets(0,0,0,10);
+
+                case  12 -> c.insets = new Insets(0,0,0,15);
             }
+
             panel.setOpaque(false);
 
             if (gui.model.getPlayerPosition().get("Lorenzo il Magnifico") != null){
@@ -170,31 +195,83 @@ public class FaithTrackPanel extends GuiPanel {
                 }
             }
 
-
-            this.add(panel, c);
+            if (i!= 11) {
+                this.add(panel, c);
+            }
             c.gridx++;
+            c.gridwidth = 1;
+            c.gridheight = 1;
             c.insets = new Insets(0,0,0,0);
         }
 
         c.gridy = 1;
         c.gridx = 0;
         for (int i = 0; i<20; i++){
+
             JPanel panel = new JPanel();
+
             if (i == 0){
                 panel.setPreferredSize(new Dimension(32, 52));
             }else if (i == 1){
                 panel.setPreferredSize(new Dimension(70, 52));
+            }else if(i == 5){
+
+                c.gridwidth = 2;
+                c.gridheight = 2;
+                panel.setPreferredSize(new Dimension(130, 104));
+                if (!gui.model.getPopeTilesPlayer().get(nickname).get("FIRST")){
+                    panel.setOpaque(false);
+                } else  {
+                    InputStream urlPope = this.getClass().getResourceAsStream("/FaithTrackImages/Pope2.png");
+
+                    BufferedImage imgPope = null;
+
+                    try {
+                        assert urlPope != null;
+                        imgPope = ImageIO.read(urlPope);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Image scaledImagePope = GUI.getScaledImage(imgPope, 115, 90);
+                    ImageIcon iconPope = new ImageIcon(scaledImagePope);
+                    JLabel pope = new JLabel();
+                    pope.setIcon(iconPope);
+                    panel.add(pope);
+                }
+            } else if (i == 16) {
+                c.gridwidth = 2;
+                c.gridheight = 2;
+                panel.setPreferredSize(new Dimension(130, 104));
+
+                if (!gui.model.getPopeTilesPlayer().get(nickname).get("THIRD")) {
+                    panel.setOpaque(false);
+                } else {
+                    InputStream urlPope = this.getClass().getResourceAsStream("/FaithTrackImages/Pope4.png");
+
+                    BufferedImage imgPope = null;
+
+                    try {
+                        assert urlPope != null;
+                        imgPope = ImageIO.read(urlPope);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Image scaledImagePope = GUI.getScaledImage(imgPope, 115, 90);
+                    ImageIcon iconPope = new ImageIcon(scaledImagePope);
+                    JLabel pope = new JLabel();
+                    pope.setIcon(iconPope);
+                    panel.add(pope);
+                }
             } else {
                 panel.setPreferredSize(new Dimension(65, 52));
             }
 
-            if (i == 7){
-                c.insets = new Insets(0,10,0,10);
-            } else if (i == 2){
-                c.insets = new Insets(0,0,0,10);
-            } else if (i == 12){
-                c.insets = new Insets(0,0,0,20);
+            switch (i){
+                case 7, 2, 4 -> c.insets = new Insets(0,0,0,10);
+
+                case  12 -> c.insets = new Insets(0,0,0,15);
             }
+
 
             panel.setOpaque(false);
 
@@ -238,7 +315,12 @@ public class FaithTrackPanel extends GuiPanel {
                     panel.add(PlayerMarker);
                 }
             }
-            this.add(panel, c);
+            panel.setBackground(new Color(new Random().nextInt(255)));
+            if (i != 6 && i != 17 && i != 10 && i!= 11) {
+                this.add(panel, c);
+            }
+            c.gridwidth = 1;
+            c.gridheight = 1;
             c.gridx++;
             c.insets = new Insets(0,0,0,0);
 
@@ -249,6 +331,7 @@ public class FaithTrackPanel extends GuiPanel {
 
         for (int i = 0; i<20; i++){
             JPanel panel = new JPanel();
+
             if (i == 0){
                 panel.setPreferredSize(new Dimension(32, 52));
             }else if (i == 1){
@@ -257,12 +340,10 @@ public class FaithTrackPanel extends GuiPanel {
                 panel.setPreferredSize(new Dimension(65, 52));
             }
 
-            if (i == 7){
-                c.insets = new Insets(0,10,0,10);
-            } else if (i == 2){
-                c.insets = new Insets(0,0,0,10);
-            } else if (i == 12){
-                c.insets = new Insets(0,0,0,20);
+            switch (i){
+                case 7, 2, 4 -> c.insets = new Insets(0,0,0,10);
+
+                case  12 -> c.insets = new Insets(0,0,0,15);
             }
             panel.setOpaque(false);
 
@@ -306,7 +387,10 @@ public class FaithTrackPanel extends GuiPanel {
                     panel.add(PlayerMarker);
                 }
             }
-            this.add(panel, c);
+            panel.setBackground(new Color(new Random().nextInt(155)));
+            if (i != 5 && i != 6 && i != 16 && i != 17) {
+                this.add(panel, c);
+            }
             c.gridx++;
             c.insets = new Insets(0,0,0,0);
         }
@@ -327,5 +411,6 @@ public class FaithTrackPanel extends GuiPanel {
 
     @Override
     public void reactToPacket(Packet packet) throws IOException {
+
     }
 }
