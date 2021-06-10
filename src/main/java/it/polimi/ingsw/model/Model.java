@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.communication.packet.ChannelTypes;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.Command;
 import it.polimi.ingsw.model.match.match.Match;
@@ -22,7 +20,7 @@ public class Model {
     /**
      * The instance of the game in the model
      */
-    private Match match;
+    public final Match match;
 
     /**
      * This attribute map all the controller to his player in the model
@@ -35,19 +33,19 @@ public class Model {
     public final Dispatcher dispatcher = new Dispatcher();
 
     /**
-     * Queue for waiting the initialization of the match
-     */
-    private final Object initializingQueue = new Object();
-
-    /**
      * selected game size of the match
      */
-    private int gameSize = -1;
+    public final int gameSize;
 
-    /**
-     * initialization flag
-     */
-    private boolean init = false;
+    private int playerJoined = 0;
+
+    public Model(int size) throws IOException {
+        this.gameSize = size;
+
+        this.match = size == 1 ?
+                new SingleplayerMatch(dispatcher):
+                new MultiplayerMatch(size, dispatcher);
+    }
 
     /**
      * This method execute the command passed on the mapped player of the passed client
@@ -63,72 +61,24 @@ public class Model {
      * Join a player to the match
      * @param client the new client
      * @param nickname the nickname of the controller
-     * @return the succeed of the operation
      */
-    public Packet login(Controller client, String nickname) {
-        if (!init) {
-            this.init = true;
-            return new Packet(HeaderTypes.SET_PLAYERS_NUMBER, ChannelTypes.PLAYER_ACTIONS, "Empty match, you have to create one.");
-        }
-
-        if (this.players.containsKey(client)) return client.invalid("Something strange is going on ༼ つ ◕_◕ ༽つ");
+    public void login(Controller client, String nickname) throws Exception {
+        if (this.players.containsKey(client)) throw new Exception("Something strange is going on ༼ つ ◕_◕ ༽つ");
 
         this.dispatcher.subscribe(nickname, client.socket);
 
-        try {
-            Player p = new Player(nickname, this.match, this.dispatcher);
-            this.players.put(client, p);
-            return this.match.playerJoin(p) ?
-                    new Packet(HeaderTypes.GAME_INIT, ChannelTypes.PLAYER_ACTIONS, "You joined a Lobby of " + this.gameSize + " players."):
-                    client.invalid("Can't join lobby \\(>_<)/");
-
-        } catch (Exception e) {
-            return client.invalid(e.getMessage());
-        }
+        Player p = new Player(nickname, this.match, this.dispatcher);
+        this.players.put(client, p);
+        if (!this.match.playerJoin(p)) throw new Exception("Something strange is going on ༼ つ ◕_◕ ༽つ");
+        playerJoined++;
     }
 
     /**
-     * Create a match of size player
-     * @param size the new size of the match
-     * @throws IOException if the thread can't wait
+     * Return the number of available seats
+     * @return the number of available seats
      */
-    public void createMatch(int size) throws IOException {
-        this.gameSize = size;
-
-        this.match = size == 1 ?
-                new SingleplayerMatch(dispatcher):
-                new MultiplayerMatch(size, dispatcher);
-
-        synchronized (this.initializingQueue) {
-            this.initializingQueue.notifyAll();
-        }
-    }
-
-    /**
-     * Return the state of initialized flag
-     * @return true if the game is set, false if not
-     */
-    public boolean initialized() {
-        return this.init;
-    }
-
-    /**
-     * Return the available seats of the game -1 if the game does not have a game size.
-     * If it has a game size return the available seats
-     * @return an int of available seats
-     * @throws InterruptedException throw when thread can't wait
-     */
-    public int availableSeats() throws InterruptedException {
-        if (!init) return -1;
-
-        synchronized (this.initializingQueue) {
-            while (this.match == null) {
-                dispatcher.sendMessage("aspetta che venga inserito il numero di giocatori");
-                this.initializingQueue.wait();
-            }
-        }
-
-        return this.match.gameSize - this.match.playerInGame();
+    public int availableSeat() {
+        return gameSize - playerJoined;
     }
 
     /**

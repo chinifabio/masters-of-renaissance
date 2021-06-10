@@ -9,8 +9,8 @@ import it.polimi.ingsw.communication.packet.Packet;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.sql.Time;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * This virtual socket class sorts received packet in channels as packet queue
@@ -30,7 +30,7 @@ public class VirtualSocket implements Runnable{
      * All the object to lock and wait
      */
     // Object must not be modified
-    private final Map<ChannelTypes, Object> waitingZone = new EnumMap<>(ChannelTypes.class);
+    private final Map<ChannelTypes, AtomicBoolean> waitingZone = new EnumMap<>(ChannelTypes.class);
 
     private final Object sendLocker = new Object();
 
@@ -56,7 +56,7 @@ public class VirtualSocket implements Runnable{
 
         for (ChannelTypes ch : ChannelTypes.values()) {
             this.channelsQueue.put(ch, new LinkedList<>());
-            this.waitingZone.put(ch, new Object());
+            this.waitingZone.put(ch, new AtomicBoolean(true));
         }
 
         this.sender = new PrintStream(this.socket.getOutputStream());
@@ -89,9 +89,13 @@ public class VirtualSocket implements Runnable{
                         .readerFor(Packet.class)
                         .readValue(serializedPacket);
 
-                synchronized (waitingZone.get(packet.channel)) {
-                    this.channelsQueue.get(packet.channel).add(packet);
-                    waitingZone.get(packet.channel).notifyAll();
+                if (waitingZone.get(packet.channel).get()){
+                    synchronized (waitingZone.get(packet.channel)) {
+                        this.channelsQueue.get(packet.channel).add(packet);
+                        waitingZone.get(packet.channel).notifyAll();
+                    }
+                } else {
+                    send(new Packet(HeaderTypes.INVALID, packet.channel, "Wait, inhibited channel"));
                 }
             } catch (JsonProcessingException e) {
                 e.printStackTrace();

@@ -22,7 +22,7 @@ public class Controller implements Runnable, Disconnectable {
 
     private ControllerState state = new InitState();
 
-    protected String nickname = "undefined";
+    protected String nickname = "anonymous player";
 
     private boolean disconnected = false;
 
@@ -56,7 +56,7 @@ public class Controller implements Runnable, Disconnectable {
             // save the result of the operation
             Packet done = state.handleMessage(received, this);
 
-            // wait model of clients has updated litemodel and then send the result
+            // wait model of clients has updated lite model and then send the result
             socket.send(new Packet(HeaderTypes.LOCK, ChannelTypes.UPDATE_LITE_MODEL, "waiting ok"));
             if (socket.pollPacketFrom(ChannelTypes.UPDATE_LITE_MODEL).header == HeaderTypes.UNLOCK) socket.send(done);
             else System.out.println(nickname + ": something wrong in the communication...");
@@ -65,11 +65,8 @@ public class Controller implements Runnable, Disconnectable {
 
     @Override
     public void handleDisconnection() {
+        state.handleDisconnection(this);
         System.out.println(Colors.color(Colors.RED, nickname) + " disconnected");
-        if (model.disconnectPlayer(this))                  // disconnection from model
-            server.disconnect(nickname, this);             // disconnection from server
-        else
-            server.removeController(nickname);
         disconnected = true;
     }
 
@@ -87,6 +84,12 @@ interface ControllerState {
      * @return the response message
      */
     Packet handleMessage(Packet packet, Controller context);
+
+    /**
+     * Handle the disconnection of the controller based on his state
+     * @param context the state of the controller
+     */
+    void handleDisconnection(Controller context);
 }
 
 class InitState implements ControllerState {
@@ -101,30 +104,54 @@ class InitState implements ControllerState {
         if (packet.header != HeaderTypes.HELLO)
             return context.invalid("invalid packet: " + packet.header + "; expected " + HeaderTypes.HELLO);
 
-        switch (context.server.connect(packet.body, context)) {
-            case Server.reconnect: // the player reconnect to the game whit a legal nickname
-                context.nickname = packet.body;
-                context.setState(new InGameState());
-                return context.model.reconnectPlayer(context.nickname, context) ?
-                        context.model.reconnectPacket(context) : //new Packet(HeaderTypes.RECONNECTED, ChannelTypes.PLAYER_ACTIONS, "Reconnected"):
-                        context.invalid("fail in reconnection");
-
-            case Server.newPlayer: // the player has a valid nickname so he can join the lobby
-                context.nickname = packet.body;
-                try {
-                    context.model = context.server.obtainModel();
-                } catch (InterruptedException e) {
-                    return context.invalid("error in obtaining model");
-                }
-                context.setState(context.model.initialized() ?
-                        new InGameState():
-                        new CreatorState());
-
-                return context.model.login(context, context.nickname);
-
-            default:
-                return context.invalid("pls change the nickname, " + Colors.color(Colors.RED_BRIGHT, packet.body) + " is invalid");
+        // the player reconnect to the game whit a legal nickname
+        if (context.server.reconnect(packet.body, context)) {
+            context.nickname = packet.body;
+            context.setState(new InGameState());
+            return context.model.reconnectPlayer(context.nickname, context) ?
+                    context.model.reconnectPacket(context) :
+                    context.invalid("fail in reconnection");
         }
+
+        // the player connect to the server and based on the state of the model in the server he can join it or create one
+        if (context.server.connect(packet.body, context)) {
+            context.nickname = packet.body;
+
+            if (context.server.isModelAvailable()) {
+                Model temp = context.server.obtainModel();
+                assert temp != null;
+                context.model = temp;
+
+                try {
+                    temp.login(context, context.nickname);
+                } catch (Exception e) {
+                    return context.invalid(e.getMessage());
+                }
+
+                context.setState(new InGameState());
+                return new Packet(HeaderTypes.GAME_INIT, ChannelTypes.PLAYER_ACTIONS, "You joined a Lobby of " + context.model.gameSize + " players.");
+            }
+
+            if (context.server.needACreator()) {
+                context.setState(new CreatorState());
+                return new Packet(HeaderTypes.SET_PLAYERS_NUMBER, ChannelTypes.PLAYER_ACTIONS, "Empty match, you have to create one.");
+            }
+
+            context.server.removeController(context.nickname);
+            return context.invalid("Wait! Someone is creating the match...");
+        }
+
+        return context.invalid("Please change the nickname, " + packet.body + " is not valid");
+    }
+
+    /**
+     * Handle the disconnection of the controller based on his state
+     *
+     * @param context the state of the controller
+     */
+    @Override
+    public void handleDisconnection(Controller context) {
+        // do nothing
     }
 }
 
@@ -142,24 +169,45 @@ class CreatorState implements ControllerState {
             return context.invalid("invalid packet: " + packet.header + "; expected " + HeaderTypes.SET_PLAYERS_NUMBER);
 
         try {
-            int n=-1;
-            try{
+            int n = -1;
+            try {
               n = Integer.parseInt(packet.body);
-              if(n<1 || n>4) return context.invalid(n + " is not a legal game size.");
+              if(n < 1 || n > 4) return context.invalid(n + " is not a legal game size.");
             } catch (NumberFormatException e){
                 return context.invalid(n + " is not a number");
             } catch (NullPointerException e){
                 return context.invalid("insert a number");
             }
-            context.model.createMatch(n);
-            context.setState(new InGameState());
-            return context.model.login(context, context.nickname);
+
+            context.model = new Model(n);
+            context.server.hereSTheModel(context.model);
 
         } catch (NumberFormatException e) {
             return context.invalid("invalid number format: " + packet.body);
         } catch (IOException e) {
             return context.invalid("fail while creating mach");
         }
+
+
+        try {
+            context.model.login(context, context.nickname);
+        } catch (Exception e) {
+            return context.invalid(e.getMessage());
+        }
+
+        context.setState(new InGameState());
+        return new Packet(HeaderTypes.GAME_INIT, ChannelTypes.PLAYER_ACTIONS, "You joined a Lobby of " + context.model.gameSize + " players.");
+    }
+
+    /**
+     * Handle the disconnection of the controller based on his state
+     *
+     * @param context the state of the controller
+     */
+    @Override
+    public void handleDisconnection(Controller context) {
+        context.server.cannotCreateModel();
+        context.server.removeController(context.nickname);
     }
 }
 
@@ -183,6 +231,17 @@ class InGameState implements ControllerState {
         } catch (JsonProcessingException e) {
             return context.invalid(e.getMessage());
         }
+    }
+
+    /**
+     * Handle the disconnection of the controller based on his state
+     *
+     * @param context the state of the controller
+     */
+    @Override
+    public void handleDisconnection(Controller context) {
+        if (context.model.disconnectPlayer(context))                  // disconnection from model
+            context.server.disconnect(context.nickname, context);             // disconnection from server
     }
 }
 

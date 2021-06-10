@@ -82,12 +82,18 @@ public class AskPlayers extends GuiPanel {
     @Override
     public void reactToPacket(Packet packet) throws IOException {
         switch (packet.header) {
-            case RECONNECTED -> gui.switchPanels(new PersonalBoardPanel(gui));
+            case RECONNECTED -> {
+                gui.switchPanels(new PersonalBoardPanel(gui));
+                gui.notifyPlayer(packet.body);
+            }
             case INVALID -> {
                 gui.notifyPlayerError(packet.body);
                 gui.switchPanels(new AskPlayers(gui));
             }
-            case GAME_INIT -> gui.switchPanels(new InitGamePanel(gui));
+            case GAME_INIT -> {
+                gui.switchPanels(new InitGamePanel(gui));
+                gui.notifyPlayer(packet.body);
+            }
         }
     }
 

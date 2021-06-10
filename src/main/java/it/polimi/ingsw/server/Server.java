@@ -3,7 +3,6 @@ package it.polimi.ingsw.server;
 import it.polimi.ingsw.communication.VirtualSocket;
 import it.polimi.ingsw.model.Model;
 
-import javax.naming.ldap.Control;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.*;
@@ -15,16 +14,11 @@ public class Server implements Runnable{
     public final ExecutorService executor = Executors.newCachedThreadPool();
     private final ServerSocket serverSocket;
 
-    private final Queue<Controller> modelControllerQueue = new LinkedList<>();
-
     private final Map<String, Controller> connectedClient = new HashMap<>();
     private final Map<String, Controller> disconnectedClient = new HashMap<>();
 
-    private Model lobby = new Model();
-
-    public final static int error = -1;
-    public final static int reconnect = 0;
-    public final static int newPlayer = 1;
+    private Model model = null;
+    private boolean creatorAssigned = false;
 
     public Server(int port) throws IOException {
         serverSocket = new ServerSocket(port);
@@ -64,24 +58,52 @@ public class Server implements Runnable{
         }
     }
 
-    public synchronized int connect(String nickname, Controller controller) {
+    public synchronized boolean connect(String nickname, Controller controller) {
         // checking the legality of the nickname
         if (
                 nickname.equalsIgnoreCase("lorenzo il magnifico") ||
                 nickname.length() > 20 || nickname.length() <= 0 ||
                 connectedClient.containsKey(nickname)
-        ) return error;
+        ) return false;
 
-        // checking if the client was disconnected
+        connectedClient.put(nickname, controller);
+        return true;
+    }
+
+    public synchronized boolean reconnect(String nickname, Controller newController) {
         if(disconnectedClient.containsKey(nickname)) {
-            controller.model = disconnectedClient.get(nickname).model; // todo to change
-            disconnectedClient.remove(nickname);
-            connectedClient.put(nickname, controller);
-            return reconnect;
+            newController.model = disconnectedClient.remove(nickname).model;
+            connectedClient.put(nickname, newController);
+            return true;
+        }
+        return false;
+    }
+
+    public synchronized boolean isModelAvailable() {
+        if (model == null || model.availableSeat() == 0) {
+            model = null;
+            return false;
         }
 
-        this.connectedClient.put(nickname, controller);
-        return newPlayer;
+        return true;
+    }
+
+    public synchronized Model obtainModel() {
+        return model;
+    }
+
+    public synchronized boolean needACreator() {
+        return !creatorAssigned && (creatorAssigned = true);
+    }
+
+    public synchronized void cannotCreateModel() {
+        creatorAssigned = false;
+    }
+
+    public synchronized void hereSTheModel(Model newModel) {
+        if (newModel.availableSeat() == 0) return;
+        model = newModel;
+        creatorAssigned = false;
     }
 
     public synchronized void disconnect(String nickname, Controller controller) {
@@ -89,13 +111,7 @@ public class Server implements Runnable{
         disconnectedClient.put(nickname, controller);
     }
 
-    public Model obtainModel() throws InterruptedException {
-        if (this.lobby.availableSeats() > 0) return this.lobby;
-        if (this.lobby.availableSeats() == 0) this.lobby = new Model();
-        return this.lobby;
-    }
-
-    public void removeController(String nickname) {
+    public synchronized void removeController(String nickname) {
         this.connectedClient.remove(nickname);
     }
 }
