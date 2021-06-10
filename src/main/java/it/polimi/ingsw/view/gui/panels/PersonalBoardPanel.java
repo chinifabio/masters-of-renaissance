@@ -75,10 +75,14 @@ public class PersonalBoardPanel  extends GuiPanel {
         JButton viewGrid = new JButton("View DevCard's grid");
         viewGrid.addActionListener(e -> gui.switchPanels(new CardsGridPanel(gui)));
 
-
-
         JButton activateProduction = new JButton("Productions");
-        activateProduction.addActionListener(e -> gui.switchPanels(new ProductionsPanel(gui)));
+        activateProduction.addActionListener(e -> {
+            try {
+                gui.switchPanels(new ProductionsPanel(gui));
+            } catch (IOException ioException) {
+                ioException.printStackTrace(); // todo change
+            }
+        });
 
         JButton moveResources = new JButton("Move Resources");
         moveResources.addActionListener(e -> gui.switchPanels(new MoveResourcesPanel(gui)));

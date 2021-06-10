@@ -36,4 +36,13 @@ public class LiteResource {
     public int getAmount() {
         return this.amount;
     }
+
+    /**
+     *
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof LiteResource) return type == ((LiteResource) obj).getType();
+        else return false;
+    }
 }

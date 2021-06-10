@@ -14,7 +14,7 @@ public class OtherPlayersPanel extends GuiPanel{
 
     private Image personalBoard;
 
-    public OtherPlayersPanel(GUI gui, String player){
+    public OtherPlayersPanel(GUI gui, String player) {
         super(gui);
 
 
@@ -50,7 +50,12 @@ public class OtherPlayersPanel extends GuiPanel{
         boardPanel.setLayout(new GridBagLayout());
 
         JPanel extraDepot = new ExtraDepotPanel(gui, player);
-        WarehousePanel warehousePanel = new WarehousePanel(gui, player);
+        WarehousePanel warehousePanel = null;
+        try {
+            warehousePanel = new WarehousePanel(gui, player);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "ehm");
+        }
 
         JPanel devSlot = new DevSlotPanel(gui, player);
         JPanel trackPanel = null;

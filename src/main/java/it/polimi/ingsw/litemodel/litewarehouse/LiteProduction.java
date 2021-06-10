@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.litemodel.LiteResource;
+import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class LiteProduction {
-
-    private String type;
 
     private final List<LiteResource> required = new ArrayList<>();
 
@@ -26,11 +26,6 @@ public class LiteProduction {
         this.added.addAll(added == null ? new ArrayList<>() : added);
     }
 
-    @JsonIgnore
-    public String getType() {
-        return type;
-    }
-
     public List<LiteResource> getRequired() {
         return required;
     }
@@ -41,5 +36,10 @@ public class LiteProduction {
 
     public List<LiteResource> getAdded() {
         return added;
+    }
+
+    @JsonIgnore
+    public boolean isUnknown() {
+        return required.contains(new LiteResource(ResourceType.UNKNOWN, 1)) || output.contains(new LiteResource(ResourceType.UNKNOWN, 1));
     }
 }

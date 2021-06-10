@@ -122,7 +122,10 @@ public class Model {
         if (!init) return -1;
 
         synchronized (this.initializingQueue) {
-            while (this.match == null) this.initializingQueue.wait();
+            while (this.match == null) {
+                dispatcher.sendMessage("aspetta che venga inserito il numero di giocatori");
+                this.initializingQueue.wait();
+            }
         }
 
         return this.match.gameSize - this.match.playerInGame();

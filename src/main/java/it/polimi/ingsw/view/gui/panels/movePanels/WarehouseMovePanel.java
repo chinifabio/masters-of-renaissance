@@ -184,6 +184,7 @@ public class WarehouseMovePanel  extends GuiPanel {
             createResourceLabel(label, GUI.resourceImages.get(tempRes.getType()));
             if (slot != DepotSlot.STRONGBOX){
 
+                label.setActionCommand("depotResourcePressed");
                 label.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {

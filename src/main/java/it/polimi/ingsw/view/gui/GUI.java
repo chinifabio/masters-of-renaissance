@@ -29,6 +29,7 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
         put(ResourceType.STONE, "WarehouseRes/stone.png" );
         put(ResourceType.SERVANT, "WarehouseRes/servant.png");
         put(ResourceType.EMPTY,"WarehouseRes/empty.png");
+        put(ResourceType.UNKNOWN,"WarehouseRes/unknown.png");
     }};
 
     public static Color borderColor = new Color(220,179,120);
@@ -156,6 +157,12 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
     public void switchPanels(GuiPanel toSee){
         synchronized (gamePanel) {
             gamePanel.remove(actualPanel);
+            //toSee.setBorder(BorderFactory.createEmptyBorder(
+            //        (height - toSee.getHeight())/2,
+            //        (width - toSee.getWidth())/2,
+            //        (height - toSee.getHeight())/2,
+            //        (width - toSee.getWidth())/2
+            //));
             gamePanel.add(toSee);
             actualPanel = toSee;
 

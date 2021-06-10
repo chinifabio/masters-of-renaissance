@@ -19,7 +19,7 @@ public class WarehousePanel  extends GuiPanel {
      * Creates a new <code>JPanel</code> with a double buffer
      * and a flow layout.
      */
-    public WarehousePanel(GUI gui, String player){
+    public WarehousePanel(GUI gui, String player) throws IOException {
         super(gui);
 
         this.setPreferredSize(new Dimension(320,400));
@@ -102,22 +102,18 @@ public class WarehousePanel  extends GuiPanel {
 
     }
 
-    public void createResourceLabel(JLabel label, String resource){
+    public void createResourceLabel(JLabel label, String resource) throws IOException {
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
         BufferedImage img = null;
-        try {
-            assert url != null;
-            img = ImageIO.read(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assert url != null;
+        img = ImageIO.read(url);
 
         Image scaledImage = GUI.getScaledImage(img, 55, 55);
         ImageIcon icon1 = new ImageIcon(scaledImage);
         label.setIcon(icon1);
     }
 
-    public void insertResourceInDepot(JPanel depot, DepotSlot slot, String player){
+    public void insertResourceInDepot(JPanel depot, DepotSlot slot, String player) throws IOException {
         depot.add(Box.createRigidArea(new Dimension(35,0)));
         LiteResource tempRes = gui.model.getDepot(player, slot).getResourcesInside().get(0);
 

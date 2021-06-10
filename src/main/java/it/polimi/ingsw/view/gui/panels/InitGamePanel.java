@@ -20,7 +20,7 @@ import java.io.InputStream;
 
 public class InitGamePanel extends GuiPanel {
 
-    public InitGamePanel(GUI gui) {
+    public InitGamePanel(GUI gui) throws IOException {
         super(gui);
         setOpaque(false);
 
@@ -39,6 +39,7 @@ public class InitGamePanel extends GuiPanel {
 
         JPanel res = new JPanel();
         res.setLayout(new BoxLayout(res, BoxLayout.X_AXIS));
+        res.setOpaque(false);
 
         res.add(new ResourceButton(ResourceType.COIN, gui));
         res.add(new ResourceButton(ResourceType.SHIELD, gui));
@@ -71,15 +72,11 @@ public class InitGamePanel extends GuiPanel {
 
 class LeaderCardButton extends JButton {
 
-    public LeaderCardButton(String id, GUI gui) {
+    public LeaderCardButton(String id, GUI gui) throws IOException {
         InputStream url = this.getClass().getResourceAsStream("/LeaderCardsImages/" + id + ".png");
-        BufferedImage img = null;
-        try {
-            assert url != null;
-            img = ImageIO.read(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        BufferedImage img;
+        assert url != null;
+        img = ImageIO.read(url);
 
         addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new DiscardLeaderCommand(id).jsonfy())));
 
