@@ -291,15 +291,15 @@ public class WarehouseTest {
         warehouse.moveInProduction(DepotSlot.BOTTOM,ProductionID.LEFT,ResourceBuilder.buildCoin(2));
         warehouse.moveInProduction(DepotSlot.MIDDLE, ProductionID.LEFT, ResourceBuilder.buildShield());
 
-        assertTrue(warehouse.getProduction().get(ProductionID.LEFT).viewResourcesAdded().contains(ResourceBuilder.buildCoin(2)));
-        assertTrue(warehouse.getProduction().get(ProductionID.LEFT).viewResourcesAdded().contains(ResourceBuilder.buildShield()));
+        assertTrue(warehouse.getProduction().get(ProductionID.LEFT).getAddedResource().contains(ResourceBuilder.buildCoin(2)));
+        assertTrue(warehouse.getProduction().get(ProductionID.LEFT).getAddedResource().contains(ResourceBuilder.buildShield()));
 
         //Moving the resources to activate the second production (prod2)
         warehouse.moveInProduction(DepotSlot.STRONGBOX,ProductionID.CENTER,ResourceBuilder.buildShield(2));
         warehouse.moveInProduction(DepotSlot.STRONGBOX, ProductionID.CENTER, ResourceBuilder.buildStone(2));
 
-        assertTrue(warehouse.getProduction().get(ProductionID.CENTER).viewResourcesAdded().contains(ResourceBuilder.buildShield(2)));
-        assertTrue(warehouse.getProduction().get(ProductionID.CENTER).viewResourcesAdded().contains(ResourceBuilder.buildStone(2)));
+        assertTrue(warehouse.getProduction().get(ProductionID.CENTER).getAddedResource().contains(ResourceBuilder.buildShield(2)));
+        assertTrue(warehouse.getProduction().get(ProductionID.CENTER).getAddedResource().contains(ResourceBuilder.buildStone(2)));
 
 
         //Activating the productions
@@ -348,15 +348,15 @@ public class WarehouseTest {
         warehouse.moveInProduction(DepotSlot.BOTTOM,ProductionID.LEFT,ResourceBuilder.buildCoin(1));
         warehouse.moveInProduction(DepotSlot.MIDDLE, ProductionID.LEFT, ResourceBuilder.buildShield());
 
-        assertTrue(warehouse.getProduction().get(ProductionID.LEFT).viewResourcesAdded().contains(ResourceBuilder.buildCoin(1)));
-        assertTrue(warehouse.getProduction().get(ProductionID.LEFT).viewResourcesAdded().contains(ResourceBuilder.buildShield()));
+        assertTrue(warehouse.getProduction().get(ProductionID.LEFT).getAddedResource().contains(ResourceBuilder.buildCoin(1)));
+        assertTrue(warehouse.getProduction().get(ProductionID.LEFT).getAddedResource().contains(ResourceBuilder.buildShield()));
 
         //Moving enough resources to activate the second production (prod2)
         warehouse.moveInProduction(DepotSlot.STRONGBOX,ProductionID.CENTER,ResourceBuilder.buildShield(2));
         warehouse.moveInProduction(DepotSlot.STRONGBOX, ProductionID.CENTER, ResourceBuilder.buildStone(2));
 
-        assertTrue(warehouse.getProduction().get(ProductionID.CENTER).viewResourcesAdded().contains(ResourceBuilder.buildShield(2)));
-        assertTrue(warehouse.getProduction().get(ProductionID.CENTER).viewResourcesAdded().contains(ResourceBuilder.buildStone(2)));
+        assertTrue(warehouse.getProduction().get(ProductionID.CENTER).getAddedResource().contains(ResourceBuilder.buildShield(2)));
+        assertTrue(warehouse.getProduction().get(ProductionID.CENTER).getAddedResource().contains(ResourceBuilder.buildStone(2)));
 
 
         assertEquals(ResourceBuilder.buildCoin(2),warehouse.viewResourcesInDepot(DepotSlot.BOTTOM).get(0));

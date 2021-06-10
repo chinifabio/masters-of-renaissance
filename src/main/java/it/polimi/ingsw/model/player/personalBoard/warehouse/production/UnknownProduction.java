@@ -10,10 +10,7 @@ import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * This method represents the UnknownProduction that are the Productions with one or more unknown resources,
@@ -45,10 +42,10 @@ public class UnknownProduction extends Production{
      */
     @JsonCreator
     public UnknownProduction(@JsonProperty("required") List<Resource> newRequired, @JsonProperty("output") List<Resource> newOutput) throws IllegalTypeInProduction {
-        super(newRequired, newOutput, Collections.singletonList(ResourceType.EMPTY));
+        super(newRequired, newOutput, Arrays.asList(ResourceType.EMPTY));
         this.normal = Optional.empty();
-        this.unknownInRequired = Objects.requireNonNull(this.required.stream().filter(x -> x.type() == ResourceType.UNKNOWN).findAny().orElse(null)).amount();
-        this.unknownInOutput = Objects.requireNonNull(this.output.stream().filter(x -> x.type() == ResourceType.UNKNOWN).findAny().orElse(null)).amount();
+        this.unknownInRequired = this.required.stream().filter(x -> x.type() == ResourceType.UNKNOWN).findAny().orElse(ResourceBuilder.buildUnknown()).amount();
+        this.unknownInOutput = this.output.stream().filter(x -> x.type() == ResourceType.UNKNOWN).findAny().orElse(ResourceBuilder.buildUnknown()).amount();
     }
 
     /**
@@ -71,6 +68,17 @@ public class UnknownProduction extends Production{
         return this.normal.isPresent() ?
                 this.normal.get().getOutput() :
                 super.getOutput();
+    }
+
+    /**
+     * This method return the list of the Resources added by the Player
+     * @return the list of resources
+     */
+    @Override
+    public List<Resource> getAddedResource() {
+        return this.normal.isPresent() ?
+                this.normal.get().getAddedResource() :
+                super.getAddedResource();
     }
 
     /**
@@ -120,7 +128,7 @@ public class UnknownProduction extends Production{
         if(counter > this.unknownInRequired) throw new IllegalNormalProduction("too many required resources");
 
         counter = 0;
-        lnorm = ResourceBuilder.rearrangeResourceList(normalProduction.viewOutput());
+        lnorm = ResourceBuilder.rearrangeResourceList(normalProduction.getOutput());
         lthis = ResourceBuilder.rearrangeResourceList(this.output);
         for(int i = 0; i < this.required.size(); i++) {
             tempSum = lnorm.get(i).amount() - lthis.get(i).amount();
@@ -142,30 +150,5 @@ public class UnknownProduction extends Production{
     public boolean reset() {
         this.normal = Optional.empty();
         return super.reset();
-    }
-
-    /**
-     * This method return the list of the Resources added by the Player
-     * @return the list of resources
-     */
-    @Override
-    public List<Resource> viewResourcesAdded() {
-        return this.normal.isPresent() ?
-                this.normal.get().viewResourcesAdded() :
-                super.viewResourcesAdded();
-    }
-
-    /**
-     * Create a lite version of the class and serialize it in json
-     *
-     * @return the json representation of the lite version of the class
-     */
-    @Override
-    public LiteProduction liteVersion() {
-        return new LiteProduction (
-                ResourceBuilder.mapResource(this.required),
-                ResourceBuilder.mapResource(this.addedResource),
-                ResourceBuilder.mapResource(this.output)
-        );
     }
 }

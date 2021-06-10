@@ -26,17 +26,17 @@ public abstract class Production implements MappableToLiteVersion {
      * this list contains all the input resource not allowed in the production
      */
     @JsonIgnore
-    protected List<ResourceType> illegalType;
+    protected final List<ResourceType> illegalType;
 
     /**
      * This attribute is the list of the Resources required to activate the Production
      */
-    protected List<Resource> required;
+    protected final List<Resource> required;
 
     /**
      * This attribute is the list of the Resources obtained after the Production
      */
-    protected List<Resource> output;
+    protected final List<Resource> output;
 
     /**
      * This attribute indicates the resources selected by the Player to activate this Production
@@ -46,11 +46,13 @@ public abstract class Production implements MappableToLiteVersion {
     /**
      * This attribute indicates when the production is been activated correctly
      */
+    @JsonIgnore
     protected boolean activated;
 
     /**
-     *
+     * Flag the production as select if player add resource in it
      */
+    @JsonIgnore
     protected boolean selected;
 
     /**
@@ -60,7 +62,6 @@ public abstract class Production implements MappableToLiteVersion {
      * @param illegal if the Resource can't be used
      * @throws IllegalTypeInProduction if an IllegalResource is used for the Production
      */
-    @JsonCreator
     public Production(List<Resource> newRequired, List<Resource> newOutput, List<ResourceType> illegal) throws IllegalTypeInProduction {
 
         this.illegalType = illegal;
@@ -79,11 +80,11 @@ public abstract class Production implements MappableToLiteVersion {
 
         this.required = ResourceBuilder.buildListOfResource();
         for (Resource res : newRequired)
-            Objects.requireNonNull(required.stream().filter(x -> x.equalsType(res)).findAny().orElse(null)).merge(res);
+            required.stream().filter(x -> x.equalsType(res)).findAny().orElse(ResourceBuilder.buildUnknown()).merge(res);
 
         this.output = ResourceBuilder.buildListOfResource();
         for (Resource res : newOutput)
-            Objects.requireNonNull(output.stream().filter(x -> x.equalsType(res)).findAny().orElse(null)).merge(res);
+            output.stream().filter(x -> x.equalsType(res)).findAny().orElse(ResourceBuilder.buildUnknown()).merge(res);
 
         this.addedResource = ResourceBuilder.buildListOfResource();
 
@@ -95,6 +96,7 @@ public abstract class Production implements MappableToLiteVersion {
     /**
      * This method returns the List of Resources requests
      */
+    @JsonGetter("required")
     public List<Resource> getRequired() {
         List<Resource> clone = new ArrayList<>();
         for(Resource item : this.required) if (item.amount() > 0) clone.add(item);
@@ -104,12 +106,21 @@ public abstract class Production implements MappableToLiteVersion {
     /**
      * This method returns the List of Resources obtained after the Production
      */
+    @JsonGetter("output")
     public List<Resource> getOutput() {
-        if(this.activated) {
-            List<Resource> clone = new ArrayList<>();
-            for (Resource item : this.output) if (item.amount() > 0) clone.add(item);
-            return clone;
-        } else return null;
+        List<Resource> clone = new ArrayList<>();
+        for (Resource item : this.output) if (item.amount() > 0) clone.add(item);
+        return clone;
+    }
+
+    /**
+     * This method returns a list of added resource
+     */
+    @JsonGetter("addedResource")
+    public List<Resource> getAddedResource() {
+        List<Resource> clone = new ArrayList<>();
+        for(Resource item : this.addedResource) if (item.amount() > 0) clone.add(item);
+        return clone;
     }
 
     /**
@@ -124,7 +135,6 @@ public abstract class Production implements MappableToLiteVersion {
      * This method transform the input resource in output resource if given one matches required one
      * @return the succeed of the operation
      */
-    //todo mettere le eccezioni perchè ho due possibilità di fallimento
     public abstract boolean activate();
 
     /**
@@ -142,6 +152,14 @@ public abstract class Production implements MappableToLiteVersion {
     public abstract boolean setNormalProduction(NormalProduction normalProduction) throws IllegalNormalProduction;
 
     /**
+     * This method indicates if the player added resources to activate the production
+     * @return true if the Player added resources
+     */
+    public boolean isSelected(){
+        return this.selected;
+    }
+
+    /**
      * This method reset the production
      * @return the succeed of the operation
      */
@@ -153,37 +171,16 @@ public abstract class Production implements MappableToLiteVersion {
     }
 
     /**
-     * Returns a string representation of the object.
-     * @return a string representation of the object.
-     */
-    @Override
-    public String toString() {
-        return "PROD: Requisite -> " + this.required +
-                "\n Output -> " + this.output +
-                "\nIllegal types: {" + this.illegalType + "}";
-    }
-
-    /**
-     * This method indicates if the player added resources to activate the production
-     * @return true if the Player added resources
-     */
-    public boolean isSelected(){
-        return this.selected;
-    }
-
-    /**
-     * This method return the list of the Resources added by the Player
-     * @return the list of resources
-     */
-    public List<Resource> viewResourcesAdded(){
-        return ResourceBuilder.rearrangeResourceList(addedResource);
-    }
-
-    /**
      * Create a lite version of the class and serialize it in json
      *
      * @return the json representation of the lite version of the class
      */
     @Override
-    public abstract LiteProduction liteVersion();
+    public LiteProduction liteVersion() {
+        return new LiteProduction (
+                ResourceBuilder.mapResource(getRequired()),
+                ResourceBuilder.mapResource(getAddedResource()),
+                ResourceBuilder.mapResource(getOutput())
+        );
+    }
 }

@@ -228,17 +228,14 @@ class ProductionNormalizer extends GuiPanel {
         this.required = required;
         this.output = output;
 
-        Map<String, ResourceType> resourcesMap = new HashMap<>(){{
+        Map<String, ResourceType> resourcesMap = new HashMap<>(){{ // todo same as line 238 because is better
             put("COIN", ResourceType.COIN);
             put("STONE", ResourceType.STONE);
             put("SHIELD",ResourceType.SHIELD);
             put("SERVANT",ResourceType.SERVANT);
         }};
 
-        possibleValues.add("COIN");
-        possibleValues.add("STONE");
-        possibleValues.add("SHIELD");
-        possibleValues.add("SERVANT");
+        for (ResourceType storable : ResourceType.storable()) possibleValues.add(storable.name());
 
         setLayout(new GridLayout(0, 1));
 
@@ -288,20 +285,17 @@ class ProductionNormalizer extends GuiPanel {
                 for (int i = 0; i < p.getAmount(); i++){
                     JButton resource = new JButton();
                     resourceButtonProd(resource,p.getType());
-                    resource.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            String choosenResource = (String) JOptionPane.showInputDialog(null, "Choose the Resource? ", "Normalize",
-                                    JOptionPane.QUESTION_MESSAGE, null,
-                                    possibleValues.toArray(), possibleValues.get(0));
-                            if (choosenResource != null){
-                                newReq.add(ResourceBuilder.buildFromType(resourcesMap.get(choosenResource), 1).liteVersion());
-                                newReq.remove(ResourceBuilder.buildFromType(ResourceType.UNKNOWN,1).liteVersion());
-                                try {
-                                    gui.switchPanels(new ProductionNormalizer(gui, newReq, newOut, id));
-                                } catch (IOException ioException) {
-                                    ioException.printStackTrace();
-                                }
+                    resource.addActionListener(e -> {
+                        String choosenResource = (String) JOptionPane.showInputDialog(null, "Choose the Resource? ", "Normalize",
+                                JOptionPane.QUESTION_MESSAGE, null,
+                                possibleValues.toArray(), possibleValues.get(0));
+                        if (choosenResource != null){
+                            newReq.add(ResourceBuilder.buildFromType(resourcesMap.get(choosenResource), 1).liteVersion());
+                            newReq.remove(ResourceBuilder.buildFromType(ResourceType.UNKNOWN,1).liteVersion());
+                            try {
+                                gui.switchPanels(new ProductionNormalizer(gui, newReq, newOut, id));
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
                             }
                         }
                     });
@@ -324,20 +318,17 @@ class ProductionNormalizer extends GuiPanel {
             for (int i = 0; i < p.getAmount(); i++){
                 JButton resource = new JButton();
                 resourceButtonProd(resource,p.getType());
-                resource.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        String choosenResource = (String) JOptionPane.showInputDialog(null, "Choose the Resource? ", "Normalize",
-                                JOptionPane.QUESTION_MESSAGE, null,
-                                possibleValues.toArray(), possibleValues.get(0));
-                        if (choosenResource != null){
-                            newOut.add(ResourceBuilder.buildFromType(resourcesMap.get(choosenResource), 1).liteVersion());
-                            newOut.remove(ResourceBuilder.buildFromType(ResourceType.UNKNOWN,1).liteVersion());
-                            try {
-                                gui.switchPanels(new ProductionNormalizer(gui, newReq, newOut, id));
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
+                resource.addActionListener(e -> {
+                    String choosenResource = (String) JOptionPane.showInputDialog(null, "Choose the Resource? ", "Normalize",
+                            JOptionPane.QUESTION_MESSAGE, null,
+                            possibleValues.toArray(), possibleValues.get(0));
+                    if (choosenResource != null){
+                        newOut.add(ResourceBuilder.buildFromType(resourcesMap.get(choosenResource), 1).liteVersion());
+                        newOut.remove(ResourceBuilder.buildFromType(ResourceType.UNKNOWN,1).liteVersion());
+                        try {
+                            gui.switchPanels(new ProductionNormalizer(gui, newReq, newOut, id));
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
                         }
                     }
                 });
@@ -356,19 +347,16 @@ class ProductionNormalizer extends GuiPanel {
 
         List<Resource> toSendOut = new ArrayList<>();
         for (LiteResource res : newOut){
-            toSendReq.add(ResourceBuilder.buildFromType(res.getType(), res.getAmount()));
+            toSendOut.add(ResourceBuilder.buildFromType(res.getType(), res.getAmount()));
         }
 
         JButton confirm = new JButton("Confirm");
-        confirm.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new SetNormalProductionCommand(id, new NormalProduction(toSendReq, toSendOut)).jsonfy()));
-                } catch (IllegalTypeInProduction illegalTypeInProduction) {
-                    JOptionPane.showMessageDialog(null, "Please, complete the process");
-                    illegalTypeInProduction.printStackTrace();
-                }
+        confirm.addActionListener(e -> {
+            try {
+                gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new SetNormalProductionCommand(id, new NormalProduction(toSendReq, toSendOut)).jsonfy()));
+            } catch (IllegalTypeInProduction illegalTypeInProduction) {
+                JOptionPane.showMessageDialog(null, "Please, complete the process");
+                illegalTypeInProduction.printStackTrace();
             }
         });
 
@@ -402,7 +390,10 @@ class ProductionNormalizer extends GuiPanel {
     @Override
     public void reactToPacket(Packet packet) throws IOException {
         switch (packet.header){
-            case OK -> gui.switchPanels(new ProductionsPanel(gui));
+            case OK -> {
+                gui.switchPanels(new ProductionsPanel(gui));
+                gui.notifyPlayer(packet.body);
+            }
             case INVALID -> {
                 gui.switchPanels(new ProductionsPanel(gui));
                 gui.notifyPlayerError(packet.body);

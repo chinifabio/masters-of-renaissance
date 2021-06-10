@@ -36,15 +36,12 @@ public class ProductionTest {
         assertFalse(production.activate());
         assertFalse(production.insertResource(ResourceBuilder.buildCoin(3)));
 
-        assertNull(production.getOutput());
-
         assertArrayEquals(req.toArray(), production.getRequired().toArray());
 
         assertTrue(production.insertResource(ResourceBuilder.buildCoin()));
         assertTrue(production.insertResource(ResourceBuilder.buildShield()));
         assertFalse(production.insertResource(ResourceBuilder.buildServant()));
 
-        assertNull(production.getOutput());
         assertArrayEquals(req.toArray(), production.getRequired().toArray());
 
         assertTrue(production.activate());
