@@ -122,26 +122,22 @@ public class FaithTrackPanel extends GuiPanel {
                 c.gridwidth = 2;
                 c.gridheight = 2;
                 panel.setPreferredSize(new Dimension(130, 104));
-                if (!gui.model.getPopeTilesPlayer().get(nickname).get("SECOND")){
-                    panel.setOpaque(false);
-                } else {
-
-                    InputStream urlPope = this.getClass().getResourceAsStream("/FaithTrackImages/Pope3.png");
-
-                    BufferedImage imgPope = null;
-
-                    try {
-                        assert urlPope != null;
-                        imgPope = ImageIO.read(urlPope);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Image scaledImagePope = GUI.getScaledImage(imgPope, 115, 90);
-                    ImageIcon iconPope = new ImageIcon(scaledImagePope);
-                    JLabel pope = new JLabel();
-                    pope.setIcon(iconPope);
-                    panel.add(pope);
+                InputStream urlPope = this.getClass().getResourceAsStream("/FaithTrackImages/Pope3X.png");
+                if (gui.model.getPopeTilesPlayer().get(nickname).get("SECOND")){
+                    urlPope = this.getClass().getResourceAsStream("/FaithTrackImages/Pope3.png");
                 }
+                BufferedImage imgPope = null;
+                try {
+                    assert urlPope != null;
+                    imgPope = ImageIO.read(urlPope);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Image scaledImagePope = GUI.getScaledImage(imgPope, 115, 90);
+                ImageIcon iconPope = new ImageIcon(scaledImagePope);
+                JLabel pope = new JLabel();
+                pope.setIcon(iconPope);
+                panel.add(pope);
             } else {
                 panel.setPreferredSize(new Dimension(65, 52));
             }
@@ -219,49 +215,48 @@ public class FaithTrackPanel extends GuiPanel {
                 c.gridwidth = 2;
                 c.gridheight = 2;
                 panel.setPreferredSize(new Dimension(130, 104));
-                if (!gui.model.getPopeTilesPlayer().get(nickname).get("FIRST")){
-                    panel.setOpaque(false);
-                } else  {
-                    InputStream urlPope = this.getClass().getResourceAsStream("/FaithTrackImages/Pope2.png");
+                InputStream urlPope = this.getClass().getResourceAsStream("/FaithTrackImages/Pope2X.png");
 
-                    BufferedImage imgPope = null;
-
-                    try {
-                        assert urlPope != null;
-                        imgPope = ImageIO.read(urlPope);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Image scaledImagePope = GUI.getScaledImage(imgPope, 115, 90);
-                    ImageIcon iconPope = new ImageIcon(scaledImagePope);
-                    JLabel pope = new JLabel();
-                    pope.setIcon(iconPope);
-                    panel.add(pope);
+                if (gui.model.getPopeTilesPlayer().get(nickname).get("FIRST")){
+                    urlPope = this.getClass().getResourceAsStream("/FaithTrackImages/Pope2.png");
                 }
+                BufferedImage imgPope = null;
+
+                try {
+                    assert urlPope != null;
+                    imgPope = ImageIO.read(urlPope);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Image scaledImagePope = GUI.getScaledImage(imgPope, 115, 90);
+                ImageIcon iconPope = new ImageIcon(scaledImagePope);
+                JLabel pope = new JLabel();
+                pope.setIcon(iconPope);
+                panel.add(pope);
+
             } else if (i == 16) {
                 c.gridwidth = 2;
                 c.gridheight = 2;
                 panel.setPreferredSize(new Dimension(130, 104));
 
-                if (!gui.model.getPopeTilesPlayer().get(nickname).get("THIRD")) {
-                    panel.setOpaque(false);
-                } else {
-                    InputStream urlPope = this.getClass().getResourceAsStream("/FaithTrackImages/Pope4.png");
+                InputStream urlPope = this.getClass().getResourceAsStream("/FaithTrackImages/Pope4X.png");
 
-                    BufferedImage imgPope = null;
-
-                    try {
-                        assert urlPope != null;
-                        imgPope = ImageIO.read(urlPope);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Image scaledImagePope = GUI.getScaledImage(imgPope, 115, 90);
-                    ImageIcon iconPope = new ImageIcon(scaledImagePope);
-                    JLabel pope = new JLabel();
-                    pope.setIcon(iconPope);
-                    panel.add(pope);
+                if (gui.model.getPopeTilesPlayer().get(nickname).get("THIRD")) {
+                    urlPope = this.getClass().getResourceAsStream("/FaithTrackImages/Pope4.png");
                 }
+                BufferedImage imgPope = null;
+
+                try {
+                    assert urlPope != null;
+                    imgPope = ImageIO.read(urlPope);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Image scaledImagePope = GUI.getScaledImage(imgPope, 115, 90);
+                ImageIcon iconPope = new ImageIcon(scaledImagePope);
+                JLabel pope = new JLabel();
+                pope.setIcon(iconPope);
+                panel.add(pope);
             } else {
                 panel.setPreferredSize(new Dimension(65, 52));
             }

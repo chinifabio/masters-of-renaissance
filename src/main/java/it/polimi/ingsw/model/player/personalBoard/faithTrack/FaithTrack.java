@@ -106,9 +106,11 @@ public class FaithTrack implements MappableToLiteVersion {
      */
     public void flipPopeTile(VaticanSpace toCheck){
         if (track.get(this.playerPosition).getVaticanSpace().ordinal >= toCheck.ordinal) {
-            if (popeTiles.containsKey(toCheck)) popeTiles.get(toCheck).flipMe();
-            updateFaithTrack();
+            if (popeTiles.containsKey(toCheck)) {
+                popeTiles.get(toCheck).flipMe();
+            }
         }
+        updateFaithTrack();
     }
 
     /**
