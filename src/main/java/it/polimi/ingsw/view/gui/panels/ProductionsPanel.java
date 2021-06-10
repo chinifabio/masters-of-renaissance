@@ -1,9 +1,17 @@
 package it.polimi.ingsw.view.gui.panels;
 
+import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
+import it.polimi.ingsw.communication.packet.commands.SetNormalProductionCommand;
 import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
+import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
+import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.movePanels.BufferMovePanel;
@@ -18,7 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
+import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,13 +42,25 @@ public class ProductionsPanel extends GuiPanel{
         middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.X_AXIS));
         middlePanel.setOpaque(false);
 
-
+        //--------BACK BUTTON----------
+        JPanel backPanel = new JPanel();
+        JButton back = new JButton("Return to PB");
+        back.addActionListener(e -> {
+            try {
+                gui.switchPanels(new PersonalBoardPanel(gui));
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+        backPanel.add(back);
+        backPanel.add(Box.createRigidArea(new Dimension(900,0)));
+        backPanel.setOpaque(false);
 
         //--------PRODS PANEL----------
         JPanel prodPanel = new JPanel();
         Map<ProductionID, LiteProduction> prods = gui.model.getAllProductions(gui.model.getMe());
         for (Map.Entry<ProductionID, LiteProduction> entry : prods.entrySet()) {
-            JPanel prod = new ProdPanel(entry.getKey().name(), entry.getValue(), gui);
+            JPanel prod = new ProdPanel(entry.getKey(), entry.getValue(), gui);
             prod.setOpaque(false);
             prodPanel.add(new JPanel().add(prod));
         }
@@ -82,6 +102,7 @@ public class ProductionsPanel extends GuiPanel{
         depotAndBufferPanel.setOpaque(false);
 
 
+        this.add(backPanel);
         this.add(prodPanel);
         middlePanel.add(warehousPanel);
         middlePanel.add(Box.createRigidArea(new Dimension(100, 0)));
@@ -100,12 +121,12 @@ public class ProductionsPanel extends GuiPanel{
 
 class ProdPanel extends JPanel {
 
-    public ProdPanel(String name, LiteProduction prod, GUI gui) throws IOException {
+    public ProdPanel(ProductionID name, LiteProduction prod, GUI gui) throws IOException {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setOpaque(false);
 
         // placing the name of the production
-        JLabel nameLabel = new JLabel(name);
+        JLabel nameLabel = new JLabel(name.name());
         nameLabel.setAlignmentX(CENTER_ALIGNMENT);
         add(nameLabel);
 
@@ -135,7 +156,7 @@ class ProdPanel extends JPanel {
             JButton normalizer = new JButton("Normalize");
             normalizer.addActionListener(e -> {
                 try {
-                    new ProductionNormalizer(prod.getRequired(), prod.getOutput());
+                    gui.switchPanels(new ProductionNormalizer(gui, prod.getRequired(), prod.getOutput(),name));
                 } catch (IOException ioException) {
                     gui.notifyPlayerError("cannot start normalizer");
                 }
@@ -172,13 +193,12 @@ class BookBackgroundPanel extends JPanel {
 class ResourceLabel extends JPanel {
     public ResourceLabel(ResourceType type, int am) throws IOException {
         setLayout(new OverlayLayout(this));
-        setOpaque(false);
+        this.setBackground(new Color(0,0,0,30));
 
         JLabel amount = new JLabel();
         amount.setFont(new Font(amount.getName(), Font.BOLD, 17));
-        amount.setForeground(Color.GREEN);
+        amount.setForeground(Color.white);
 
-        amount.setBackground(new Color(0, 0, 0, 10));
         amount.setText(String.valueOf(am));
 
         JLabel image = new JLabel();
@@ -186,8 +206,8 @@ class ResourceLabel extends JPanel {
         assert img != null;
         image.setIcon(new ImageIcon(GUI.getScaledImage(ImageIO.read(img), 25, 25)));
 
-        image.setAlignmentX(0.31f);
-        image.setAlignmentY(0.55f);
+        image.setAlignmentX(0.60f);
+        image.setAlignmentY(0.70f);
         add(amount);
         add(image);
 
@@ -195,55 +215,198 @@ class ResourceLabel extends JPanel {
     }
 }
 
-class ProductionNormalizer extends JFrame implements ActionListener {
+
+class ProductionNormalizer extends GuiPanel {
 
     private final List<LiteResource> required;
     private final List<LiteResource> output;
+    List<String> possibleValues = new ArrayList<>();
 
-
-    public ProductionNormalizer(List<LiteResource> required, List<LiteResource> output) throws IOException {
-        super("Production Normalizer");
+    public ProductionNormalizer(GUI gui, List<LiteResource> required, List<LiteResource> output, ProductionID id) throws IOException {
+        super(gui);
 
         this.required = required;
         this.output = output;
 
+        Map<String, ResourceType> resourcesMap = new HashMap<>(){{
+            put("COIN", ResourceType.COIN);
+            put("STONE", ResourceType.STONE);
+            put("SHIELD",ResourceType.SHIELD);
+            put("SERVANT",ResourceType.SERVANT);
+        }};
+
+        possibleValues.add("COIN");
+        possibleValues.add("STONE");
+        possibleValues.add("SHIELD");
+        possibleValues.add("SERVANT");
+
         setLayout(new GridLayout(0, 1));
 
+        //--------BACK BUTTON----------
+        JPanel backPanel = new JPanel();
+        JButton back = new JButton("Back");
+        back.addActionListener(e -> {
+            try {
+                gui.switchPanels(new ProductionsPanel(gui));
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+        backPanel.add(back);
+        //backPanel.add(Box.createRigidArea(new Dimension(900,0)));
+        backPanel.setOpaque(false);
 
         JPanel req = new JPanel();
+
+        List<LiteResource> newReq = new ArrayList<>();
+        for (LiteResource resource : required){
+            if (resource.getType() == ResourceType.UNKNOWN) {
+                for (int i = 0; i < resource.getAmount(); i++) {
+                    newReq.add(ResourceBuilder.buildFromType(resource.getType(), 1).liteVersion());
+                }
+            } else {
+                newReq.add(ResourceBuilder.buildFromType(resource.getType(), resource.getAmount()).liteVersion());
+            }
+        }
+
+
+        List<LiteResource> newOut = new ArrayList<>();
+        for (LiteResource resource : output){
+            if (resource.getType() == ResourceType.UNKNOWN) {
+                for (int i = 0; i < resource.getAmount(); i++) {
+                    newOut.add(ResourceBuilder.buildFromType(resource.getType(), 1).liteVersion());
+                }
+            } else {
+                newOut.add(ResourceBuilder.buildFromType(resource.getType(), resource.getAmount()).liteVersion());
+            }
+        }
+
         req.setLayout(new GridLayout(1, 0));
         req.setOpaque(false);
-        for(LiteResource p : required) req.add(new ResourceLabel(p.getType(), p.getAmount()));
+        for(LiteResource p : required) {
+            if (p.getType() == ResourceType.UNKNOWN){
+                for (int i = 0; i < p.getAmount(); i++){
+                    JButton resource = new JButton();
+                    resourceButtonProd(resource,p.getType());
+                    resource.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            String choosenResource = (String) JOptionPane.showInputDialog(null, "Choose the Resource? ", "Normalize",
+                                    JOptionPane.QUESTION_MESSAGE, null,
+                                    possibleValues.toArray(), possibleValues.get(0));
+                            if (choosenResource != null){
+                                newReq.add(ResourceBuilder.buildFromType(resourcesMap.get(choosenResource), 1).liteVersion());
+                                newReq.remove(ResourceBuilder.buildFromType(ResourceType.UNKNOWN,1).liteVersion());
+                                try {
+                                    gui.switchPanels(new ProductionNormalizer(gui, newReq, newOut, id));
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+                    req.add(resource);
+                }
+            } else {
+                ResourceLabel resource = new ResourceLabel(p.getType(), p.getAmount());
+                req.add(resource);
+            }
+
+        }
 
         JPanel out = new JPanel();
+
+
         out.setLayout(new GridLayout(1, 0));
         out.setOpaque(false);
-        for(LiteResource p : output) out.add(new ResourceLabel(p.getType(), p.getAmount()));
+        for(LiteResource p : output) {
+            if (p.getType() == ResourceType.UNKNOWN){
+            for (int i = 0; i < p.getAmount(); i++){
+                JButton resource = new JButton();
+                resourceButtonProd(resource,p.getType());
+                resource.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String choosenResource = (String) JOptionPane.showInputDialog(null, "Choose the Resource? ", "Normalize",
+                                JOptionPane.QUESTION_MESSAGE, null,
+                                possibleValues.toArray(), possibleValues.get(0));
+                        if (choosenResource != null){
+                            newOut.add(ResourceBuilder.buildFromType(resourcesMap.get(choosenResource), 1).liteVersion());
+                            newOut.remove(ResourceBuilder.buildFromType(ResourceType.UNKNOWN,1).liteVersion());
+                            try {
+                                gui.switchPanels(new ProductionNormalizer(gui, newReq, newOut, id));
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+                        }
+                    }
+                });
+                out.add(resource);
+            }
+         } else {
+                ResourceLabel resource = new ResourceLabel(p.getType(), p.getAmount());
+                out.add(resource);
+            }
+        }
+
+        List<Resource> toSendReq = new ArrayList<>();
+        for (LiteResource res : newReq){
+            toSendReq.add(ResourceBuilder.buildFromType(res.getType(), res.getAmount()));
+        }
+
+        List<Resource> toSendOut = new ArrayList<>();
+        for (LiteResource res : newOut){
+            toSendReq.add(ResourceBuilder.buildFromType(res.getType(), res.getAmount()));
+        }
+
+        JButton confirm = new JButton("Confirm");
+        confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new SetNormalProductionCommand(id, new NormalProduction(toSendReq, toSendOut)).jsonfy()));
+                } catch (IllegalTypeInProduction illegalTypeInProduction) {
+                    JOptionPane.showMessageDialog(null, "Please, complete the process");
+                    illegalTypeInProduction.printStackTrace();
+                }
+            }
+        });
 
         JPanel buttons = new JPanel();
         buttons.setLayout(new GridLayout(1, 0));
         buttons.setOpaque(false);
-        //for(ResourceType t : ResourceBuilder.buildListOfStorable().stream().map(Resource::type).collect(Collectors.toList())) req.add(new ResourceButton(t, gui));
+        buttons.add(confirm);
 
+
+        add(backPanel);
         add(new JLabel("Click on resource to normalize the unknown"));
         add(req);
         add(out);
-
+        add(confirm);
 
 
 
     }
 
-    /**
-     * Invoked when an action occurs.
-     *
-     * @param e the event to be processed
-     */
+    public void resourceButtonProd(JButton image, ResourceType type) throws IOException {
+        InputStream img = getClass().getResourceAsStream("/WarehouseRes/"+type.name().toLowerCase()+".png");
+        assert img != null;
+        image.setIcon(new ImageIcon(GUI.getScaledImage(ImageIO.read(img), 25, 25)));
+
+        add(image);
+
+        setAlignmentX(CENTER_ALIGNMENT);
+    }
+
+
     @Override
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "done":
-                break;
+    public void reactToPacket(Packet packet) throws IOException {
+        switch (packet.header){
+            case OK -> gui.switchPanels(new ProductionsPanel(gui));
+            case INVALID -> {
+                gui.switchPanels(new ProductionsPanel(gui));
+                gui.notifyPlayerError(packet.body);
+            }
         }
     }
 }

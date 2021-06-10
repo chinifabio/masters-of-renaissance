@@ -119,6 +119,7 @@ public class FaithTrackPanel extends GuiPanel {
             }else if (i == 1){
                 panel.setPreferredSize(new Dimension(70, 52));
             }else if(i == 10){
+                panel.setLayout(new BorderLayout());
                 c.gridwidth = 2;
                 c.gridheight = 2;
                 panel.setPreferredSize(new Dimension(130, 104));
@@ -133,11 +134,16 @@ public class FaithTrackPanel extends GuiPanel {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Image scaledImagePope = GUI.getScaledImage(imgPope, 115, 90);
+                Image scaledImagePope = GUI.getScaledImage(imgPope, 105, 80);
                 ImageIcon iconPope = new ImageIcon(scaledImagePope);
                 JLabel pope = new JLabel();
                 pope.setIcon(iconPope);
-                panel.add(pope);
+                JPanel tiles = new JPanel();
+                tiles.add(Box.createRigidArea(new Dimension(4,0)));
+                tiles.add(pope);
+                tiles.setOpaque(false);
+                panel.add(tiles, BorderLayout.SOUTH);
+
             } else {
                 panel.setPreferredSize(new Dimension(65, 52));
             }
@@ -211,7 +217,7 @@ public class FaithTrackPanel extends GuiPanel {
             }else if (i == 1){
                 panel.setPreferredSize(new Dimension(70, 52));
             }else if(i == 5){
-
+                panel.setLayout(new BorderLayout());
                 c.gridwidth = 2;
                 c.gridheight = 2;
                 panel.setPreferredSize(new Dimension(130, 104));
@@ -228,13 +234,18 @@ public class FaithTrackPanel extends GuiPanel {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Image scaledImagePope = GUI.getScaledImage(imgPope, 115, 90);
+                Image scaledImagePope = GUI.getScaledImage(imgPope, 105, 80);
                 ImageIcon iconPope = new ImageIcon(scaledImagePope);
                 JLabel pope = new JLabel();
                 pope.setIcon(iconPope);
-                panel.add(pope);
+                JPanel tiles = new JPanel();
+                tiles.add(pope);
+                tiles.add(Box.createRigidArea(new Dimension(2,0)));
+                tiles.setOpaque(false);
+                panel.add(tiles, BorderLayout.SOUTH);
 
             } else if (i == 16) {
+                panel.setLayout(new BorderLayout());
                 c.gridwidth = 2;
                 c.gridheight = 2;
                 panel.setPreferredSize(new Dimension(130, 104));
@@ -252,11 +263,15 @@ public class FaithTrackPanel extends GuiPanel {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                Image scaledImagePope = GUI.getScaledImage(imgPope, 115, 90);
+                Image scaledImagePope = GUI.getScaledImage(imgPope, 105, 80);
                 ImageIcon iconPope = new ImageIcon(scaledImagePope);
                 JLabel pope = new JLabel();
                 pope.setIcon(iconPope);
-                panel.add(pope);
+                JPanel tiles = new JPanel();
+                tiles.add(Box.createRigidArea(new Dimension(6,0)));
+                tiles.add(pope);
+                tiles.setOpaque(false);
+                panel.add(tiles, BorderLayout.SOUTH);
             } else {
                 panel.setPreferredSize(new Dimension(65, 52));
             }
