@@ -133,8 +133,8 @@ public class LiteModel {
         return result;
     }
 
-    public synchronized Map<String, Map<String, Boolean>> getPopeTilesPlayer(){
-        Map <String, Map<String, Boolean>> result = new HashMap<>();
+    public synchronized Map<String, HashMap<String, Boolean>> getPopeTilesPlayer(){
+        Map <String, HashMap<String, Boolean>> result = new HashMap<>();
         for (Map.Entry<String, LitePersonalBoard> entry : this.players.entrySet()){
             result.put(entry.getKey(), entry.getValue().getPopeTiles());
         }

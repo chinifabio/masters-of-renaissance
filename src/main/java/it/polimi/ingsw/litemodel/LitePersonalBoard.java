@@ -81,8 +81,8 @@ public class LitePersonalBoard {
         this.track.flipPopeTile(popeTile);
     }
 
-    @JsonIgnore
-    public Map<String, Boolean> getPopeTiles(){
+
+    public HashMap<String, Boolean> getPopeTiles(){
         return this.track.getPopeTiles();
     }
 

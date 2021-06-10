@@ -178,16 +178,16 @@ public class FaithTrackPrinter {
     /**
      * This attribute create the Legend that will appear before the FaithTrack, it indicates the marker and the
      * PopeTiles of the Players
-     * @param nicknames is the List of players' nicknames
+     //* @param nicknames is the List of players' nicknames
      * @param tiles is the List of popeTiles of each player
      * @return the String of the Legend that will be printed
      */
-    private String createLegend(List<String> nicknames, List<Map<String, Boolean>> tiles){
+    private String createLegend(Map<String, HashMap<String, Boolean>> tiles){
         StringBuilder popeTiles = new StringBuilder();
         int i = 0;
         int lenght;
 
-        for (String name : nicknames){
+        for (String name : tiles.keySet()){
             lenght = 0;
             popeTiles.append(Colors.color(colors[i % 4], name)).append(": ");
             lenght = lenght + name.length();
@@ -196,14 +196,16 @@ public class FaithTrackPrinter {
                 lenght++;
             }
 
+            System.out.println("------- \n" + name);
             popeTiles.append(Colors.color(colors[i%4],"┼" + name.charAt(0))).append( " - PopeTiles: " );
-            //for (Map.Entry<String, Boolean> entry : tiles.get(i).entrySet()){
+
             List<VaticanSpace> loop = new ArrayList<>(Arrays.asList(VaticanSpace.values()));
             loop.remove(VaticanSpace.NONE);
             for (VaticanSpace vs : loop){
                 popeTiles.append(Colors.color(Colors.CYAN_BRIGHT,"["));
-                if (tiles.get(i).get(vs.name())){
-                    popeTiles.append(Colors.color(Colors.GREEN,"X"));
+                System.out.println(tiles.get(name).get(vs.name()));
+                if (tiles.get(name).get(vs.name())){
+                    popeTiles.append(Colors.color(Colors.GREEN,"V"));
                 } else {
                     popeTiles.append(" ");
                 }
@@ -244,16 +246,15 @@ public class FaithTrackPrinter {
      */
     public void printTrack(LiteModel model){
         Map<String, Integer> players = model.getPlayerPosition();
-        Map<String, Map<String, Boolean>> popetiles = model.getPopeTilesPlayer();
+        Map<String, HashMap<String, Boolean>> popetiles = model.getPopeTilesPlayer();
 
         List<String> nicknames = new ArrayList<>(players.keySet());
         List<Integer> positions = new ArrayList<>(players.values());
-        List<Map<String, Boolean>> popeTiles = new ArrayList<>(popetiles.values());
 
         int vert = MAX_VERT+model.playersInGame()+3;
         String[][] faithTrack = new String[vert][MAX_HORIZ_CELL*(this.track.size())];
 
-        System.out.println(createLegend(nicknames, popeTiles));
+        System.out.println(createLegend(popetiles));
         createTrack(model.playersInGame(), faithTrack);
         insertPlayerPos(nicknames, positions, faithTrack);
         for (int r = 0; r < (vert); r++){

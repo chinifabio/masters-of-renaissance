@@ -10,7 +10,7 @@ public class LiteFaithTrack {
 
     private int playerPosition = 0;
 
-    private final Map<String, Boolean> tiles;
+    private final HashMap<String, Boolean> tiles;
 
     @JsonCreator
     public LiteFaithTrack() {
@@ -33,8 +33,7 @@ public class LiteFaithTrack {
         this.tiles.put(toFlip, true);
     }
 
-    @JsonIgnore
-    public Map<String, Boolean> getPopeTiles() {
+    public HashMap<String, Boolean> getPopeTiles() {
         return tiles;
     }
 }
