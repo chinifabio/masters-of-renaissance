@@ -14,31 +14,18 @@ public class NotifyPanel extends JPanel{
     }
 
     public void appendMessage(String message, Color bg) {
-        JTextArea toAdd = new MessageLabel(message, bg);
+        JLabel label = new JLabel();
+        label.setOpaque(true);
+        label.setBackground(bg);
+        label.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        toAdd.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label.setAlignmentX(CENTER_ALIGNMENT);
 
-        add(toAdd);
-        add(Box.createRigidArea(new Dimension(0, 5)));
+        label.setText(String.format("<html><div WIDTH=%d>%s</div></html>", width - 25, message));
+
+        add(label);
+        add(Box.createRigidArea(new Dimension(0, 10)));
         revalidate();
     }
 
-}
-
-class MessageLabel extends JTextArea {
-    public MessageLabel(String text, Color bg) {
-        super(5,20);
-
-        setEnabled(false);
-
-        setLineWrap(true);
-        setWrapStyleWord(true);
-
-        append(text);
-        setMaximumSize(new Dimension(NotifyPanel.width, 50));
-
-        setOpaque(true);
-        setBackground(bg);
-        setBorder(new EmptyBorder(5, 5, 5, 5));
-    }
 }

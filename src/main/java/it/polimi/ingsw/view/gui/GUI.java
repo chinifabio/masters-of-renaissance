@@ -141,10 +141,15 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
 
         gamePanel.setPreferredSize(new Dimension(width - 300, height));
 
-        notifyPanel.setPreferredSize(new Dimension(300, height));
+        JScrollPane scrollPane = new JScrollPane(notifyPanel);
+        scrollPane.setPreferredSize(new Dimension(300, height));
 
         add(gamePanel, BorderLayout.CENTER);
-        add(notifyPanel, BorderLayout.LINE_END);
+
+        JPanel scrollContainer = new JPanel();
+        scrollContainer.add(scrollPane);
+        scrollContainer.setMinimumSize(new Dimension(NotifyPanel.width, height));
+        add(scrollPane, BorderLayout.LINE_END);
 
         actualPanel = new AskNickname(this);
         gamePanel.add(actualPanel);
@@ -157,12 +162,6 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
     public void switchPanels(GuiPanel toSee){
         synchronized (gamePanel) {
             gamePanel.remove(actualPanel);
-            //toSee.setBorder(BorderFactory.createEmptyBorder(
-            //        (height - toSee.getHeight())/2,
-            //        (width - toSee.getWidth())/2,
-            //        (height - toSee.getHeight())/2,
-            //        (width - toSee.getWidth())/2
-            //));
             gamePanel.add(toSee);
             actualPanel = toSee;
 
