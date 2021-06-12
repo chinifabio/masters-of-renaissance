@@ -80,8 +80,9 @@ public class Warehouse {
 
 
         this.constraint = new ArrayList<>();
-        this.addConstraint(x -> x.getFrom() != DepotSlot.STRONGBOX || x.getDest() == DepotSlot.BUFFER);
+        this.addConstraint(x -> x.getFrom() != DepotSlot.STRONGBOX || (x.getDest() == DepotSlot.BUFFER || x.getDest() == DepotSlot.DEVBUFFER));
         this.addConstraint(x-> x.getDest() != DepotSlot.STRONGBOX || x.getFrom() == DepotSlot.BUFFER);
+        this.addConstraint(x-> x.getFrom() != DepotSlot.DEVBUFFER);
 
         this.player = player;
 
@@ -374,6 +375,14 @@ public class Warehouse {
     public void flushBufferDepot() {
         depots.put(DepotSlot.BUFFER, DepotBuilder.buildStrongBoxDepot());
         updateDepot(DepotSlot.BUFFER);
+    }
+
+    /**
+     * This method flush the buffer depot by replacing it whit a new one empty
+     */
+    public void flushDevBufferDepot() {
+        depots.put(DepotSlot.DEVBUFFER, DepotBuilder.buildStrongBoxDepot());
+        updateDepot(DepotSlot.DEVBUFFER);
     }
 
     /**

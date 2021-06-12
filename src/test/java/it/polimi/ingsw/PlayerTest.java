@@ -17,6 +17,7 @@ import it.polimi.ingsw.model.exceptions.warehouse.NegativeResourcesDepotExceptio
 import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.exceptions.warehouse.WrongDepotException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
+import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.player.Player;
@@ -31,6 +32,7 @@ import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -82,7 +84,7 @@ public class PlayerTest{
 
     }
 
-    @Test
+    @RepeatedTest(25)
     public void BuyDevCard() throws UnobtainableResourceException, WrongDepotException, EndGameException, LootTypeException {
         DevCard card1 = game.viewDevSetup().get(0);
         DevCard card2 = game.viewDevSetup().get(3);
@@ -90,27 +92,48 @@ public class PlayerTest{
 
         for(int i=0 ; i<card1.getCost().size() ; i++){
             Resource temp = ResourceBuilder.buildFromType(card1.getCost().get(i).getType(), card1.getCost().get(i).getAmount());
-            assertTrue(game.currentPlayer().obtainResource(DepotSlot.BUFFER,temp));
+            assertTrue(game.currentPlayer().obtainResource(DepotSlot.STRONGBOX,temp));
         }
 
         assertTrue(game.currentPlayer().canDoStuff());
+        game.currentPlayer().buyCard();
+        for(int i=0 ; i<card1.getCost().size() ; i++){
+            Resource temp = ResourceBuilder.buildFromType(card1.getCost().get(i).getType(), card1.getCost().get(i).getAmount());
+            game.currentPlayer().moveBetweenDepot(DepotSlot.STRONGBOX,DepotSlot.DEVBUFFER,temp);
+        }
         game.currentPlayer().buyDevCard(LevelDevCard.LEVEL1, ColorDevCard.GREEN, DevCardSlot.LEFT);
         assertEquals(card1,game.currentPlayer().test_getPB().viewDevCards().get(DevCardSlot.LEFT));
 
         game.currentPlayer().endThisTurn();
         assertTrue(game.currentPlayer().canDoStuff());
-        game.currentPlayer().buyDevCard(LevelDevCard.LEVEL3, ColorDevCard.BLUE, DevCardSlot.CENTER);
+        game.currentPlayer().useMarketTray(RowCol.COL,1);
+        game.currentPlayer().endThisTurn();
+        assertTrue(game.currentPlayer().canDoStuff());
+        game.currentPlayer().buyCard();
 
-        for(int i=0 ; i<card2.getCost().size() ; i++){
+        for(int i=0 ; i<card2.getCost().size() ; i++) {
             Resource temp = ResourceBuilder.buildFromType(card2.getCost().get(i).getType(), card2.getCost().get(i).getAmount());
-            assertTrue(game.currentPlayer().obtainResource(DepotSlot.BUFFER,temp));
+            assertTrue(game.currentPlayer().obtainResource(DepotSlot.STRONGBOX,temp));
         }
 
-        game.currentPlayer().moveBetweenDepot(DepotSlot.BUFFER,DepotSlot.TOP,ResourceBuilder.buildFromType(card2.getCost().get(0).getType(),1));
-        game.currentPlayer().addDiscount(ResourceBuilder.buildFromType(card2.getCost().get(0).getType(),1).type());
-        game.currentPlayer().buyDevCard(LevelDevCard.LEVEL1, ColorDevCard.YELLOW, DevCardSlot.RIGHT);
-        assertEquals(card2,game.currentPlayer().test_getPB().viewDevCards().get(DevCardSlot.RIGHT));
-
+        if(card2.getCost().size() > 1) {
+            for(int i=0 ; i<card2.getCost().size()-1 ; i++) {
+                Resource temp = ResourceBuilder.buildFromType(card2.getCost().get(i).getType(), card2.getCost().get(i).getAmount());
+                game.currentPlayer().moveBetweenDepot(DepotSlot.STRONGBOX,DepotSlot.DEVBUFFER,temp);
+            }
+            game.currentPlayer().buyDevCard(LevelDevCard.LEVEL1, ColorDevCard.YELLOW, DevCardSlot.RIGHT);
+            for(int i=0 ; i<card2.getCost().size() ; i++) {
+                Resource temp = ResourceBuilder.buildFromType(card2.getCost().get(i).getType(), card2.getCost().get(i).getAmount());
+                assertTrue(game.currentPlayer().test_getPB().getWH_forTest().getTotalResources().contains(temp));
+            }
+        }
+        else {
+            Resource temp = ResourceBuilder.buildFromType(card2.getCost().get(0).getType(), card2.getCost().get(0).getAmount()-1);
+            game.currentPlayer().moveBetweenDepot(DepotSlot.STRONGBOX,DepotSlot.DEVBUFFER,temp);
+            game.currentPlayer().addDiscount(ResourceBuilder.buildFromType(card2.getCost().get(0).getType(),1).type());
+            game.currentPlayer().buyDevCard(LevelDevCard.LEVEL1, ColorDevCard.YELLOW, DevCardSlot.RIGHT);
+            assertEquals(card2,game.currentPlayer().test_getPB().viewDevCards().get(DevCardSlot.RIGHT));
+        }
     }
 
     @Test

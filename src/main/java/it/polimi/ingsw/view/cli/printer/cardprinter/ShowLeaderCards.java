@@ -23,7 +23,7 @@ public class ShowLeaderCards {
         }
         int index = 0;
         for (LiteLeaderCard card : toShow) {
-            LeaderCardPrinter.createLeaderCard(leaderCards, card, 0, index);
+            LeaderCardPrinter.createLeaderCard(leaderCards, card, 0, index, card.isActivated());
             index = index + 14;
         }
 
@@ -39,7 +39,7 @@ public class ShowLeaderCards {
     public static void createLeaderCardsSlot(String[][] display, List<LiteLeaderCard> toShow, int x, int y){
         int index = y;
         for (LiteLeaderCard card : toShow) {
-            LeaderCardPrinter.createLeaderCard(display, card, x, index);
+            LeaderCardPrinter.createLeaderCard(display, card, x, index, card.isActivated());
             index = index + 14;
         }
     }

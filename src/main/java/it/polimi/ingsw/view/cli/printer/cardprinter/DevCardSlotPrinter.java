@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class DevCardSlotPrinter {
+public class  DevCardSlotPrinter {
 
     private static final int HEIGHT = 11; //rows.
     private static final int WIDTH = 46; //cols.

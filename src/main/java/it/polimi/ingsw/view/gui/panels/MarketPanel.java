@@ -129,7 +129,10 @@ public class MarketPanel extends GuiPanel {
     @Override
     public void reactToPacket(Packet packet) throws IOException {
         switch (packet.header) {
-            case OK -> gui.switchPanels(new MarketPanel(gui));
+            case OK -> {
+                MarketPanel temp = new MarketPanel(gui);
+                gui.switchPanels(temp);
+            }
             case INVALID -> gui.notifyPlayerError(packet.body);
         }
     }

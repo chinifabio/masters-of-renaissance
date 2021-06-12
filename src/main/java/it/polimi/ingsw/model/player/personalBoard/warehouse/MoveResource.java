@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.resource.Resource;
  * This class represents the movement of resources between depots
  */
 public class MoveResource {
+
     /**
      * This attribute is the DepotSlot where the resources will be taken from
      */

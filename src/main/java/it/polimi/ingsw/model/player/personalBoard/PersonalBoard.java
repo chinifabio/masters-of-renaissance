@@ -370,10 +370,10 @@ public class PersonalBoard {
     }
 
     /**
-     * ? Non si può usare la funzione sopra ^ ?
+     * Discard all the resources in the DevBuffer depot after buying a card
      */
     public void flushBufferDevCard(){
-        this.warehouse.flushBufferDepot();
+        this.warehouse.flushDevBufferDepot();
     }
 
     /**

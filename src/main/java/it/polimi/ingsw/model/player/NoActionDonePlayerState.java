@@ -49,8 +49,8 @@ public class NoActionDonePlayerState extends PlayerState {
         return new NotHisTurnPlayerState(this.context);
     }
 
-// -------------------------- PLAYER ACTION IMPLEMENTATIONS ---------------------------------
 
+// -------------------------- PLAYER ACTION IMPLEMENTATIONS ---------------------------------
 
 
     /**
@@ -98,37 +98,19 @@ public class NoActionDonePlayerState extends PlayerState {
         return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Marble painted successfully");
     }
 
-    /**
-     *  player ask to buy the first card of the deck in position passed as parameter
-     * @param row         the row of the card required
-     * @param col         the column of the card required
-     * @param destination the slot where put the dev card slot
-     * @return true if there where no issue, false instead
-     */
     @Override
     public Packet buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
-        this.context.slotDestination = destination;
-        boolean res;
-        try {
-            res = this.context.match.buyDevCard(row, col);
-        }
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You have to enter the buycard phase by typing \"buycard\"!");
+    }
 
-        catch (EndGameException e) {
-            this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
-            this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
-            return new Packet(HeaderTypes.END_GAME, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
-        }
-
-        catch (Exception e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
-        }
-
-        if (res) {
-            this.context.setState(new MainActionDonePlayerState(this.context));
-        }
-        return res ?
-                new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You bought the develop card requested"):
-                new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You have no requisite to buy the card");
+    /**
+     *  Player asks to buy a devcard
+     *  @return the result of the operation
+     */
+    @Override
+    public Packet buyCard() {
+        this.context.setState(new BuyCardPlayerState(this.context));
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Move the needed resource for the chosen card into the devbuffer");
     }
 
     /**

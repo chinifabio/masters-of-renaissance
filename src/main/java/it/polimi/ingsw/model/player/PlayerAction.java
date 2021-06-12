@@ -32,13 +32,19 @@ public interface PlayerAction {
     Packet paintMarbleInTray(int conversionsIndex, int marbleIndex);
 
     /**
-     * player ask to buy the first card of the deck in position passed as parameter
+     * Player confirms the buy of a devcard
      * @param row the row of the card required
      * @param col the column of the card required
      * @param destination the slot where put the dev card slot
      * @return true if there where no issue, false instead
      */
     Packet buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination);
+
+    /**
+     * Player asks to buy a devcard
+     * @return the result of the operation
+     */
+    Packet buyCard();
 
     /**
      * This method takes the resources from the Depots and the Strongbox to
@@ -96,4 +102,10 @@ public interface PlayerAction {
      * @return true if success, false otherwise
      */
     Packet endThisTurn();
+
+    /**
+     * Used during the buydevcard phase to return to the initial warehouse state.
+     * @return a warning packet
+     */
+    Packet rollBack();
 }

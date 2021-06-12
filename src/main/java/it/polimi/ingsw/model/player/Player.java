@@ -261,6 +261,15 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     }
 
     /**
+     * 
+     * @return
+     */
+    @Override
+    public Packet buyCard() {
+        return this.playerState.buyCard();
+    }
+
+    /**
      * This method takes the resources from the Depots and the Strongbox to
      * activate the productions and insert the Resources obtained into the Strongbox
      * @return true if success
@@ -334,6 +343,11 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         return this.playerState.endThisTurn();
     }
 
+    @Override
+    public Packet rollBack() {
+        return this.playerState.rollBack();
+    }
+
     /**
      * Set a chosen resource attribute in player
      * @param slot is the Depot where the Resource is located
@@ -389,7 +403,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         }
         //resource check
         List<Resource> tempBufferRes;
-        tempBufferRes = this.personalBoard.viewDepotResource(DepotSlot.BUFFER);
+        tempBufferRes = this.personalBoard.viewDepotResource(DepotSlot.DEVBUFFER);
         for (Requisite reqLoop : req) {
             for (Resource tempListResLoop : tempBufferRes) {
                 if (tempListResLoop.type().equals(reqLoop.getType())) {

@@ -17,6 +17,8 @@ import it.polimi.ingsw.model.player.PlayerAction;
         @JsonSubTypes.Type(name = "ActivateLeader", value = ActivateLeaderCommand.class),
         @JsonSubTypes.Type(name = "ActivateProduction", value = ActivateProductionCommand.class),
         @JsonSubTypes.Type(name = "BuyDevCard", value = BuyDevCardCommand.class),
+        @JsonSubTypes.Type(name = "BuyCard", value = BuyCardCommand.class),
+        @JsonSubTypes.Type(name = "Return", value = ReturnCommand.class),
         @JsonSubTypes.Type(name = "ChooseResource", value = ChooseResourceCommand.class),
         @JsonSubTypes.Type(name = "DiscardLeader", value = DiscardLeaderCommand.class),
         @JsonSubTypes.Type(name = "EndTurn", value = EndTurnCommand.class),

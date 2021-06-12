@@ -37,8 +37,9 @@ public class DevDecksPrinter {
         int indexRows = x + 5;
 
         for (DevCardSlot slot : DevCardSlot.values()) {
-            Collections.reverse(toShow.get(slot));
-            for (LiteDevCard card : toShow.get(slot)) {
+            List<LiteDevCard> temp = new ArrayList<>(toShow.get(slot));
+            Collections.reverse(temp);
+            for (LiteDevCard card : temp) {
                 DevCardPrinter.createDevCard(display, card, indexRows, indexCols);
                 indexRows = indexRows - 2;
             }

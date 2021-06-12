@@ -92,7 +92,7 @@ public abstract class PlayerState implements PlayerAction {
     }
 
     /**
-     * Player asks to buy the first card of the deck in position passed as parameter
+     * Player confirms the buy of a devcard
      * @param row the row of the card required
      * @param col the column of the card required
      * @param destination the slot where put the dev card slot
@@ -100,6 +100,15 @@ public abstract class PlayerState implements PlayerAction {
      */
     @Override
     public Packet buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    }
+
+    /**
+     * Player asks to buy a devcard
+     * @return the result of the operation
+     */
+    @Override
+    public Packet buyCard() {
         return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 
@@ -184,4 +193,8 @@ public abstract class PlayerState implements PlayerAction {
         return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 
+    @Override
+    public Packet rollBack() {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    }
 }

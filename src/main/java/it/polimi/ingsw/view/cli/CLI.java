@@ -384,12 +384,20 @@ class CliInGameState extends CliState {
                         DevCardSlot slot = DevCardSlot.valueOf(data.get(i++).toUpperCase());
                         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyDevCardCommand(level, color, slot).jsonfy());
                     } catch (IllegalArgumentException out) {
-                        context.notifyPlayerError(data.get(i) + " is not mappable");
+                        if(!(data.size()==i)) context.notifyPlayerError(data.get(i) + " is not mappable");
+                        else context.notifyPlayerError( "you missed some parameters or you misspelled something");
                     } catch (IndexOutOfBoundsException arg) {
-                        context.notifyPlayerError("You missed some parameter");
+                        DevCardBufferPrinter.printDevCardPhase(context.getModel(), context.getModel().getMe());
+                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyCardCommand().jsonfy());
                     }
                     break;
-
+                case "devbuffer" :
+                    DevCardBufferPrinter.printDevCardPhase(context.getModel(), context.getModel().getMe());
+                    break;
+                case "rollback" :
+                case "rb" :
+                case "return" :
+                    return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ReturnCommand().jsonfy());
                 case "usemarket":
                     try {
                         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new UseMarketTrayCommand(

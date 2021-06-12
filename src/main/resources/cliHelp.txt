@@ -43,8 +43,14 @@ you can enter the following commands:
             - paint a marble in the tray with an available marble conversion
             - to view you conversion you can use the view method "conversions"
 
+        buycard
+            - go into the buycard phase
+
+        return/rollback/rb
+            - exit from the buycard phase
+
         buycard [level] [color] [slot]
-            - buy a card in the card market if you have enough resources
+            - buy a card in the card market if you have enough resources in the devbuffer
             - // fare nel codice "LEVEL" + parse int
             - // mettere i colori
             - // slot left center right
