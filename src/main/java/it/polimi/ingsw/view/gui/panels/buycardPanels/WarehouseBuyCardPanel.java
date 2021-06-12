@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.gui.panels.movePanels;
+package it.polimi.ingsw.view.gui.panels.buycardPanels;
 
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
@@ -19,23 +19,13 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-public class WarehouseMovePanel  extends GuiPanel {
+public class WarehouseBuyCardPanel extends GuiPanel {
 
-    private DepotSlot destDepot;
-
-    DepotSlot[] initValueDepot = { DepotSlot.TOP, DepotSlot.MIDDLE, DepotSlot.BOTTOM, DepotSlot.BUFFER};
 
     private Image warehouseImage;
 
-    /**
-     * Creates a new <code>JPanel</code> with a double buffer
-     * and a flow layout.
-     */
-    public WarehouseMovePanel(GUI gui){
+    public WarehouseBuyCardPanel(GUI gui) {
         super(gui);
 
         InputStream is = getClass().getResourceAsStream("/warehouse.png");
@@ -110,7 +100,20 @@ public class WarehouseMovePanel  extends GuiPanel {
             image.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JOptionPane.showMessageDialog(null, "You can't move the resources from the Strongbox!");
+                    int value = 0;
+                    boolean valid = true;
+
+                    String str = JOptionPane.showInputDialog(null, "How many resources do you want to move?");
+                    try{
+                        value = Integer.parseInt(str);
+                    } catch (Exception notParsable){
+                        JOptionPane.showMessageDialog(null, "Please use a valid number!");
+                        valid = false;
+                    }
+
+                    if (valid) {
+                        gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(DepotSlot.STRONGBOX, DepotSlot.DEVBUFFER, ResourceBuilder.buildFromType(res.getType(), value)).jsonfy()));
+                    }
                 }
             });
 
@@ -140,7 +143,7 @@ public class WarehouseMovePanel  extends GuiPanel {
     @Override
     public void reactToPacket(Packet packet) throws IOException {
         switch (packet.header) {
-            case OK -> gui.switchPanels(new WarehouseMovePanel(gui));
+            case OK -> gui.switchPanels(new WarehouseBuyCardPanel(gui));
             case INVALID -> gui.notifyPlayerError(packet.body);
         }
     }
@@ -175,23 +178,7 @@ public class WarehouseMovePanel  extends GuiPanel {
                 label.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        destDepot = null;
-
-                        List<DepotSlot> possibleValuesDepots = new ArrayList<>(Arrays.asList(initValueDepot));
-
-                        if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL1) != null){
-                            possibleValuesDepots.add(DepotSlot.SPECIAL1);
-                        }
-                        if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL2) != null){
-                            possibleValuesDepots.add(DepotSlot.SPECIAL2);
-                        }
-
-                        DepotSlot destDepot = (DepotSlot) JOptionPane.showInputDialog(null, "Where do you want to move this resource? ", "Move resources",
-                                JOptionPane.QUESTION_MESSAGE, null,
-                                possibleValuesDepots.toArray(), possibleValuesDepots.get(0));
-                        if (destDepot != null) {
-                            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(slot, destDepot, ResourceBuilder.buildFromType(tempRes.getType(), 1)).jsonfy()));
-                        }
+                        gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(slot, DepotSlot.DEVBUFFER, ResourceBuilder.buildFromType(tempRes.getType(), 1)).jsonfy()));
                     }
                 });
             }
@@ -204,10 +191,10 @@ public class WarehouseMovePanel  extends GuiPanel {
      */
     @Override
     protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
+        super.paintComponent(g);
 
-            int width = 320;
-            int height = 500;
-            g.drawImage(warehouseImage, 0, -55, width, height, null);
+        int width = 320;
+        int height = 500;
+        g.drawImage(warehouseImage, 0, -55, width, height, null);
     }
 }

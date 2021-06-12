@@ -4,8 +4,8 @@ import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.EndTurnCommand;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.view.gui.GUI;
+import it.polimi.ingsw.view.gui.panels.buycardPanels.CardsGridPanel;
 import it.polimi.ingsw.view.gui.panels.movePanels.MoveResourcesPanel;
 
 import javax.imageio.ImageIO;

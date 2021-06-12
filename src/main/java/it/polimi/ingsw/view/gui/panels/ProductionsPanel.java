@@ -237,7 +237,9 @@ class ProductionNormalizer extends GuiPanel {
 
         for (ResourceType storable : ResourceType.storable()) possibleValues.add(storable.name());
 
-        setLayout(new GridLayout(0, 1));
+        //setLayout(new GridLayout(0, 1));
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.add(Box.createRigidArea(new Dimension(0,200)));
 
         //--------BACK BUTTON----------
         JPanel backPanel = new JPanel();
@@ -250,11 +252,14 @@ class ProductionNormalizer extends GuiPanel {
             }
         });
         backPanel.add(back);
-        //backPanel.add(Box.createRigidArea(new Dimension(900,0)));
         backPanel.setOpaque(false);
 
-        JPanel req = new JPanel();
+        JPanel backgroundPanel = new BookBackgroundPanel();
+        JPanel mainPanel = new JPanel();
+        mainPanel.add(backgroundPanel);
 
+        JPanel req = new JPanel();
+        req.setLayout(new BoxLayout(req, BoxLayout.Y_AXIS));
         List<LiteResource> newReq = new ArrayList<>();
         for (LiteResource resource : required){
             if (resource.getType() == ResourceType.UNKNOWN) {
@@ -278,19 +283,20 @@ class ProductionNormalizer extends GuiPanel {
             }
         }
 
-        req.setLayout(new GridLayout(1, 0));
         req.setOpaque(false);
         for(LiteResource p : required) {
             if (p.getType() == ResourceType.UNKNOWN){
                 for (int i = 0; i < p.getAmount(); i++){
                     JButton resource = new JButton();
+                    resource.setOpaque(false);
+                    resource.setContentAreaFilled(false);
                     resourceButtonProd(resource,p.getType());
                     resource.addActionListener(e -> {
-                        String choosenResource = (String) JOptionPane.showInputDialog(null, "Choose the Resource? ", "Normalize",
+                        String chosenResource = (String) JOptionPane.showInputDialog(null, "Choose the Resource", "Normalize",
                                 JOptionPane.QUESTION_MESSAGE, null,
                                 possibleValues.toArray(), possibleValues.get(0));
-                        if (choosenResource != null){
-                            newReq.add(ResourceBuilder.buildFromType(resourcesMap.get(choosenResource), 1).liteVersion());
+                        if (chosenResource != null){
+                            newReq.add(ResourceBuilder.buildFromType(resourcesMap.get(chosenResource), 1).liteVersion());
                             newReq.remove(ResourceBuilder.buildFromType(ResourceType.UNKNOWN,1).liteVersion());
                             try {
                                 gui.switchPanels(new ProductionNormalizer(gui, newReq, newOut, id));
@@ -310,20 +316,23 @@ class ProductionNormalizer extends GuiPanel {
 
         JPanel out = new JPanel();
 
+        out.setLayout(new BoxLayout(out, BoxLayout.Y_AXIS));
 
-        out.setLayout(new GridLayout(1, 0));
+        //out.setLayout(new GridLayout(1, 0));
         out.setOpaque(false);
         for(LiteResource p : output) {
             if (p.getType() == ResourceType.UNKNOWN){
             for (int i = 0; i < p.getAmount(); i++){
                 JButton resource = new JButton();
+                resource.setOpaque(false);
+                resource.setContentAreaFilled(false);
                 resourceButtonProd(resource,p.getType());
                 resource.addActionListener(e -> {
-                    String choosenResource = (String) JOptionPane.showInputDialog(null, "Choose the Resource? ", "Normalize",
+                    String chosenResource = (String) JOptionPane.showInputDialog(null, "Choose the Resource", "Normalize",
                             JOptionPane.QUESTION_MESSAGE, null,
                             possibleValues.toArray(), possibleValues.get(0));
-                    if (choosenResource != null){
-                        newOut.add(ResourceBuilder.buildFromType(resourcesMap.get(choosenResource), 1).liteVersion());
+                    if (chosenResource != null){
+                        newOut.add(ResourceBuilder.buildFromType(resourcesMap.get(chosenResource), 1).liteVersion());
                         newOut.remove(ResourceBuilder.buildFromType(ResourceType.UNKNOWN,1).liteVersion());
                         try {
                             gui.switchPanels(new ProductionNormalizer(gui, newReq, newOut, id));
@@ -365,11 +374,14 @@ class ProductionNormalizer extends GuiPanel {
         buttons.setOpaque(false);
         buttons.add(confirm);
 
-
+        setOpaque(false);
         add(backPanel);
         add(new JLabel("Click on resource to normalize the unknown"));
-        add(req);
-        add(out);
+        mainPanel.add(req);
+        mainPanel.add(Box.createRigidArea(new Dimension(50,0)));
+        mainPanel.add(out);
+        mainPanel.setOpaque(false);
+        add(mainPanel);
         add(confirm);
 
 

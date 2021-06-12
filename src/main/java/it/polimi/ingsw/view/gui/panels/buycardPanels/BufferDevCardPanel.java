@@ -1,17 +1,16 @@
-package it.polimi.ingsw.view.gui.panels.movePanels;
-
+package it.polimi.ingsw.view.gui.panels.buycardPanels;
 
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.MoveDepotCommand;
 import it.polimi.ingsw.litemodel.LiteResource;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.GuiPanel;
+import it.polimi.ingsw.view.gui.panels.movePanels.BufferMovePanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -25,13 +24,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BufferMovePanel extends GuiPanel {
-
-    private DepotSlot slot;
+public class BufferDevCardPanel extends GuiPanel {
 
     Image buffer;
 
-    public BufferMovePanel(GUI gui){
+    public BufferDevCardPanel(GUI gui) {
         super(gui);
 
         InputStream is = getClass().getResourceAsStream("/buffer.png");
@@ -46,8 +43,6 @@ public class BufferMovePanel extends GuiPanel {
             e.printStackTrace();
         }
 
-        DepotSlot[] initValue = { DepotSlot.TOP, DepotSlot.MIDDLE, DepotSlot.BOTTOM, DepotSlot.BUFFER};
-
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(Box.createRigidArea(new Dimension(0,20)));
@@ -59,7 +54,7 @@ public class BufferMovePanel extends GuiPanel {
 
         bigPanel.setPreferredSize(new Dimension(400, 100));
 
-        for (LiteResource res : gui.model.getDepot(gui.model.getMe(), DepotSlot.BUFFER).getResourcesInside()){
+        for (LiteResource res : gui.model.getDepot(gui.model.getMe(), DepotSlot.DEVBUFFER).getResourcesInside()){
             JPanel resource = new JPanel();
             resource.setLayout(new OverlayLayout(resource));
             resource.setOpaque(false);
@@ -74,43 +69,8 @@ public class BufferMovePanel extends GuiPanel {
             amount.setBackground(new Color(0, 0, 0, 10));
             amount.setText(String.valueOf(res.getAmount()));
 
-            JButton image = new JButton();
+            JLabel image = new JLabel();
             createResourceLabel(image, GUI.resourceImages.get(res.getType()));
-
-            image.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    slot = null;
-                    int value = 0;
-                    boolean valid = true;
-                    List<DepotSlot> possibleValues = new ArrayList<>(Arrays.asList(initValue));
-
-                    if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL1) != null){
-                        possibleValues.add(DepotSlot.SPECIAL1);
-                    }
-                    if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL2) != null){
-                        possibleValues.add(DepotSlot.SPECIAL2);
-                    }
-
-                    DepotSlot slot = (DepotSlot) JOptionPane.showInputDialog(null, "Where do you wanto to move this resource? ", "Move resources",
-                            JOptionPane.QUESTION_MESSAGE, null,
-                            possibleValues.toArray(), possibleValues.get(0));
-
-                    if (slot != null) {
-                        String str = JOptionPane.showInputDialog(null, "How many resources do you want to move?", "1");
-                        try {
-                            value = Integer.parseInt(str);
-                        } catch (Exception notParsable) {
-                            JOptionPane.showMessageDialog(null, "Please use a valid number!");
-                            valid = false;
-                        }
-
-                        if (valid) {
-                            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(DepotSlot.BUFFER, slot, ResourceBuilder.buildFromType(res.getType(), value)).jsonfy()));
-                        }
-                    }
-                }
-            });
 
             resource.add(amount);
             image.setAlignmentX(0.31f);
@@ -130,7 +90,7 @@ public class BufferMovePanel extends GuiPanel {
 
     }
 
-    public void createResourceLabel(JButton button, String resource){
+    public void createResourceLabel(JLabel button, String resource){
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
         BufferedImage img = null;
         try {
@@ -144,7 +104,6 @@ public class BufferMovePanel extends GuiPanel {
         ImageIcon icon1 = new ImageIcon(scaledImage);
         button.setIcon(icon1);
         button.setPreferredSize(new Dimension(44, 44));
-        button.setContentAreaFilled(false);
 
     }
 
@@ -160,7 +119,7 @@ public class BufferMovePanel extends GuiPanel {
     @Override
     public void reactToPacket(Packet packet) throws IOException {
         switch (packet.header) {
-            case OK -> gui.switchPanels(new BufferMovePanel(gui));
+            case OK -> gui.switchPanels(new BufferDevCardPanel(gui));
             case INVALID -> gui.notifyPlayerError(packet.body);
         }
     }

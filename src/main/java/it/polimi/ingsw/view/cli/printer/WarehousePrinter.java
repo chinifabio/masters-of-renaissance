@@ -296,15 +296,6 @@ public class WarehousePrinter {
         System.out.println();
     }
 
-    public static void printResourcesLegend(){
-        String legend =
-                Colors.color(Colors.YELLOW_BRIGHT, "©") + " = " + Colors.color(Colors.YELLOW_BRIGHT, "Coin\n") +
-                        Colors.color(Colors.BLUE_BRIGHT, "▼") + " = " + Colors.color(Colors.BLUE_BRIGHT, "Shield\n") +
-                        Colors.color(Colors.PURPLE, "Õ") + " = " + Colors.color(Colors.PURPLE, "Servant\n") +
-                        Colors.color(Colors.WHITE, "■") + " = " + Colors.color(Colors.WHITE, "Stone\n");
-        System.out.println(legend);
-    }
-
     public static void main(String[] args){
         LiteModel model = new LiteModel();
         model.createPlayer("gino");
