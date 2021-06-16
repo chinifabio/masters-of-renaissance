@@ -2,32 +2,35 @@ you can enter the following commands:
 
     view methods
 
-        market
+        market/tray
             - show the market tray
 
-        cardmarket
+        cardmarket/viewcardmarket/devsetup
             - show the develop card market where you can buy develop cards
 
-        faithtrack
-            - show the faith track and the position of all other players
+        faithtrack/track
+            - show the faith track and the position of every players
 
-        personalboard [player name]
+        personalboard/viewpersonalboard/pb [player name]
             - show the personal board of the given player
             - if you put no nickname it will show you your personalboard
 
-        leadercards
-            - show you leader cards
+        leadercards/viewleader/leader
+            - show your leader cards
 
         productions
             - show you your productions
 
-        warehouse
+        warehouse/viewwarehouse/wh
             - show you your warehouse
 
-        discounts
+        devbuffer/db
+            - show your warehouse and the devbuffer
+
+        discounts/disc
             - show your available discounts in the card market
 
-        conversion
+        conversion/conv
             - show your available white marble conversion for the market tray
 
         players
@@ -39,51 +42,54 @@ you can enter the following commands:
             - push the specified row or col
             - index is the number of the row or col to push
 
-        paintmarble [conversion index] [marble index]
+        paintmarble/paint [conversion index] [marble index]
             - paint a marble in the tray with an available marble conversion
-            - to view you conversion you can use the view method "conversions"
-
-        buycard
-            - go into the buycard phase
+            - to view your available conversion you can type "conversions" or "conv"
 
         return/rollback/rb
-            - exit from the buycard phase
+            - exit from the buycard phase and returns to the initial warehouse state
 
-        buycard [level] [color] [slot]
-            - buy a card in the card market if you have enough resources in the devbuffer
+        buycard/buy OR buycard/buy [level] [color] [slot]
+            - write with no parameters to enter the buycard phase!
+            - write with parameters to buy a card in the card market if you have enough resources in the devbuffer
+            - don't forget discounts! you can type "discounts" or "disc" to see them, if you have any
             - // fare nel codice "LEVEL" + parse int
             - // mettere i colori
-            - // slot left center right
+            - level: level1, level2, level3
+            - color: GREEN, PURPLE, BLUE, YELLOW
+            - slots: left center right
 
-        activateproduction
-            - activate the production
+        activateproduction/actprod
+            - activate the production with the selected ones
 
-        moveinproduction [depot source] [production destination] [resource type] [amount]
+        moveinproduction/movep [depot source] [production destination] [resource type] [amount]
             - move the given resource from the source depot to the destination production
-            - listare i depot
-            - listare le produzioni
-            - listare i tipi di risorse
+            - depot: TOP, MIDDLE, BOTTOM, STRONGBOX, BUFFER(?)
+            - productions: BASIC, LEFT, CENTER, RIGHT, SPECIAL1, SPECIAL2
+            - resource types: COIN, STONE, SHIELD, SERVANT
 
-        normalizeproduction [] x [] x
+        normalizeproduction/normalize [destination production] x [list of [resource type] [amount]] x [resource type] [amount]
             - create a normal production to replace an unknown production
             - dire della lista
+            - productions: BASIC, LEFT, CENTER, RIGHT, SPECIAL1, SPECIAL2
+            - resource types: COIN, STONE, SHIELD, SERVANT
 
-        moveindepot [depot source] [depot destination] [resource type] [amount]
+        moveindepot/move [depot source] [depot destination] [resource type] [amount]
             - move the given resource from the source depot to the destination production
-            - listare i depot
-            - listare i tipi di risorse
+            - depot: TOP, MIDDLE, BOTTOM, STRONGBOX, BUFFER(?)
+            - resource types: COIN, STONE, SHIELD, SERVANT
 
-        activateleader [leader ID]
-            - activare the leader card with the given id
-            - number of the id of the leader card
+        activateleader/actleader [leader ID]
+            - activate the leader card with the given id, insert only the number
 
-        discardleader [leader ID]
-            - discard the leader card with the given id
-            - number of the id of the leader card
+        discardleader/discard [leader ID]
+            - discard the leader card with the given id, insert only the number
 
-        chooseresource [depot destination] [resource type]
-            - in the initial game phase you receive a resource given
+        chooseresource/chooseres/resource [depot destination] [resource type]
+            - in the initial game phase you can receive a resource given
             - destinantion is where the resource will be placed
+            - depot: TOP, MIDDLE, BOTTOM, STRONGBOX, BUFFER(?)
+            - resource types: COIN, STONE, SHIELD, SERVANT
 
-        done
+        done/end
             - you end your turn

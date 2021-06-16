@@ -377,26 +377,27 @@ class CliInGameState extends CliState {
                 case "done":
                     return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy());
 
-                case "buycard" :
+                case "buycard":
+                case "buy" :
                     try {
                         LevelDevCard level = LevelDevCard.valueOf(data.get(i++).toUpperCase());
                         ColorDevCard color = ColorDevCard.valueOf(data.get(i++).toUpperCase());
                         DevCardSlot slot = DevCardSlot.valueOf(data.get(i++).toUpperCase());
                         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyDevCardCommand(level, color, slot).jsonfy());
                     } catch (IllegalArgumentException out) {
-                        if(!(data.size()==i)) context.notifyPlayerError(data.get(i) + " is not mappable");
-                        else context.notifyPlayerError( "you missed some parameters or you misspelled something");
+                        context.notifyPlayerError(data.get(--i) + " is not mappable");
                     } catch (IndexOutOfBoundsException arg) {
                         DevCardBufferPrinter.printDevCardPhase(context.getModel(), context.getModel().getMe());
                         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyCardCommand().jsonfy());
                     }
                     break;
-                case "devbuffer" :
+                case "devbuffer":
+                case "db":
                     DevCardBufferPrinter.printDevCardPhase(context.getModel(), context.getModel().getMe());
                     break;
-                case "rollback" :
-                case "rb" :
-                case "return" :
+                case "rollback":
+                case "rb":
+                case "return":
                     return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ReturnCommand().jsonfy());
                 case "usemarket":
                     try {
@@ -424,7 +425,7 @@ class CliInGameState extends CliState {
                     } catch (NumberFormatException number) {
                         context.notifyPlayerError(data.get(4) + " Is not a number");
                     } catch (IllegalArgumentException arg) {
-                        context.notifyPlayerError(data.get(i) + " Doesn't exist. Type help for accepted values");
+                        context.notifyPlayerError(data.get(--i) + " Doesn't exist. Type help for accepted values");
                     } catch (IndexOutOfBoundsException out) {
                         context.notifyPlayerError("You missed some parameter");
                     }
@@ -441,13 +442,14 @@ class CliInGameState extends CliState {
                     } catch (IndexOutOfBoundsException out) {
                         context.notifyPlayerError("You missed some parameter ...");
                     } catch (NumberFormatException number) {
-                        context.notifyPlayerError(data.get(4) + " Is not a number!");
+                        context.notifyPlayerError(data.get(4) + " is not a number!");
                     } catch (IllegalArgumentException arg) {
-                        context.notifyPlayerError(data.get(i) + " Doesn't exist. Type help for accepted values");
+                        context.notifyPlayerError(data.get(--i) + " Doesn't exist. Type help for accepted values");
                     }
                     break;
 
                 case "activateproduction":
+                case "actprod":
                     return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ActivateProductionCommand().jsonfy());
 
                 case "discardleader":
@@ -457,21 +459,23 @@ class CliInGameState extends CliState {
                     } catch (IndexOutOfBoundsException out) {
                         context.notifyPlayerError("you need to insert the leader id");
                     } catch (NumberFormatException number) {
-                        context.notifyPlayerError(data.get(1) + " Is not a number!");
+                        context.notifyPlayerError(data.get(1) + " is not a number!");
                     }
                     break;
 
                 case "activateleader":
+                case "actleader":
                     try {
                         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ActivateLeaderCommand("LC" + Integer.parseInt(data.get(1))).jsonfy());
                     } catch (IndexOutOfBoundsException out) {
                         context.notifyPlayerError("You need to insert the leader id");
                     } catch (NumberFormatException number) {
-                        context.notifyPlayerError(data.get(1) + " Is not a number!");
+                        context.notifyPlayerError(data.get(1) + " is not a number!");
                     }
                     break;
 
                 case "normalizeproduction":
+                case "normalize":
                     i = 1;
                     try {
                         ProductionID prod = ProductionID.valueOf(data.get(i++).toUpperCase());
@@ -508,6 +512,7 @@ class CliInGameState extends CliState {
                     break;
 
                 case "paintmarble":
+                case "paint":
                     try {
                         return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new PaintMarbleCommand(
                                 Integer.parseInt(data.get(i++)),
@@ -516,10 +521,9 @@ class CliInGameState extends CliState {
                     } catch (IndexOutOfBoundsException out) {
                         context.notifyPlayerError("You missed some parameter ...");
                     } catch (NumberFormatException number) {
-                        context.notifyPlayerError(data.get(i) + " Is not a number!");
+                        context.notifyPlayerError(data.get(--i) + " is not a number!");
                     }
                     break;
-
                 case "viewleader":
                 case "leadercards":
                 case "leader":
@@ -571,6 +575,16 @@ class CliInGameState extends CliState {
                     context.faithTrackPrinter.printTrack(context.model);
                     break;
 
+                case "discounts":
+                    CasualPrinter.printDiscounts(context.getModel().getDiscounts(context.getModel().getMe()));
+                    break;
+                case "conversion":
+                case "conv":
+                    CasualPrinter.printConversion(context.getModel().getConversion(context.getModel().getMe()));
+                    break;
+                case "players":
+                    CasualPrinter.printPlayers(context.model);
+                    break;
                 default:
                     context.notifyPlayerError("Unknown command, try again!");
                     break;
@@ -643,6 +657,7 @@ class CliInitGameState extends CliState {
                     break;
 
                 case "done":
+                case "end":
                     return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy());
 
                 default:

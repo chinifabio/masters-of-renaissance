@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 
+import it.polimi.ingsw.view.cli.Colors;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,4 +22,13 @@ public enum MarbleColor {
         //return TextColors.colorMarbleType(this);
     }
 
+    public String toColor(){
+        return switch (this.toString()) {
+            case "BLUE" -> Colors.BLUE_BRIGHT;
+            case "YELLOW" -> Colors.YELLOW_BRIGHT;
+            case "GRAY" -> Colors.BLACK_BRIGHT;
+            case "PURPLE" -> Colors.PURPLE;
+            default -> Colors.RED_BOLD;
+        };
+    }
 }

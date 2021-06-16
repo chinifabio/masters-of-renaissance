@@ -45,4 +45,9 @@ public class LiteResource {
         if (obj instanceof LiteResource) return type == ((LiteResource) obj).getType();
         else return false;
     }
+
+    @Override
+    public String toString() {
+        return type.toString();
+    }
 }

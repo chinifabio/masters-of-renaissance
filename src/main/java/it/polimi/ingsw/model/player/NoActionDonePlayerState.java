@@ -182,6 +182,7 @@ public class NoActionDonePlayerState extends PlayerState {
      */
     @Override
     public Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
+        if(to == DepotSlot.DEVBUFFER) return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You can't do that!");
         try {
             this.context.personalBoard.moveResourceDepot(from, to, loot);
         } catch (Exception e) {

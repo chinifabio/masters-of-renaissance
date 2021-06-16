@@ -33,4 +33,14 @@ public enum ResourceType {
         for (ResourceType t : ResourceType.values()) if (t.storable) result.add(t);
         return result;
     }
+
+    public String toColor(){
+        return switch (this.toString()) {
+            case "SHIELD" -> Colors.BLUE_BRIGHT;
+            case "COIN" -> Colors.YELLOW_BRIGHT;
+            case "STONE" -> Colors.BLACK_BRIGHT;
+            case "SERVANT" -> Colors.PURPLE;
+            default -> Colors.RED_BOLD;
+        };
+    }
 }
