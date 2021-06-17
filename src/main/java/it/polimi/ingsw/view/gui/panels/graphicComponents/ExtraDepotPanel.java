@@ -1,10 +1,10 @@
-package it.polimi.ingsw.view.gui.panels;
+package it.polimi.ingsw.view.gui.panels.graphicComponents;
 
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.gui.GUI;
+import it.polimi.ingsw.view.gui.panels.LeaderDepotPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -13,10 +13,12 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ExtraDepotPanel extends GuiPanel{
+public class ExtraDepotPanel extends JPanel {
+
+    private GUI gui;
 
     public ExtraDepotPanel(GUI gui, String nickname) {
-        super(gui);
+        this.gui = gui;
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setPreferredSize(new Dimension(200,400));
 
@@ -53,11 +55,6 @@ public class ExtraDepotPanel extends GuiPanel{
         this.add(topPanel);
         this.add(bottomPanel);
         this.setOpaque(false);
-    }
-
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-
     }
 
     public void insertResourceInDepot(JPanel depot, DepotSlot slot, String player){

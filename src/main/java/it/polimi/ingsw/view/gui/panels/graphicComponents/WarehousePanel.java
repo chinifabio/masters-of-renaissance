@@ -1,6 +1,5 @@
-package it.polimi.ingsw.view.gui.panels;
+package it.polimi.ingsw.view.gui.panels.graphicComponents;
 
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -13,14 +12,16 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class WarehousePanel  extends GuiPanel {
+public class WarehousePanel  extends JPanel {
+
+    private final GUI gui;
 
     /**
      * Creates a new <code>JPanel</code> with a double buffer
      * and a flow layout.
      */
     public WarehousePanel(GUI gui, String player) throws IOException {
-        super(gui);
+        this.gui = gui;
 
         this.setPreferredSize(new Dimension(320,400));
         this.setOpaque(false);
@@ -104,11 +105,8 @@ public class WarehousePanel  extends GuiPanel {
 
     public void createResourceLabel(JLabel label, String resource) throws IOException {
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
-        BufferedImage img = null;
         assert url != null;
-        img = ImageIO.read(url);
-
-        Image scaledImage = GUI.getScaledImage(img, 55, 55);
+        Image scaledImage = GUI.getScaledImage(ImageIO.read(url), 55, 55);
         ImageIcon icon1 = new ImageIcon(scaledImage);
         label.setIcon(icon1);
     }
@@ -123,7 +121,4 @@ public class WarehousePanel  extends GuiPanel {
             depot.add(label);
         }
     }
-
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {}
 }

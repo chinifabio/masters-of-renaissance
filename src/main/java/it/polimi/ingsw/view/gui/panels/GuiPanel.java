@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
-public abstract class GuiPanel extends JPanel {
+public abstract class GuiPanel {
 
     protected final GUI gui;
 
@@ -15,5 +15,5 @@ public abstract class GuiPanel extends JPanel {
         this.gui = gui;
     }
 
-    public abstract void reactToPacket(Packet packet) throws IOException;
+    public abstract JPanel update() throws IOException;
 }

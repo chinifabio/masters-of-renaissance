@@ -1,13 +1,16 @@
 package it.polimi.ingsw.view.cli;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.communication.Disconnectable;
-import it.polimi.ingsw.communication.VirtualSocket;
+import it.polimi.ingsw.communication.SocketListener;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.*;
+import it.polimi.ingsw.communication.packet.rendering.Lighter;
+import it.polimi.ingsw.communication.packet.updates.Updater;
 import it.polimi.ingsw.litemodel.LiteModel;
-import it.polimi.ingsw.litemodel.LiteModelUpdater;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
@@ -21,7 +24,6 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Productio
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
-import it.polimi.ingsw.view.Messanger;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.cli.printer.*;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
@@ -34,7 +36,7 @@ import java.util.*;
 
 public class CLI implements View, Disconnectable {
 
-    public static Map<ResourceType, String> colorResource = new EnumMap<ResourceType, String>(ResourceType.class) {{
+    public static Map<ResourceType, String> colorResource = new EnumMap<>(ResourceType.class) {{
         put(ResourceType.COIN, Colors.color(Colors.YELLOW_BRIGHT, "©"));
         put(ResourceType.SHIELD, Colors.color(Colors.BLUE_BRIGHT, "▼"));
         put(ResourceType.SERVANT, Colors.color(Colors.PURPLE, "Õ"));
@@ -44,7 +46,7 @@ public class CLI implements View, Disconnectable {
         put(ResourceType.FAITHPOINT, Colors.color(Colors.RED, "┼"));
     }};
 
-    public static Map<MarbleColor, String> colorMarbles = new EnumMap<MarbleColor, String>(MarbleColor.class) {{
+    public static Map<MarbleColor, String> colorMarbles = new EnumMap<>(MarbleColor.class) {{
         put(MarbleColor.YELLOW, Colors.color(Colors.YELLOW_BRIGHT, "●"));
         put(MarbleColor.BLUE, Colors.color(Colors.BLUE_BRIGHT, "●"));
         put(MarbleColor.PURPLE, Colors.color(Colors.PURPLE, "●"));
@@ -55,9 +57,9 @@ public class CLI implements View, Disconnectable {
 
     public final LiteModel model = new LiteModel();
     public final FaithTrackPrinter faithTrackPrinter = new FaithTrackPrinter();
-    public final VirtualSocket socket;
+    public final SocketListener socket;
 
-    private CliState state = new CliInitialState();
+    private CliState state;
 
     public final Object printerLock = new Object();
 
@@ -67,32 +69,33 @@ public class CLI implements View, Disconnectable {
         titleName();
         System.out.println(Colors.color(Colors.YELLOW_BRIGHT, "\nAt the start of the game, you have to discard two leader cards and, based on your position in the sequence, you can select up to 2 initial resources.\nAfter that, end your turn. You can type \"help\" to see again the possible moves.\n"));
 
-        socket = new VirtualSocket(new Socket(address, port));
+        socket = new SocketListener(new Socket(address, port), this);
         connected = true;
+        setState(new ChooseNicknameCLI(this));
     }
 
     private static void titleName(){
         String title = "\n" +
-                Colors.casualColorYellow("                                                   ███╗   ███╗ █████╗ ███████╗████████╗███████╗██████╗ ███████╗               \n") +
-                Colors.casualColorYellow("                                                   ████╗ ████║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗██╔════╝               \n") +
-                Colors.casualColorYellow("                                                   ██╔████╔██║███████║███████╗   ██║   █████╗  ██████╔╝███████╗               \n") +
-                Colors.casualColorYellow("                                                   ██║╚██╔╝██║██╔══██║╚════██║   ██║   ██╔══╝  ██╔══██╗╚════██║               \n") +
-                Colors.casualColorYellow("                                                   ██║ ╚═╝ ██║██║  ██║███████║   ██║   ███████╗██║  ██║███████║               \n") +
-                Colors.casualColorYellow("                                                   ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝               \n") +
-                Colors.casualColorYellow("                                                                                                                              \n") +
-                Colors.casualColorYellow("                                                                            ██████╗ ███████╗                                  \n") +
-                Colors.casualColorYellow("                                                                           ██╔═══██╗██╔════╝                                  \n") +
-                Colors.casualColorYellow("                                                                           ██║   ██║█████╗                                    \n") +
-                Colors.casualColorYellow("                                                                           ██║   ██║██╔══╝                                    \n") +
-                Colors.casualColorYellow("                                                                           ╚██████╔╝██║                                       \n") +
-                Colors.casualColorYellow("                                                                            ╚═════╝ ╚═╝                                       \n") +
-                Colors.casualColorYellow("                                                                                                                              \n") +
-                Colors.casualColorYellow("                                       ██████╗ ███████╗███╗   ██╗ █████╗ ██╗███████╗███████╗ █████╗ ███╗   ██╗ ██████╗███████╗\n") +
-                Colors.casualColorYellow("                                       ██╔══██╗██╔════╝████╗  ██║██╔══██╗██║██╔════╝██╔════╝██╔══██╗████╗  ██║██╔════╝██╔════╝\n") +
-                Colors.casualColorYellow("                                       ██████╔╝█████╗  ██╔██╗ ██║███████║██║███████╗███████╗███████║██╔██╗ ██║██║     █████╗  \n") +
-                Colors.casualColorYellow("                                       ██╔══██╗██╔══╝  ██║╚██╗██║██╔══██║██║╚════██║╚════██║██╔══██║██║╚██╗██║██║     ██╔══╝  \n") +
-                Colors.casualColorYellow("                                       ██║  ██║███████╗██║ ╚████║██║  ██║██║███████║███████║██║  ██║██║ ╚████║╚██████╗███████╗\n") +
-                Colors.casualColorYellow("                                       ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝\n") +
+                Colors.casualColorYellow("                                             ███╗   ███╗ █████╗ ███████╗████████╗███████╗██████╗ ███████╗               \n") +
+                Colors.casualColorYellow("                                             ████╗ ████║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗██╔════╝               \n") +
+                Colors.casualColorYellow("                                             ██╔████╔██║███████║███████╗   ██║   █████╗  ██████╔╝███████╗               \n") +
+                Colors.casualColorYellow("                                             ██║╚██╔╝██║██╔══██║╚════██║   ██║   ██╔══╝  ██╔══██╗╚════██║               \n") +
+                Colors.casualColorYellow("                                             ██║ ╚═╝ ██║██║  ██║███████║   ██║   ███████╗██║  ██║███████║               \n") +
+                Colors.casualColorYellow("                                             ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚══════╝               \n") +
+                Colors.casualColorYellow("                                                                                                                        \n") +
+                Colors.casualColorYellow("                                                                      ██████╗ ███████╗                                  \n") +
+                Colors.casualColorYellow("                                                                     ██╔═══██╗██╔════╝                                  \n") +
+                Colors.casualColorYellow("                                                                     ██║   ██║█████╗                                    \n") +
+                Colors.casualColorYellow("                                                                     ██║   ██║██╔══╝                                    \n") +
+                Colors.casualColorYellow("                                                                     ╚██████╔╝██║                                       \n") +
+                Colors.casualColorYellow("                                                                      ╚═════╝ ╚═╝                                       \n") +
+                Colors.casualColorYellow("                                                                                                                        \n") +
+                Colors.casualColorYellow("                                 ██████╗ ███████╗███╗   ██╗ █████╗ ██╗███████╗███████╗ █████╗ ███╗   ██╗ ██████╗███████╗\n") +
+                Colors.casualColorYellow("                                 ██╔══██╗██╔════╝████╗  ██║██╔══██╗██║██╔════╝██╔════╝██╔══██╗████╗  ██║██╔════╝██╔════╝\n") +
+                Colors.casualColorYellow("                                 ██████╔╝█████╗  ██╔██╗ ██║███████║██║███████╗███████╗███████║██╔██╗ ██║██║     █████╗  \n") +
+                Colors.casualColorYellow("                                 ██╔══██╗██╔══╝  ██║╚██╗██║██╔══██║██║╚════██║╚════██║██╔══██║██║╚██╗██║██║     ██╔══╝  \n") +
+                Colors.casualColorYellow("                                 ██║  ██║███████╗██║ ╚████║██║  ██║██║███████║███████║██║  ██║██║ ╚████║╚██████╗███████╗\n") +
+                Colors.casualColorYellow("                                 ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝\n") +
                 "                                                                                                                              ";
         System.out.println(title);
     }
@@ -109,17 +112,6 @@ public class CLI implements View, Disconnectable {
     }
 
     /**
-     * Show to the player a server reply
-     *
-     * @param reply the reply to show to the player
-     */
-    public void notifyServerReply(String reply) {
-        synchronized (printerLock) {
-            System.out.println(Colors.color(Colors.CYAN, reply));
-        }
-    }
-
-    /**
      * show an error to the player
      *
      * @param errorMessage the error message
@@ -127,17 +119,6 @@ public class CLI implements View, Disconnectable {
     public void notifyPlayerError(String errorMessage) {
         synchronized (printerLock) {
             System.out.println(Colors.color(Colors.RED_BRIGHT, errorMessage));
-        }
-    }
-
-    /**
-     * notify a warning message to the player
-     *
-     * @param s the waring message
-     */
-    public void notifyPlayerWarning(String s) {
-        synchronized (printerLock) {
-            System.out.println(Colors.color(Colors.YELLOW_BRIGHT, s));
         }
     }
 
@@ -151,30 +132,51 @@ public class CLI implements View, Disconnectable {
         return this.model;
     }
 
-    @Override
-    public VirtualSocket getSocket() {
-        return this.socket;
-    }
-
     /**
      * read data from command line when needed
      */
-    public void run() {
+    public void start() {
         new Thread(this.socket).start();
-        new Thread(new LiteModelUpdater(this.socket, this.model)).start();
-        new Thread(new Messanger(this)).start();
-        socket.pinger(this);
+        new Thread(() -> {
+            while (true) handleUserInput(new Scanner(System.in).nextLine());
+        }).start();
 
-        while(connected){
-            try {
-                state.start(this);
-            } catch (InterruptedException e) {
-                System.out.println("miseriaccia harry... thread fail");
-                return;
+        while (connected) {
+            Packet received = socket.pollPacket();
+            switch (received.channel) {
+                case MESSENGER -> notifyPlayer(received.body);
+
+                case PLAYER_ACTIONS -> {
+                    // todo send with OK header the new model
+                    if (received.header != HeaderTypes.INVALID) {
+                        notifyPlayer(received.body);
+                    } else
+                        notifyPlayerError(received.body);
+                }
+
+                case UPDATE_LITE_MODEL -> {
+                    try {
+                        ((Updater) new ObjectMapper().readerFor(Updater.class).readValue(received.body)).update(this.model);
+                    } catch (JsonProcessingException e) {
+                        System.out.println(Colors.color(Colors.RED, "update view error: ") + e.getMessage());
+                    }
+                }
+
+                case RENDER_CANNON -> {
+                    try {
+                        ((Lighter)new ObjectMapper().readerFor(Lighter.class).readValue(received.body)).fire(this);
+                    } catch (JsonProcessingException e) {
+                        System.out.println(Colors.color(Colors.RED, "render cannon error: ") + e.getMessage());
+                    }
+                }
+
+                case CONNECTION_STATUS -> {}
             }
         }
+    }
 
-        System.out.println(Colors.color(Colors.WHITE, "Quitting..."));
+    private void handleUserInput(String nextLine) {
+        state.handleInput(nextLine);
     }
 
     /**
@@ -204,479 +206,441 @@ public class CLI implements View, Disconnectable {
 
     public void setState(CliState state) {
         this.state = state;
-    }
-
-    public static void main(String[] args) {
-        try {
-            CLI cli  = new CLI("localhost", 4444);
-            Thread client = new Thread(cli);
-            client.setDaemon(true);
-            client.start();
-            client.join();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        notifyPlayer("");
+        notifyPlayer(state.entryMessage);
     }
 
     @Override
     public void handleDisconnection() {
         this.connected = false;
         notifyPlayerError("disconnected");
-
     }
 
     @Override
-    public VirtualSocket disconnectableSocket() {
-        return this.socket;
+    public void fireGameCreator() {
+        setState(new CliSetPlayersNumberState(this));
+    }
+
+    @Override
+    public void fireLobbyWait() {
+        setState(new LobbyWaitingCLI(this));
+    }
+
+    @Override
+    public void fireGameInit() {
+        setState(new CliInitGameState(this));
+    }
+
+    @Override
+    public void fireGameSession() {
+        setState(new CliInGameState(this));
+    }
+
+    @Override
+    public void fireGameEnded() {
+        setState(new CliErrorState(this));
+    }
+
+    @Override
+    public void fireGameResult() {
+        setState(new CliErrorState(this));
+    }
+
+    public static void main(String[] args) {
+        try {
+            new CLI("localhost", 4444).start();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
 
 abstract class CliState {
 
-    /**
-     * The next state mapped on the server response
-     */
-    protected final Map<HeaderTypes, CliState> nextState = new EnumMap<>(HeaderTypes.class);
+    protected final CLI context;
+    public final String entryMessage;
 
 
-    /**
-     * Do some stuff that generate a packet to send to the server
-     * @return packet to send to the server
-     */
-    protected abstract Packet generatePacket(CLI context);
-
-    public void start(CLI context) throws InterruptedException {
-        context.socket.send(generatePacket(context));
-
-        Packet response = context.socket.pollPacketFrom(ChannelTypes.PLAYER_ACTIONS);
-        context.notifyServerReply(response.body);
-
-        context.setState(this.nextState.containsKey(response.header) ?
-                this.nextState.get(response.header):
-                new CliErrorState()
-        );
+    protected CliState(CLI context, String entryMessage) {
+        this.context = context;
+        this.entryMessage = entryMessage;
     }
+
+    public abstract void handleInput(String userInput);
 }
 
 class CliErrorState extends CliState {
 
-    /**
-     * Do some stuff that generate a packet to send to the server
-     *
-     * @param context context of the state
-     * @return packet to send to the server
-     */
+    CliErrorState(CLI context) {
+        super(context, "There was an error, quitting");
+    }
+
     @Override
-    protected Packet generatePacket(CLI context) {
-        synchronized (context.printerLock) {
-            context.notifyPlayer("error");
-            System.exit(-1);
-        }
-        return null;
+    public void handleInput(String userInput) {
+
     }
 }
 
-class CliInitialState extends CliState {
+class ChooseNicknameCLI extends CliState {
 
-    public CliInitialState() {
-        super();
-        this.nextState.put(HeaderTypes.INVALID, this);
-        this.nextState.put(HeaderTypes.RECONNECTED, new CliInGameState());
-        this.nextState.put(HeaderTypes.GAME_INIT, new CliInitGameState());
-        this.nextState.put(HeaderTypes.SET_PLAYERS_NUMBER, new CliSetPlayersNumberState());
+    ChooseNicknameCLI(CLI context) {
+        super(context, "Choose your nickname:");
     }
 
     @Override
-    protected Packet generatePacket(CLI context) {
-        boolean illegal = true;
-        String nick = "";
-
-        while (illegal) {
-            try {
-                context.notifyPlayer("Choose your nickname:");
-                nick = new Scanner(System.in).nextLine();
-                illegal = false;
-            } catch (NoSuchElementException out) {
-                context.notifyPlayerError("You have to insert a nickname");
-            }
-        }
-
-        context.model.setMyNickname(nick);
-        return new Packet(HeaderTypes.HELLO, ChannelTypes.PLAYER_ACTIONS, nick);
+    public void handleInput(String userInput) {
+        context.model.setMyNickname(userInput);
+        context.socket.send(new Packet(HeaderTypes.HELLO, ChannelTypes.PLAYER_ACTIONS, userInput));
     }
 }
 
 class CliSetPlayersNumberState extends CliState {
 
-    public CliSetPlayersNumberState() {
-        super();
-        this.nextState.put(HeaderTypes.RECONNECTED, new CliInGameState());
-        this.nextState.put(HeaderTypes.GAME_INIT, new CliInitGameState());
-        this.nextState.put(HeaderTypes.INVALID, this);
+    CliSetPlayersNumberState(CLI context) {
+        super(context, "How many players?");
     }
 
-    /**
-     * Do some stuff that generate a packet to send to the server
-     *
-     * @param context context of the state
-     * @return packet to send to the server
-     */
     @Override
-    protected Packet generatePacket(CLI context) {
-        int number = -1;
-        boolean illegal = true;
+    public void handleInput(String userInput) {
+        int number;
 
-        while (illegal) {
-            context.notifyPlayer("How many players?");
-            String data = new Scanner(System.in).nextLine();
-
-            try {
-                if(data.equals("")) throw new IndexOutOfBoundsException();
-                number = Integer.parseInt(data);
-                illegal = false;
-            }
-            catch (IndexOutOfBoundsException | NullPointerException e) {
-                context.notifyPlayerError("You have to insert a number");
-            }
-            catch (NumberFormatException e) {
-                context.notifyPlayerError(data + " is not a number");
-            }
+        try {
+            if(userInput.equals("")) throw new IndexOutOfBoundsException();
+            number = Integer.parseInt(userInput);
+            context.socket.send(new Packet(HeaderTypes.SET_PLAYERS_NUMBER, ChannelTypes.PLAYER_ACTIONS, String.valueOf(number)));
         }
+        catch (IndexOutOfBoundsException | NullPointerException e) {
+            context.notifyPlayerError("You have to insert a number");
+        }
+        catch (NumberFormatException e) {
+            context.notifyPlayerError(userInput + " is not a number");
+        }
+    }
+}
 
-        return new Packet(HeaderTypes.SET_PLAYERS_NUMBER, ChannelTypes.PLAYER_ACTIONS, String.valueOf(number));
+class LobbyWaitingCLI extends CliState {
+
+    LobbyWaitingCLI(CLI context) {
+        super(context, "waiting for other players...");
+    }
+
+    @Override
+    public void handleInput(String userInput) {
+        System.out.println("trimone ho detto che devi aspettare");
     }
 }
 
 class CliInGameState extends CliState {
 
-    public CliInGameState() {
-        super();
-        this.nextState.put(HeaderTypes.OK, this);
-        this.nextState.put(HeaderTypes.INVALID, this);
-        this.nextState.put(HeaderTypes.END_GAME, new CliEndGameState());
+    CliInGameState(CLI context) {
+        super(context, "Choose an action. Type help for commands.");
     }
 
-    /**
-     * Do some stuff that generate a packet to send to the server
-     *
-     * @param context context of the state
-     * @return packet to send to the server
-     */
     @Override
-    protected Packet generatePacket(CLI context) {
-        while (true) {
-            context.notifyPlayer("Choose an action. Type help for commands.");
-            List<String> data = Arrays.asList(new Scanner(System.in).nextLine().split(" "));
+    public void handleInput(String userInput) {
+        List<String> data = Arrays.asList(userInput.split(" "));
 
-            int i = 1;
-            switch (data.get(0).toLowerCase()) {
-                case "help":
-                    context.renderHelp();
-                    break;
+        int i = 1;
+        switch (data.get(0).toLowerCase()) {
+            case "help":
+                context.renderHelp();
+                break;
 
-                case "done":
-                    return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy());
+            case "done":
+                context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy()));
+                break;
 
-                case "buycard":
-                case "buy" :
-                    try {
-                        LevelDevCard level = LevelDevCard.valueOf(data.get(i++).toUpperCase());
-                        ColorDevCard color = ColorDevCard.valueOf(data.get(i++).toUpperCase());
-                        DevCardSlot slot = DevCardSlot.valueOf(data.get(i++).toUpperCase());
-                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyDevCardCommand(level, color, slot).jsonfy());
-                    } catch (IllegalArgumentException out) {
-                        context.notifyPlayerError(data.get(--i) + " is not mappable");
-                    } catch (IndexOutOfBoundsException arg) {
-                        DevCardBufferPrinter.printDevCardPhase(context.getModel(), context.getModel().getMe());
-                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyCardCommand().jsonfy());
-                    }
-                    break;
-                case "devbuffer":
-                case "db":
+            case "buycard":
+            case "buy" :
+                try {
+                    LevelDevCard level = LevelDevCard.valueOf(data.get(i++).toUpperCase());
+                    ColorDevCard color = ColorDevCard.valueOf(data.get(i++).toUpperCase());
+                    DevCardSlot slot = DevCardSlot.valueOf(data.get(i++).toUpperCase());
+                    context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyDevCardCommand(level, color, slot).jsonfy()));
+                } catch (IllegalArgumentException out) {
+                    context.notifyPlayerError(data.get(--i) + " is not mappable");
+                } catch (IndexOutOfBoundsException arg) {
                     DevCardBufferPrinter.printDevCardPhase(context.getModel(), context.getModel().getMe());
-                    break;
-                case "rollback":
-                case "rb":
-                case "return":
-                    return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ReturnCommand().jsonfy());
-                case "usemarket":
-                    try {
-                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new UseMarketTrayCommand(
-                                RowCol.valueOf(data.get(i++).toUpperCase()),
-                                Integer.parseInt(data.get(i))-1
-                        ).jsonfy());
-                    } catch (IndexOutOfBoundsException out) {
-                        context.notifyPlayerError("you missed some parameter");
-                    } catch (NumberFormatException number) {
-                        context.notifyPlayerError(data.get(2) + " is not a number!");
-                    } catch (IllegalArgumentException arg) {
-                        context.notifyPlayerError("some parameter in the command is not correct");
+                    context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyCardCommand().jsonfy()));
+                }
+                break;
+
+            case "devbuffer":
+            case "db":
+                DevCardBufferPrinter.printDevCardPhase(context.getModel(), context.getModel().getMe());
+                break;
+
+            case "rollback":
+            case "rb":
+            case "return":
+                context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ReturnCommand().jsonfy()));
+                break;
+
+            case "usemarket":
+                try {
+                    context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new UseMarketTrayCommand(
+                            RowCol.valueOf(data.get(i++).toUpperCase()),
+                            Integer.parseInt(data.get(i))-1
+                    ).jsonfy()));
+                } catch (IndexOutOfBoundsException out) {
+                    context.notifyPlayerError("you missed some parameter");
+                } catch (NumberFormatException number) {
+                    context.notifyPlayerError(data.get(2) + " is not a number!");
+                } catch (IllegalArgumentException arg) {
+                    context.notifyPlayerError("some parameter in the command is not correct");
+                }
+                break;
+
+            case "moveinproduction":
+            case "movep":
+                try {
+                    context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveInProductionCommand(
+                            DepotSlot.valueOf(data.get(i++).toUpperCase()),
+                            ProductionID.valueOf(data.get(i++).toUpperCase()),
+                            ResourceBuilder.buildFromType(ResourceType.valueOf(data.get(i++).toUpperCase()), Integer.parseInt(data.get(i)))
+                    ).jsonfy()));
+                } catch (NumberFormatException number) {
+                    context.notifyPlayerError(data.get(4) + " Is not a number");
+                } catch (IllegalArgumentException arg) {
+                    context.notifyPlayerError(data.get(--i) + " Doesn't exist. Type help for accepted values");
+                } catch (IndexOutOfBoundsException out) {
+                    context.notifyPlayerError("You missed some parameter");
+                }
+                break;
+
+            case "moveindepot":
+            case "move":
+                try {
+                    context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(
+                            DepotSlot.valueOf(data.get(i++).toUpperCase()),
+                            DepotSlot.valueOf(data.get(i++).toUpperCase()),
+                            ResourceBuilder.buildFromType(ResourceType.valueOf(data.get(i++).toUpperCase()), Integer.parseInt(data.get(i)))
+                    ).jsonfy()));
+                } catch (IndexOutOfBoundsException out) {
+                    context.notifyPlayerError("You missed some parameter ...");
+                } catch (NumberFormatException number) {
+                    context.notifyPlayerError(data.get(4) + " is not a number!");
+                } catch (IllegalArgumentException arg) {
+                    context.notifyPlayerError(data.get(--i) + " Doesn't exist. Type help for accepted values");
+                }
+                break;
+
+            case "activateproduction":
+            case "actprod":
+                context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ActivateProductionCommand().jsonfy()));
+                break;
+
+            case "discardleader":
+            case "discard":
+                try {
+                    context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new DiscardLeaderCommand("LC" + Integer.parseInt(data.get(1))).jsonfy()));
+                } catch (IndexOutOfBoundsException out) {
+                    context.notifyPlayerError("you need to insert the leader id");
+                } catch (NumberFormatException number) {
+                    context.notifyPlayerError(data.get(1) + " is not a number!");
+                }
+                break;
+
+            case "activateleader":
+            case "actleader":
+                try {
+                    context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ActivateLeaderCommand("LC" + Integer.parseInt(data.get(1))).jsonfy()));
+                } catch (IndexOutOfBoundsException out) {
+                    context.notifyPlayerError("You need to insert the leader id");
+                } catch (NumberFormatException number) {
+                    context.notifyPlayerError(data.get(1) + " is not a number!");
+                }
+                break;
+
+            case "normalizeproduction":
+            case "normalize":
+                i = 1;
+                try {
+                    ProductionID prod = ProductionID.valueOf(data.get(i++).toUpperCase());
+
+                    List<Resource> required = new ArrayList<>();
+                    while (!data.get(i).equals("x")) {
+                        required.add(ResourceBuilder.buildFromType(
+                                ResourceType.valueOf(data.get(i++).toUpperCase()),
+                                Integer.parseInt(data.get(i++))
+                        ));
                     }
-                    break;
 
-                case "moveinproduction":
-                case "movep":
-                    try {
-                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveInProductionCommand(
-                                DepotSlot.valueOf(data.get(i++).toUpperCase()),
-                                ProductionID.valueOf(data.get(i++).toUpperCase()),
-                                ResourceBuilder.buildFromType(ResourceType.valueOf(data.get(i++).toUpperCase()), Integer.parseInt(data.get(i)))
-                        ).jsonfy());
-                    } catch (NumberFormatException number) {
-                        context.notifyPlayerError(data.get(4) + " Is not a number");
-                    } catch (IllegalArgumentException arg) {
-                        context.notifyPlayerError(data.get(--i) + " Doesn't exist. Type help for accepted values");
-                    } catch (IndexOutOfBoundsException out) {
-                        context.notifyPlayerError("You missed some parameter");
+                    List<Resource> output = new ArrayList<>();
+                    while (!data.get(i).equals("x")) {
+                        output.add(ResourceBuilder.buildFromType(
+                                ResourceType.valueOf(data.get(i++).toUpperCase()),
+                                Integer.parseInt(data.get(i++))
+                        ));
                     }
-                    break;
 
-                case "moveindepot":
-                case "move":
-                    try {
-                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(
-                                DepotSlot.valueOf(data.get(i++).toUpperCase()),
-                                DepotSlot.valueOf(data.get(i++).toUpperCase()),
-                                ResourceBuilder.buildFromType(ResourceType.valueOf(data.get(i++).toUpperCase()), Integer.parseInt(data.get(i)))
-                        ).jsonfy());
-                    } catch (IndexOutOfBoundsException out) {
-                        context.notifyPlayerError("You missed some parameter ...");
-                    } catch (NumberFormatException number) {
-                        context.notifyPlayerError(data.get(4) + " is not a number!");
-                    } catch (IllegalArgumentException arg) {
-                        context.notifyPlayerError(data.get(--i) + " Doesn't exist. Type help for accepted values");
-                    }
-                    break;
+                    context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new SetNormalProductionCommand(
+                            prod,
+                            new NormalProduction(required, output)
+                    ).jsonfy()));
+                } catch (IllegalTypeInProduction ill) {
+                    context.notifyPlayerError(ill.getMessage());
+                } catch (IndexOutOfBoundsException out) {
+                    context.notifyPlayerError("You missed some parameter ...");
+                } catch (NumberFormatException number) {
+                    context.notifyPlayerError(data.get(i - 1) + " Is not a number!");
+                } catch (IllegalArgumentException arg) {
+                    context.notifyPlayerError(data.get(i - 1) + " Doesn't exist. Type help for accepted values");
+                }
+                break;
 
-                case "activateproduction":
-                case "actprod":
-                    return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ActivateProductionCommand().jsonfy());
+            case "paintmarble":
+            case "paint":
+                try {
+                    context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new PaintMarbleCommand(
+                            Integer.parseInt(data.get(i++)),
+                            Integer.parseInt(data.get(i))
+                    ).jsonfy()));
+                } catch (IndexOutOfBoundsException out) {
+                    context.notifyPlayerError("You missed some parameter ...");
+                } catch (NumberFormatException number) {
+                    context.notifyPlayerError(data.get(--i) + " is not a number!");
+                }
+                break;
+            case "viewleader":
+            case "leadercards":
+            case "leader":
+                List<LiteLeaderCard> temp = context.model.getLeader(context.model.getMe());
+                if(temp == null || temp.isEmpty()){
+                    context.notifyPlayerError("You don't have any leader cards!");
+                    break;
+                }
+                ShowLeaderCards.printLeaderCardsPlayer(temp);
+                break;
 
-                case "discardleader":
-                case "discard":
-                    try {
-                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new DiscardLeaderCommand("LC" + Integer.parseInt(data.get(1))).jsonfy());
-                    } catch (IndexOutOfBoundsException out) {
-                        context.notifyPlayerError("you need to insert the leader id");
-                    } catch (NumberFormatException number) {
-                        context.notifyPlayerError(data.get(1) + " is not a number!");
-                    }
-                    break;
+            case "viewpersonalboard":
+            case "pb":
+            case "personalboard":
+                try {
+                    PersonalBoardPrinter.printPersonalBoard(context.model, data.get(1));
+                } catch (IndexOutOfBoundsException out) {
+                    PersonalBoardPrinter.printPersonalBoard(context.model, context.model.getMe());
+                } catch (NullPointerException n) {
+                    context.notifyPlayerError(data.get(i) + " player doesn't exist");
+                }
+                break;
 
-                case "activateleader":
-                case "actleader":
-                    try {
-                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ActivateLeaderCommand("LC" + Integer.parseInt(data.get(1))).jsonfy());
-                    } catch (IndexOutOfBoundsException out) {
-                        context.notifyPlayerError("You need to insert the leader id");
-                    } catch (NumberFormatException number) {
-                        context.notifyPlayerError(data.get(1) + " is not a number!");
-                    }
-                    break;
+            case "viewcardmarket":
+            case "cardmarket":
+            case "devsetup":
+                DevSetupPrinter.printDevSetup(context.getModel().getDevSetup());
+                break;
 
-                case "normalizeproduction":
-                case "normalize":
-                    i = 1;
-                    try {
-                        ProductionID prod = ProductionID.valueOf(data.get(i++).toUpperCase());
+            case "warehouse":
+            case "wh":
+            case "viewwarehouse":
+                try {
+                    WarehousePrinter.printWarehouse(context.model, data.get(1));
+                } catch (IndexOutOfBoundsException out) {
+                    WarehousePrinter.printWarehouse(context.model, context.model.getMe());
+                } catch (NullPointerException nul) {
+                    context.notifyPlayerError("player doesn't exist");
+                }
+                break;
 
-                        List<Resource> required = new ArrayList<>();
-                        while (!data.get(i).equals("x")) {
-                            required.add(ResourceBuilder.buildFromType(
-                                    ResourceType.valueOf(data.get(i++).toUpperCase()),
-                                    Integer.parseInt(data.get(i++))
-                            ));
-                        }
+            case "tray":
+            case "market":
+                MarketTrayPrinter.printMarketTray(context.model.getTray());
+                break;
 
-                        List<Resource> output = new ArrayList<>();
-                        while (!data.get(i).equals("x")) {
-                            output.add(ResourceBuilder.buildFromType(
-                                    ResourceType.valueOf(data.get(i++).toUpperCase()),
-                                    Integer.parseInt(data.get(i++))
-                            ));
-                        }
+            case "track":
+            case "faithtrack":
+                context.faithTrackPrinter.printTrack(context.model);
+                break;
 
-                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new SetNormalProductionCommand(
-                                prod,
-                                new NormalProduction(required, output)
-                        ).jsonfy());
-                    } catch (IllegalTypeInProduction ill) {
-                        context.notifyPlayerError(ill.getMessage());
-                    } catch (IndexOutOfBoundsException out) {
-                        context.notifyPlayerError("You missed some parameter ...");
-                    } catch (NumberFormatException number) {
-                        context.notifyPlayerError(data.get(i - 1) + " Is not a number!");
-                    } catch (IllegalArgumentException arg) {
-                        context.notifyPlayerError(data.get(i - 1) + " Doesn't exist. Type help for accepted values");
-                    }
-                    break;
-
-                case "paintmarble":
-                case "paint":
-                    try {
-                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new PaintMarbleCommand(
-                                Integer.parseInt(data.get(i++)),
-                                Integer.parseInt(data.get(i))
-                        ).jsonfy());
-                    } catch (IndexOutOfBoundsException out) {
-                        context.notifyPlayerError("You missed some parameter ...");
-                    } catch (NumberFormatException number) {
-                        context.notifyPlayerError(data.get(--i) + " is not a number!");
-                    }
-                    break;
-                case "viewleader":
-                case "leadercards":
-                case "leader":
-                    List<LiteLeaderCard> temp = context.model.getLeader(context.model.getMe());
-                    if(temp == null || temp.isEmpty()){
-                        context.notifyPlayerError("You don't have any leader cards!");
-                        break;
-                    }
-                    ShowLeaderCards.printLeaderCardsPlayer(temp);
-                    break;
-
-                case "viewpersonalboard":
-                case "pb":
-                case "personalboard":
-                    try {
-                        PersonalBoardPrinter.printPersonalBoard(context.model, data.get(1));
-                    } catch (IndexOutOfBoundsException out) {
-                        PersonalBoardPrinter.printPersonalBoard(context.model, context.model.getMe());
-                    } catch (NullPointerException n) {
-                        context.notifyPlayerError(data.get(i) + " player doesn't exist");
-                    }
-                    break;
-
-                case "viewcardmarket":
-                case "cardmarket":
-                case "devsetup":
-                    DevSetupPrinter.printDevSetup(context.getModel().getDevSetup());
-                    break;
-
-                case "warehouse":
-                case "wh":
-                case "viewwarehouse":
-                    try {
-                        WarehousePrinter.printWarehouse(context.model, data.get(1));
-                    } catch (IndexOutOfBoundsException out) {
-                        WarehousePrinter.printWarehouse(context.model, context.model.getMe());
-                    } catch (NullPointerException nul) {
-                        context.notifyPlayerError("player doesn't exist");
-                    }
-                    break;
-
-                case "tray":
-                case "market":
-                    MarketTrayPrinter.printMarketTray(context.model.getTray());
-                    break;
-
-                case "track":
-                case "faithtrack":
-                    context.faithTrackPrinter.printTrack(context.model);
-                    break;
-
-                case "discounts":
-                    CasualPrinter.printDiscounts(context.getModel().getDiscounts(context.getModel().getMe()));
-                    break;
-                case "conversion":
-                case "conv":
-                    CasualPrinter.printConversion(context.getModel().getConversion(context.getModel().getMe()));
-                    break;
-                case "players":
-                    CasualPrinter.printPlayers(context.model);
-                    break;
-                default:
-                    context.notifyPlayerError("Unknown command, try again!");
-                    break;
-            }
+            case "discounts":
+                CasualPrinter.printDiscounts(context.getModel().getDiscounts(context.getModel().getMe()));
+                break;
+            case "conversion":
+            case "conv":
+                CasualPrinter.printConversion(context.getModel().getConversion(context.getModel().getMe()));
+                break;
+            case "players":
+                CasualPrinter.printPlayers(context.model);
+                break;
+            default:
+                context.notifyPlayerError("Unknown command, try again!");
+                break;
         }
     }
 }
 
 class CliInitGameState extends CliState {
 
-    public CliInitGameState() {
-        super();
-        this.nextState.put(HeaderTypes.INVALID, this);
-        this.nextState.put(HeaderTypes.OK, this);
-        this.nextState.put(HeaderTypes.GAME_START, new CliInGameState());
+    CliInitGameState(CLI context) {
+        super(context, "You have to discard leader cards and choose resource");
     }
 
-    /**
-     * Do some stuff that generate a packet to send to the server
-     *
-     * @param context
-     * @return packet to send to the server
-     */
     @Override
-    protected Packet generatePacket(CLI context) {
-        while (true) {
-            context.notifyPlayer("You have to discard leader cards and choose resource");
-            List<String> data = Arrays.asList(new Scanner(System.in).nextLine().split(" "));
+    public void handleInput(String userInput) {
+        List<String> data = Arrays.asList(userInput.split(" "));
 
-            int i = 1;
-            switch (data.get(0).toLowerCase()) {
-                case "help":
-                    System.out.println("you can " + Colors.color(Colors.GREEN_BRIGHT, "discardleader [number]") + " or " + Colors.color(Colors.GREEN_BRIGHT, "chooseres [depot destination] [resource type]"));
+        int i = 1;
+        switch (data.get(0).toLowerCase()) {
+            case "help":
+                System.out.println("you can " + Colors.color(Colors.GREEN_BRIGHT, "discardleader [number]") + " or " + Colors.color(Colors.GREEN_BRIGHT, "chooseres [depot destination] [resource type]"));
+                break;
+
+            case "leader":
+            case "viewleader":
+            case "leadercards":
+                List<LiteLeaderCard> temp = context.model.getLeader(context.model.getMe());
+                if(temp == null || temp.isEmpty()){
+                    context.notifyPlayerError("You don't have any leader cards!");
                     break;
+                }
+                ShowLeaderCards.printLeaderCardsPlayer(temp);
+                break;
 
-                case "leader":
-                case "viewleader":
-                case "leadercards":
-                    List<LiteLeaderCard> temp = context.model.getLeader(context.model.getMe());
-                    if(temp == null || temp.isEmpty()){
-                        context.notifyPlayerError("You don't have any leader cards!");
-                        break;
-                    }
-                    ShowLeaderCards.printLeaderCardsPlayer(temp);
-                    break;
+            case "resource":
+            case "chooseres":
+            case "chooseresource":
+                try {
+                    DepotSlot dest = DepotSlot.valueOf(data.get(i++).toUpperCase());
+                    ResourceType res = ResourceType.valueOf(data.get(i).toUpperCase());
+                    context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ChooseResourceCommand(dest, res).jsonfy()));
+                } catch (IndexOutOfBoundsException e) {
+                    context.notifyPlayerError("You missed some parameters");
+                } catch (IllegalArgumentException e) {
+                    context.notifyPlayerError(data.get(--i) + " is not mappable");
+                }
+                break;
 
-                case "resource":
-                case "chooseres":
-                case "chooseresource":
-                    try {
-                        DepotSlot dest = DepotSlot.valueOf(data.get(i++).toUpperCase());
-                        ResourceType res = ResourceType.valueOf(data.get(i).toUpperCase());
-                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ChooseResourceCommand(dest, res).jsonfy());
-                    } catch (IndexOutOfBoundsException e) {
-                        context.notifyPlayerError("You missed some parameters");
-                    } catch (IllegalArgumentException e) {
-                        context.notifyPlayerError(data.get(--i) + " is not mappable");
-                    }
-                    break;
+            case "discardleader":
+            case "discard":
+                try {
+                    context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new DiscardLeaderCommand("LC" + Integer.parseInt(data.get(1))).jsonfy()));
+                } catch (IndexOutOfBoundsException out) {
+                    context.notifyPlayerError("you need to insert the leader id");
+                } catch (NumberFormatException number) {
+                    context.notifyPlayerError(data.get(1) + " Is not a number!");
+                }
+                break;
 
-                case "discardleader":
-                case "discard":
-                    try {
-                        return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new DiscardLeaderCommand("LC" + Integer.parseInt(data.get(1))).jsonfy());
-                    } catch (IndexOutOfBoundsException out) {
-                        context.notifyPlayerError("you need to insert the leader id");
-                    } catch (NumberFormatException number) {
-                        context.notifyPlayerError(data.get(1) + " Is not a number!");
-                    }
-                    break;
+            case "done":
+            case "end":
+                context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy()));
+                break;
 
-                case "done":
-                case "end":
-                    return new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy());
-
-                default:
-                    System.out.println(Colors.color(Colors.RED_BRIGHT, "unknown input, type help for available commands"));
-            }
+            default:
+                System.out.println(Colors.color(Colors.RED_BRIGHT, "unknown input, type help for available commands"));
+                break;
         }
     }
 }
 
 class CliEndGameState extends CliState {
-    /**
-     * Do some stuff that generate a packet to send to the server
-     *
-     * @param context the context of the state
-     * @return packet to send to the server
-     */
+    CliEndGameState(CLI context) {
+        super(context, "Game ended, results are coming");
+    }
+
     @Override
-    protected Packet generatePacket(CLI context) {
-        System.out.println("The game is ended");
-        return null;
+    public void handleInput(String userInput) {
+        System.out.println("work in progress");
     }
 }

@@ -1,69 +1,45 @@
 package it.polimi.ingsw.view.gui.panels;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.view.gui.GUI;
+import it.polimi.ingsw.view.gui.panels.graphicComponents.*;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class OtherPlayersPanel extends GuiPanel{
 
-    private Image personalBoard;
+    private final String player;
 
     public OtherPlayersPanel(GUI gui, String player) {
         super(gui);
+        this.player = player;
+    }
 
+    @Override
+    public JPanel update() throws IOException {
+        JPanel result = new BgJPanel("/otherBoard.png", GUI.width, GUI.height);
 
         //--------BACK BUTTON----------
         JPanel backPanel = new JPanel();
         JButton back = new JButton("Return to PB");
-        back.addActionListener(e -> {
-            try {
-                gui.switchPanels(new PersonalBoardPanel(gui));
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        });
+        back.addActionListener(e -> gui.switchPanels(new PersonalBoardPanel(gui)));
         backPanel.add(back);
         backPanel.setOpaque(false);
 
-        this.add(backPanel);
-
-        InputStream is = getClass().getResourceAsStream("/otherBoard.png");
-        if (is == null) try {
-            throw new IOException("otherBoard.png not found");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            personalBoard = ImageIO.read(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        result.add(backPanel);
 
         JPanel boardPanel = new JPanel();
         boardPanel.setOpaque(false);
         boardPanel.setLayout(new GridBagLayout());
 
         JPanel extraDepot = new ExtraDepotPanel(gui, player);
-        WarehousePanel warehousePanel = null;
-        try {
-            warehousePanel = new WarehousePanel(gui, player);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "ehm");
-        }
+        WarehousePanel warehousePanel = new WarehousePanel(gui, player);
 
         JPanel devSlot = new DevSlotPanel(gui, player);
-        JPanel trackPanel = null;
-        try {
-            trackPanel = new FaithTrackPanel(gui, player);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        JPanel trackPanel = new FaithTrackPanel(gui, player);
 
         GridBagConstraints c = new GridBagConstraints();
 
@@ -88,37 +64,29 @@ public class OtherPlayersPanel extends GuiPanel{
         boardPanel.add(Box.createRigidArea(new Dimension(1920-380-200,25)), c);
 
 
-        setName("Homepage");
-        this.setLayout(new BorderLayout());
+        result.setName("Homepage");
+        result.setLayout(new BorderLayout());
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
         JPanel buttons = new JPanel();
 
         JButton otherLeader = new JButton("View " + player + "'s Leaders");
-        otherLeader.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gui.switchPanels(new OtherPlayerLeaderPanel(gui, player));
-            }
-        });
+        otherLeader.addActionListener(e -> gui.switchPanels(new OtherPlayerLeaderPanel(gui, player)));
         buttons.add(otherLeader);
         buttons.add(backPanel);
 
         bottomPanel.setBackground(GUI.borderColor);
         buttons.setOpaque(false);
 
-
-
-        setPreferredSize(new Dimension(gui.width-300,  gui.height));
+        result.setPreferredSize(new Dimension(GUI.gameWidth, GUI.gameHeight));
         buttons.add(Box.createRigidArea(new Dimension(0,70)));
 
-        setVisible(true);
-
+        result.setVisible(true);
 
         buttons.setPreferredSize(new Dimension(1720, 100));
 
-        this.add(boardPanel);
+        result.add(boardPanel);
 
         JPanel panelText = new JPanel();
         panelText.setOpaque(false);
@@ -139,30 +107,13 @@ public class OtherPlayersPanel extends GuiPanel{
         bottomPanel.add(panelText);
         bottomPanel.add(buttons);
 
-        this.add(bottomPanel, BorderLayout.SOUTH);
+        result.add(bottomPanel, BorderLayout.SOUTH);
 
-        this.setBackground(GUI.borderColor);
+        result.setBackground(GUI.borderColor);
 
-        repaint();
-        revalidate();
-    }
+        result.repaint();
+        result.revalidate();
 
-    /**
-     * Draw the background
-     */
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        int width = gui.width-250;
-        int height = gui.height-100;
-        g.drawImage(personalBoard, 0, -10,width,height, null);
-    }
-
-    @Override
-    public void reactToPacket(Packet packet) {
-        switch (packet.header){
-            case INVALID -> gui.notifyPlayerError(packet.body);
-        }
+        return result;
     }
 }

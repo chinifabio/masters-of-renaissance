@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class WarehouseMovePanel  extends GuiPanel {
+public class WarehouseMovePanel  extends JPanel {
 
     private DepotSlot destDepot;
 
@@ -31,24 +31,18 @@ public class WarehouseMovePanel  extends GuiPanel {
 
     private Image warehouseImage;
 
+    private final GUI gui;
+
     /**
      * Creates a new <code>JPanel</code> with a double buffer
      * and a flow layout.
      */
-    public WarehouseMovePanel(GUI gui){
-        super(gui);
+    public WarehouseMovePanel(GUI gui) throws IOException {
+        this.gui = gui;
 
         InputStream is = getClass().getResourceAsStream("/warehouse.png");
-        if (is == null) try {
-            throw new IOException("warehouse.png not found");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            warehouseImage = ImageIO.read(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assert is != null;
+        warehouseImage = ImageIO.read(is);
 
         this.setPreferredSize(new Dimension(320,400));
         this.setOpaque(false);
@@ -107,12 +101,7 @@ public class WarehouseMovePanel  extends GuiPanel {
 
             JButton image = new JButton();
             createResourceLabel(image, GUI.resourceImages.get(res.getType()));
-            image.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JOptionPane.showMessageDialog(null, "You can't move the resources from the Strongbox!");
-                }
-            });
+            image.addActionListener(e -> JOptionPane.showMessageDialog(null, "You can't move the resources from the Strongbox!"));
 
             resource.add(amount);
             image.setAlignmentX(0.31f);
@@ -135,14 +124,6 @@ public class WarehouseMovePanel  extends GuiPanel {
         this.add(Box.createRigidArea(new Dimension(320, 40)));
         this.add(bigStrong);
 
-    }
-
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-        switch (packet.header) {
-            case OK -> gui.switchPanels(new WarehouseMovePanel(gui));
-            case INVALID -> gui.notifyPlayerError(packet.body);
-        }
     }
 
     public void createResourceLabel(JButton button, String resource){
@@ -172,26 +153,23 @@ public class WarehouseMovePanel  extends GuiPanel {
             if (slot != DepotSlot.STRONGBOX){
 
                 label.setActionCommand("depotResourcePressed");
-                label.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        destDepot = null;
+                label.addActionListener(e -> {
+                    destDepot = null;
 
-                        List<DepotSlot> possibleValuesDepots = new ArrayList<>(Arrays.asList(initValueDepot));
+                    List<DepotSlot> possibleValuesDepots = new ArrayList<>(Arrays.asList(initValueDepot));
 
-                        if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL1) != null){
-                            possibleValuesDepots.add(DepotSlot.SPECIAL1);
-                        }
-                        if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL2) != null){
-                            possibleValuesDepots.add(DepotSlot.SPECIAL2);
-                        }
+                    if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL1) != null){
+                        possibleValuesDepots.add(DepotSlot.SPECIAL1);
+                    }
+                    if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL2) != null){
+                        possibleValuesDepots.add(DepotSlot.SPECIAL2);
+                    }
 
-                        DepotSlot destDepot = (DepotSlot) JOptionPane.showInputDialog(null, "Where do you want to move this resource? ", "Move resources",
-                                JOptionPane.QUESTION_MESSAGE, null,
-                                possibleValuesDepots.toArray(), possibleValuesDepots.get(0));
-                        if (destDepot != null) {
-                            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(slot, destDepot, ResourceBuilder.buildFromType(tempRes.getType(), 1)).jsonfy()));
-                        }
+                    DepotSlot destDepot = (DepotSlot) JOptionPane.showInputDialog(null, "Where do you want to move this resource? ", "Move resources",
+                            JOptionPane.QUESTION_MESSAGE, null,
+                            possibleValuesDepots.toArray(), possibleValuesDepots.get(0));
+                    if (destDepot != null) {
+                        gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(slot, destDepot, ResourceBuilder.buildFromType(tempRes.getType(), 1)).jsonfy()));
                     }
                 });
             }

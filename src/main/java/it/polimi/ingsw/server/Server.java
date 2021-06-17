@@ -1,6 +1,5 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.communication.VirtualSocket;
 import it.polimi.ingsw.model.Model;
 
 import java.io.IOException;
@@ -9,9 +8,9 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Server implements Runnable{
+public class Server {
 
-    public final ExecutorService executor = Executors.newCachedThreadPool();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
     private final ServerSocket serverSocket;
 
     private final Map<String, Controller> connectedClient = new HashMap<>();
@@ -25,37 +24,27 @@ public class Server implements Runnable{
     }
 
     public static void main(String[] args) {
-        Thread serverWorker;
         try {
-            serverWorker = new Thread(new Server(4444));
+            new Server(4444).start();
         } catch (IOException e) {
             System.out.println(e.getMessage());
-            return;
-        }
-        serverWorker.setDaemon(true);
-        serverWorker.start();
-        try {
-            serverWorker.join();
-        } catch (InterruptedException e) {
-            System.out.println("interrupted");
         }
     }
 
-    public void run() {
+    public void start() {
         System.out.println("Server ready");
         while (true) {
             try {
-                // accept the connection and start the virtual socket to sort the received packet
-                VirtualSocket clientSocket = new VirtualSocket(this.serverSocket.accept());
-                this.executor.submit(clientSocket);
-
-                // start the controller to handle the client messages
-                Controller controller = new Controller(clientSocket, this);
+                Controller controller = new Controller(serverSocket.accept(), this);
                 this.executor.submit(controller);
             } catch (IOException e) {
                 System.out.println("Error while accepting client: " + e.getMessage());
             }
         }
+    }
+
+    public void executeRunnable(Runnable t) {
+        executor.submit(t);
     }
 
     public synchronized boolean connect(String nickname, Controller controller) {

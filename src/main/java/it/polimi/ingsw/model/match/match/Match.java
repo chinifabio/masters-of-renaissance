@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.communication.packet.updates.DevSetupUpdater;
 import it.polimi.ingsw.communication.packet.updates.TrayUpdater;
 import it.polimi.ingsw.model.Dispatcher;
+import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
@@ -61,6 +62,8 @@ public abstract class Match implements PlayerToMatch {
      */
     protected final Dispatcher view;
 
+    protected Model model;
+
     /**
      * checked pope tiles
      */
@@ -73,7 +76,6 @@ public abstract class Match implements PlayerToMatch {
      */
     protected Match(int gameSize, Dispatcher view) throws IOException {
         this.gameSize = gameSize;
-
         this.view = view;
 
         gameOnAir = false;
@@ -84,7 +86,7 @@ public abstract class Match implements PlayerToMatch {
 
         List<LeaderCard> init = new ObjectMapper().readValue(
                 getClass().getResourceAsStream("/json/LeaderCards.json"),
-                new TypeReference<List<LeaderCard>>(){}
+                new TypeReference<>() {}
         );
 
         this.leaderCardDeck = new Deck<>(init);
@@ -98,6 +100,10 @@ public abstract class Match implements PlayerToMatch {
 
         updateDevSetup();
         updateTray();
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
     }
 
     /**

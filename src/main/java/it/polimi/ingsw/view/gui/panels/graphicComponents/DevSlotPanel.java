@@ -1,6 +1,5 @@
-package it.polimi.ingsw.view.gui.panels;
+package it.polimi.ingsw.view.gui.panels.graphicComponents;
 
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
@@ -10,18 +9,15 @@ import it.polimi.ingsw.view.gui.GUI;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class DevSlotPanel extends GuiPanel {
-    /**
-     * Creates a new <code>JPanel</code> with a double buffer
-     * and a flow layout.
-     */
+public class DevSlotPanel extends JPanel {
 
-    public DevSlotPanel(GUI gui, String player) {
-        super(gui);
+    private GUI gui;
+
+    public DevSlotPanel(GUI gui, String player) throws IOException {
+        this.gui = gui;
 
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.setPreferredSize(new Dimension(810,400));
@@ -47,22 +43,16 @@ public class DevSlotPanel extends GuiPanel {
         this.setOpaque(false);
     }
 
-    public void createDevSpace(JPanel space, DevCardSlot slot, String player){
+    public void createDevSpace(JPanel space, DevCardSlot slot, String player) throws IOException {
 
         float i = 0;
         for (LiteDevCard card : gui.model.getDevelop(player).get(slot)){
             if (card.getLevel() != LevelDevCard.NOLEVEL && card.getColor() != ColorDevCard.NOCOLOR && !card.getCardID().equals("Empty")) {
                 JLabel label = new JLabel();
-                InputStream url = this.getClass().getResourceAsStream("/DevCardsImage/" + card.getCardID() + ".png");
-                BufferedImage img = null;
-                try {
-                    assert url != null;
-                    img = ImageIO.read(url);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
-                Image scaledImage = GUI.getScaledImage(img, (462 / 2)-50, (698 / 2)-50);
+                InputStream url = this.getClass().getResourceAsStream("/DevCardsImage/" + card.getCardID() + ".png");
+                assert url != null;
+                Image scaledImage = GUI.getScaledImage(ImageIO.read(url), (462 / 2)-50, (698 / 2)-50);
                 ImageIcon icon1 = new ImageIcon(scaledImage);
                 label.setIcon(icon1);
 
@@ -73,15 +63,8 @@ public class DevSlotPanel extends GuiPanel {
             } else {
                 JLabel label = new JLabel();
                 InputStream url = this.getClass().getResourceAsStream("/WarehouseRes/empty.png");
-                BufferedImage img = null;
-                try {
-                    assert url != null;
-                    img = ImageIO.read(url);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                Image scaledImage = GUI.getScaledImage(img, (462 / 2)-50, (698 / 2)-50);
+                assert url != null;
+                Image scaledImage = GUI.getScaledImage(ImageIO.read(url), (462 / 2)-50, (698 / 2)-50);
                 ImageIcon icon1 = new ImageIcon(scaledImage);
                 label.setIcon(icon1);
 
@@ -92,10 +75,5 @@ public class DevSlotPanel extends GuiPanel {
                 space.setOpaque(false);
             }
         }
-    }
-
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-
     }
 }

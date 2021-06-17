@@ -20,12 +20,14 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ExtraDepotBuyCardPanel extends GuiPanel {
+public class ExtraDepotBuyCardPanel extends JPanel {
 
+
+    private final GUI gui;
 
     public ExtraDepotBuyCardPanel(GUI gui) {
+        this.gui = gui;
 
-        super(gui);
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setPreferredSize(new Dimension(200,400));
 
@@ -64,11 +66,6 @@ public class ExtraDepotBuyCardPanel extends GuiPanel {
         this.setOpaque(false);
     }
 
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-
-    }
-
     public void insertResourceInDepot(JPanel depot, DepotSlot slot, String player){
         depot.add(Box.createRigidArea(new Dimension(5,0)));
         LiteResource tempRes = gui.model.getDepot(player, slot).getResourcesInside().get(0);
@@ -80,12 +77,7 @@ public class ExtraDepotBuyCardPanel extends GuiPanel {
 
             if (slot != DepotSlot.STRONGBOX){
 
-                label.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(slot, DepotSlot.DEVBUFFER, ResourceBuilder.buildFromType(tempRes.getType(), 1)).jsonfy()));
-                    }
-                });
+                label.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(slot, DepotSlot.DEVBUFFER, ResourceBuilder.buildFromType(tempRes.getType(), 1)).jsonfy())));
             }
 
             depot.add(label);

@@ -19,38 +19,27 @@ public class LeaderPanel extends GuiPanel {
 
     public LeaderPanel(GUI gui) {
         super(gui);
-
-        setOpaque(false);
-        this.add(Box.createRigidArea(new Dimension(0, 800)));
-
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-
-        for (LiteLeaderCard card : gui.model.getLeader(gui.model.getMe())){
-                add(new LeaderCardPanel(card.getCardID(), gui, card.isActivated()));
-        }
-
-        JButton back = new JButton("Return to PB");
-        back.addActionListener(e -> {
-            try {
-                gui.switchPanels(new PersonalBoardPanel(gui));
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        });
-        add(back);
     }
 
     @Override
-    public void reactToPacket(Packet packet) throws IOException {
-        switch (packet.header){
-            case OK -> gui.switchPanels(new LeaderPanel(gui));
-            case INVALID -> {
-                gui.switchPanels(new LeaderPanel(gui));
-                gui.notifyPlayerError(packet.body);
-            }
-        }
-    }
+    public JPanel update() throws IOException {
+        JPanel result = new JPanel();
 
+        result.setOpaque(false);
+        result.add(Box.createRigidArea(new Dimension(0, 800)));
+
+        result.setLayout(new BoxLayout(result, BoxLayout.X_AXIS));
+
+        for (LiteLeaderCard card : gui.model.getLeader(gui.model.getMe())){
+            result.add(new LeaderCardPanel(card.getCardID(), gui, card.isActivated()));
+        }
+
+        JButton back = new JButton("Return to PB");
+        back.addActionListener(e -> gui.switchPanels(new PersonalBoardPanel(gui)));
+        result.add(back);
+
+        return result;
+    }
 }
 
 class LeaderCardPanel extends JPanel {

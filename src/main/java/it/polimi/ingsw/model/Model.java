@@ -40,11 +40,13 @@ public class Model {
     private int playerJoined = 0;
 
     public Model(int size) throws IOException {
-        this.gameSize = size;
+        gameSize = size;
 
-        this.match = size == 1 ?
+        match = size == 1 ?
                 new SingleplayerMatch(dispatcher):
                 new MultiplayerMatch(size, dispatcher);
+
+        match.setModel(this);
     }
 
     /**
@@ -71,6 +73,11 @@ public class Model {
         this.players.put(client, p);
         if (!this.match.playerJoin(p)) throw new Exception("Something strange is going on ༼ つ ◕_◕ ༽つ");
         playerJoined++;
+
+        if (playerJoined == match.gameSize) {
+            System.out.println("sto mandando le munizioni");
+            players.forEach((controller, player) -> controller.gameInit());
+        }
     }
 
     /**
@@ -79,6 +86,10 @@ public class Model {
      */
     public int availableSeat() {
         return gameSize - playerJoined;
+    }
+
+    public void gameSetupDone() {
+        players.forEach((controller, player) -> controller.gameStart());
     }
 
     /**

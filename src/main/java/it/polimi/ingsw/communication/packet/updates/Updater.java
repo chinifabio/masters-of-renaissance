@@ -27,7 +27,7 @@ import it.polimi.ingsw.view.View;
         @JsonSubTypes.Type(name = "Tray", value = TrayUpdater.class),
         @JsonSubTypes.Type(name = "Model", value = ModelUpdater.class),
 })
-public abstract class Updater {
+public abstract class  Updater {
 
     /**
      * Take a lite model as input and apply to the implementing function

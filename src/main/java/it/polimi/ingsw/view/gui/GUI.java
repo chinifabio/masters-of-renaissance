@@ -1,27 +1,28 @@
 package it.polimi.ingsw.view.gui;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.communication.Disconnectable;
-import it.polimi.ingsw.communication.ServerReply;
-import it.polimi.ingsw.communication.VirtualSocket;
-import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.SocketListener;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
+import it.polimi.ingsw.communication.packet.rendering.Lighter;
+import it.polimi.ingsw.communication.packet.updates.Updater;
 import it.polimi.ingsw.litemodel.LiteModel;
-import it.polimi.ingsw.litemodel.LiteModelUpdater;
 import it.polimi.ingsw.model.resource.ResourceType;
-import it.polimi.ingsw.view.Messanger;
 import it.polimi.ingsw.view.View;
+import it.polimi.ingsw.view.cli.Colors;
 import it.polimi.ingsw.view.gui.panels.*;
+import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
 
-public class GUI extends JFrame implements View, Disconnectable, ActionListener {
+public class GUI extends JFrame implements View, Disconnectable {
 
     public static HashMap<ResourceType, String> resourceImages = new HashMap<>(){{
         put(ResourceType.COIN, "WarehouseRes/coin.png");
@@ -34,13 +35,18 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
 
     public static Color borderColor = new Color(220,179,120);
     public final LiteModel model = new LiteModel();
-    public final VirtualSocket socket;
+    public final SocketListener socket;
 
-    private final JPanel gamePanel = new LogoPanel(this);
+    private final JPanel gamePanel = new BgJPanel("/LogoMasters.png", gameWidth, gameHeight);
     private final NotifyPanel notifyPanel = new NotifyPanel();
 
-    public final int width = 1640;
-    public final int height = 810;
+    public static final int width = 1640;
+    public static final int height = 810;
+
+    public static final int gameWidth = 1340;
+    public static final int gameHeight = 810;
+
+    private boolean activeClient = true;
 
     private GuiPanel actualPanel;
 
@@ -55,15 +61,6 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
     }
 
     /**
-     * Show to the player a server reply
-     *
-     * @param reply the reply to show to the player
-     */
-    public void notifyServerReply(ServerReply reply) {
-
-    }
-
-    /**
      * show an error to the player
      *
      * @param errorMessage the error message
@@ -71,16 +68,6 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
     @Override
     public void notifyPlayerError(String errorMessage) {
         notifyPanel.appendMessage(errorMessage, new Color(255, 110, 102));
-    }
-
-    /**
-     * notify a warning message to the player
-     *
-     * @param s the waring message
-     */
-    @Override
-    public void notifyPlayerWarning(String s) {
-
     }
 
     /**
@@ -94,8 +81,33 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
     }
 
     @Override
-    public VirtualSocket getSocket() {
-        return this.socket;
+    public void fireGameInit() {
+        switchPanels(new InitGamePanel(this));
+    }
+
+    @Override
+    public void fireGameSession() {
+        switchPanels(new PersonalBoardPanel(this));
+    }
+
+    @Override
+    public void fireGameEnded() {
+        JOptionPane.showMessageDialog(null, "work in progress");
+    }
+
+    @Override
+    public void fireGameResult() {
+        JOptionPane.showMessageDialog(null, "work in progress");
+    }
+
+    @Override
+    public void fireGameCreator() {
+        switchPanels(new AskPlayers(this));
+    }
+
+    @Override
+    public void fireLobbyWait() {
+        switchPanels(new LoadingPanel(this));
     }
 
     /**
@@ -110,30 +122,53 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
      * @see Thread#run()
      */
     @Override
-    public void run() {
+    public void start() {
         new Thread(socket).start();
-        new Thread(new LiteModelUpdater(socket, model)).start();
-        new Thread(new Messanger(this)).start();
-        socket.pinger(this);
+        // todo can be changed implementing .execute(View view) in Packet, so we can avoid switch statement
+        while (activeClient) {
+            Packet received = socket.pollPacket();
+            switch (received.channel) {
+                case MESSENGER -> notifyPlayer(received.body);
 
-        boolean gino = true;
-        while (gino) {
-            try {
-                Packet received = socket.pollPacketFrom(ChannelTypes.PLAYER_ACTIONS);
-                actualPanel.reactToPacket(received);
-            } catch (IOException e) {
-                notifyPlayerError(e.getMessage());
-                gino = false;
+                case PLAYER_ACTIONS -> {
+                    // todo send with OK header the new model
+                    if (received.header != HeaderTypes.INVALID) {
+                        notifyPlayer(received.body);
+                        updatePanel();
+                    } else
+                        notifyPlayerError(received.body);
+                }
+
+                case UPDATE_LITE_MODEL -> {
+                    try {
+                        Updater up = new ObjectMapper().readerFor(Updater.class).readValue(received.body);
+                        up.update(this.model);
+                        //updatePanel(); todo de comment when model will send all the changes in only one packet
+                        // todo in the OK packet there is a serialized "image" of the match
+                    } catch (JsonProcessingException e) {
+                        System.out.println(Colors.color(Colors.RED, "update view error: ") + e.getMessage());
+                    }
+                }
+
+                case RENDER_CANNON -> {
+                    try {
+                        Lighter ammo = new ObjectMapper().readerFor(Lighter.class).readValue(received.body);
+                        ammo.fire(this);
+                    } catch (JsonProcessingException e) {
+                        System.out.println(Colors.color(Colors.RED, "render cannon error: ") + e.getMessage());
+                    }
+                }
+
+                case CONNECTION_STATUS -> {}
             }
         }
 
-        this.notifyPlayerError("QUITTING");
     }
 
     public GUI(String address, int port) throws IOException {
         super ("Master of Renaissance");
         
-        socket = new VirtualSocket(new Socket(address, port));
+        socket = new SocketListener(new Socket(address, port), this);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -152,8 +187,7 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
         add(scrollPane, BorderLayout.LINE_END);
 
         actualPanel = new AskNickname(this);
-        gamePanel.add(actualPanel);
-
+        gamePanel.add(actualPanel.update());
 
         pack();
         setVisible(true);
@@ -161,23 +195,40 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
 
     public void switchPanels(GuiPanel toSee){
         synchronized (gamePanel) {
-            gamePanel.remove(actualPanel);
-            gamePanel.add(toSee);
+            gamePanel.removeAll(); // todo can cause problems
             actualPanel = toSee;
+
+            try {
+                gamePanel.add(toSee.update());
+            } catch (IOException e) {
+                // todo break the game
+                e.printStackTrace();
+            }
 
             gamePanel.repaint();
             gamePanel.revalidate();
         }
     }
 
+    public void updatePanel() {
+        gamePanel.removeAll(); // todo can cause problems
+
+        try {
+            gamePanel.add(actualPanel.update());
+        } catch (IOException e) {
+            // todo break the game
+            e.printStackTrace();
+        }
+
+        gamePanel.repaint();
+        gamePanel.revalidate();
+    }
+
     public static void main(String[] args){
         try {
-            Thread client = new Thread(new GUI("localhost", 4444));
-            client.start();
-            client.join();
+            new GUI("localhost", 4444).start();
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            System.exit(-1);
         }
     }
 
@@ -194,29 +245,7 @@ public class GUI extends JFrame implements View, Disconnectable, ActionListener 
 
     @Override
     public void handleDisconnection() {
-        System.out.println("disconnected");
-        System.exit(-1);
-    }
-
-    @Override
-    public VirtualSocket disconnectableSocket() {
-        return null;
-    }
-
-    /**
-     * Invoked when an action occurs.
-     *
-     * @param e the event to be processed
-     */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "render leader":
-                switchPanels(new LeaderPanel(this));
-                break;
-            case "render user request":
-                switchPanels(new AskNickname(this));
-                break;
-        }
+        activeClient = false;
+        JOptionPane.showMessageDialog(null, "Connection lost :(");
     }
 }

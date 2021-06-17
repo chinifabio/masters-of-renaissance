@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.GuiPanel;
 import it.polimi.ingsw.view.gui.panels.PersonalBoardPanel;
+import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -23,33 +24,20 @@ import java.io.InputStream;
 public class CardsGridPanel extends GuiPanel {
     JOptionPane devSlot = new JOptionPane();
 
-    private Image background;
-
     public CardsGridPanel(GUI gui) {
         super(gui);
+    }
 
-        InputStream is = getClass().getResourceAsStream("/Background.png");
-        if (is == null) try {
-            throw new IOException("background.png not found");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            background = ImageIO.read(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public JPanel update() throws IOException {
+        JPanel result = new BgJPanel("/Background.png",GUI.width+100, GUI.height);
 
-
-        this.setPreferredSize(new Dimension(1920, 800));
-        this.setBackground(GUI.borderColor);
+        result.setPreferredSize(new Dimension(1920, 800));
+        result.setBackground(GUI.borderColor);
 
         devSlot.setLayout(new FlowLayout());
 
-
-
-
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
         JPanel button = new JPanel();
         JPanel row1 = new JPanel();
         JPanel row2 = new JPanel();
@@ -94,30 +82,19 @@ public class CardsGridPanel extends GuiPanel {
         row3.add(r3c4);
 
         JButton back = new JButton("Return to PB");
-        back.addActionListener(e -> {
-            try {
-                gui.switchPanels(new PersonalBoardPanel(gui));
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        });
+        back.addActionListener(e -> gui.switchPanels(new PersonalBoardPanel(gui)));
         button.add(back);
         button.setOpaque(false);
         row1.setOpaque(false);
         row2.setOpaque(false);
         row3.setOpaque(false);
 
-        this.add(button);
-        this.add(row1);
-        this.add(row2);
-        this.add(row3);
-    }
+        result.add(button);
+        result.add(row1);
+        result.add(row2);
+        result.add(row3);
 
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-        switch (packet.header){
-            case INVALID -> gui.notifyPlayerError(packet.body);
-        }
+        return result;
     }
 
     public JButton generateDevCardButton(JButton button, String name, int r, int c){
@@ -136,39 +113,24 @@ public class CardsGridPanel extends GuiPanel {
         Image scaledImage = GUI.getScaledImage(img, 462/3, 698/3);
         ImageIcon icon1 = new ImageIcon(scaledImage);
         button.setIcon(icon1);
-        button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    int n = JOptionPane.showOptionDialog(null,
-                            "Would you like to buy this card? ",
-                            "Buy Development Card",
-                            JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            possibleValues,
-                            possibleValues[1]);
+        button.addActionListener(e -> {
+            int n = JOptionPane.showOptionDialog(null,
+                    "Would you like to buy this card? ",
+                    "Buy Development Card",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    possibleValues,
+                    possibleValues[1]);
 
-                    if (n == 0) {
-                        gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyCardCommand().jsonfy()));
-                        gui.switchPanels(new MoveResourcesBuyCardPanel(gui, r, c, scaledImage));
-                    }
-                }
+            if (n == 0) {
+                gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyCardCommand().jsonfy()));
+                gui.switchPanels(new MoveResourcesBuyCardPanel(gui, r, c, scaledImage));
+            }
         });
         if (name.equals("EMPTY")){
             button.setEnabled(false);
         }
         return button;
-    }
-
-    /**
-     * Draw the background
-     */
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        int width = gui.width+100;
-        int height = gui.height;
-        g.drawImage(background, 0, -10,width,height, null);
     }
 }

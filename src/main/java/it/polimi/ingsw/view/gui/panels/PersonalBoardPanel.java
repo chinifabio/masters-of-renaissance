@@ -6,26 +6,24 @@ import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.EndTurnCommand;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.buycardPanels.CardsGridPanel;
+import it.polimi.ingsw.view.gui.panels.graphicComponents.*;
 import it.polimi.ingsw.view.gui.panels.movePanels.MoveResourcesPanel;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PersonalBoardPanel  extends GuiPanel {
 
-    private  Image personalBoard;
-
-    public PersonalBoardPanel(GUI gui) throws IOException {
+    public PersonalBoardPanel(GUI gui) {
         super(gui);
+    }
 
-        InputStream is = getClass().getResourceAsStream("/board.png");
-        if (is == null) throw new IOException("board.png not found");
-        personalBoard = ImageIO.read(is);
+    @Override
+    public JPanel update() throws IOException {
+        JPanel result = new BgJPanel("/board.png", GUI.width-NotifyPanel.width, GUI.height-100);
 
         JPanel boardPanel = new JPanel();
         boardPanel.setOpaque(false);
@@ -37,8 +35,6 @@ public class PersonalBoardPanel  extends GuiPanel {
         JPanel extraDepot = new ExtraDepotPanel(gui, gui.model.getMe());
 
         GridBagConstraints c = new GridBagConstraints();
-
-
 
         c.gridy = 1;
         boardPanel.add(warehousePanel, c);
@@ -59,8 +55,8 @@ public class PersonalBoardPanel  extends GuiPanel {
         boardPanel.add(Box.createRigidArea(new Dimension(1920-380-200,25)), c);
 
 
-        setName("Homepage");
-        this.setLayout(new BorderLayout());
+        result.setName("Homepage");
+        result.setLayout(new BorderLayout());
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
@@ -76,13 +72,7 @@ public class PersonalBoardPanel  extends GuiPanel {
         viewGrid.addActionListener(e -> gui.switchPanels(new CardsGridPanel(gui)));
 
         JButton activateProduction = new JButton("Productions");
-        activateProduction.addActionListener(e -> {
-            try {
-                gui.switchPanels(new ProductionsPanel(gui));
-            } catch (IOException ioException) {
-                ioException.printStackTrace(); // todo change
-            }
-        });
+        activateProduction.addActionListener(e -> gui.switchPanels(new ProductionsPanel(gui)));
 
         JButton moveResources = new JButton("Move Resources");
         moveResources.addActionListener(e -> gui.switchPanels(new MoveResourcesPanel(gui)));
@@ -90,18 +80,14 @@ public class PersonalBoardPanel  extends GuiPanel {
         JButton endTurn = new JButton("EndTurn");
         endTurn.addActionListener(e -> {
             gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy()));
-            try {
-                gui.switchPanels(new PersonalBoardPanel(gui));
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+            gui.switchPanels(new PersonalBoardPanel(gui)); // todo try with this instead of creating a new instance
         });
 
         bottomPanel.setBackground(GUI.borderColor);
         buttons.setOpaque(false);
 
 
-        setPreferredSize(new Dimension(gui.width-300,  gui.height));
+        result.setPreferredSize(new Dimension(GUI.gameWidth,  GUI.gameHeight));
         buttons.add(Box.createRigidArea(new Dimension(0,70)));
         buttons.add(viewLeader);
         buttons.add(viewMarket);
@@ -129,12 +115,12 @@ public class PersonalBoardPanel  extends GuiPanel {
         }
 
         buttons.add(endTurn);
-        setVisible(true);
+        result.setVisible(true);
 
 
         buttons.setPreferredSize(new Dimension(1720, 100));
 
-        this.add(boardPanel);
+        result.add(boardPanel);
 
         JPanel buffer = new BufferPanel(gui);
         buffer.setPreferredSize(new Dimension(400,100));
@@ -142,30 +128,12 @@ public class PersonalBoardPanel  extends GuiPanel {
         bottomPanel.add(buffer);
         bottomPanel.add(buttons);
 
-        this.add(bottomPanel, BorderLayout.SOUTH);
-        this.setBackground(GUI.borderColor);
+        result.add(bottomPanel, BorderLayout.SOUTH);
+        result.setBackground(GUI.borderColor);
 
-        repaint();
-        revalidate();
+        result.repaint();
+        result.revalidate();
+
+        return result;
     }
-
-    /**
-     * Draw the background
-     */
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        int width = gui.width-250;
-        int height = gui.height-100;
-        g.drawImage(personalBoard, 0, -10,width,height, null);
-    }
-
-    @Override
-    public void reactToPacket(Packet packet) {
-        switch (packet.header){
-            case INVALID -> gui.notifyPlayerError(packet.body);
-        }
-    }
-
 }

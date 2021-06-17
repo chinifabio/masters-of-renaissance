@@ -1,10 +1,6 @@
 package it.polimi.ingsw.view.gui.panels;
 
-import it.polimi.ingsw.communication.packet.ChannelTypes;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.communication.packet.commands.ActivateLeaderCommand;
-import it.polimi.ingsw.communication.packet.commands.DiscardLeaderCommand;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.view.gui.GUI;
 
@@ -18,28 +14,31 @@ import java.io.InputStream;
 public class OtherPlayerLeaderPanel extends GuiPanel {
 
 
+    private final String nickname;
+
     public OtherPlayerLeaderPanel(GUI gui, String nickname) {
         super(gui);
-
-        setOpaque(false);
-        this.add(Box.createRigidArea(new Dimension(0, 800)));
-
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-
-        for (LiteLeaderCard card : gui.model.getLeader(nickname)){
-            add(new OtherLeaderCardPanel(card.getCardID(), gui, card.isActivated()));
-        }
-
-        JButton back = new JButton("Return to PB");
-        back.addActionListener(e -> {
-            gui.switchPanels(new OtherPlayersPanel(gui, nickname));
-        });
-        add(back);
+        this.nickname = nickname;
     }
 
     @Override
-    public void reactToPacket(Packet packet) throws IOException {}
+    public JPanel update() throws IOException {
+        JPanel result = new JPanel();
 
+        result.setOpaque(false);
+        result.add(Box.createRigidArea(new Dimension(0, 800)));
+        result.setLayout(new BoxLayout(result, BoxLayout.X_AXIS));
+
+        for (LiteLeaderCard card : gui.model.getLeader(nickname)){
+            result.add(new OtherLeaderCardPanel(card.getCardID(), gui, card.isActivated()));
+        }
+
+        JButton back = new JButton("Return to PB");
+        back.addActionListener(e -> gui.switchPanels(new OtherPlayersPanel(gui, nickname)));
+        result.add(back);
+
+        return result;
+    }
 }
 
 class OtherLeaderCardPanel extends JPanel {
@@ -69,10 +68,7 @@ class OtherLeaderCardPanel extends JPanel {
 
         label.setIcon(icon1);
 
-
-
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
-
 
         add(Box.createRigidArea(new Dimension(0, 10)));
 

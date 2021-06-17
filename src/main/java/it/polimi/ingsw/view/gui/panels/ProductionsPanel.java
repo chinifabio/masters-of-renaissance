@@ -22,21 +22,23 @@ import it.polimi.ingsw.view.gui.panels.movePanels.WarehouseMovePanel;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProductionsPanel extends GuiPanel{
 
-    public ProductionsPanel(GUI gui) throws IOException {
+    public ProductionsPanel(GUI gui) {
         super(gui);
+    }
 
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setOpaque(false);
+    @Override
+    public JPanel update() throws IOException {
+        JPanel result = new JPanel();
+
+        result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
+        result.setOpaque(false);
 
         JPanel middlePanel = new JPanel();
         middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.X_AXIS));
@@ -45,13 +47,7 @@ public class ProductionsPanel extends GuiPanel{
         //--------BACK BUTTON----------
         JPanel backPanel = new JPanel();
         JButton back = new JButton("Return to PB");
-        back.addActionListener(e -> {
-            try {
-                gui.switchPanels(new PersonalBoardPanel(gui));
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        });
+        back.addActionListener(e -> gui.switchPanels(new PersonalBoardPanel(gui)));
         backPanel.add(back);
         backPanel.add(Box.createRigidArea(new Dimension(900,0)));
         backPanel.setOpaque(false);
@@ -102,20 +98,14 @@ public class ProductionsPanel extends GuiPanel{
         depotAndBufferPanel.setOpaque(false);
 
 
-        this.add(backPanel);
-        this.add(prodPanel);
+        result.add(backPanel);
+        result.add(prodPanel);
         middlePanel.add(warehousPanel);
         middlePanel.add(Box.createRigidArea(new Dimension(100, 0)));
         middlePanel.add(depotAndBufferPanel);
-        this.add(middlePanel);
-    }
+        result.add(middlePanel);
 
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-        switch (packet.header) {
-            case OK -> gui.switchPanels(new MoveResourcesPanel(gui));
-            case INVALID -> gui.notifyPlayerError(packet.body);
-        }
+        return result;
     }
 }
 
@@ -220,6 +210,7 @@ class ProductionNormalizer extends GuiPanel {
 
     private final List<LiteResource> required;
     private final List<LiteResource> output;
+    private final ProductionID id;
     List<String> possibleValues = new ArrayList<>();
 
     public ProductionNormalizer(GUI gui, List<LiteResource> required, List<LiteResource> output, ProductionID id) throws IOException {
@@ -228,29 +219,23 @@ class ProductionNormalizer extends GuiPanel {
         this.required = required;
         this.output = output;
 
-        Map<String, ResourceType> resourcesMap = new HashMap<>(){{ // todo same as line 238 because is better
-            put("COIN", ResourceType.COIN);
-            put("STONE", ResourceType.STONE);
-            put("SHIELD",ResourceType.SHIELD);
-            put("SERVANT",ResourceType.SERVANT);
-        }};
+        this.id = id;
+    }
+
+    @Override
+    public JPanel update() throws IOException {
+        JPanel result = new JPanel();
 
         for (ResourceType storable : ResourceType.storable()) possibleValues.add(storable.name());
 
         //setLayout(new GridLayout(0, 1));
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.add(Box.createRigidArea(new Dimension(0,200)));
+        result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
+        result.add(Box.createRigidArea(new Dimension(0,200)));
 
         //--------BACK BUTTON----------
         JPanel backPanel = new JPanel();
         JButton back = new JButton("Back");
-        back.addActionListener(e -> {
-            try {
-                gui.switchPanels(new ProductionsPanel(gui));
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        });
+        back.addActionListener(e -> gui.switchPanels(new ProductionsPanel(gui)));
         backPanel.add(back);
         backPanel.setOpaque(false);
 
@@ -287,16 +272,15 @@ class ProductionNormalizer extends GuiPanel {
         for(LiteResource p : required) {
             if (p.getType() == ResourceType.UNKNOWN){
                 for (int i = 0; i < p.getAmount(); i++){
-                    JButton resource = new JButton();
+                    JButton resource = resourceButtonProd(p.getType());
                     resource.setOpaque(false);
                     resource.setContentAreaFilled(false);
-                    resourceButtonProd(resource,p.getType());
                     resource.addActionListener(e -> {
                         String chosenResource = (String) JOptionPane.showInputDialog(null, "Choose the Resource", "Normalize",
                                 JOptionPane.QUESTION_MESSAGE, null,
                                 possibleValues.toArray(), possibleValues.get(0));
                         if (chosenResource != null){
-                            newReq.add(ResourceBuilder.buildFromType(resourcesMap.get(chosenResource), 1).liteVersion());
+                            newReq.add(ResourceBuilder.buildFromType(ResourceType.valueOf(chosenResource), 1).liteVersion());
                             newReq.remove(ResourceBuilder.buildFromType(ResourceType.UNKNOWN,1).liteVersion());
                             try {
                                 gui.switchPanels(new ProductionNormalizer(gui, newReq, newOut, id));
@@ -323,16 +307,15 @@ class ProductionNormalizer extends GuiPanel {
         for(LiteResource p : output) {
             if (p.getType() == ResourceType.UNKNOWN){
             for (int i = 0; i < p.getAmount(); i++){
-                JButton resource = new JButton();
+                JButton resource = resourceButtonProd(p.getType());
                 resource.setOpaque(false);
                 resource.setContentAreaFilled(false);
-                resourceButtonProd(resource,p.getType());
                 resource.addActionListener(e -> {
                     String chosenResource = (String) JOptionPane.showInputDialog(null, "Choose the Resource", "Normalize",
                             JOptionPane.QUESTION_MESSAGE, null,
                             possibleValues.toArray(), possibleValues.get(0));
                     if (chosenResource != null){
-                        newOut.add(ResourceBuilder.buildFromType(resourcesMap.get(chosenResource), 1).liteVersion());
+                        newOut.add(ResourceBuilder.buildFromType(ResourceType.valueOf(chosenResource), 1).liteVersion());
                         newOut.remove(ResourceBuilder.buildFromType(ResourceType.UNKNOWN,1).liteVersion());
                         try {
                             gui.switchPanels(new ProductionNormalizer(gui, newReq, newOut, id));
@@ -374,42 +357,27 @@ class ProductionNormalizer extends GuiPanel {
         buttons.setOpaque(false);
         buttons.add(confirm);
 
-        setOpaque(false);
-        add(backPanel);
-        add(new JLabel("Click on resource to normalize the unknown"));
+        result.setOpaque(false);
+        result.add(backPanel);
+        result.add(new JLabel("Click on resource to normalize the unknown"));
         mainPanel.add(req);
         mainPanel.add(Box.createRigidArea(new Dimension(50,0)));
         mainPanel.add(out);
         mainPanel.setOpaque(false);
-        add(mainPanel);
-        add(confirm);
+        result.add(mainPanel);
+        result.add(confirm);
 
-
-
+        return result;
     }
 
-    public void resourceButtonProd(JButton image, ResourceType type) throws IOException {
+    public JButton resourceButtonProd(ResourceType type) throws IOException {
+        JButton butt = new JButton();
+
         InputStream img = getClass().getResourceAsStream("/WarehouseRes/"+type.name().toLowerCase()+".png");
         assert img != null;
-        image.setIcon(new ImageIcon(GUI.getScaledImage(ImageIO.read(img), 25, 25)));
+        butt.setIcon(new ImageIcon(GUI.getScaledImage(ImageIO.read(img), 25, 25)));
+        butt.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        add(image);
-
-        setAlignmentX(CENTER_ALIGNMENT);
-    }
-
-
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-        switch (packet.header){
-            case OK -> {
-                gui.switchPanels(new ProductionsPanel(gui));
-                gui.notifyPlayer(packet.body);
-            }
-            case INVALID -> {
-                gui.switchPanels(new ProductionsPanel(gui));
-                gui.notifyPlayerError(packet.body);
-            }
-        }
+        return butt;
     }
 }

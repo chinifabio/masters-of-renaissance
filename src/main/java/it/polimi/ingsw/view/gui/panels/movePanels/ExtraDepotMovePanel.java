@@ -9,13 +9,10 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.gui.GUI;
-import it.polimi.ingsw.view.gui.panels.GuiPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,14 +20,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ExtraDepotMovePanel extends GuiPanel {
+public class ExtraDepotMovePanel extends JPanel {
 
     private DepotSlot destDepot;
+
+    private final GUI gui;
 
     DepotSlot[] initValueDepot = { DepotSlot.TOP, DepotSlot.MIDDLE, DepotSlot.BOTTOM, DepotSlot.BUFFER};
 
     public ExtraDepotMovePanel(GUI gui) {
-        super(gui);
+        this.gui = gui;
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setPreferredSize(new Dimension(200,400));
 
@@ -69,11 +68,6 @@ public class ExtraDepotMovePanel extends GuiPanel {
         this.setOpaque(false);
     }
 
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-
-    }
-
     public void insertResourceInDepot(JPanel depot, DepotSlot slot, String player){
         depot.add(Box.createRigidArea(new Dimension(5,0)));
         LiteResource tempRes = gui.model.getDepot(player, slot).getResourcesInside().get(0);
@@ -85,26 +79,23 @@ public class ExtraDepotMovePanel extends GuiPanel {
 
             if (slot != DepotSlot.STRONGBOX){
 
-                label.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        destDepot = null;
+                label.addActionListener(e -> {
+                    destDepot = null;
 
-                        List<DepotSlot> possibleValuesDepots = new ArrayList<>(Arrays.asList(initValueDepot));
+                    List<DepotSlot> possibleValuesDepots = new ArrayList<>(Arrays.asList(initValueDepot));
 
-                        if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL1) != null){
-                            possibleValuesDepots.add(DepotSlot.SPECIAL1);
-                        }
-                        if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL2) != null){
-                            possibleValuesDepots.add(DepotSlot.SPECIAL2);
-                        }
+                    if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL1) != null){
+                        possibleValuesDepots.add(DepotSlot.SPECIAL1);
+                    }
+                    if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL2) != null){
+                        possibleValuesDepots.add(DepotSlot.SPECIAL2);
+                    }
 
-                        DepotSlot destDepot = (DepotSlot) JOptionPane.showInputDialog(null, "Where do you want to move this resource? ", "Move resources",
-                                JOptionPane.QUESTION_MESSAGE, null,
-                                possibleValuesDepots.toArray(), possibleValuesDepots.get(0));
-                        if (destDepot != null) {
-                            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(slot, destDepot, ResourceBuilder.buildFromType(tempRes.getType(), 1)).jsonfy()));
-                        }
+                    DepotSlot destDepot = (DepotSlot) JOptionPane.showInputDialog(null, "Where do you want to move this resource? ", "Move resources",
+                            JOptionPane.QUESTION_MESSAGE, null,
+                            possibleValuesDepots.toArray(), possibleValuesDepots.get(0));
+                    if (destDepot != null) {
+                        gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(slot, destDepot, ResourceBuilder.buildFromType(tempRes.getType(), 1)).jsonfy()));
                     }
                 });
             }

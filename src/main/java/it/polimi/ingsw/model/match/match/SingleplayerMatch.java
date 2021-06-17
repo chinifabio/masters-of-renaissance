@@ -65,7 +65,8 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
         List<SoloActionToken> init = new ObjectMapper().readValue(
                 getClass().getResourceAsStream("/json/SoloActionTokens.json"),
-                new TypeReference<List<SoloActionToken>>(){});
+                new TypeReference<>() {
+                });
 
         this.soloToken = new Deck<>(init);
         this.soloToken.shuffle();
@@ -205,6 +206,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     @Override
     public void initialSelectionDone() {
         player.startHisTurn();
+        if (model != null) model.gameSetupDone();
     }
 
     /**

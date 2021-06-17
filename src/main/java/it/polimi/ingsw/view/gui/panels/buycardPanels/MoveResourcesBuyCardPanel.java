@@ -23,12 +23,18 @@ public class MoveResourcesBuyCardPanel extends GuiPanel {
 
     public MoveResourcesBuyCardPanel(GUI gui, int r, int c, Image card) {
         super(gui);
-
         this.r = r;
         this.c = c;
         this.image = card;
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setOpaque(false);
+    }
+
+    @Override
+    public JPanel update() throws IOException {
+        JPanel result = new JPanel();
+
+
+        result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
+        result.setOpaque(false);
 
         JPanel middlePanel = new JPanel();
         middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.X_AXIS));
@@ -46,16 +52,13 @@ public class MoveResourcesBuyCardPanel extends GuiPanel {
         });
 
         JButton confirm = new JButton("Confirm");
-        confirm.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                DevCardSlot slot = (DevCardSlot) JOptionPane.showInputDialog(null, "Select the Slot of the PersonalBoard \n where the Development Card will be placed", "BuyCards",
-                        JOptionPane.QUESTION_MESSAGE, null,
-                        possibleValues, possibleValues[0]);
-                if (slot != null){
-                    gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyDevCardCommand(gui.model.getDevSetup().getDevSetup()[r][c].getLevel(), gui.model.getDevSetup().getDevSetup()[r][c].getColor(), slot).jsonfy()));
-                    gui.switchPanels(new CardsGridPanel(gui));
-                }
+        confirm.addActionListener(e -> {
+            DevCardSlot slot = (DevCardSlot) JOptionPane.showInputDialog(null, "Select the Slot of the PersonalBoard \n where the Development Card will be placed", "BuyCards",
+                    JOptionPane.QUESTION_MESSAGE, null,
+                    possibleValues, possibleValues[0]);
+            if (slot != null){
+                gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyDevCardCommand(gui.model.getDevSetup().getDevSetup()[r][c].getLevel(), gui.model.getDevSetup().getDevSetup()[r][c].getColor(), slot).jsonfy()));
+                gui.switchPanels(new CardsGridPanel(gui));
             }
         });
 
@@ -118,23 +121,16 @@ public class MoveResourcesBuyCardPanel extends GuiPanel {
 
 
 
-        this.add(Box.createRigidArea(new Dimension(0, 30)));
-        this.add(backPanel);
-        this.add(Box.createRigidArea(new Dimension(0, 20)));
-        this.add(messagePanel);
-        this.add(Box.createRigidArea(new Dimension(0, 20)));
+        result.add(Box.createRigidArea(new Dimension(0, 30)));
+        result.add(backPanel);
+        result.add(Box.createRigidArea(new Dimension(0, 20)));
+        result.add(messagePanel);
+        result.add(Box.createRigidArea(new Dimension(0, 20)));
         middlePanel.add(warehousePanel);
         middlePanel.add(Box.createRigidArea(new Dimension(100, 0)));
         middlePanel.add(depotAndBufferPanel);
-        this.add(middlePanel);
+        result.add(middlePanel);
 
-    }
-
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-        switch (packet.header) {
-            case OK -> gui.switchPanels(new MoveResourcesBuyCardPanel(gui, r, c, image));
-            case INVALID -> gui.notifyPlayerError(packet.body);
-        }
+        return result;
     }
 }

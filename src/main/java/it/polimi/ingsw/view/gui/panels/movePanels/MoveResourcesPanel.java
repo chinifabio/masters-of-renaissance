@@ -12,9 +12,14 @@ public class MoveResourcesPanel extends GuiPanel {
 
     public MoveResourcesPanel(GUI gui){
         super(gui);
+    }
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setOpaque(false);
+    @Override
+    public JPanel update() throws IOException {
+        JPanel result = new JPanel();
+
+        result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
+        result.setOpaque(false);
 
         JPanel middlePanel = new JPanel();
         middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.X_AXIS));
@@ -25,13 +30,7 @@ public class MoveResourcesPanel extends GuiPanel {
         //--------BACK BUTTON----------
         JPanel backPanel = new JPanel();
         JButton back = new JButton("Return to PB");
-        back.addActionListener(e -> {
-            try {
-                gui.switchPanels(new PersonalBoardPanel(gui));
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        });
+        back.addActionListener(e -> gui.switchPanels(new PersonalBoardPanel(gui)));
         backPanel.add(back);
         backPanel.add(Box.createRigidArea(new Dimension(900,0)));
         backPanel.setOpaque(false);
@@ -72,21 +71,14 @@ public class MoveResourcesPanel extends GuiPanel {
         depotAndBufferPanel.setOpaque(false);
 
 
-        this.add(Box.createRigidArea(new Dimension(0, 100)));
-        this.add(backPanel);
-        this.add(Box.createRigidArea(new Dimension(0, 100)));
+        result.add(Box.createRigidArea(new Dimension(0, 100)));
+        result.add(backPanel);
+        result.add(Box.createRigidArea(new Dimension(0, 100)));
         middlePanel.add(warehousPanel);
         middlePanel.add(Box.createRigidArea(new Dimension(100, 0)));
         middlePanel.add(depotAndBufferPanel);
-        this.add(middlePanel);
+        result.add(middlePanel);
 
-    }
-
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-        switch (packet.header) {
-            case OK -> gui.switchPanels(new MoveResourcesPanel(gui));
-            case INVALID -> gui.notifyPlayerError(packet.body);
-        }
+        return result;
     }
 }

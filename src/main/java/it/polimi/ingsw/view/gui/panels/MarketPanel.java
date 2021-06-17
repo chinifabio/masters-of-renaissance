@@ -9,6 +9,7 @@ import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.view.gui.GUI;
+import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -19,56 +20,30 @@ import java.io.InputStream;
 
 public class MarketPanel extends GuiPanel {
 
-    private Image img = null;
-
     public MarketPanel(GUI gui) {
         super(gui);
-        this.setOpaque(false);
+    }
 
-        setLayout(new FlowLayout());
+    @Override
+    public JPanel update() throws IOException {
+        JPanel result = new JPanel();
 
-        setPreferredSize(new Dimension(1920 - 380 - 200, 1080 - 270));
+        result.setOpaque(false);
+        result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
 
-        try {
-            img = ImageIO.read(getClass().getResourceAsStream("/MarketTrayImages/MarketTrayPNG.png"));
-        } catch (IOException e) {
-            System.exit(-1);
-        }
-
-        InputStream slideUrl = this.getClass().getResourceAsStream("/MarketTrayImages/MarblesPNG/" + gui.model.getTray().getSlideMarble().getColor() + ".png");
-        BufferedImage slideImg = null;
-        try {
-            assert slideUrl != null;
-            slideImg = ImageIO.read(slideUrl);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Image scaledSlide = GUI.getScaledImage(slideImg, 35, 35);
+        InputStream slideUrl = getClass().getResourceAsStream("/MarketTrayImages/MarblesPNG/" + gui.model.getTray().getSlideMarble().getColor() + ".png");
+        assert slideUrl != null;
+        Image scaledSlide = GUI.getScaledImage(ImageIO.read(slideUrl), 35, 35);
         ImageIcon slideIcon = new ImageIcon(scaledSlide);
 
-        //--------BACK BUTTON----------
-        JButton back = new JButton("Return to PB");
-
-        back.addActionListener(e -> {
-            try {
-                gui.switchPanels(new PersonalBoardPanel(gui));
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        });
-
-
-        //--------BACK PANEL----------
-        JPanel backPanel = new JPanel();
-        backPanel.setOpaque(false);
-        backPanel.add(back);
-        add(backPanel);
-
         //--------FORMATTING----------
-        add(Box.createRigidArea(new Dimension(150, 0)));
+        result.add(Box.createRigidArea(new Dimension(0, 100)));
 
         //--------MARBLE GRID----------
         JPanel marblePanel = new JPanel();
+        JPanel tray = new BgJPanel("/MarketTrayImages/MarketTrayPNG.png", 397, 506);
+        tray.setPreferredSize(new Dimension(397, 506));
+
         marblePanel.setLayout(new GridLayout(6, 6));
 
         //--------SLIDE MARBLE----------
@@ -120,35 +95,21 @@ public class MarketPanel extends GuiPanel {
         }
 
         //--------FORMATTING----------
-        marblePanel.setBorder(BorderFactory.createEmptyBorder(165, 0, 0, 160));
+        marblePanel.setBorder(BorderFactory.createEmptyBorder(63, 180, 80, 80));
         marblePanel.setOpaque(false);
-        marblePanel.setVisible(true);
-        add(marblePanel);
-    }
+        tray.add(marblePanel);
+        tray.setAlignmentX(Component.CENTER_ALIGNMENT);
+        tray.setOpaque(false);
+        result.add(tray);
 
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-        switch (packet.header) {
-            case OK -> {
-                MarketPanel temp = new MarketPanel(gui);
-                gui.switchPanels(temp);
-            }
-            case INVALID -> gui.notifyPlayerError(packet.body);
-        }
-    }
+        //--------BACK BUTTON----------
+        JButton back = new JButton("Return to PB");
 
-    /**
-     * Draw the background
-     */
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+        back.addActionListener(e -> gui.switchPanels(new PersonalBoardPanel(gui)));
+        result.add(Box.createRigidArea(new Dimension(0, 30)));
+        result.add(back);
 
-        int x = 475;
-        int y = 100;
-        int width = 397;
-        int height = 506;
-        g.drawImage(img, x, y, width, height, null);
+        return result;
     }
 
     private JPanel drawMarble(int index, MarbleColor color) {
@@ -195,7 +156,7 @@ public class MarketPanel extends GuiPanel {
                 });
             }
             else{
-                button.addActionListener(e -> JOptionPane.showMessageDialog(this,"You can't paint marbles!"));
+                button.addActionListener(e -> JOptionPane.showMessageDialog(null,"You can't paint marbles!"));
             }
         }
         panel.setVisible(true);

@@ -25,26 +25,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BufferMovePanel extends GuiPanel {
+public class BufferMovePanel extends JPanel {
 
     private DepotSlot slot;
 
     Image buffer;
 
-    public BufferMovePanel(GUI gui){
-        super(gui);
-
+    public BufferMovePanel(GUI gui) throws IOException {
         InputStream is = getClass().getResourceAsStream("/buffer.png");
-        if (is == null) try {
-            throw new IOException("buffer.png not found");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            buffer = ImageIO.read(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assert is != null;
+        buffer = ImageIO.read(is);
 
         DepotSlot[] initValue = { DepotSlot.TOP, DepotSlot.MIDDLE, DepotSlot.BOTTOM, DepotSlot.BUFFER};
 
@@ -77,37 +67,34 @@ public class BufferMovePanel extends GuiPanel {
             JButton image = new JButton();
             createResourceLabel(image, GUI.resourceImages.get(res.getType()));
 
-            image.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    slot = null;
-                    int value = 0;
-                    boolean valid = true;
-                    List<DepotSlot> possibleValues = new ArrayList<>(Arrays.asList(initValue));
+            image.addActionListener(e -> {
+                slot = null;
+                int value = 0;
+                boolean valid = true;
+                List<DepotSlot> possibleValues = new ArrayList<>(Arrays.asList(initValue));
 
-                    if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL1) != null){
-                        possibleValues.add(DepotSlot.SPECIAL1);
+                if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL1) != null){
+                    possibleValues.add(DepotSlot.SPECIAL1);
+                }
+                if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL2) != null){
+                    possibleValues.add(DepotSlot.SPECIAL2);
+                }
+
+                DepotSlot slot = (DepotSlot) JOptionPane.showInputDialog(null, "Where do you wanto to move this resource? ", "Move resources",
+                        JOptionPane.QUESTION_MESSAGE, null,
+                        possibleValues.toArray(), possibleValues.get(0));
+
+                if (slot != null) {
+                    String str = JOptionPane.showInputDialog(null, "How many resources do you want to move?", "1");
+                    try {
+                        value = Integer.parseInt(str);
+                    } catch (Exception notParsable) {
+                        JOptionPane.showMessageDialog(null, "Please use a valid number!");
+                        valid = false;
                     }
-                    if (gui.getModel().getDepot(gui.model.getMe(), DepotSlot.SPECIAL2) != null){
-                        possibleValues.add(DepotSlot.SPECIAL2);
-                    }
 
-                    DepotSlot slot = (DepotSlot) JOptionPane.showInputDialog(null, "Where do you wanto to move this resource? ", "Move resources",
-                            JOptionPane.QUESTION_MESSAGE, null,
-                            possibleValues.toArray(), possibleValues.get(0));
-
-                    if (slot != null) {
-                        String str = JOptionPane.showInputDialog(null, "How many resources do you want to move?", "1");
-                        try {
-                            value = Integer.parseInt(str);
-                        } catch (Exception notParsable) {
-                            JOptionPane.showMessageDialog(null, "Please use a valid number!");
-                            valid = false;
-                        }
-
-                        if (valid) {
-                            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(DepotSlot.BUFFER, slot, ResourceBuilder.buildFromType(res.getType(), value)).jsonfy()));
-                        }
+                    if (valid) {
+                        gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(DepotSlot.BUFFER, slot, ResourceBuilder.buildFromType(res.getType(), value)).jsonfy()));
                     }
                 }
             });
@@ -155,13 +142,5 @@ public class BufferMovePanel extends GuiPanel {
         int width = 250;
         int height = 100;
         g.drawImage(buffer, 15, 0,width,height, null);
-    }
-
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-        switch (packet.header) {
-            case OK -> gui.switchPanels(new BufferMovePanel(gui));
-            case INVALID -> gui.notifyPlayerError(packet.body);
-        }
     }
 }

@@ -154,6 +154,7 @@ public class MultiplayerMatch extends Match{
             connectedPlayers.get(curPlayer).startHisTurn();
             view.sendMessage("All players passed game initialization");
             view.sendMessage("Is the turn of " + currentPlayer());
+            if (model != null) model.gameSetupDone();
         }
     }
 

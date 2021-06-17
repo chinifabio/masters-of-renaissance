@@ -20,22 +20,26 @@ import java.io.InputStream;
 
 public class InitGamePanel extends GuiPanel {
 
-    public InitGamePanel(GUI gui) throws IOException {
+    public InitGamePanel(GUI gui) {
         super(gui);
-        setOpaque(false);
+    }
 
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    @Override
+    public JPanel update() throws IOException {
+        JPanel result = new JPanel();
 
-        add(Box.createRigidArea(new Dimension(0, 50)));
+        result.setOpaque(false);
+        result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
+        result.add(Box.createRigidArea(new Dimension(0, 50)));
 
         JPanel leader = new JPanel();
         leader.setLayout(new BoxLayout(leader, BoxLayout.X_AXIS));
         for (LiteLeaderCard card : gui.model.getLeader(gui.model.getMe())){
             leader.add(new LeaderCardButton(card.getCardID(), gui));
         }
-        add(leader);
+        result.add(leader);
 
-        add(Box.createRigidArea(new Dimension(0, 20)));
+        result.add(Box.createRigidArea(new Dimension(0, 20)));
 
         JPanel res = new JPanel();
         res.setLayout(new BoxLayout(res, BoxLayout.X_AXIS));
@@ -46,27 +50,17 @@ public class InitGamePanel extends GuiPanel {
         res.add(new ResourceButton(ResourceType.SERVANT, gui));
         res.add(new ResourceButton(ResourceType.STONE, gui));
 
-        add(res);
+        result.add(res);
 
-        add(Box.createRigidArea(new Dimension(0, 30)));
+        result.add(Box.createRigidArea(new Dimension(0, 30)));
 
         JButton done = new JButton("DONE");
         done.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy())));
-        done.setAlignmentX(CENTER_ALIGNMENT);
+        done.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        add(done);
-    }
+        result.add(done);
 
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-        switch (packet.header) {
-            case OK -> {
-                gui.switchPanels(new InitGamePanel(gui));
-                gui.notifyPlayer(packet.body);
-            }
-            case INVALID -> gui.notifyPlayerError(packet.body);
-            case GAME_START -> gui.switchPanels(new PersonalBoardPanel(gui));
-        }
+        return result;
     }
 }
 

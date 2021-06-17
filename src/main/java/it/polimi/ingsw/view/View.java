@@ -1,12 +1,11 @@
 package it.polimi.ingsw.view;
 
-import it.polimi.ingsw.communication.VirtualSocket;
 import it.polimi.ingsw.litemodel.LiteModel;
 
 /**
  * This interface is the View
  */
-public interface View extends Runnable{
+public interface View {
 
     /**
      * Tell something to the player
@@ -20,11 +19,12 @@ public interface View extends Runnable{
      */
     void notifyPlayerError(String errorMessage);
 
-    /**
-     * notify a warning message to the player
-     * @param s the waring message
-     */
-    void notifyPlayerWarning(String s);
+    void fireGameCreator();
+    void fireLobbyWait();
+    void fireGameInit();
+    void fireGameSession();
+    void fireGameEnded();
+    void fireGameResult();
 
     /**
      * return the liteModel of the view
@@ -32,5 +32,5 @@ public interface View extends Runnable{
      */
     LiteModel getModel();
 
-    VirtualSocket getSocket();
+    void start();
 }

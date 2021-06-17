@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.gui.panels;
 
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.view.gui.GUI;
 
 import javax.imageio.ImageIO;
@@ -12,7 +11,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Random;
 
-public class FaithTrackPanel extends GuiPanel {
+public class FaithTrackPanel extends JPanel {
 
     HashMap<Integer, Integer> playerPos = new HashMap<>(){{
         put(0,2);
@@ -84,26 +83,18 @@ public class FaithTrackPanel extends GuiPanel {
      * and a flow layout.
      */
     public FaithTrackPanel(GUI gui, String nickname) throws IOException {
-        super(gui);
 
         this.player = gui.model.getPlayerPosition().get(nickname);
 
         InputStream url = this.getClass().getResourceAsStream("/WarehouseRes/faithpoint.png");
-        BufferedImage img = null;
-        try {
-            assert url != null;
-            img = ImageIO.read(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Image scaledImage = GUI.getScaledImage(img, 50, 50);
+        assert  url != null;
+        Image scaledImage = GUI.getScaledImage(ImageIO.read(url), 50, 50);
         ImageIcon icon1 = new ImageIcon(scaledImage);
         JLabel PlayerMarker = new JLabel();
         PlayerMarker.setIcon(icon1);
 
         this.setLayout(new GridBagLayout());
-        this.setPreferredSize(new Dimension(1920-380-200,285));
-
+        this.setPreferredSize(new Dimension(GUI.gameWidth,285));
 
         GridBagConstraints c = new GridBagConstraints();
 
@@ -160,28 +151,16 @@ public class FaithTrackPanel extends GuiPanel {
                 int lorenzo = gui.model.getPlayerPosition().get("Lorenzo il Magnifico");
                 if (player == lorenzo){
                     url = this.getClass().getResourceAsStream("/FaithTrackImages/blackAndPlayer.png");
-                    img = null;
-                    try {
-                        assert url != null;
-                        img = ImageIO.read(url);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    scaledImage = GUI.getScaledImage(img, 50, 50);
+                    assert url != null;
+                    scaledImage = GUI.getScaledImage(ImageIO.read(url), 50, 50);
                     icon1 = new ImageIcon(scaledImage);
                     PlayerMarker.setIcon(icon1);
                 } else {
                     if (playerPos.get(lorenzo) == 0) {
                         if (i == topRow.get(lorenzo)) {
                             InputStream urlLor = this.getClass().getResourceAsStream("/FaithTrackImages/blackCross.png");
-                            BufferedImage imgLor = null;
-                            try {
-                                assert urlLor != null;
-                                imgLor = ImageIO.read(urlLor);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            Image scaledImageLor = GUI.getScaledImage(imgLor, 50, 50);
+                            assert urlLor != null;
+                            Image scaledImageLor = GUI.getScaledImage(ImageIO.read(urlLor), 50, 50);
                             ImageIcon iconLor = new ImageIcon(scaledImageLor);
                             JLabel LoreMarker = new JLabel();
                             LoreMarker.setIcon(iconLor);
@@ -289,28 +268,16 @@ public class FaithTrackPanel extends GuiPanel {
                 int lorenzo = gui.model.getPlayerPosition().get("Lorenzo il Magnifico");
                 if (player == lorenzo){
                     url = this.getClass().getResourceAsStream("/FaithTrackImages/blackAndPlayer.png");
-                    img = null;
-                    try {
-                        assert url != null;
-                        img = ImageIO.read(url);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    scaledImage = GUI.getScaledImage(img, 50, 50);
+                    assert url != null;
+                    scaledImage = GUI.getScaledImage(ImageIO.read(url), 50, 50);
                     icon1 = new ImageIcon(scaledImage);
                     PlayerMarker.setIcon(icon1);
                 } else {
                     if (playerPos.get(lorenzo) == 1) {
                         if (i == centerRow.get(lorenzo)) {
                             InputStream urlLor = this.getClass().getResourceAsStream("/FaithTrackImages/blackCross.png");
-                            BufferedImage imgLor = null;
-                            try {
-                                assert urlLor != null;
-                                imgLor = ImageIO.read(urlLor);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            Image scaledImageLor = GUI.getScaledImage(imgLor, 50, 50);
+                            assert urlLor != null;
+                            Image scaledImageLor = GUI.getScaledImage(ImageIO.read(urlLor), 50, 50);
                             ImageIcon iconLor = new ImageIcon(scaledImageLor);
                             JLabel LoreMarker = new JLabel();
                             LoreMarker.setIcon(iconLor);
@@ -361,28 +328,16 @@ public class FaithTrackPanel extends GuiPanel {
                 int lorenzo = gui.model.getPlayerPosition().get("Lorenzo il Magnifico");
                 if (player == lorenzo){
                     url = this.getClass().getResourceAsStream("/FaithTrackImages/blackAndPlayer.png");
-                    img = null;
-                    try {
-                        assert url != null;
-                        img = ImageIO.read(url);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    scaledImage = GUI.getScaledImage(img, 50, 50);
+                    assert url != null;
+                    scaledImage = GUI.getScaledImage(ImageIO.read(url), 50, 50);
                     icon1 = new ImageIcon(scaledImage);
                     PlayerMarker.setIcon(icon1);
                 } else {
                     if (playerPos.get(lorenzo) == 2) {
                         if (i == bottomRow.get(lorenzo)) {
                             InputStream urlLor = this.getClass().getResourceAsStream("/FaithTrackImages/blackCross.png");
-                            BufferedImage imgLor = null;
-                            try {
-                                assert urlLor != null;
-                                imgLor = ImageIO.read(urlLor);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            Image scaledImageLor = GUI.getScaledImage(imgLor, 50, 50);
+                            assert urlLor != null;
+                            Image scaledImageLor = GUI.getScaledImage(ImageIO.read(urlLor), 50, 50);
                             ImageIcon iconLor = new ImageIcon(scaledImageLor);
                             JLabel LoreMarker = new JLabel();
                             LoreMarker.setIcon(iconLor);
@@ -416,11 +371,6 @@ public class FaithTrackPanel extends GuiPanel {
 
         repaint();
         revalidate();
-
-    }
-
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
 
     }
 }

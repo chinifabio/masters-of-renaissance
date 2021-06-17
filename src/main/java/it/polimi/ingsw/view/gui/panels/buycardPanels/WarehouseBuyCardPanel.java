@@ -20,25 +20,19 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class WarehouseBuyCardPanel extends GuiPanel {
+public class WarehouseBuyCardPanel extends JPanel {
 
+    private final GUI gui;
 
     private Image warehouseImage;
 
-    public WarehouseBuyCardPanel(GUI gui) {
-        super(gui);
+    public WarehouseBuyCardPanel(GUI gui) throws IOException {
+        //super(gui);
+        this.gui = gui;
 
         InputStream is = getClass().getResourceAsStream("/warehouse.png");
-        if (is == null) try {
-            throw new IOException("warehouse.png not found");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            warehouseImage = ImageIO.read(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assert is != null;
+       warehouseImage = ImageIO.read(is);
 
         this.setPreferredSize(new Dimension(320,400));
         this.setOpaque(false);
@@ -97,23 +91,20 @@ public class WarehouseBuyCardPanel extends GuiPanel {
 
             JButton image = new JButton();
             createResourceLabel(image, GUI.resourceImages.get(res.getType()));
-            image.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    int value = 0;
-                    boolean valid = true;
+            image.addActionListener(e -> {
+                int value = 0;
+                boolean valid = true;
 
-                    String str = JOptionPane.showInputDialog(null, "How many resources do you want to move?");
-                    try{
-                        value = Integer.parseInt(str);
-                    } catch (Exception notParsable){
-                        JOptionPane.showMessageDialog(null, "Please use a valid number!");
-                        valid = false;
-                    }
+                String str = JOptionPane.showInputDialog(null, "How many resources do you want to move?");
+                try{
+                    value = Integer.parseInt(str);
+                } catch (Exception notParsable){
+                    JOptionPane.showMessageDialog(null, "Please use a valid number!");
+                    valid = false;
+                }
 
-                    if (valid) {
-                        gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(DepotSlot.STRONGBOX, DepotSlot.DEVBUFFER, ResourceBuilder.buildFromType(res.getType(), value)).jsonfy()));
-                    }
+                if (valid) {
+                    gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(DepotSlot.STRONGBOX, DepotSlot.DEVBUFFER, ResourceBuilder.buildFromType(res.getType(), value)).jsonfy()));
                 }
             });
 
@@ -140,13 +131,13 @@ public class WarehouseBuyCardPanel extends GuiPanel {
 
     }
 
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-        switch (packet.header) {
-            case OK -> gui.switchPanels(new WarehouseBuyCardPanel(gui));
-            case INVALID -> gui.notifyPlayerError(packet.body);
-        }
-    }
+    //@Override
+    //public void reactToPacket(Packet packet) throws IOException {
+    //    switch (packet.header) {
+    //        case OK -> gui.switchPanels(new WarehouseBuyCardPanel(gui));
+    //        case INVALID -> gui.notifyPlayerError(packet.body);
+    //    }
+    //}
 
     public void createResourceLabel(JButton button, String resource){
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
@@ -175,12 +166,7 @@ public class WarehouseBuyCardPanel extends GuiPanel {
             if (slot != DepotSlot.STRONGBOX){
 
                 label.setActionCommand("depotResourcePressed");
-                label.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(slot, DepotSlot.DEVBUFFER, ResourceBuilder.buildFromType(tempRes.getType(), 1)).jsonfy()));
-                    }
-                });
+                label.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveDepotCommand(slot, DepotSlot.DEVBUFFER, ResourceBuilder.buildFromType(tempRes.getType(), 1)).jsonfy())));
             }
             depot.add(label);
         }

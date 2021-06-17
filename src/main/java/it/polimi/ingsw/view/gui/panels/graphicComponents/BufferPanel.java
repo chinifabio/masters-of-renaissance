@@ -1,6 +1,5 @@
-package it.polimi.ingsw.view.gui.panels;
+package it.polimi.ingsw.view.gui.panels.graphicComponents;
 
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -13,24 +12,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class BufferPanel extends GuiPanel{
+public class BufferPanel extends BgJPanel{
 
-    Image buffer;
-
-    public BufferPanel(GUI gui){
-        super(gui);
-
-        InputStream is = getClass().getResourceAsStream("/buffer.png");
-        if (is == null) try {
-            throw new IOException("buffer.png not found");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            buffer = ImageIO.read(is);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public BufferPanel(GUI gui) throws IOException {
+        super("/buffer.png", 275,100);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.add(Box.createRigidArea(new Dimension(0,20)));
@@ -75,7 +60,6 @@ public class BufferPanel extends GuiPanel{
         bigPanel.setOpaque(false);
 
         this.add(bigPanel);
-
     }
 
     public void createResourceLabel(JLabel label, String resource){
@@ -91,19 +75,5 @@ public class BufferPanel extends GuiPanel{
         Image scaledImage = GUI.getScaledImage(img, 42, 42);
         ImageIcon icon1 = new ImageIcon(scaledImage);
         label.setIcon(icon1);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        int width = 250;
-        int height = 100;
-        g.drawImage(buffer, 15, 0,width,height, null);
-    }
-
-    @Override
-    public void reactToPacket(Packet packet) throws IOException {
-
     }
 }
