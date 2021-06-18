@@ -126,7 +126,6 @@ class ChooseNickname implements ControllerState {
         // check if the player where disconnected
         if (context.server.reconnect(packet.body, context)) {
             context.nickname = packet.body;
-            context.setState(new InGameState());
             return context.model.reconnectPlayer(context.nickname, context) ?
                     context.model.reconnectPacket(context) :
                     context.invalid("fail in reconnection");

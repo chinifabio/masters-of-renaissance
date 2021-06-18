@@ -111,6 +111,7 @@ public class Model {
         this.players.put(context, this.match.reconnectPlayer(nickname));
         this.dispatcher.subscribe(nickname, context.socket);
         System.out.println(Colors.color(Colors.GREEN_BRIGHT, nickname) + " reconnected");
+        context.gameStart();
         return true;
     }
 
