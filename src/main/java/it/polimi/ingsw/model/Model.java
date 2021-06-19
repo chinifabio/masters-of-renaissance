@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.Command;
+import it.polimi.ingsw.communication.packet.updates.ScoreboardUpdater;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
@@ -90,6 +91,20 @@ public class Model {
 
     public void gameSetupDone() {
         players.forEach((controller, player) -> controller.gameStart());
+    }
+
+    public void playerEndGame() {
+        players
+                .entrySet()
+                .stream()
+                .filter(e -> e.getValue().equals(match.currentPlayer()))
+                .forEach(e -> e.getKey().gameEnd());
+    }
+
+    public void matchEnded() {
+        dispatcher.publish(new ScoreboardUpdater(match.winnerCalculator()));
+        // mandare i risultati
+        players.forEach((controller, player) -> controller.gameScoreboard());
     }
 
     /**

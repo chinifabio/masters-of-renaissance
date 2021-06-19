@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.model.Pair;
 import it.polimi.ingsw.communication.packet.updates.FaithTrackUpdater;
 import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
@@ -215,6 +216,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     @Override
     public void startEndGameLogic() {
         gameOnAir = false;
+        if (model != null) model.matchEnded();
         player.endThisTurn();
     }
 
@@ -272,8 +274,14 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      * On each player is call the method to calculate the points obtained and the higher one wins
      */
     @Override
-    public void winnerCalculator() {
-        // todo look for lorenzo winning flag or calculate the player points
+    public Scoreboard winnerCalculator() {
+        Scoreboard scoreboard = new Scoreboard(lorenzoWinner ?
+                "Lorenzo il magnifico wins the match!" :
+                "You won against Lorenzo il Magnifico" );
+
+        if (!lorenzoWinner) scoreboard.addPlayerScore(player.getNickname(), player.calculateVictoryPoints());
+
+        return scoreboard;
     }
 
     private void updateToken() {

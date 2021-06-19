@@ -87,6 +87,14 @@ public class Controller implements Runnable, Disconnectable {
     public void gameStart() {
         setState(new InGameState());
     }
+
+    public void gameEnd() {
+        setState(new WaitingResult());
+    }
+
+    public void gameScoreboard() {
+        setState(new GameScoreboard());
+    }
 }
 
 interface ControllerState {
@@ -366,6 +374,76 @@ class InGameState implements ControllerState {
     @Override
     public Lighter renderCannonAmmo() {
         return new FireGameSession();
+    }
+}
+
+class WaitingResult implements ControllerState {
+    /**
+     * handle the client message and create a response Packet
+     *
+     * @param packet  the message to handle
+     * @param context the context of the state
+     * @return the response message
+     */
+    @Override
+    public Packet handleMessage(Packet packet, Controller context) {
+        return context.invalid("The match is still running, wait that all the players end their turn!");
+    }
+
+    /**
+     * Handle the disconnection of the controller based on his state
+     *
+     * @param context the state of the controller
+     */
+    @Override
+    public void handleDisconnection(Controller context) {
+        context.server.removeController(context.nickname);
+        // the player can't reconnect, to see his result need to ask to his friends
+    }
+
+    /**
+     * Return a scene to render in the view of the client
+     *
+     * @return a packet that fire the render of a scene
+     */
+    @Override
+    public Lighter renderCannonAmmo() {
+        return new FireGameEnded();
+    }
+}
+
+class GameScoreboard implements ControllerState {
+    /**
+     * handle the client message and create a response Packet
+     *
+     * @param packet  the message to handle
+     * @param context the context of the state
+     * @return the response message
+     */
+    @Override
+    public Packet handleMessage(Packet packet, Controller context) {
+        return context.invalid("The match is ended!");
+    }
+
+    /**
+     * Handle the disconnection of the controller based on his state
+     *
+     * @param context the state of the controller
+     */
+    @Override
+    public void handleDisconnection(Controller context) {
+        context.server.removeController(context.nickname);
+        // the player can't reconnect, to see his result need to ask to his friends
+    }
+
+    /**
+     * Return a scene to render in the view of the client
+     *
+     * @return a packet that fire the render of a scene
+     */
+    @Override
+    public Lighter renderCannonAmmo() {
+        return new FireGameResult();
     }
 }
 

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.match.match;
 
+import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.model.Pair;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
@@ -8,10 +9,7 @@ import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * This class represents the MultiplayerMatch
@@ -129,12 +127,13 @@ public class MultiplayerMatch extends Match{
         if (endGameLogic) {
             if (curPlayer == (gameSize - 1)) {
                 gameOnAir = false;
-                // todo launch endgame in model and server
+                if (model != null) model.matchEnded();
                 return;
             }
 
-            curPlayer = (curPlayer + 1) % connectedPlayers.size();
             currentPlayer().setState(new CountingPointsPlayerState(currentPlayer()));
+            if (model != null) model.playerEndGame();
+            curPlayer = (curPlayer + 1) % connectedPlayers.size();
             view.sendMessage("The turn of " + currentPlayer().getNickname() + " is started!");
             return;
         }
@@ -216,8 +215,14 @@ public class MultiplayerMatch extends Match{
      * On each player is call the method to calculate the points obtained and the higher one wins
      */
     @Override
-    public void winnerCalculator() {
+    public Scoreboard winnerCalculator() {
+        Scoreboard board = new Scoreboard("Here's the results!");
 
+        for (Player p : connectedPlayers) {
+            board.addPlayerScore(p.getNickname(), p.calculateVictoryPoints());
+        }
+
+        return board;
     }
 
     /**

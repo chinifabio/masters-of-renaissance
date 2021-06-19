@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.view.View;
 
 /**
@@ -26,6 +27,7 @@ import it.polimi.ingsw.view.View;
         @JsonSubTypes.Type(name = "Token", value = TokenUpdater.class),
         @JsonSubTypes.Type(name = "Tray", value = TrayUpdater.class),
         @JsonSubTypes.Type(name = "Model", value = ModelUpdater.class),
+        @JsonSubTypes.Type(name = "Scoreboard", value = ScoreboardUpdater.class),
 })
 public abstract class  Updater {
 

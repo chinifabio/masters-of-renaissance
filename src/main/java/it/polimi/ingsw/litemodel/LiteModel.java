@@ -22,15 +22,15 @@ public class LiteModel {
     private final HashMap<String, LitePersonalBoard> players = new HashMap<>();
 
     @JsonIgnore
-    public final Object lock = new Object();
-
-    @JsonIgnore
     private String me;
 
     private LiteMarketTray tray;
     private LiteDevSetup devSetup;
 
     private LiteSoloActionToken soloToken;
+
+    @JsonIgnore
+    private Scoreboard scoreboard;
 
     @JsonCreator
     public LiteModel(){}
@@ -105,6 +105,10 @@ public class LiteModel {
 
     public synchronized void setConversions(String nickname, List<MarbleColor> collect) {
         this.players.get(nickname).setConversions(collect);
+    }
+
+    public void setScoreboard(Scoreboard scoreboard) {
+        this.scoreboard = scoreboard;
     }
 
 // ------------------- GETTER METHODS ------------------

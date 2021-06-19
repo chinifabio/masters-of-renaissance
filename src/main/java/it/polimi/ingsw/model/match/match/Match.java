@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.communication.packet.updates.DevSetupUpdater;
 import it.polimi.ingsw.communication.packet.updates.TrayUpdater;
+import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.model.cards.*;
@@ -278,7 +279,7 @@ public abstract class Match implements PlayerToMatch {
      * This method is used to calculate and notify the winner of the match.
      * On each player is call the method to calculate the points obtained and the higher one wins
      */
-    public abstract void winnerCalculator();
+    public abstract Scoreboard winnerCalculator();
 
     /**
      * Return the current player in the game

@@ -116,6 +116,10 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         this.match = match;
     }
 
+    public int calculateVictoryPoints() {
+        return personalBoard.getTotalVictoryPoints();
+    }
+
     /**
      * This method set the nickname of the Player
      * @return the nickname of the player
