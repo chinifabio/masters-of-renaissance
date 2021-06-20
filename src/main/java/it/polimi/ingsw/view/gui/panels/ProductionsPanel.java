@@ -353,6 +353,7 @@ class ProductionNormalizer extends GuiPanel {
         confirm.addActionListener(e -> {
             try {
                 gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new SetNormalProductionCommand(id, new NormalProduction(toSendReq, toSendOut)).jsonfy()));
+                gui.switchPanels(new ProductionsPanel(gui));
             } catch (IllegalTypeInProduction illegalTypeInProduction) {
                 JOptionPane.showMessageDialog(null, "Please, complete the process");
                 illegalTypeInProduction.printStackTrace();

@@ -97,7 +97,7 @@ public class CardsGridPanel extends GuiPanel {
         return background;
     }
 
-    public JButton generateDevCardButton(JButton button, String name, int r, int c){
+    public void generateDevCardButton(JButton button, String name, int r, int c){
         InputStream url = this.getClass().getResourceAsStream("/DevCardsImage/" + name + ".png");
         BufferedImage img = null;
         try {
@@ -131,6 +131,5 @@ public class CardsGridPanel extends GuiPanel {
         if (name.equals("EMPTY")){
             button.setEnabled(false);
         }
-        return button;
     }
 }
