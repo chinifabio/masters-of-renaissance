@@ -12,6 +12,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
  * This command permits to the player to choose a resource at the start of the match
  */
 public class ChooseResourceCommand extends Command{
+
     /**
      * The resource to obtain at the start of the match
      */
@@ -22,6 +23,11 @@ public class ChooseResourceCommand extends Command{
      */
     private final DepotSlot dest;
 
+    /**
+     * This is the constructor of the class
+     * @param dest is the depot where the resource will be placed
+     * @param res is the resources obtained at the start of the match
+     */
     @JsonCreator
     public ChooseResourceCommand(@JsonProperty("dest") DepotSlot dest, @JsonProperty("res") ResourceType res) {
         this.res = res;

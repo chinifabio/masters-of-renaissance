@@ -25,6 +25,12 @@ public class MoveInProductionCommand extends Command {
      */
     private final DepotSlot from;
 
+    /**
+     * This is the constructor of the class
+     * @param from is the depot where the resource is taken from
+     * @param dest is the production where the resource will be placed
+     * @param loot is the resource to move
+     */
     @JsonCreator
     public MoveInProductionCommand(@JsonProperty("from") DepotSlot from, @JsonProperty("dest") ProductionID dest, @JsonProperty("loot") Resource loot){
         this.from = from;

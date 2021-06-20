@@ -6,10 +6,10 @@ import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.litecards.LiteSoloActionToken;
 import it.polimi.ingsw.view.View;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TokenUpdater extends Updater {
-
     private final LiteSoloActionToken token;
 
     @JsonCreator

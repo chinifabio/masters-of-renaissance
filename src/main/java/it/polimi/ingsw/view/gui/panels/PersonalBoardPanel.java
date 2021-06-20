@@ -23,7 +23,7 @@ public class PersonalBoardPanel  extends GuiPanel {
 
     @Override
     public JPanel update() throws IOException {
-        JPanel result = new BgJPanel("/board.png", GUI.width-NotifyPanel.width, GUI.height-100);
+        JPanel result = new BgJPanel("/board.png", GUI.width-NotifyPanel.width+50, GUI.height-120);
 
         JPanel boardPanel = new JPanel();
         boardPanel.setOpaque(false);

@@ -8,12 +8,27 @@ import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.player.PlayerAction;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 
+import javax.swing.*;
+import java.util.ArrayList;
+
 /**
  * This command allow the player to buy a dev card in the dev setup
  */
 public class BuyDevCardCommand extends Command {
+
+    /**
+     * This attribute is the row of the cards' grid
+     */
     private final LevelDevCard row;
+
+    /**
+     * This attribute is the column of the cards' grid
+     */
     private final ColorDevCard col;
+
+    /**
+     * This attribute is the slot where the card will be placed
+     */
     private final DevCardSlot destination;
 
     /**

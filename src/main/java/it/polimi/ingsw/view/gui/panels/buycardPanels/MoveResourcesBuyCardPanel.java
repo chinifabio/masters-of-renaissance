@@ -8,6 +8,7 @@ import it.polimi.ingsw.communication.packet.commands.ReturnCommand;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.GuiPanel;
+import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +31,10 @@ public class MoveResourcesBuyCardPanel extends GuiPanel {
 
     @Override
     public JPanel update() throws IOException {
+        JPanel background = new BgJPanel("/brickBackground.png",GUI.width-370, GUI.height-78,35,35);
         JPanel result = new JPanel();
+
+        background.setPreferredSize(new Dimension(GUI.gameWidth, GUI.gameHeight));
 
 
         result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
@@ -107,9 +111,11 @@ public class MoveResourcesBuyCardPanel extends GuiPanel {
         JTextArea message = new JTextArea();
         message.setText("Move the resources needed to buy the Development Card");
         message.setFont(new Font("Times New Roman",Font.ITALIC,22));
-        message.setForeground(GUI.borderColor);
+        message.setBackground(GUI.borderColor);
+        message.setForeground(new Color(51, 123, 175));
         message.setEditable(false);
-        message.setOpaque(false);
+        messagePanel.add(Box.createRigidArea(new Dimension(10,0)));
+        //message.setOpaque(false);
 
         JLabel cardImage = new JLabel();
         Image cardScaled = GUI.getScaledImage(image,462/4, 698/4);
@@ -131,6 +137,9 @@ public class MoveResourcesBuyCardPanel extends GuiPanel {
         middlePanel.add(depotAndBufferPanel);
         result.add(middlePanel);
 
-        return result;
+        background.setOpaque(false);
+        result.setOpaque(false);
+        background.add(result);
+        return background;
     }
 }

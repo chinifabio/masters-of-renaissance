@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.player.PlayerAction;
  * This command discard a leader card owned by the player
  */
 public class DiscardLeaderCommand extends Command {
+
     /**
      * The id of the leader to discard
      */
@@ -34,6 +35,9 @@ public class DiscardLeaderCommand extends Command {
         return player.discardLeader(this.leaderID);
     }
 
+    /**
+     * @return the id of the leaderCard
+     */
     @JsonGetter("leaderID")
     public String getLeaderID() {
         return leaderID;

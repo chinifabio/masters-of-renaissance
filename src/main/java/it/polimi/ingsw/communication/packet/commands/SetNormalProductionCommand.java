@@ -11,6 +11,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Productio
  * This command is used for set a normal production of a passed player
  */
 public class SetNormalProductionCommand extends Command{
+
     /**
      * The id of the production to normalize
      */
@@ -21,6 +22,11 @@ public class SetNormalProductionCommand extends Command{
      */
     private final NormalProduction prod;
 
+    /**
+     * This is the constructor of the class
+     * @param id is the identifier of the production
+     * @param prod is the production to normalize
+     */
     @JsonCreator
     public SetNormalProductionCommand(@JsonProperty("id") ProductionID id, @JsonProperty("prod") NormalProduction prod) {
         this.id = id;

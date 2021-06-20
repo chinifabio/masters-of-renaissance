@@ -5,8 +5,6 @@ import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.BuyCardCommand;
-import it.polimi.ingsw.communication.packet.commands.BuyDevCardCommand;
-import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.GuiPanel;
 import it.polimi.ingsw.view.gui.panels.PersonalBoardPanel;
@@ -15,8 +13,6 @@ import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,9 +26,11 @@ public class CardsGridPanel extends GuiPanel {
 
     @Override
     public JPanel update() throws IOException {
-        JPanel result = new BgJPanel("/Background.png",GUI.width+100, GUI.height);
+        JPanel background = new BgJPanel("/Background.png",GUI.width-300, GUI.height);
+        JPanel result = new JPanel();
 
-        result.setPreferredSize(new Dimension(1920, 800));
+        background.setPreferredSize(new Dimension(GUI.gameWidth, GUI.gameHeight));
+
         result.setBackground(GUI.borderColor);
 
         devSlot.setLayout(new FlowLayout());
@@ -94,7 +92,9 @@ public class CardsGridPanel extends GuiPanel {
         result.add(row2);
         result.add(row3);
 
-        return result;
+        result.setOpaque(false);
+        background.add(result);
+        return background;
     }
 
     public JButton generateDevCardButton(JButton button, String name, int r, int c){

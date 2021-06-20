@@ -15,7 +15,7 @@ import java.io.InputStream;
 
 public class ExtraDepotPanel extends JPanel {
 
-    private GUI gui;
+    private final GUI gui;
 
     public ExtraDepotPanel(GUI gui, String nickname) {
         this.gui = gui;

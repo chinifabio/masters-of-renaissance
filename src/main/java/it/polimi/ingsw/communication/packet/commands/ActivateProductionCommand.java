@@ -8,6 +8,10 @@ import it.polimi.ingsw.model.player.PlayerAction;
  * This command activate the production of the passed player
  */
 public class ActivateProductionCommand extends Command{
+
+    /**
+     * This is the constructor of the class
+     */
     @JsonCreator
     public ActivateProductionCommand(){}
 

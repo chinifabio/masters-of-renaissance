@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.gui.panels.movePanels;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.*;
+import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +17,10 @@ public class MoveResourcesPanel extends GuiPanel {
 
     @Override
     public JPanel update() throws IOException {
+        JPanel background = new BgJPanel("/brickBackground.png",GUI.width-370, GUI.height-78,35,35);
         JPanel result = new JPanel();
+
+        background.setPreferredSize(new Dimension(GUI.gameWidth, GUI.gameHeight));
 
         result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
         result.setOpaque(false);
@@ -79,6 +83,9 @@ public class MoveResourcesPanel extends GuiPanel {
         middlePanel.add(depotAndBufferPanel);
         result.add(middlePanel);
 
-        return result;
+        background.setOpaque(false);
+        result.setOpaque(false);
+        background.add(result);
+        return background;
     }
 }

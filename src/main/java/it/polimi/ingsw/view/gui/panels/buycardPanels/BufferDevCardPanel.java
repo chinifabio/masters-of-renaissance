@@ -25,7 +25,7 @@ public class BufferDevCardPanel extends BgJPanel {
         JPanel bigPanel = new JPanel();
         JPanel bufferPanel = new JPanel();
 
-        bigPanel.setPreferredSize(new Dimension(400, 100));
+        //bigPanel.setPreferredSize(new Dimension(250, 100));
 
         for (LiteResource res : gui.model.getDepot(gui.model.getMe(), DepotSlot.DEVBUFFER).getResourcesInside()){
             JPanel resource = new JPanel();
@@ -54,6 +54,8 @@ public class BufferDevCardPanel extends BgJPanel {
             bufferPanel.add(resource);
         }
 
+
+        bufferPanel.add(Box.createRigidArea(new Dimension(20,0)));
         bufferPanel.setOpaque(false);
         bigPanel.add(bufferPanel);
 

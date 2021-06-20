@@ -13,6 +13,11 @@ public class ConversionUpdater extends Updater {
     private final List<Marble> list;
     private final String nickname;
 
+    /**
+     * This is the constructor of the class
+     * @param nickname
+     * @param marbleConversions
+     */
     @JsonCreator
     public ConversionUpdater(@JsonProperty("nickname") String nickname, @JsonProperty("list") List<Marble> marbleConversions) {
         this.nickname = nickname;

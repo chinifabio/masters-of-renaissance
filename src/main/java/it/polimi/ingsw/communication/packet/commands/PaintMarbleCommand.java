@@ -10,6 +10,7 @@ import it.polimi.ingsw.model.player.PlayerAction;
  * This command allow the player to paint a marble in the tray whit one of his conversion
  */
 public class PaintMarbleCommand extends Command {
+
     /**
      * The index of the conversion
      */

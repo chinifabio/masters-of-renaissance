@@ -7,6 +7,7 @@ import it.polimi.ingsw.communication.packet.commands.ActivateLeaderCommand;
 import it.polimi.ingsw.communication.packet.commands.DiscardLeaderCommand;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.view.gui.GUI;
+import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -23,7 +24,10 @@ public class LeaderPanel extends GuiPanel {
 
     @Override
     public JPanel update() throws IOException {
+        JPanel background = new BgJPanel("/Background.png",GUI.width-300, GUI.height);
         JPanel result = new JPanel();
+
+        background.setPreferredSize(new Dimension(GUI.gameWidth, GUI.gameHeight));
 
         result.setOpaque(false);
         result.add(Box.createRigidArea(new Dimension(0, 800)));
@@ -38,7 +42,8 @@ public class LeaderPanel extends GuiPanel {
         back.addActionListener(e -> gui.switchPanels(new PersonalBoardPanel(gui)));
         result.add(back);
 
-        return result;
+        background.add(result);
+        return background;
     }
 }
 

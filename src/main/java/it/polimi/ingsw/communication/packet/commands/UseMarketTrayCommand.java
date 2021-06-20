@@ -14,6 +14,7 @@ import it.polimi.ingsw.model.player.PlayerAction;
  * This class represent a command instance for the player that use the market tray
  */
 public class UseMarketTrayCommand extends Command{
+
     /**
      * the row or col
      */
@@ -45,11 +46,17 @@ public class UseMarketTrayCommand extends Command{
         return player.useMarketTray(this.rc, this.index);
     }
 
+    /**
+     * @return the row or the column selected
+     */
     @JsonGetter("rc")
     public RowCol getRc() {
         return rc;
     }
 
+    /**
+     * @return the index of the tray
+     */
     @JsonGetter("index")
     public int getIndex() {
         return index;
