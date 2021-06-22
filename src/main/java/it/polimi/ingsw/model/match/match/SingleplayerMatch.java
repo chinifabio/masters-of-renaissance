@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.communication.packet.updates.PlayerOrderUpdater;
 import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.model.Pair;
 import it.polimi.ingsw.communication.packet.updates.FaithTrackUpdater;
@@ -117,6 +118,12 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
         player = joined;
         player.initialSetup = new Pair<>(0, 0);
+
+        List<String> playerOrder = new ArrayList<>();
+        playerOrder.add(this.player.getNickname());
+        view.publish(new PlayerOrderUpdater(playerOrder));
+
+
         player.startHisTurn();
         gameOnAir = true;
         return true;

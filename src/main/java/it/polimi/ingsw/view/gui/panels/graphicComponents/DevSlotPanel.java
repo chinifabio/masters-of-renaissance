@@ -50,7 +50,7 @@ public class DevSlotPanel extends JPanel {
             if (card.getLevel() != LevelDevCard.NOLEVEL && card.getColor() != ColorDevCard.NOCOLOR && !card.getCardID().equals("Empty")) {
                 JLabel label = new JLabel();
 
-                InputStream url = this.getClass().getResourceAsStream("/DevCardsImage/" + card.getCardID() + ".png");
+                InputStream url = this.getClass().getResourceAsStream("/DevCardsImages/" + card.getCardID() + ".png");
                 assert url != null;
                 Image scaledImage = GUI.getScaledImage(ImageIO.read(url), (462 / 2)-50, (698 / 2)-50);
                 ImageIcon icon1 = new ImageIcon(scaledImage);

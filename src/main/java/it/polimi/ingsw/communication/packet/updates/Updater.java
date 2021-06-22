@@ -28,6 +28,7 @@ import it.polimi.ingsw.view.View;
         @JsonSubTypes.Type(name = "Tray", value = TrayUpdater.class),
         @JsonSubTypes.Type(name = "Model", value = ModelUpdater.class),
         @JsonSubTypes.Type(name = "Scoreboard", value = ScoreboardUpdater.class),
+        @JsonSubTypes.Type(name = "Players", value = PlayerOrderUpdater.class)
 })
 public abstract class  Updater {
 

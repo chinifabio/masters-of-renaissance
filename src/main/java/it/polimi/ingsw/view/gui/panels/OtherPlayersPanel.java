@@ -20,7 +20,7 @@ public class OtherPlayersPanel extends GuiPanel{
 
     @Override
     public JPanel update() throws IOException {
-        JPanel result = new BgJPanel("/otherBoard.png", GUI.width, GUI.height);
+        JPanel result = new BgJPanel("/otherBoard.png", GUI.width-NotifyPanel.width+50, GUI.height-120);
 
         //--------BACK BUTTON----------
         JPanel backPanel = new JPanel();

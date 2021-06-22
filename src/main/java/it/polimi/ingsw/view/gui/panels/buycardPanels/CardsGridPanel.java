@@ -98,7 +98,7 @@ public class CardsGridPanel extends GuiPanel {
     }
 
     public void generateDevCardButton(JButton button, String name, int r, int c){
-        InputStream url = this.getClass().getResourceAsStream("/DevCardsImage/" + name + ".png");
+        InputStream url = this.getClass().getResourceAsStream("/DevCardsImages/" + name + ".png");
         BufferedImage img = null;
         try {
             assert url != null;

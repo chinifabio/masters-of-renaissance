@@ -243,6 +243,9 @@ public class GUI extends JFrame implements View, Disconnectable {
         return resizedImg;
     }
 
+
+
+
     @Override
     public void handleDisconnection() {
         activeClient = false;

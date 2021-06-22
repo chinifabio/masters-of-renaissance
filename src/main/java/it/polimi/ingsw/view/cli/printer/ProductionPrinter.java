@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.cli.printer;
 
+import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
@@ -173,7 +174,8 @@ public class ProductionPrinter {
 
     }
 
-    public static void printProductions(Map<ProductionID, LiteProduction> productions){
+    public static void printProductions(LiteModel model, String nickname){
+        Map<ProductionID, LiteProduction> productions = model.getAllProductions(nickname);
         String[][] display = new String[HEIGHT][WIDTH];
 
         createProductions(display, productions, 0 ,0);
@@ -189,6 +191,7 @@ public class ProductionPrinter {
     }
 
 
+    /*
     public  static void main(String[] args){
         Map<ProductionID, LiteProduction> productionMap = new EnumMap<>(ProductionID.class);
         List<LiteResource> required = new ArrayList<>();
@@ -218,6 +221,8 @@ public class ProductionPrinter {
 
 
     }
+
+     */
 
 
 }

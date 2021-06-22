@@ -30,6 +30,9 @@ public class LiteModel {
     private LiteSoloActionToken soloToken;
 
     @JsonIgnore
+    private List<String> playerOrder;
+
+    @JsonIgnore
     private Scoreboard scoreboard;
 
     @JsonCreator
@@ -107,6 +110,10 @@ public class LiteModel {
         this.players.get(nickname).setConversions(collect);
     }
 
+    public synchronized void setPlayerOrder(List<String> playerOrder){
+        this.playerOrder = playerOrder;
+    }
+
     public void setScoreboard(Scoreboard scoreboard) {
         this.scoreboard = scoreboard;
     }
@@ -144,6 +151,11 @@ public class LiteModel {
         }
         return result;
     }
+
+    public synchronized List<String> getPlayerOrder(){
+        return new ArrayList<>(playerOrder);
+    }
+
 
     public synchronized void flipPopeTile(String nickname, String popeTile) {
         this.players.get(nickname).flipPopeTile(popeTile);
