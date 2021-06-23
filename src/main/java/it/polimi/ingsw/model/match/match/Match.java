@@ -103,6 +103,10 @@ public abstract class Match implements PlayerToMatch {
         updateTray();
     }
 
+    /**
+     * This method sets the Model
+     * @param model is the model to set
+     */
     public void setModel(Model model) {
         this.model = model;
     }

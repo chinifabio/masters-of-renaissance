@@ -10,6 +10,7 @@ import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.gui.GUI;
+import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -26,6 +27,8 @@ public class InitGamePanel extends GuiPanel {
 
     @Override
     public JPanel update() throws IOException {
+        JPanel background = new BgJPanel("/Background.png",GUI.width-300, GUI.height);
+        background.setPreferredSize(new Dimension(GUI.gameWidth, GUI.gameHeight));
         JPanel result = new JPanel();
 
         result.setOpaque(false);
@@ -60,7 +63,9 @@ public class InitGamePanel extends GuiPanel {
 
         result.add(done);
 
-        return result;
+        background.add(Box.createRigidArea(new Dimension(0, 700)));
+        background.add(result);
+        return background;
     }
 }
 

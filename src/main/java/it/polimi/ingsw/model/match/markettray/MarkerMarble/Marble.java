@@ -60,6 +60,9 @@ public class Marble implements MappableToLiteVersion {
         return ResourceBuilder.buildFromType(toResource, 1);
     }
 
+    /**
+     * @return true if the marble can be painted
+     */
     @JsonIgnore
     public boolean isPaintable(){
         return false;

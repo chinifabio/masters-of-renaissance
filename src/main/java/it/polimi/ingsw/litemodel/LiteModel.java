@@ -156,6 +156,9 @@ public class LiteModel {
         return new ArrayList<>(playerOrder);
     }
 
+    public Scoreboard getScoreboard() {
+        return scoreboard;
+    }
 
     public synchronized void flipPopeTile(String nickname, String popeTile) {
         this.players.get(nickname).flipPopeTile(popeTile);

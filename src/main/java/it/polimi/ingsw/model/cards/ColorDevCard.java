@@ -13,26 +13,48 @@ public enum ColorDevCard {
     PURPLE(3, Colors.PURPLE, Colors.PURPLE_BACKGROUND),
     NOCOLOR(-1, Colors.WHITE, Colors.WHITE);
 
+    /**
+     * This attribute is the column of the cards' grid
+     */
     private final int devSetupIndex;
 
+    /**
+     * This attribute is the color of the card
+     */
     private final String color;
 
+    /**
+     * This attribute is the background color, used in CLI
+     */
     private final String backGround;
 
+    /**
+     * This is the constructor of the class
+     * @param index is the index in the cards' grid
+     * @param color is the color of the card
+     * @param backGround is the background color in CLI
+     */
     ColorDevCard(int index, String color, String backGround) {
         this.devSetupIndex = index;
         this.color = color;
         this.backGround = backGround;
     }
 
+    //Todo remove (?)
     public int getDevSetupIndex() {
         return this.devSetupIndex;
     }
 
+    /**
+     * @return the color of the card
+     */
     public String getDevCardColor(){
         return this.color;
     }
 
+    /**
+     * @return the background color
+     */
     public String getDevCardColorBackground(){
         return this.backGround;
     }

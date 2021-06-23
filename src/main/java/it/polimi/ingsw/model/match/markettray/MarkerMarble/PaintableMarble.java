@@ -14,6 +14,9 @@ import java.util.Optional;
  */
 public class PaintableMarble extends Marble{
 
+    /**
+     * This attribute is the marble
+     */
     private Optional<Marble> marble;
 
     /**

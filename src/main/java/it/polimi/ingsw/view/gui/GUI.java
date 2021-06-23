@@ -97,7 +97,8 @@ public class GUI extends JFrame implements View, Disconnectable {
 
     @Override
     public void fireGameResult() {
-        JOptionPane.showMessageDialog(null, "work in progress");
+        //JOptionPane.showMessageDialog(null, "work in progress result");
+        switchPanels(new ScoreboardPanel(this));
     }
 
     @Override

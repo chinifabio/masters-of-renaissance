@@ -26,10 +26,13 @@ public class MarketPanel extends GuiPanel {
 
     @Override
     public JPanel update() throws IOException {
-        JPanel result = new JPanel();
-
+        JPanel result = new BgJPanel("/brickBackground.png",GUI.width-370, GUI.height-78,35,35);
+        result.setPreferredSize(new Dimension(GUI.gameWidth, GUI.gameHeight));
         result.setOpaque(false);
-        result.setLayout(new BoxLayout(result, BoxLayout.Y_AXIS));
+
+        JPanel bigPanel = new JPanel();
+        bigPanel.setOpaque(false);
+        bigPanel.setLayout(new BoxLayout(bigPanel, BoxLayout.Y_AXIS));
 
         InputStream slideUrl = getClass().getResourceAsStream("/MarketTrayImages/MarblesPNG/" + gui.model.getTray().getSlideMarble().getColor() + ".png");
         assert slideUrl != null;
@@ -37,7 +40,7 @@ public class MarketPanel extends GuiPanel {
         ImageIcon slideIcon = new ImageIcon(scaledSlide);
 
         //--------FORMATTING----------
-        result.add(Box.createRigidArea(new Dimension(0, 100)));
+        bigPanel.add(Box.createRigidArea(new Dimension(0, 100)));
 
         //--------MARBLE GRID----------
         JPanel marblePanel = new JPanel();
@@ -100,14 +103,15 @@ public class MarketPanel extends GuiPanel {
         tray.add(marblePanel);
         tray.setAlignmentX(Component.CENTER_ALIGNMENT);
         tray.setOpaque(false);
-        result.add(tray);
+        bigPanel.add(tray);
 
         //--------BACK BUTTON----------
         JButton back = new JButton("Return to PB");
 
         back.addActionListener(e -> gui.switchPanels(new PersonalBoardPanel(gui)));
-        result.add(Box.createRigidArea(new Dimension(0, 30)));
-        result.add(back);
+        bigPanel.add(Box.createRigidArea(new Dimension(0, 30)));
+        bigPanel.add(back);
+        result.add(bigPanel);
 
         return result;
     }
