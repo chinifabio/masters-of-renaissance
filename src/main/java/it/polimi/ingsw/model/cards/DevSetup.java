@@ -29,13 +29,13 @@ public class DevSetup implements MappableToLiteVersion {
     public DevSetup() throws IOException {
         List<List<DevCard>> init = new ObjectMapper().readValue(
                 getClass().getResourceAsStream("/json/DevCards.json"),
-                new TypeReference<List<List<DevCard>>>(){});
+                new TypeReference<>(){});
 
-        this.devDeckGrid = new ArrayList<>();
+        devDeckGrid = new ArrayList<>();
         for(List<DevCard> deck : init){
             Deck<DevCard> temp = new Deck<>(deck);
             temp.shuffle();
-            this.devDeckGrid.add(temp);
+            devDeckGrid.add(temp);
         }
     }
 
@@ -86,7 +86,7 @@ public class DevSetup implements MappableToLiteVersion {
      */
     @Override
     public LiteDevSetup liteVersion() {
-        LiteDevCard[][] result = new LiteDevCard[3][4]; // todo remove the hardcoded values
+        LiteDevCard[][] result = new LiteDevCard[3][4];
         LiteDevCard nullCard= new LiteDevCard("EMPTY", null, 0, LevelDevCard.NOLEVEL, ColorDevCard.NOCOLOR, new ArrayList<>());
 
         int i = 0;

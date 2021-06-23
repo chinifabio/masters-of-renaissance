@@ -37,11 +37,7 @@ public class AddDepotEffect extends Effect{
      */
     @Override
     public void use(CardReaction p) {
-        try {
-            ((PlayableCardReaction) p).addDepot(this.res);
-        } catch (ExtraDepotsException e) {
-            // todo delete this exception so you can add infinite depot
-        }
+        ((PlayableCardReaction) p).addDepot(this.res);
     }
 
     /**

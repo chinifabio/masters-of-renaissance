@@ -25,6 +25,10 @@ public class Dispatcher {
         for (SocketListener x : this.listeners.values()) x.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.MESSENGER, message));
     }
 
+    public void sendError(String message) {
+        for (SocketListener x : this.listeners.values()) x.send(new Packet(HeaderTypes.INVALID, ChannelTypes.MESSENGER, message));
+    }
+
     public void publish(Updater updater) {
         updater.update(this.model);
         for (SocketListener x : this.listeners.values()) x.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.UPDATE_LITE_MODEL, updater.jsonfy()));

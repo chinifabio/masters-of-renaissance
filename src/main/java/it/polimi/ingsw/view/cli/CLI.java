@@ -9,11 +9,13 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.*;
 import it.polimi.ingsw.communication.packet.rendering.Lighter;
+import it.polimi.ingsw.communication.packet.updates.TokenUpdater;
 import it.polimi.ingsw.communication.packet.updates.Updater;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
+import it.polimi.ingsw.model.cards.SoloActionToken;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -28,6 +30,7 @@ import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.cli.printer.*;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
+import it.polimi.ingsw.view.cli.printer.cardprinter.SoloActionTokenPrinter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -132,6 +135,23 @@ public class CLI implements View, Disconnectable {
         return this.model;
     }
 
+    @Override
+    public void popUpLorenzoMoves() {
+        try {
+            synchronized (printerLock) {
+                SoloActionTokenPrinter.printSoloActionToken(model.getSoloToken());
+            }
+        } catch (NullPointerException nul) {
+            notifyPlayerError("Solo action token used by lorenzo is scomparisciuted");
+        }
+    }
+
+    @Override
+    public void quittaMalamente() {
+        notifyPlayerError("Something gone wrong, you will be disconnected");
+        System.exit(0);
+    }
+
     /**
      * read data from command line when needed
      */
@@ -144,7 +164,10 @@ public class CLI implements View, Disconnectable {
         while (connected) {
             Packet received = socket.pollPacket();
             switch (received.channel) {
-                case MESSENGER -> notifyPlayer(received.body);
+                case MESSENGER -> {
+                    if (received.header == HeaderTypes.NOTIFY) notifyPlayer(received.body);
+                    if (received.header == HeaderTypes.INVALID) notifyPlayerError(received.body);
+                }
 
                 case PLAYER_ACTIONS -> {
                     // todo send with OK header the new model
@@ -155,10 +178,17 @@ public class CLI implements View, Disconnectable {
                 }
 
                 case UPDATE_LITE_MODEL -> {
+                    Updater up;
                     try {
-                        ((Updater) new ObjectMapper().readerFor(Updater.class).readValue(received.body)).update(this.model);
+                        up = new ObjectMapper().readerFor(Updater.class).readValue(received.body);
+                        up.update(this.model);
                     } catch (JsonProcessingException e) {
-                        System.out.println(Colors.color(Colors.RED, "update view error: ") + e.getMessage());
+                        quittaMalamente();
+                        return;
+                    }
+
+                    if (up instanceof TokenUpdater) {
+                        popUpLorenzoMoves();
                     }
                 }
 
@@ -166,7 +196,7 @@ public class CLI implements View, Disconnectable {
                     try {
                         ((Lighter)new ObjectMapper().readerFor(Lighter.class).readValue(received.body)).fire(this);
                     } catch (JsonProcessingException e) {
-                        System.out.println(Colors.color(Colors.RED, "render cannon error: ") + e.getMessage());
+                        quittaMalamente();
                     }
                 }
 

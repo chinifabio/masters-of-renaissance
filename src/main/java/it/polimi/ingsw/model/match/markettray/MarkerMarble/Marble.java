@@ -39,7 +39,7 @@ public class Marble implements MappableToLiteVersion {
      * @param toResource resourceType to build the resource when someone request it
      */
     @JsonCreator
-    protected Marble(@JsonProperty("color") MarbleColor color, @JsonProperty("toResource") ResourceType toResource) {
+    public Marble(@JsonProperty("color") MarbleColor color, @JsonProperty("toResource") ResourceType toResource) {
         this.color = color;
         this.toResource = toResource;
     }
@@ -120,6 +120,5 @@ public class Marble implements MappableToLiteVersion {
     @Override
     public LiteMarble liteVersion() {
         return new LiteMarble(this.color, this.toResource);
-        // todo add the lite version of the paintable marble
     }
 }

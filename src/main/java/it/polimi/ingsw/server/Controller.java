@@ -321,7 +321,7 @@ class GameInit implements ControllerState {
      */
     @Override
     public void handleDisconnection(Controller context) {
-        // todo ehehehe
+        // todo ehehehe *faccina col sudore che ride*
     }
 
     /**

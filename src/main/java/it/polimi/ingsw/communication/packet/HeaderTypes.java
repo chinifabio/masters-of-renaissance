@@ -15,5 +15,6 @@ public enum HeaderTypes {
     PONG,
     TIMEOUT,
     LOCK,
-    UNLOCK
+    UNLOCK,
+    TOKEN
 }

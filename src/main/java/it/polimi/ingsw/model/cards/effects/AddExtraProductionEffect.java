@@ -34,11 +34,7 @@ public class AddExtraProductionEffect extends Effect{
      */
     @Override
     public void use(CardReaction p) {
-        try {
-            ((PlayableCardReaction) p).addExtraProduction(this.prod);
-        } catch (ExtraProductionException e) {
-            // todo delete this exception so you can add infinite extra production
-        }
+        ((PlayableCardReaction) p).addExtraProduction(this.prod);
     }
 
     /**

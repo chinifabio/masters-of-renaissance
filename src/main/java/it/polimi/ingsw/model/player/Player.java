@@ -173,8 +173,12 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param prod is the production to add
      */
     @Override
-    public void addExtraProduction(Production prod) throws ExtraProductionException {
-        this.personalBoard.addExtraProduction(prod);
+    public void addExtraProduction(Production prod) {
+        try {
+            this.personalBoard.addExtraProduction(prod);
+        } catch (ExtraProductionException e) {
+            view.sendError(e.getMessage());
+        }
     }
 
     /**
@@ -182,8 +186,12 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param res new depot type to be added to Warehouse depots
      */
     @Override
-    public void addDepot(ResourceType res) throws ExtraDepotsException {
-        this.personalBoard.addDepot(res);
+    public void addDepot(ResourceType res) {
+        try {
+            this.personalBoard.addDepot(res);
+        } catch (ExtraDepotsException e) {
+            view.sendError(e.getMessage());
+        }
     }
 
     /**
@@ -212,12 +220,23 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param slot is the Depot where the Resources will be inserted
      * @param obt the resource obtained
      * @return the succeed of the operation
-     * @throws WrongDepotException if the Depot can't be used
      */
     @Override
-    public boolean obtainResource(DepotSlot slot, Resource obt) throws WrongDepotException, UnobtainableResourceException, EndGameException {
-        obt.onObtain(this);
-        return (obt.isStorable() && this.personalBoard.insertInDepot(slot, obt));
+    public boolean obtainResource(DepotSlot slot, Resource obt) {
+        try {
+            obt.onObtain(this);
+            return (obt.isStorable() && this.personalBoard.insertInDepot(slot, obt));
+        }
+
+        catch (EndGameException end) {
+            match.startEndGameLogic();
+            return true;
+        }
+
+        catch (Exception e) {
+            view.sendError(e.getMessage());
+            return false;
+        }
     }
 
     /**
@@ -225,8 +244,12 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param amount how many cells the marker moves
      */
     @Override
-    public void moveFaithMarker(int amount) throws EndGameException {
-        this.personalBoard.moveFaithMarker(amount, this.match);
+    public void moveFaithMarker(int amount) {
+        try {
+            personalBoard.moveFaithMarker(amount, match);
+        } catch (EndGameException e) {
+            match.startEndGameLogic();
+        }
     }
 
 
@@ -265,8 +288,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     }
 
     /**
-     * 
-     * @return
+     *
      */
     @Override
     public Packet buyCard() {
@@ -374,7 +396,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         try {
             this.personalBoard.addLeaderCard(leaderCard);
         } catch (AlreadyInDeckException e) {
-            // todo error to player handler
+            view.sendError(e.getMessage());
         }
     }
 
@@ -392,6 +414,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         if (!this.personalBoard.checkDevCard(slotDestination, card)) {
             return false;
         }
+
         //discount
         for (Resource resLoop : this.marketDiscount) {
             for (int j = 0; j < req.size(); j++) {
@@ -405,6 +428,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
                 }
             }
         }
+
         //resource check
         List<Resource> tempBufferRes;
         tempBufferRes = this.personalBoard.viewDepotResource(DepotSlot.DEVBUFFER);
@@ -415,6 +439,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
                 }
             }
         }
+
         //resource removal
         this.personalBoard.flushBufferDevCard();
         return true;

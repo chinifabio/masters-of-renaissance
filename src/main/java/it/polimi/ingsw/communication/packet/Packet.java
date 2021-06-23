@@ -29,7 +29,6 @@ public class Packet {
      * @param channel the channel of the packet
      * @param body the message transported by the packet
      */
-    // todo implements all the possible types of packet as classes that implements the inteface Packet
     @JsonCreator
     public Packet(
             @JsonProperty("Header") HeaderTypes header,

@@ -9,7 +9,6 @@ import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.cards.effects.AddDiscountEffect;
 import it.polimi.ingsw.model.cards.effects.AddProductionEffect;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.requisite.LootTypeException;
@@ -85,9 +84,9 @@ public class PlayerTest{
     }
 
     @RepeatedTest(25)
-    public void BuyDevCard() throws UnobtainableResourceException, WrongDepotException, EndGameException, LootTypeException {
-        DevCard card1 = game.viewDevSetup().get(0);
-        DevCard card2 = game.viewDevSetup().get(3);
+    public void BuyDevCard() throws LootTypeException {
+        DevCard card1 = game.test_viewDevSetup().get(0);
+        DevCard card2 = game.test_viewDevSetup().get(3);
 
 
         for(int i=0 ; i<card1.getCost().size() ; i++){

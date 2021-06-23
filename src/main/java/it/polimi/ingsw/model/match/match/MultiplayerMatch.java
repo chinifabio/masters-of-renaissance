@@ -4,14 +4,12 @@ import it.polimi.ingsw.communication.packet.updates.PlayerOrderUpdater;
 import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.model.Pair;
 import it.polimi.ingsw.model.Dispatcher;
-import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.player.CountingPointsPlayerState;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This class represents the MultiplayerMatch
@@ -112,14 +110,7 @@ public class MultiplayerMatch extends Match{
         new ArrayList<>(connectedPlayers)
                 .stream()
                 .filter(p->!p.equals(connectedPlayers.get(curPlayer)))
-                .forEach(p-> {
-                    try {
-                        p.moveFaithMarker(amount);
-                    } catch (EndGameException e) {
-                        p.setState(new CountingPointsPlayerState(p));
-                        startEndGameLogic();
-                    }
-                });
+                .forEach(p-> p.moveFaithMarker(amount));
     }
 
     /**

@@ -7,6 +7,7 @@ import it.polimi.ingsw.communication.SocketListener;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.rendering.Lighter;
+import it.polimi.ingsw.communication.packet.updates.TokenUpdater;
 import it.polimi.ingsw.communication.packet.updates.Updater;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -21,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class GUI extends JFrame implements View, Disconnectable {
 
@@ -70,6 +72,20 @@ public class GUI extends JFrame implements View, Disconnectable {
         notifyPanel.appendMessage(errorMessage, new Color(255, 110, 102));
     }
 
+    @Override
+    public void popUpLorenzoMoves() {
+        try {
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(this.getClass().getResource("/SoloActionTokenImages/" + model.getSoloToken().getCardID() + ".png")));
+            JOptionPane.showMessageDialog(
+                    null,
+                    null,
+                    "Lorenzo moves", JOptionPane.INFORMATION_MESSAGE,
+                    icon);
+        } catch (NullPointerException e) {
+            notifyPlayerError("Vincenzo è un terrone e puzza perchè non si lava, teroni bastardi. Ruspe!");
+        }
+    }
+
     /**
      * return the liteModel of the view
      *
@@ -102,6 +118,12 @@ public class GUI extends JFrame implements View, Disconnectable {
     }
 
     @Override
+    public void quittaMalamente() {
+        JOptionPane.showMessageDialog(null, "Something gone wrong, you will be disconnected");
+        System.exit(0);
+    }
+
+    @Override
     public void fireGameCreator() {
         switchPanels(new AskPlayers(this));
     }
@@ -117,7 +139,7 @@ public class GUI extends JFrame implements View, Disconnectable {
     @Override
     public void start() {
         new Thread(socket).start();
-        // todo can be changed implementing .execute(View view) in Packet, so we can avoid switch statement
+
         while (activeClient) {
             Packet received = socket.pollPacket();
             switch (received.channel) {
@@ -133,13 +155,18 @@ public class GUI extends JFrame implements View, Disconnectable {
                 }
 
                 case UPDATE_LITE_MODEL -> {
+                    Updater up;
                     try {
-                        Updater up = new ObjectMapper().readerFor(Updater.class).readValue(received.body);
+                        up = new ObjectMapper().readerFor(Updater.class).readValue(received.body);
                         up.update(this.model);
                         //updatePanel(); todo de comment when model will send all the changes in only one packet
-                        // todo in the OK packet there is a serialized "image" of the match
                     } catch (JsonProcessingException e) {
-                        System.out.println(Colors.color(Colors.RED, "update view error: ") + e.getMessage());
+                        quittaMalamente();
+                        return;
+                    }
+
+                    if (up instanceof TokenUpdater) {
+                        popUpLorenzoMoves();
                     }
                 }
 
@@ -148,7 +175,7 @@ public class GUI extends JFrame implements View, Disconnectable {
                         Lighter ammo = new ObjectMapper().readerFor(Lighter.class).readValue(received.body);
                         ammo.fire(this);
                     } catch (JsonProcessingException e) {
-                        System.out.println(Colors.color(Colors.RED, "render cannon error: ") + e.getMessage());
+                        quittaMalamente();
                     }
                 }
 
@@ -188,7 +215,7 @@ public class GUI extends JFrame implements View, Disconnectable {
 
     public void switchPanels(GuiPanel toSee){
         synchronized (gamePanel) {
-            gamePanel.removeAll(); // todo can cause problems
+            gamePanel.removeAll();
             actualPanel = toSee;
 
             try {
@@ -205,7 +232,7 @@ public class GUI extends JFrame implements View, Disconnectable {
     }
 
     public void updatePanel() {
-        gamePanel.removeAll(); // todo can cause problems
+        gamePanel.removeAll();
 
         try {
             gamePanel.add(actualPanel.update());

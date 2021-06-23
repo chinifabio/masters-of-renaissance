@@ -44,7 +44,7 @@ public interface PlayerToMatch {
      * return a view of the dev setup. It is shown only the first card of each decks
      * @return the list representation of the dev setup
      */
-    List<DevCard> viewDevSetup();
+    List<DevCard> test_viewDevSetup();
 
     /**
      * player ask to buy the first card of the deck in position passed as parameter
@@ -73,7 +73,6 @@ public interface PlayerToMatch {
 
     /**
      * Tells to the match the end of the player turn;
-     * @return true if the player ended is turn
      */
     void turnDone();
 
@@ -81,7 +80,7 @@ public interface PlayerToMatch {
      * This method return a Leader Card Deck
      * @return Leader Card Deck
      */
-    List<LeaderCard> requestLeaderCard();
+    List<LeaderCard> requestLeaderCard() throws EmptyDeckException;
 
     /**
      * This method starts the end game logic

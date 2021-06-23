@@ -139,9 +139,6 @@ public class ProductionPrinter {
                 display[i][initcol+11] = "║";
             }
 
-            //TODO Da riguardare, trovare un modo di crare una lista di risorse con amount 0 e modificare l'amount in base a quello presente nella lista della added
-
-
             initrow = x + 8;
             initcol = reset + 3;
             int num = 0;
@@ -189,40 +186,4 @@ public class ProductionPrinter {
         System.out.println();
 
     }
-
-
-    /*
-    public  static void main(String[] args){
-        Map<ProductionID, LiteProduction> productionMap = new EnumMap<>(ProductionID.class);
-        List<LiteResource> required = new ArrayList<>();
-        List<LiteResource> output = new ArrayList<>();
-
-        List<LiteResource> added = new ArrayList<>();
-        added.add(new LiteResource(ResourceType.COIN, 2));
-        added.add(new LiteResource(ResourceType.SERVANT, 2));
-        added.add(new LiteResource(ResourceType.SHIELD, 2));
-
-        required.add(new LiteResource(ResourceType.COIN, 2));
-        output.add(new LiteResource(ResourceType.SERVANT, 1));
-        output.add(new LiteResource(ResourceType.FAITHPOINT, 1));
-
-        productionMap.put(ProductionID.BASIC, new LiteProduction(required, added, output));
-
-        required.add(new LiteResource(ResourceType.STONE, 2));
-        productionMap.put(ProductionID.LEFT, new LiteProduction(required, added, output));
-
-        required.add(new LiteResource(ResourceType.SHIELD, 3));
-        output.add(new LiteResource(ResourceType.COIN, 3));
-        productionMap.put(ProductionID.CENTER, new LiteProduction(required, added, output));
-
-
-        printProductions(productionMap);
-
-
-
-    }
-
-     */
-
-
 }

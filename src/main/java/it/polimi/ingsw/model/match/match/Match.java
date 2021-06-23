@@ -175,21 +175,16 @@ public abstract class Match implements PlayerToMatch {
      * @return the list representation of the dev setup
      */
     @Override
-    public List<DevCard> viewDevSetup() {                                   // solo per test?
+    public List<DevCard> test_viewDevSetup() {
         List<DevCard> temp = new ArrayList<>();
         for(ColorDevCard colorDevCard : ColorDevCard.values()){
             if(colorDevCard.equals(ColorDevCard.NOCOLOR)) break;
             for(LevelDevCard levelDevCard : LevelDevCard.values()){
                 if(levelDevCard.equals(LevelDevCard.NOLEVEL)) break;
-                try {
-                    temp.add(this.devSetup.showDevDeck(levelDevCard, colorDevCard));
-                } catch (IndexOutOfBoundsException e) {
-                    System.out.println("Failed to find the Deck: " + colorDevCard + " " + levelDevCard);
-                }
+                temp.add(devSetup.showDevDeck(levelDevCard, colorDevCard));
             }
         }
         return temp;
-        //TODO testing: what if the level1 deck is empty? does it break?
     }
 
     /**
@@ -201,7 +196,6 @@ public abstract class Match implements PlayerToMatch {
      */
     @Override
     public boolean buyDevCard(LevelDevCard row, ColorDevCard col) throws PlayerStateException, EmptyDeckException, LootTypeException, AlreadyInDeckException, EndGameException {
-        // todo check if non current players actually can't buy a card
         if (this.currentPlayer().hasRequisite(this.devSetup.showDevDeck(row, col).getCost(),row,col,this.devSetup.showDevDeck(row,col))) {
             this.currentPlayer().receiveDevCard(this.devSetup.drawFromDeck(row, col));
 
@@ -241,16 +235,10 @@ public abstract class Match implements PlayerToMatch {
      * @return Leader Card Deck
      */
     @Override
-    public List<LeaderCard> requestLeaderCard() {
-        int size = 4;
-        List<LeaderCard> ret = new ArrayList<>(size);
-        for(int i = 0; i < size; i++) {
-            try {
-                ret.add(this.leaderCardDeck.draw());
-            } catch (EmptyDeckException e) {
-                // todo end the game with error state
-            }
-        }
+    public List<LeaderCard> requestLeaderCard() throws EmptyDeckException {
+        int initialLeader = 4;
+        List<LeaderCard> ret = new ArrayList<>(initialLeader);
+        for(int i = 0; i < initialLeader; i++) ret.add(leaderCardDeck.draw());
         return ret;
     }
 

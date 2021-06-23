@@ -1,11 +1,8 @@
 package it.polimi.ingsw.matchTests;
 
 import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.Dispatcher;
-import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
-import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
@@ -103,20 +100,7 @@ public class MultiplayerMatchTest {
     @RepeatedTest(5)
     public void endMatchByEndFaithTrack() {
 
-        int i = 0;
-        while (true) {
-            try {
-                order.get(0).obtainResource(DepotSlot.STRONGBOX, MarbleBuilder.buildRed().toResource());
-            } catch (EndGameException e) {
-                multiplayer.startEndGameLogic();
-                break;
-            }
-            catch (Exception e) {fail();}
-            finally {
-                i++;
-            }
-        }
-        assertEquals(24, i);
+        order.get(0).obtainResource(DepotSlot.BUFFER, ResourceBuilder.buildFaithPoint(24));
 
         order.get(1).test_endTurnNoMain();
         order.get(2).test_endTurnNoMain();

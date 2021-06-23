@@ -85,22 +85,7 @@ public class PersonalBoardPanel  extends GuiPanel {
         moveResources.addActionListener(e -> gui.switchPanels(new MoveResourcesPanel(gui)));
 
         JButton endTurn = new JButton("EndTurn");
-        endTurn.addActionListener(e -> {
-            //TODO FA FARE CON FABIO CHE LO FARA' MEGLIO
-            /*
-            if (players.isEmpty()) {
-                ImageIcon icon = new ImageIcon(Objects.requireNonNull(this.getClass().getResource("/SoloActionTokenImages/" + gui.getModel().getSoloToken().getCardID() + ".png")));
-                JOptionPane.showMessageDialog(
-                        null,
-                        "This is the first Action Token",
-                        "Solo Action Token", JOptionPane.INFORMATION_MESSAGE,
-                        icon);
-            }
-
-             */
-            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy()));
-            gui.switchPanels(new PersonalBoardPanel(gui)); // todo try with this instead of creating a new instance
-        });
+        endTurn.addActionListener(e -> gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new EndTurnCommand().jsonfy())));
 
         bottomPanel.setBackground(GUI.borderColor);
         buttons.setOpaque(false);

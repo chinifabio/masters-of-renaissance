@@ -4,7 +4,6 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.cards.effects.*;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
-import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
@@ -135,7 +134,7 @@ public class LeaderTest {
         while(list.get(whiteMarble).color() != MarbleColor.WHITE) whiteMarble++;
 
         // adding marble conversion
-        Marble conv = MarbleBuilder.buildBlue();
+        Marble conv = new Marble(MarbleColor.BLUE, ResourceType.SHIELD);
         Effect test = new WhiteMarbleEffect(conv);
 
         assertTrue(game.currentPlayer().test_getConv().isEmpty());

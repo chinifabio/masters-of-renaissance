@@ -74,7 +74,7 @@ public class SocketListener implements Runnable {
                 try {
                     receiver.wait();
                 } catch (InterruptedException e) {
-                    e.printStackTrace(); // todo mmmm sus
+                    disconnectable.handleDisconnection();
                 }
 
                 if (!connected) return new Packet(HeaderTypes.TIMEOUT, ChannelTypes.CONNECTION_STATUS, "connection closed");

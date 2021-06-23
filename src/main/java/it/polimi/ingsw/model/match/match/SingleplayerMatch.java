@@ -14,6 +14,7 @@ import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.match.SoloTokenReaction;
+import it.polimi.ingsw.model.player.CountingPointsPlayerState;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
@@ -72,8 +73,6 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
         this.soloToken = new Deck<>(init);
         this.soloToken.shuffle();
-
-        updateToken();
 
         this.discardedFromToken = new Deck<>();
 
@@ -174,7 +173,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
                         this.startEndGameLogic();
                     }
                 } catch (AlreadyInDeckException e) {
-                    // todo error to controller
+                    view.sendMessage("Lorenzo broke the game discarding a develop card");
                 }
             }
         }
@@ -197,9 +196,9 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
             SoloActionToken s = this.soloToken.useAndDiscard();
             s.useEffect(this);
             view.sendMessage("Lorenzo used " + s.getCardID());
-            updateToken();
-        } catch (EmptyDeckException ignore) {
-            System.out.println(">.<");
+            updateToken(s);
+        } catch (EmptyDeckException e) {
+            view.sendError("Lorenzo broke the game using a solo action token");
         }
 
         this.marketTray.unPaint();
@@ -224,6 +223,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     public void startEndGameLogic() {
         gameOnAir = false;
         if (model != null) model.matchEnded();
+        player.setState(new CountingPointsPlayerState(player));
         player.endThisTurn();
     }
 
@@ -287,12 +287,13 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
                 "You won against Lorenzo il Magnifico" );
 
         if (!lorenzoWinner) scoreboard.addPlayerScore(player.getNickname(), player.calculateVictoryPoints());
+        else scoreboard.addPlayerScore(lorenzoNickname, -1);
 
         return scoreboard;
     }
 
-    private void updateToken() {
-        this.view.publish(new TokenUpdater(this.soloToken.peekFirstCard().liteVersion()));
+    private void updateToken(SoloActionToken used) {
+        this.view.publish(new TokenUpdater(used.liteVersion()));
     }
 
     /**

@@ -136,9 +136,9 @@ public class EffectTest {
     void destroyCardsEffect() {
         SoloActionToken token = new SoloActionToken("505", new DestroyCardsEffect(ColorDevCard.GREEN));
 
-        DevCard oldOnTop = singleplayer.viewDevSetup().get(0);
+        DevCard oldOnTop = singleplayer.test_viewDevSetup().get(0);
         token.useEffect(singleplayer);
-        assertNotEquals(oldOnTop, singleplayer.viewDevSetup().get(0));
+        assertNotEquals(oldOnTop, singleplayer.test_viewDevSetup().get(0));
     }
 
     @Test
@@ -150,7 +150,6 @@ public class EffectTest {
         assertEquals(x+2, singleplayer.lorenzoPosition());
     }
 
-    //TODO adjust when buyDevCard will works
     @Test
     void addDiscountEffect() throws IllegalTypeInProduction, IOException {
         List<Requisite> req = new ArrayList<>();

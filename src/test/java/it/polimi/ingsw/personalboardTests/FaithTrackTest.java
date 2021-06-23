@@ -249,10 +249,7 @@ public class FaithTrackTest {
             game.currentPlayer().test_endTurnNoMain();
         });
 
-        try {
-            game.currentPlayer().moveFaithMarker(8);//Player2: 24
-        } catch (EndGameException ignore) {}
-
+        game.currentPlayer().moveFaithMarker(8);//Player2: 24
 
         assertEquals(12 + 4 + 3 + 2, order.get(0).getFT_forTest().countingFaithTrackVictoryPoints()); //FIRST PLAYER
         assertEquals(20 + 4 + 2, order.get(1).getFT_forTest().countingFaithTrackVictoryPoints()); //SECOND PLAYER

@@ -6,6 +6,7 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
+import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
@@ -49,16 +50,13 @@ public class InitialSelectionPlayerState extends PlayerState {
                 new Packet(HeaderTypes.GAME_INIT, ChannelTypes.PLAYER_ACTIONS, "reconnect"));
 
         Pair<Integer> initRes = Optional.of(context.initialSetup).orElse(new Pair<>(0,0));
-        try { this.context.moveFaithMarker(initRes.two); } catch (EndGameException ignore) {}
+        this.context.moveFaithMarker(initRes.two);
         this.toChoose = initRes.one;
 
-        for(LeaderCard ld : this.context.match.requestLeaderCard()) {
-            try {
-                this.context.personalBoard.addLeaderCard(ld);
-            } catch (AlreadyInDeckException e) {
-                e.printStackTrace();
-                // todo error to player handler
-            }
+        try {
+            for(LeaderCard ld : this.context.match.requestLeaderCard()) this.context.personalBoard.addLeaderCard(ld);
+        } catch (EmptyDeckException | AlreadyInDeckException e) {
+            context.view.sendError(e.getMessage());
         }
     }
 

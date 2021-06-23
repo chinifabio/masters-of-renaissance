@@ -19,6 +19,8 @@ public interface View {
      */
     void notifyPlayerError(String errorMessage);
 
+    void popUpLorenzoMoves();
+
     void fireGameCreator();
     void fireLobbyWait();
     void fireGameInit();
@@ -33,4 +35,6 @@ public interface View {
     LiteModel getModel();
 
     void start();
+
+    void quittaMalamente();
 }

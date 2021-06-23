@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
 import it.polimi.ingsw.model.match.markettray.DimensionReader;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
-import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleBuilder;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.match.markettray.MarketTray;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -218,7 +217,7 @@ public class MarketTrayTest {
             fail(e.getMessage());
         }
 
-        Marble conversion = MarbleBuilder.buildGray();
+        Marble conversion = new Marble(MarbleColor.GRAY, ResourceType.STONE);
 
         List<Marble> marbles = tray.showMarketTray();
         marbles.add(tray.showSlideMarble());

@@ -53,9 +53,6 @@ public class WarehousePanel  extends JPanel {
         bottomDepot.setOpaque(false);
         bottomDepot.setPreferredSize(new Dimension(75, 10));
 
-
-
-
         JPanel bigStrong = new JPanel();
 
 
