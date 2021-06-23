@@ -168,6 +168,7 @@ public class NoActionDonePlayerState extends PlayerState {
         try {
             this.context.personalBoard.moveInProduction(from, dest, loot);
         } catch (Exception e) {
+            e.printStackTrace();
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
 
@@ -186,7 +187,8 @@ public class NoActionDonePlayerState extends PlayerState {
         try {
             this.context.personalBoard.moveResourceDepot(from, to, loot);
         } catch (Exception e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            e.printStackTrace();
+            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e + " " + e.getCause() + " " + e.getMessage());
         }
 
         return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Resource moved successfully");

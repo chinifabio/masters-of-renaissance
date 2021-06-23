@@ -31,16 +31,19 @@ public abstract class Production implements MappableToLiteVersion {
     /**
      * This attribute is the list of the Resources required to activate the Production
      */
+    @JsonIgnore
     protected final List<Resource> required;
 
     /**
      * This attribute is the list of the Resources obtained after the Production
      */
+    @JsonIgnore
     protected final List<Resource> output;
 
     /**
      * This attribute indicates the resources selected by the Player to activate this Production
      */
+    @JsonIgnore
     protected List<Resource> addedResource;
 
     /**
@@ -87,7 +90,6 @@ public abstract class Production implements MappableToLiteVersion {
             output.stream().filter(x -> x.equalsType(res)).findAny().orElse(ResourceBuilder.buildUnknown()).merge(res);
 
         this.addedResource = ResourceBuilder.buildListOfResource();
-
 
         this.activated = false;
         this.selected = false;

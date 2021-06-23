@@ -234,7 +234,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      */
     @Override
     public int playerInGame() {
-        return 1;
+        return player == null ? 0 : 1;
     }
 
     /**

@@ -2,16 +2,23 @@ package it.polimi.ingsw.personalboardTests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
+import it.polimi.ingsw.model.match.match.Match;
+import it.polimi.ingsw.model.match.match.SingleplayerMatch;
+import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.UnknownProduction;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -157,6 +164,40 @@ public class ProductionTest {
         assertFalse(test.activate());
 
         assertArrayEquals(new Resource[]{ResourceBuilder.buildFaithPoint()}, test.getOutput().toArray());
+    }
+
+    @Test
+    public void activateUnknownProduction() {
+        assertDoesNotThrow(()->{
+            Dispatcher view = new Dispatcher();
+            Match match = new SingleplayerMatch(view);
+
+            Player player = new Player("Dummy", match, view);
+
+            match.playerJoin(player);
+
+            player.test_discardLeader();
+            player.test_discardLeader();
+            player.endThisTurn();
+
+            // normalizing the basic production
+            player.setNormalProduction(ProductionID.BASIC, new NormalProduction(
+                    Collections.singletonList(ResourceBuilder.buildCoin(2)),
+                    Collections.singletonList(ResourceBuilder.buildServant())
+            ));
+            // cheating and getting resources
+            player.obtainResource(DepotSlot.MIDDLE, ResourceBuilder.buildCoin(2));
+
+            // adding resource to the basic production
+            player.moveInProduction(DepotSlot.MIDDLE, ProductionID.BASIC, ResourceBuilder.buildCoin(2));
+
+            // activating the production
+            player.activateProductions();
+
+            // checking he has stone in the strongbox
+            assertTrue(player.test_getPB().getDepots().get(DepotSlot.STRONGBOX).viewResources().contains(ResourceBuilder.buildServant()));
+
+        });
     }
 
 }

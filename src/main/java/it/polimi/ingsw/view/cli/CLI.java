@@ -466,6 +466,7 @@ class CliInGameState extends CliState {
                         ));
                     }
 
+                    i++; // without this output will never be calculated
                     List<Resource> output = new ArrayList<>();
                     while (!data.get(i).equals("x")) {
                         output.add(ResourceBuilder.buildFromType(
@@ -551,6 +552,17 @@ class CliInGameState extends CliState {
             case "track":
             case "faithtrack":
                 context.faithTrackPrinter.printTrack(context.model);
+                break;
+
+            case "productions":
+            case "prod":
+                try {
+                    ProductionPrinter.printProductions(context.model, data.get(1));
+                } catch (IndexOutOfBoundsException out) {
+                    ProductionPrinter.printProductions(context.model, context.model.getMe());
+                } catch (NullPointerException nul) {
+                    context.notifyPlayerError("player doesn't exist");
+                }
                 break;
 
             case "discounts":

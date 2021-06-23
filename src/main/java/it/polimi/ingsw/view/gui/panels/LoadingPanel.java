@@ -1,15 +1,11 @@
 package it.polimi.ingsw.view.gui.panels;
 
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Objects;
 
 public class LoadingPanel extends GuiPanel {

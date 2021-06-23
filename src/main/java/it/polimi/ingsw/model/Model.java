@@ -38,8 +38,6 @@ public class Model {
      */
     public final int gameSize;
 
-    private int playerJoined = 0;
-
     public Model(int size) throws IOException {
         gameSize = size;
 
@@ -73,9 +71,8 @@ public class Model {
         Player p = new Player(nickname, this.match, this.dispatcher);
         this.players.put(client, p);
         if (!this.match.playerJoin(p)) throw new Exception("Something strange is going on ༼ つ ◕_◕ ༽つ");
-        playerJoined++;
 
-        if (playerJoined == match.gameSize) {
+        if (match.playerInGame() == match.gameSize) {
             System.out.println("sto mandando le munizioni");
             players.forEach((controller, player) -> controller.gameInit());
         }
@@ -86,7 +83,7 @@ public class Model {
      * @return the number of available seats
      */
     public int availableSeat() {
-        return gameSize - playerJoined;
+        return gameSize - match.playerInGame();
     }
 
     public void gameSetupDone() {

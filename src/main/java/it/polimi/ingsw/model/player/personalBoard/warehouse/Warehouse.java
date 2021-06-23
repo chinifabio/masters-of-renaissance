@@ -194,6 +194,7 @@ public class Warehouse {
 
         for (Map.Entry<ProductionID, Production> entry : availableProductions.entrySet()) {
             if (entry.getValue().isSelected() && !entry.getValue().activate()){
+                // upper logic condition says: selected and has wrong added resource (activate() checks that req is satisfied)
                 clearProduction();
                 return false;
             }
@@ -202,8 +203,7 @@ public class Warehouse {
         for (Map.Entry<ProductionID, Production> entry : availableProductions.entrySet()){
             if(entry.getValue().isActivated()){
                 for (Resource res : entry.getValue().getOutput()){
-                    player.obtainResource(DepotSlot.STRONGBOX,res);
-                    //insertInDepot(DepotSlot.STRONGBOX, res);
+                    player.obtainResource(DepotSlot.STRONGBOX, res);
                 }
             }
             entry.getValue().reset();

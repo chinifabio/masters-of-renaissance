@@ -279,6 +279,7 @@ class WaitingInLobby implements ControllerState {
     public void handleDisconnection(Controller context) {
         if (context.model.disconnectPlayer(context))                  // disconnection from model
             context.server.disconnect(context.nickname, context);             // disconnection from server
+        else context.server.removeController(context.nickname);
     }
 
     /**

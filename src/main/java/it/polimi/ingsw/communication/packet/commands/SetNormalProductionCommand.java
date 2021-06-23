@@ -40,6 +40,6 @@ public class SetNormalProductionCommand extends Command{
      */
     @Override
     public Packet execute(PlayerAction player) {
-        return player.setNormalProduction(this.id, this.prod);
+        return player.setNormalProduction(id, prod);
     }
 }

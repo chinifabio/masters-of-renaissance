@@ -36,17 +36,13 @@ public class NormalProduction extends Production{
      */
     @Override
     public boolean activate() {
-        if (this.activated) return false;
+        if (activated) return false;
 
-        boolean result = true;
         for(int i = 0; i < required.size(); i++) {
-            if (!required.get(i).equals(addedResource.get(i))) {
-                result = false;
-                break;
-            }
+            if (!required.get(i).equals(addedResource.get(i))) return false;
         }
-        this.activated = result;
-        return result;
+
+        return (activated = true);
     }
 
     /**
@@ -55,18 +51,19 @@ public class NormalProduction extends Production{
      * @return the succeed of the operation
      */
     // todo return false if resource goes out of upper bound
+    // todo improve the code below so you don't need to create so many variables
     @Override
     public boolean insertResource(Resource input) {
         if (illegalType.contains(input.type())) return false;
 
         // copy the stored resource of input resource type
-        Resource stored = addedResource.stream().filter(x->x.equalsType(input)).reduce(null, (x, y) -> y);
+        Resource stored = addedResource.stream().filter(x->x.equalsType(input)).findAny().get();
         Resource copy = stored.buildNewOne();
         boolean result;
 
         // check if input can be stored
         result = copy.merge(input);
-        result &= (copy.amount() <= required.stream().filter(x->x.equalsType(copy)).reduce(null, (x,y) -> y).amount());
+        result &= (copy.amount() <= required.stream().filter(x->x.equalsType(copy)).findAny().get().amount());
 
         // store the input if it is legal
         if (result) {

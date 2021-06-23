@@ -21,7 +21,7 @@ public class UnknownProduction extends Production{
     /**
      * this normal production allow to an unknown production to work as a normal production
      */
-    private Optional<NormalProduction> normal;
+    private Optional<NormalProduction> normal = Optional.empty();
 
     /**
      * contains the number of unknown resources in the required list
@@ -42,10 +42,9 @@ public class UnknownProduction extends Production{
      */
     @JsonCreator
     public UnknownProduction(@JsonProperty("required") List<Resource> newRequired, @JsonProperty("output") List<Resource> newOutput) throws IllegalTypeInProduction {
-        super(newRequired, newOutput, Arrays.asList(ResourceType.EMPTY));
-        this.normal = Optional.empty();
-        this.unknownInRequired = this.required.stream().filter(x -> x.type() == ResourceType.UNKNOWN).findAny().orElse(ResourceBuilder.buildUnknown()).amount();
-        this.unknownInOutput = this.output.stream().filter(x -> x.type() == ResourceType.UNKNOWN).findAny().orElse(ResourceBuilder.buildUnknown()).amount();
+        super(newRequired, newOutput, Collections.singletonList(ResourceType.EMPTY));
+        unknownInRequired = required.stream().filter(x -> x.type() == ResourceType.UNKNOWN).findAny().orElse(ResourceBuilder.buildUnknown()).amount();
+        unknownInOutput = output.stream().filter(x -> x.type() == ResourceType.UNKNOWN).findAny().orElse(ResourceBuilder.buildUnknown()).amount();
     }
 
     /**
@@ -54,8 +53,8 @@ public class UnknownProduction extends Production{
      */
     @Override
     public List<Resource> getRequired() {
-        return this.normal.isPresent() ?
-            this.normal.get().getRequired() :
+        return normal.isPresent() ?
+            normal.get().getRequired() :
             super.getRequired();
     }
 
@@ -65,8 +64,8 @@ public class UnknownProduction extends Production{
      */
     @Override
     public List<Resource> getOutput() {
-        return this.normal.isPresent() ?
-                this.normal.get().getOutput() :
+        return normal.isPresent() ?
+                normal.get().getOutput() :
                 super.getOutput();
     }
 
@@ -76,8 +75,8 @@ public class UnknownProduction extends Production{
      */
     @Override
     public List<Resource> getAddedResource() {
-        return this.normal.isPresent() ?
-                this.normal.get().getAddedResource() :
+        return normal.isPresent() ?
+                normal.get().getAddedResource() :
                 super.getAddedResource();
     }
 
@@ -87,7 +86,27 @@ public class UnknownProduction extends Production{
      */
     @Override
     public boolean activate() {
-        return this.normal.isPresent() && this.normal.get().activate();
+        return normal.isPresent() && normal.get().activate();
+    }
+
+    /**
+     * This method turns the "activated" attribute to true
+     *
+     * @return true when this Production is activated
+     */
+    @Override
+    public boolean isActivated() {
+        return normal.isPresent() && normal.get().isActivated();
+    }
+
+    /**
+     * This method indicates if the player added resources to activate the production
+     *
+     * @return true if the Player added resources
+     */
+    @Override
+    public boolean isSelected() {
+        return normal.isPresent() && normal.get().isSelected();
     }
 
     /**
@@ -97,11 +116,11 @@ public class UnknownProduction extends Production{
      */
     @Override
     public boolean insertResource(Resource resource) throws UnknownUnspecifiedException {
-        if (!this.normal.isPresent()){
+        if (normal.isEmpty()){
             throw new UnknownUnspecifiedException();
         }
-        boolean result = this.normal.get().insertResource(resource);
-        if (result) this.selected = true;
+        boolean result = normal.get().insertResource(resource);
+        if (result) selected = true;
         return result;
     }
 
@@ -117,28 +136,30 @@ public class UnknownProduction extends Production{
         List<Resource> lnorm;
         List<Resource> lthis;
 
-        lnorm = ResourceBuilder.rearrangeResourceList(normalProduction.getRequired());
-        lthis = ResourceBuilder.rearrangeResourceList(this.required);
-        for(int i = 0; i < this.required.size(); i++) {
+        lnorm = ResourceBuilder.rearrangeResourceList(normalProduction.required);
+        lthis = ResourceBuilder.rearrangeResourceList(required);
+        for(int i = 0; i < required.size(); i++) {
             tempSum = lnorm.get(i).amount() - lthis.get(i).amount();
             if(lthis.get(i).type() == ResourceType.UNKNOWN) tempSum = 0;
-            if(tempSum < 0) throw new IllegalNormalProduction("too few required resources");
+            if(tempSum < 0) throw new IllegalNormalProduction("too few " + lnorm.get(i).type() + " in the required resources");
             counter += tempSum;
         }
-        if(counter > this.unknownInRequired) throw new IllegalNormalProduction("too many required resources");
+        if(counter != unknownInRequired) throw new IllegalNormalProduction("Incompatible required list of resource");
 
         counter = 0;
-        lnorm = ResourceBuilder.rearrangeResourceList(normalProduction.getOutput());
-        lthis = ResourceBuilder.rearrangeResourceList(this.output);
-        for(int i = 0; i < this.required.size(); i++) {
-            tempSum = lnorm.get(i).amount() - lthis.get(i).amount();
-            if(lthis.get(i).type() == ResourceType.UNKNOWN) tempSum = 0;
-            if(tempSum < 0 && lthis.get(i).type() != ResourceType.UNKNOWN) throw new IllegalNormalProduction( "too few out resources");
+        lnorm = ResourceBuilder.rearrangeResourceList(normalProduction.output);
+        lthis = ResourceBuilder.rearrangeResourceList(output);
+        for(int i = 0; i < this.output.size(); i++) {
+            tempSum = lnorm.get(i).amount() - lthis.get(i).amount(); // because resources can't have a new lower number
+            if(lthis.get(i).type() == ResourceType.UNKNOWN) tempSum = 0; // because unknown must decrease their number
+            if(tempSum < 0) throw new IllegalNormalProduction( "too few " + lnorm.get(i).type() + " in the required resources");
             counter += tempSum;
         }
-        if(counter > this.unknownInOutput) throw new IllegalNormalProduction("too many output resources");
+        if(counter != unknownInOutput) throw new IllegalNormalProduction("Incompatible output list of resource");
 
-        this.normal = Optional.of(normalProduction);
+
+
+        normal = Optional.of(normalProduction);
         return true;
     }
 
@@ -148,7 +169,7 @@ public class UnknownProduction extends Production{
      */
     @Override
     public boolean reset() {
-        this.normal = Optional.empty();
+        normal = Optional.empty();
         return super.reset();
     }
 }

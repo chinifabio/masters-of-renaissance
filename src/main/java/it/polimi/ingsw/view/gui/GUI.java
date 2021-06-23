@@ -112,15 +112,7 @@ public class GUI extends JFrame implements View, Disconnectable {
     }
 
     /**
-     * When an object implementing interface {@code Runnable} is used
-     * to create a thread, starting the thread causes the object's
-     * {@code run} method to be called in that separately executing
-     * thread.
-     * <p>
-     * The general contract of the method {@code run} is that it may
-     * take any action whatsoever.
-     *
-     * @see Thread#run()
+     * Receive packet and react to them
      */
     @Override
     public void start() {
@@ -201,9 +193,10 @@ public class GUI extends JFrame implements View, Disconnectable {
 
             try {
                 gamePanel.add(toSee.update());
-            } catch (IOException e) {
-                // todo break the game
-                e.printStackTrace();
+            } catch (Exception | Error e) {
+                JOptionPane.showMessageDialog(null, "You missed some resource!", "ERROR", JOptionPane.ERROR_MESSAGE);
+                activeClient = false;
+                System.exit(0);
             }
 
             gamePanel.repaint();
@@ -216,9 +209,10 @@ public class GUI extends JFrame implements View, Disconnectable {
 
         try {
             gamePanel.add(actualPanel.update());
-        } catch (IOException e) {
-            // todo break the game
-            e.printStackTrace();
+        } catch (Exception | Error e) {
+            JOptionPane.showMessageDialog(null, "You missed some resource!", "ERROR", JOptionPane.ERROR_MESSAGE);
+            activeClient = false;
+            System.exit(0);
         }
 
         gamePanel.repaint();
@@ -251,5 +245,6 @@ public class GUI extends JFrame implements View, Disconnectable {
     public void handleDisconnection() {
         activeClient = false;
         JOptionPane.showMessageDialog(null, "Connection lost :(");
+        System.exit(-1);
     }
 }
