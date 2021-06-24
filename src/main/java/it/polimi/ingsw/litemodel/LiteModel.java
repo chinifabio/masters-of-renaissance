@@ -31,7 +31,6 @@ public class LiteModel {
 
     private List<String> playerOrder = new ArrayList<>();
 
-    @JsonIgnore
     private Scoreboard scoreboard;
 
     @JsonCreator
@@ -53,6 +52,7 @@ public class LiteModel {
         this.devSetup = model.getDevSetup();
 
         this.soloToken = model.soloToken;
+        this.scoreboard = model.scoreboard;
     }
 
 // --------------- SETTER METHODS ------------------
