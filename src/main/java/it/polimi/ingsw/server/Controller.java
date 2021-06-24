@@ -2,7 +2,6 @@ package it.polimi.ingsw.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.communication.Disconnectable;
 import it.polimi.ingsw.communication.SocketListener;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
@@ -15,21 +14,20 @@ import it.polimi.ingsw.view.cli.Colors;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Controller implements Runnable, Disconnectable {
+public class Controller implements Runnable {
 
     public final Server server;
     public final SocketListener socket;
 
-    protected Model model;
+    Model model;
+    String nickname = "anonymous player";
 
     private ControllerState state = new ChooseNickname();
-
-    protected String nickname = "anonymous player";
 
     private boolean disconnected = false;
 
     public Controller(Socket socket, Server server) throws IOException {
-        this.socket = new SocketListener(socket, this);
+        this.socket = new SocketListener(socket);
         this.server = server;
 
         this.server.executeRunnable(this.socket);
@@ -42,42 +40,6 @@ public class Controller implements Runnable, Disconnectable {
 
     public Packet invalid(String message) {
         return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, message);
-    }
-
-    /**
-     * Handle client messages
-     */
-    @Override
-    public void run() {
-        while (!disconnected) {
-            // wait for a message to handle
-            Packet received = socket.pollPacket();
-            switch (received.channel) {
-                case PLAYER_ACTIONS -> {
-                    System.out.println(Colors.color(Colors.CYAN, nickname) + ": " + received);
-
-                    // save the result of the operation
-                    Packet done = state.handleMessage(received, this);
-                    socket.send(done);
-                }
-
-                case MESSENGER -> {
-                    // model.sendChat()
-                }
-
-                case CONNECTION_STATUS -> {}
-
-                default -> disconnected = true;
-            }
-        }
-    }
-
-    @Override
-    public void handleDisconnection() {
-        state.handleDisconnection(this);
-        System.out.println(Colors.color(Colors.RED, nickname) + " disconnected");
-        disconnected = true;
-
     }
 
     public void gameInit() {
@@ -94,6 +56,46 @@ public class Controller implements Runnable, Disconnectable {
 
     public void gameScoreboard() {
         setState(new GameScoreboard());
+    }
+
+    public void fireReconnection() {
+        socket.send(new Packet(HeaderTypes.OK, ChannelTypes.RENDER_CANNON, state.renderCannonAmmo().jsonfy()));
+    }
+
+    public void transferStatus(Controller remove) {
+        model = remove.model;
+        state = remove.state;
+    }
+
+    /**
+     * Handle client messages
+     */
+    @Override
+    public void run() {
+        while (!disconnected) {
+            // wait for a message to handle
+            Packet received = socket.pollPacket();
+            switch (received.channel) {
+                case PLAYER_ACTIONS -> {
+                    System.out.println(Colors.color(Colors.CYAN, nickname) + ": " + received);
+
+                    // save the result of the operation
+                    socket.send(state.handleMessage(received, this));
+                }
+
+                case MESSENGER -> {
+                    // model.sendChat()
+                }
+
+                case CONNECTION_STATUS -> {
+                    if (received.header == HeaderTypes.TIMEOUT) {
+                        state.handleDisconnection(this);
+                        System.out.println(Colors.color(Colors.RED, nickname) + " disconnected");
+                        disconnected = true;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -135,7 +137,7 @@ class ChooseNickname implements ControllerState {
         if (context.server.reconnect(packet.body, context)) {
             context.nickname = packet.body;
             return context.model.reconnectPlayer(context.nickname, context) ?
-                    context.model.reconnectPacket(context) :
+                    new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "reconnect") :
                     context.invalid("fail in reconnection");
         }
 
@@ -277,8 +279,7 @@ class WaitingInLobby implements ControllerState {
      */
     @Override
     public void handleDisconnection(Controller context) {
-        if (context.model.disconnectPlayer(context))                  // disconnection from model
-            context.server.disconnect(context.nickname, context);             // disconnection from server
+        if (context.model.disconnectPlayer(context)) context.server.disconnect(context.nickname, context);
         else context.server.removeController(context.nickname);
     }
 
@@ -321,7 +322,8 @@ class GameInit implements ControllerState {
      */
     @Override
     public void handleDisconnection(Controller context) {
-        // todo ehehehe *faccina col sudore che ride*
+        if (context.model.disconnectPlayer(context)) context.server.disconnect(context.nickname, context);
+        else context.server.removeController(context.nickname);
     }
 
     /**
@@ -364,8 +366,8 @@ class InGameState implements ControllerState {
      */
     @Override
     public void handleDisconnection(Controller context) {
-        if (context.model.disconnectPlayer(context))                  // disconnection from model
-            context.server.disconnect(context.nickname, context);             // disconnection from server
+        if (context.model.disconnectPlayer(context)) context.server.disconnect(context.nickname, context);
+        else context.server.removeController(context.nickname);
     }
 
     /**
@@ -398,8 +400,8 @@ class WaitingResult implements ControllerState {
      */
     @Override
     public void handleDisconnection(Controller context) {
-        context.server.removeController(context.nickname);
-        // the player can't reconnect, to see his result need to ask to his friends
+        if (context.model.disconnectPlayer(context)) context.server.disconnect(context.nickname, context);
+        else context.server.removeController(context.nickname);
     }
 
     /**
@@ -433,8 +435,8 @@ class GameScoreboard implements ControllerState {
      */
     @Override
     public void handleDisconnection(Controller context) {
-        context.server.removeController(context.nickname);
-        // the player can't reconnect, to see his result need to ask to his friends
+        if (context.model.disconnectPlayer(context)) context.server.disconnect(context.nickname, context);
+        else context.server.removeController(context.nickname);
     }
 
     /**

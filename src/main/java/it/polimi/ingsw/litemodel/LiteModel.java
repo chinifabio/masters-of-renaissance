@@ -29,8 +29,7 @@ public class LiteModel {
 
     private LiteSoloActionToken soloToken;
 
-    @JsonIgnore
-    private List<String> playerOrder;
+    private List<String> playerOrder = new ArrayList<>();
 
     @JsonIgnore
     private Scoreboard scoreboard;
@@ -48,6 +47,7 @@ public class LiteModel {
      */
     public void replaceModel(LiteModel model) {
         model.players.forEach(this.players::put);
+        playerOrder = model.playerOrder;
 
         this.tray = model.getTray();
         this.devSetup = model.getDevSetup();

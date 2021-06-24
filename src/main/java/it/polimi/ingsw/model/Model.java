@@ -110,7 +110,7 @@ public class Model {
      * @return the succeed of the operation
      */
     public boolean disconnectPlayer(Controller controller) {
-        return this.match.disconnectPlayer(this.players.get(controller));
+        return match.disconnectPlayer(players.get(controller));
     }
 
     /**
@@ -123,16 +123,7 @@ public class Model {
         this.players.put(context, this.match.reconnectPlayer(nickname));
         this.dispatcher.subscribe(nickname, context.socket);
         System.out.println(Colors.color(Colors.GREEN_BRIGHT, nickname) + " reconnected");
-        context.gameStart();
+        context.fireReconnection();
         return true;
-    }
-
-    /**
-     * Return the packet to send back when a controller reconnect
-     * @param context the reconnecting controller
-     * @return the packet to send to the user
-     */
-    public Packet reconnectPacket(Controller context) {
-        return this.players.get(context).reconnectPacket();
     }
 }

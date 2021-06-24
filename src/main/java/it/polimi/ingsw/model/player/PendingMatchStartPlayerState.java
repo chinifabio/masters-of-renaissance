@@ -16,8 +16,7 @@ public class PendingMatchStartPlayerState extends PlayerState {
      * @param context        the context
      */
     public PendingMatchStartPlayerState(Player context) {
-        super(context, "Wait that all the players complete the initial selection phase!",
-                new Packet(HeaderTypes.RECONNECTED, ChannelTypes.PLAYER_ACTIONS, "reconnect"));
+        super(context, "Wait that all the players complete the initial selection phase!");
     }
 
     /**

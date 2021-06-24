@@ -12,8 +12,7 @@ public class DisconnectedPlayerState extends PlayerState {
      * @param context is the context
      */
     protected DisconnectedPlayerState(Player context) {
-        super(context, "disconnected, you aren't able to do stuff (◉᷅_◉᷅ )",
-                new Packet(HeaderTypes.RECONNECTED, ChannelTypes.PLAYER_ACTIONS, "reconnect"));
+        super(context, "disconnected, you aren't able to do stuff (◉᷅_◉᷅ )");
     }
 
     /**

@@ -14,8 +14,7 @@ public class CountingPointsPlayerState extends PlayerState {
      * @param context the context
      */
     public CountingPointsPlayerState(Player context) {
-        super(context, "match ended",
-                new Packet(HeaderTypes.RECONNECTED, ChannelTypes.PLAYER_ACTIONS, "reconnect"));
+        super(context, "match ended");
     }
 
     /**

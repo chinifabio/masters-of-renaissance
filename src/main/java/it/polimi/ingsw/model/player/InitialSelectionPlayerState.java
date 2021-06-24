@@ -46,8 +46,7 @@ public class InitialSelectionPlayerState extends PlayerState {
      * @param context        the context
      */
     public InitialSelectionPlayerState(Player context) {
-        super(context, "You are in the game initialization phase, you need to discard leader card or choose resource",
-                new Packet(HeaderTypes.GAME_INIT, ChannelTypes.PLAYER_ACTIONS, "reconnect"));
+        super(context, "You are in the game initialization phase, you need to discard leader card or choose resource");
 
         Pair<Integer> initRes = Optional.of(context.initialSetup).orElse(new Pair<>(0,0));
         this.context.moveFaithMarker(initRes.two);

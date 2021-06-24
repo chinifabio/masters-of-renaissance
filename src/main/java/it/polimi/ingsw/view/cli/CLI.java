@@ -1,21 +1,14 @@
 package it.polimi.ingsw.view.cli;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.communication.Disconnectable;
 import it.polimi.ingsw.communication.SocketListener;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.*;
-import it.polimi.ingsw.communication.packet.rendering.Lighter;
-import it.polimi.ingsw.communication.packet.updates.TokenUpdater;
-import it.polimi.ingsw.communication.packet.updates.Updater;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
-import it.polimi.ingsw.model.cards.SoloActionToken;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -26,6 +19,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Productio
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.view.ClientPacketHandler;
 import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.cli.printer.*;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevSetupPrinter;
@@ -37,7 +31,7 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.util.*;
 
-public class CLI implements View, Disconnectable {
+public class CLI implements View {
 
     public static Map<ResourceType, String> colorResource = new EnumMap<>(ResourceType.class) {{
         put(ResourceType.COIN, Colors.color(Colors.YELLOW_BRIGHT, "©"));
@@ -66,14 +60,11 @@ public class CLI implements View, Disconnectable {
 
     public final Object printerLock = new Object();
 
-    private boolean connected;
-
     public CLI(String address, int port) throws IOException {
         titleName();
         System.out.println(Colors.color(Colors.YELLOW_BRIGHT, "\nAt the start of the game, you have to discard two leader cards and, based on your position in the sequence, you can select up to 2 initial resources.\nAfter that, end your turn. You can type \"help\" to see again the possible moves.\n"));
 
-        socket = new SocketListener(new Socket(address, port), this);
-        connected = true;
+        socket = new SocketListener(new Socket(address, port));
         setState(new ChooseNicknameCLI(this));
     }
 
@@ -142,67 +133,31 @@ public class CLI implements View, Disconnectable {
                 SoloActionTokenPrinter.printSoloActionToken(model.getSoloToken());
             }
         } catch (NullPointerException nul) {
-            notifyPlayerError("Solo action token used by lorenzo is scomparisciuted");
+            notifyPlayerError("No token to visualize");
         }
     }
 
     @Override
-    public void quittaMalamente() {
-        notifyPlayerError("Something gone wrong, you will be disconnected");
+    public void emergencyExit(String message) {
+        notifyPlayerError(message);
         System.exit(0);
     }
 
     /**
      * read data from command line when needed
      */
+    @Override
     public void start() {
-        new Thread(this.socket).start();
+        // start socket
+        new Thread(socket).start();
+
+        // keyboard listener
         new Thread(() -> {
             while (true) handleUserInput(new Scanner(System.in).nextLine());
         }).start();
 
-        while (connected) {
-            Packet received = socket.pollPacket();
-            switch (received.channel) {
-                case MESSENGER -> {
-                    if (received.header == HeaderTypes.NOTIFY) notifyPlayer(received.body);
-                    if (received.header == HeaderTypes.INVALID) notifyPlayerError(received.body);
-                }
-
-                case PLAYER_ACTIONS -> {
-                    // todo send with OK header the new model
-                    if (received.header != HeaderTypes.INVALID) {
-                        notifyPlayer(received.body);
-                    } else
-                        notifyPlayerError(received.body);
-                }
-
-                case UPDATE_LITE_MODEL -> {
-                    Updater up;
-                    try {
-                        up = new ObjectMapper().readerFor(Updater.class).readValue(received.body);
-                        up.update(this.model);
-                    } catch (JsonProcessingException e) {
-                        quittaMalamente();
-                        return;
-                    }
-
-                    if (up instanceof TokenUpdater) {
-                        popUpLorenzoMoves();
-                    }
-                }
-
-                case RENDER_CANNON -> {
-                    try {
-                        ((Lighter)new ObjectMapper().readerFor(Lighter.class).readValue(received.body)).fire(this);
-                    } catch (JsonProcessingException e) {
-                        quittaMalamente();
-                    }
-                }
-
-                case CONNECTION_STATUS -> {}
-            }
-        }
+        // start packet handler
+        new ClientPacketHandler(this, socket).start();
     }
 
     private void handleUserInput(String nextLine) {
@@ -234,16 +189,15 @@ public class CLI implements View, Disconnectable {
         }
     }
 
+    @Override
+    public void refresh() {
+        notifyPlayer(state.entryMessage);
+    }
+
     public void setState(CliState state) {
         this.state = state;
         notifyPlayer("");
         notifyPlayer(state.entryMessage);
-    }
-
-    @Override
-    public void handleDisconnection() {
-        this.connected = false;
-        notifyPlayerError("disconnected");
     }
 
     @Override

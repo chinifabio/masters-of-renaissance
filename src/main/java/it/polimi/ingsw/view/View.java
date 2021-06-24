@@ -28,13 +28,15 @@ public interface View {
     void fireGameEnded();
     void fireGameResult();
 
+    void refresh();
+
+    void start();
+
     /**
      * return the liteModel of the view
      * @return the model of the view
      */
     LiteModel getModel();
 
-    void start();
-
-    void quittaMalamente();
+    void emergencyExit(String message);
 }

@@ -12,8 +12,7 @@ public class PendingInitPlayerState extends PlayerState {
      * @param context is the context
      */
     protected PendingInitPlayerState(Player context) {
-        super(context, "wait other players join!",
-                new Packet(HeaderTypes.RECONNECTED, ChannelTypes.PLAYER_ACTIONS, "reconnect"));
+        super(context, "wait other players join!");
     }
 
     /**

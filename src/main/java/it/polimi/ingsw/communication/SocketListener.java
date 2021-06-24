@@ -26,17 +26,17 @@ public class SocketListener implements Runnable {
     private final Scanner receiver;
 
     private final Timer timer = new Timer();
-    private final Disconnectable disconnectable;
+    //private final Disconnectable disconnectable;
 
     /**
      * Create a virtual socket to sort received packet in channels
      * @param socket the real socket
      */
-    public SocketListener(Socket socket, Disconnectable disconnectable) throws IOException {
+    public SocketListener(Socket socket) throws IOException {
         this.socket = socket;
         this.socket.setSoTimeout(timeout);
 
-        this.disconnectable = disconnectable;
+        //this.disconnectable = disconnectable;
 
         sender = new PrintStream(socket.getOutputStream());
         receiver = new Scanner(socket.getInputStream());
@@ -74,7 +74,7 @@ public class SocketListener implements Runnable {
                 try {
                     receiver.wait();
                 } catch (InterruptedException e) {
-                    disconnectable.handleDisconnection();
+                    connected = false;
                 }
 
                 if (!connected) return new Packet(HeaderTypes.TIMEOUT, ChannelTypes.CONNECTION_STATUS, "connection closed");
@@ -95,7 +95,10 @@ public class SocketListener implements Runnable {
             try {
                 serializedPacket = receiver.nextLine();
             } catch (NoSuchElementException timeout) {
-                disconnectable.handleDisconnection();
+                synchronized (receiver) {
+                    packetQueue.add(new Packet(HeaderTypes.TIMEOUT, ChannelTypes.CONNECTION_STATUS, "connection closed"));
+                    receiver.notifyAll();
+                }
                 return;
             }
 

@@ -61,7 +61,7 @@ public class Server {
 
     public synchronized boolean reconnect(String nickname, Controller newController) {
         if(disconnectedClient.containsKey(nickname)) {
-            newController.model = disconnectedClient.remove(nickname).model;
+            newController.transferStatus(disconnectedClient.remove(nickname));
             connectedClient.put(nickname, newController);
             return true;
         }

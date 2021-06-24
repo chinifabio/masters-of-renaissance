@@ -1,18 +1,10 @@
 package it.polimi.ingsw.view.gui;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.communication.Disconnectable;
 import it.polimi.ingsw.communication.SocketListener;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.communication.packet.rendering.Lighter;
-import it.polimi.ingsw.communication.packet.updates.TokenUpdater;
-import it.polimi.ingsw.communication.packet.updates.Updater;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.model.resource.ResourceType;
+import it.polimi.ingsw.view.ClientPacketHandler;
 import it.polimi.ingsw.view.View;
-import it.polimi.ingsw.view.cli.Colors;
 import it.polimi.ingsw.view.gui.panels.*;
 import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 
@@ -24,7 +16,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class GUI extends JFrame implements View, Disconnectable {
+public class GUI extends JFrame implements View {
 
     public static HashMap<ResourceType, String> resourceImages = new HashMap<>(){{
         put(ResourceType.COIN, "WarehouseRes/coin.png");
@@ -47,8 +39,6 @@ public class GUI extends JFrame implements View, Disconnectable {
 
     public static final int gameWidth = 1340;
     public static final int gameHeight = 810;
-
-    private boolean activeClient = true;
 
     private GuiPanel actualPanel;
 
@@ -82,7 +72,7 @@ public class GUI extends JFrame implements View, Disconnectable {
                     "Lorenzo moves", JOptionPane.INFORMATION_MESSAGE,
                     icon);
         } catch (NullPointerException e) {
-            notifyPlayerError("Vincenzo è un terrone e puzza perchè non si lava, teroni bastardi. Ruspe!");
+            notifyPlayerError("No token to visualize");
         }
     }
 
@@ -113,13 +103,12 @@ public class GUI extends JFrame implements View, Disconnectable {
 
     @Override
     public void fireGameResult() {
-        //JOptionPane.showMessageDialog(null, "work in progress result");
         switchPanels(new ScoreboardPanel(this));
     }
 
     @Override
-    public void quittaMalamente() {
-        JOptionPane.showMessageDialog(null, "Something gone wrong, you will be disconnected");
+    public void emergencyExit(String message) {
+        JOptionPane.showMessageDialog(null, message);
         System.exit(0);
     }
 
@@ -133,62 +122,10 @@ public class GUI extends JFrame implements View, Disconnectable {
         switchPanels(new LoadingPanel(this));
     }
 
-    /**
-     * Receive packet and react to them
-     */
-    @Override
-    public void start() {
-        new Thread(socket).start();
-
-        while (activeClient) {
-            Packet received = socket.pollPacket();
-            switch (received.channel) {
-                case MESSENGER -> notifyPlayer(received.body);
-
-                case PLAYER_ACTIONS -> {
-                    // todo send with OK header the new model
-                    if (received.header != HeaderTypes.INVALID) {
-                        notifyPlayer(received.body);
-                        updatePanel();
-                    } else
-                        notifyPlayerError(received.body);
-                }
-
-                case UPDATE_LITE_MODEL -> {
-                    Updater up;
-                    try {
-                        up = new ObjectMapper().readerFor(Updater.class).readValue(received.body);
-                        up.update(this.model);
-                        //updatePanel(); todo de comment when model will send all the changes in only one packet
-                    } catch (JsonProcessingException e) {
-                        quittaMalamente();
-                        return;
-                    }
-
-                    if (up instanceof TokenUpdater) {
-                        popUpLorenzoMoves();
-                    }
-                }
-
-                case RENDER_CANNON -> {
-                    try {
-                        Lighter ammo = new ObjectMapper().readerFor(Lighter.class).readValue(received.body);
-                        ammo.fire(this);
-                    } catch (JsonProcessingException e) {
-                        quittaMalamente();
-                    }
-                }
-
-                case CONNECTION_STATUS -> {}
-            }
-        }
-
-    }
-
     public GUI(String address, int port) throws IOException {
         super ("Master of Renaissance");
         
-        socket = new SocketListener(new Socket(address, port), this);
+        socket = new SocketListener(new Socket(address, port));
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -213,6 +150,12 @@ public class GUI extends JFrame implements View, Disconnectable {
         setVisible(true);
     }
 
+    @Override
+    public void start() {
+        new Thread(socket).start();
+        new ClientPacketHandler(this, socket).start();
+    }
+
     public void switchPanels(GuiPanel toSee){
         synchronized (gamePanel) {
             gamePanel.removeAll();
@@ -221,9 +164,8 @@ public class GUI extends JFrame implements View, Disconnectable {
             try {
                 gamePanel.add(toSee.update());
             } catch (Exception | Error e) {
-                JOptionPane.showMessageDialog(null, "You missed some resource!", "ERROR", JOptionPane.ERROR_MESSAGE);
-                activeClient = false;
-                System.exit(0);
+                e.printStackTrace();
+                emergencyExit("You missed some resource " + e.getMessage());
             }
 
             gamePanel.repaint();
@@ -231,15 +173,14 @@ public class GUI extends JFrame implements View, Disconnectable {
         }
     }
 
-    public void updatePanel() {
+    @Override
+    public void refresh() {
         gamePanel.removeAll();
 
         try {
             gamePanel.add(actualPanel.update());
         } catch (Exception | Error e) {
-            JOptionPane.showMessageDialog(null, "You missed some resource!", "ERROR", JOptionPane.ERROR_MESSAGE);
-            activeClient = false;
-            System.exit(0);
+            emergencyExit("You missed some resource" + e.getMessage());
         }
 
         gamePanel.repaint();
@@ -250,7 +191,8 @@ public class GUI extends JFrame implements View, Disconnectable {
         try {
             new GUI("localhost", 4444).start();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
+            System.out.println("Unable to start the GUI, check the connection to the server or start the CLI");
         }
     }
 
@@ -263,15 +205,5 @@ public class GUI extends JFrame implements View, Disconnectable {
         g2.dispose();
 
         return resizedImg;
-    }
-
-
-
-
-    @Override
-    public void handleDisconnection() {
-        activeClient = false;
-        JOptionPane.showMessageDialog(null, "Connection lost :(");
-        System.exit(-1);
     }
 }

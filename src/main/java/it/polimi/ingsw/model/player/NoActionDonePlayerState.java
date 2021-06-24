@@ -26,8 +26,7 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param context        the context
      */
     protected NoActionDonePlayerState(Player context) {
-        super(context, "",
-                new Packet(HeaderTypes.RECONNECTED, ChannelTypes.PLAYER_ACTIONS, "reconnect"));
+        super(context, "");
     }
 
     /**
