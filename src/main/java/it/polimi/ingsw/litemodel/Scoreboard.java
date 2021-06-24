@@ -20,27 +20,35 @@ public class Scoreboard {
 
     public void addPlayerScore(String nickname, int score) {
         board.add(new BoardEntry(nickname, score));
-        board.sort(Comparator.comparingInt(o -> o.score));
+        board.sort(Comparator.comparingInt(o -> -o.score));
     }
 
     public List<BoardEntry> getBoard() {
-        return new ArrayList<>(board);
+        List<BoardEntry> temp = new ArrayList<>(board);
+        return temp;
     }
+
+    public static class BoardEntry {
+
+        private final String nickname;
+        private final int score;
+
+        @JsonCreator
+        BoardEntry(@JsonProperty("nickname") String nickname, @JsonProperty("score") int score) {
+            this.nickname = nickname;
+            this.score = score;
+        }
+
+        public String getNickname(){
+            return this.nickname;
+        }
+
+        public int getScore() {
+            return score;
+        }
+    }
+
+
 }
 
-class BoardEntry {
 
-    public final String nickname;
-    public final int score;
-
-    @JsonCreator
-    BoardEntry(@JsonProperty("nickname") String nickname, @JsonProperty("score") int score) {
-        this.nickname = nickname;
-        this.score = score;
-    }
-
-    public String getNickname(){
-        return this.nickname;
-    }
-
-}

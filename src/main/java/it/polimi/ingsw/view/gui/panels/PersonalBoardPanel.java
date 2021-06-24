@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class PersonalBoardPanel  extends GuiPanel {
 
@@ -123,7 +122,7 @@ public class PersonalBoardPanel  extends GuiPanel {
 
         JPanel buffer = new BufferPanel(gui);
         buffer.setPreferredSize(new Dimension(400,100));
-        bottomPanel.add(Box.createRigidArea(new Dimension(30,0)));
+        bottomPanel.add(Box.createRigidArea(new Dimension(35,0)));
         bottomPanel.add(buffer);
         bottomPanel.add(buttons);
 
