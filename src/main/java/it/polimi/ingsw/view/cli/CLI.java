@@ -191,7 +191,7 @@ public class CLI implements View {
 
     @Override
     public void refresh() {
-        notifyPlayer(state.entryMessage);
+        //notifyPlayer(state.entryMessage);
     }
 
     public void setState(CliState state) {
@@ -207,7 +207,7 @@ public class CLI implements View {
 
     @Override
     public void fireLobbyWait() {
-        setState(new LobbyWaitingCLI(this));
+        setState(new CliLobbyWaitState(this));
     }
 
     @Override
@@ -222,12 +222,12 @@ public class CLI implements View {
 
     @Override
     public void fireGameEnded() {
-        setState(new CliErrorState(this));
+        setState(new CliWaitResultState(this));
     }
 
     @Override
     public void fireGameResult() {
-        setState(new CliErrorState(this));
+        setState(new CliResultState(this));
     }
 
     public static void main(String[] args) {
@@ -253,15 +253,39 @@ abstract class CliState {
     public abstract void handleInput(String userInput);
 }
 
-class CliErrorState extends CliState {
+class CliWaitResultState extends CliState {
 
-    CliErrorState(CLI context) {
+    CliWaitResultState(CLI context) {
         super(context, "There was an error, quitting");
     }
 
     @Override
     public void handleInput(String userInput) {
+        List<String> data = Arrays.asList(userInput.split(" "));
 
+        int i = 1;
+        switch (data.get(0).toLowerCase()) {
+            case "viewpersonalboard":
+            case "pb":
+            case "personalboard":
+                try {
+                    PersonalBoardPrinter.printPersonalBoard(context.model, data.get(1));
+                } catch (IndexOutOfBoundsException out) {
+                    PersonalBoardPrinter.printPersonalBoard(context.model, context.model.getMe());
+                } catch (NullPointerException n) {
+                    context.notifyPlayerError(data.get(i) + " player doesn't exist");
+                }
+                break;
+
+            case "track":
+            case "faithtrack":
+                context.faithTrackPrinter.printTrack(context.model);
+                break;
+
+            default:
+                context.notifyPlayerError("Unknown command! You can only view personal boards or the faith track");
+                break;
+        }
     }
 }
 
@@ -302,15 +326,15 @@ class CliSetPlayersNumberState extends CliState {
     }
 }
 
-class LobbyWaitingCLI extends CliState {
+class CliLobbyWaitState extends CliState {
 
-    LobbyWaitingCLI(CLI context) {
+    CliLobbyWaitState(CLI context) {
         super(context, "waiting for other players...");
     }
 
     @Override
     public void handleInput(String userInput) {
-        System.out.println("trimone ho detto che devi aspettare");
+        context.notifyPlayerError("trimone ho detto che devi aspettare");
     }
 }
 
@@ -642,9 +666,9 @@ class CliInitGameState extends CliState {
     }
 }
 
-class CliEndGameState extends CliState {
-    CliEndGameState(CLI context) {
-        super(context, "Game ended, results are coming");
+class CliResultState extends CliState {
+    CliResultState(CLI context) {
+        super(context, "Leaderboard");
     }
 
     @Override

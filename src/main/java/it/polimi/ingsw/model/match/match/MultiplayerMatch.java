@@ -5,6 +5,7 @@ import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.model.Pair;
 import it.polimi.ingsw.model.Dispatcher;
 import it.polimi.ingsw.model.player.CountingPointsPlayerState;
+import it.polimi.ingsw.model.player.NotHisTurnPlayerState;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 
@@ -131,9 +132,6 @@ public class MultiplayerMatch extends Match{
 
             currentPlayer().setState(new CountingPointsPlayerState(currentPlayer()));
             if (model != null) model.playerEndGame();
-            curPlayer = (curPlayer + 1) % connectedPlayers.size();
-            view.sendMessage("The turn of " + currentPlayer().getNickname() + " is started!");
-            return;
         }
 
         curPlayer = (curPlayer + 1) % connectedPlayers.size();
@@ -148,6 +146,7 @@ public class MultiplayerMatch extends Match{
     public void initialSelectionDone() {
         initializedPlayers++;
         if (initializedPlayers == gameSize) {
+            connectedPlayers.forEach(player -> player.setState(new NotHisTurnPlayerState(player)));
             connectedPlayers.get(curPlayer).startHisTurn();
             view.sendMessage("All players passed game initialization");
             view.sendMessage("Is the turn of " + currentPlayer());
@@ -160,6 +159,7 @@ public class MultiplayerMatch extends Match{
      */
     @Override
     public void startEndGameLogic() {
+        if (model != null) model.playerEndGame();
         view.sendMessage("End game logic started!");
         endGameLogic = true;
         turnDone();
@@ -217,7 +217,7 @@ public class MultiplayerMatch extends Match{
         Scoreboard board = new Scoreboard("Here's the results!");
 
         for (Player p : connectedPlayers) {
-            board.addPlayerScore(p.getNickname(), p.calculateVictoryPoints());
+            board.addPlayerScore(p.getNickname(), p.calculateVictoryPoints(), 123); // todo get total resources
         }
 
         return board;

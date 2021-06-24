@@ -15,7 +15,7 @@ public class NotHisTurnPlayerState extends PlayerState {
      *
      * @param context        the context
      */
-    protected NotHisTurnPlayerState(Player context) {
+    public NotHisTurnPlayerState(Player context) {
         super(context, "it is not your turn");
     }
 

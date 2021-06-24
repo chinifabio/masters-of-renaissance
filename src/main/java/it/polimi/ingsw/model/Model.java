@@ -73,7 +73,6 @@ public class Model {
         if (!this.match.playerJoin(p)) throw new Exception("Something strange is going on ༼ つ ◕_◕ ༽つ");
 
         if (match.playerInGame() == match.gameSize) {
-            System.out.println("sto mandando le munizioni");
             players.forEach((controller, player) -> controller.gameInit());
         }
     }
@@ -100,8 +99,8 @@ public class Model {
 
     public void matchEnded() {
         dispatcher.publish(new ScoreboardUpdater(match.winnerCalculator()));
-        // mandare i risultati
         players.forEach((controller, player) -> controller.gameScoreboard());
+
     }
 
     /**

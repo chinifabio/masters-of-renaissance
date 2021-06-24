@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.communication.packet.updates.PlayerOrderUpdater;
 import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.model.Pair;
-import it.polimi.ingsw.communication.packet.updates.FaithTrackUpdater;
 import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
 import it.polimi.ingsw.communication.packet.updates.TokenUpdater;
 import it.polimi.ingsw.model.Dispatcher;
@@ -179,7 +178,8 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
         }
         this.updateDevSetup();
 
-        if (this.devSetup.showDevDeck(levels.get(levels.size() - 1), color) == null) { // try to watch if there is cards in the top level deck
+        // try to watch if there is cards in the top level deck
+        if (this.devSetup.showDevDeck(levels.get(levels.size() - 1), color) == null) {
             System.out.println("end of the game: Lorenzo discarded all the dev cards of a color");
             this.lorenzoWinner = true;
             startEndGameLogic(); // start end game logic if there is no card to discard
@@ -286,12 +286,16 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
                 "Lorenzo il magnifico wins the match!" :
                 "You won against Lorenzo il Magnifico" );
 
-        if (!lorenzoWinner) scoreboard.addPlayerScore(player.getNickname(), player.calculateVictoryPoints());
-        else scoreboard.addPlayerScore(lorenzoNickname, -1);
+        if (!lorenzoWinner) scoreboard.addPlayerScore(player.getNickname(), player.calculateVictoryPoints(), 0); // todo get total resources
+        else scoreboard.addPlayerScore(lorenzoNickname, -1, -1);
 
         return scoreboard;
     }
 
+    /**
+     * Update the solo token used by lorenzo into the lite model
+     * @param used solo token used
+     */
     private void updateToken(SoloActionToken used) {
         this.view.publish(new TokenUpdater(used.liteVersion()));
     }
@@ -302,11 +306,6 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      */
     public Deck<SoloActionToken> obtainSoloTokens() {
         return this.soloToken;
-    }
-
-    // for testing
-    public Deck<DevCard> test_getDiscarded() {
-        return this.discardedFromToken;
     }
 
     /**
@@ -331,5 +330,10 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      */
     public Player currentPlayer(){
         return this.player;
+    }
+
+    // for testing
+    public Deck<DevCard> test_getDiscarded() {
+        return this.discardedFromToken;
     }
 }

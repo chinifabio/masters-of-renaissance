@@ -14,18 +14,48 @@ import it.polimi.ingsw.view.cli.Colors;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * The Controller will receive all the packets sent by the client to the server and than, based on his state, handle it.
+ * Controller will send back a response
+ */
 public class Controller implements Runnable {
 
+    /**
+     * A server reference used to obtain or share models
+     */
     public final Server server;
+
+    /**
+     * A packet container used to store received packets
+     */
     public final SocketListener socket;
 
+    /**
+     * The model representing the match joined by the client
+     */
     Model model;
+
+    /**
+     * The nickname of the player. It is always initialized as "anonymous player"
+     */
     String nickname = "anonymous player";
 
+    /**
+     * The state of the controller
+     */
     private ControllerState state = new ChooseNickname();
 
+    /**
+     * A flag used to stop the controller
+     */
     private boolean disconnected = false;
 
+    /**
+     * Create a contrller from server and socket
+     * @param socket the socket used for the communication
+     * @param server the server
+     * @throws IOException when creator is unable to create a socketListener
+     */
     public Controller(Socket socket, Server server) throws IOException {
         this.socket = new SocketListener(socket);
         this.server = server;
@@ -33,42 +63,71 @@ public class Controller implements Runnable {
         this.server.executeRunnable(this.socket);
     }
 
+    /**
+     * Update the state of the controller and update the view of the client
+     * @param newState the new state of the controller
+     */
     public void setState(ControllerState newState) {
         state = newState;
         socket.send(new Packet(HeaderTypes.OK, ChannelTypes.RENDER_CANNON, state.renderCannonAmmo().jsonfy()));
     }
 
+    /**
+     * Create and invalid packet for the player action channel
+     * @param message the message to handle
+     * @return the created packet
+     */
     public Packet invalid(String message) {
         return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, message);
     }
 
+    /**
+     * Set the state of the controller as game initialization
+     */
     public void gameInit() {
         setState(new GameInit());
     }
 
+    /**
+     * Set the state of the controller as game started
+     */
     public void gameStart() {
         setState(new InGameState());
     }
 
+    /**
+     * Set the state of the controller as game ended
+     */
     public void gameEnd() {
         setState(new WaitingResult());
     }
 
+    /**
+     * Set the state of the controller as game result
+     */
     public void gameScoreboard() {
+        server.cleanNickname(nickname);
         setState(new GameScoreboard());
     }
 
+    /**
+     * update the view of the client once he has reconnected
+     */
     public void fireReconnection() {
         socket.send(new Packet(HeaderTypes.OK, ChannelTypes.RENDER_CANNON, state.renderCannonAmmo().jsonfy()));
     }
 
+    /**
+     * copy the information from an old controller
+     * @param remove the old controller
+     */
     public void transferStatus(Controller remove) {
         model = remove.model;
         state = remove.state;
     }
 
     /**
-     * Handle client messages
+     * Receive packet and handle the behavior of it
      */
     @Override
     public void run() {
@@ -165,7 +224,7 @@ class ChooseNickname implements ControllerState {
                 return new Packet(HeaderTypes.SET_PLAYERS_NUMBER, ChannelTypes.PLAYER_ACTIONS, "Empty match, you have to create one.");
             }
 
-            context.server.removeController(context.nickname);
+            context.server.cleanNickname(context.nickname);
             return context.invalid("Wait! Someone is creating the match...");
         }
 
@@ -245,7 +304,7 @@ class ChoosePlayerNumber implements ControllerState {
     @Override
     public void handleDisconnection(Controller context) {
         context.server.cannotCreateModel();
-        context.server.removeController(context.nickname);
+        context.server.cleanNickname(context.nickname);
     }
 
     /**
@@ -280,7 +339,7 @@ class WaitingInLobby implements ControllerState {
     @Override
     public void handleDisconnection(Controller context) {
         if (context.model.disconnectPlayer(context)) context.server.disconnect(context.nickname, context);
-        else context.server.removeController(context.nickname);
+        else context.server.cleanNickname(context.nickname);
     }
 
     /**
@@ -323,7 +382,7 @@ class GameInit implements ControllerState {
     @Override
     public void handleDisconnection(Controller context) {
         if (context.model.disconnectPlayer(context)) context.server.disconnect(context.nickname, context);
-        else context.server.removeController(context.nickname);
+        else context.server.cleanNickname(context.nickname);
     }
 
     /**
@@ -367,7 +426,7 @@ class InGameState implements ControllerState {
     @Override
     public void handleDisconnection(Controller context) {
         if (context.model.disconnectPlayer(context)) context.server.disconnect(context.nickname, context);
-        else context.server.removeController(context.nickname);
+        else context.server.cleanNickname(context.nickname);
     }
 
     /**
@@ -401,7 +460,7 @@ class WaitingResult implements ControllerState {
     @Override
     public void handleDisconnection(Controller context) {
         if (context.model.disconnectPlayer(context)) context.server.disconnect(context.nickname, context);
-        else context.server.removeController(context.nickname);
+        else context.server.cleanNickname(context.nickname);
     }
 
     /**
@@ -435,8 +494,7 @@ class GameScoreboard implements ControllerState {
      */
     @Override
     public void handleDisconnection(Controller context) {
-        if (context.model.disconnectPlayer(context)) context.server.disconnect(context.nickname, context);
-        else context.server.removeController(context.nickname);
+        context.server.cleanNickname(context.nickname);
     }
 
     /**
@@ -449,5 +507,3 @@ class GameScoreboard implements ControllerState {
         return new FireGameResult();
     }
 }
-
-

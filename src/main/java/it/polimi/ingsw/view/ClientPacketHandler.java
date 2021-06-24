@@ -35,9 +35,10 @@ public class ClientPacketHandler {
                     // todo send with OK header the new model
                     if (received.header != HeaderTypes.INVALID) {
                         view.notifyPlayer(received.body);
-                        view.refresh();
-                    } else
+                    } else {
                         view.notifyPlayerError(received.body);
+                    }
+                    view.refresh();
                 }
 
                 case UPDATE_LITE_MODEL -> {
@@ -45,7 +46,6 @@ public class ClientPacketHandler {
                     try {
                         up = new ObjectMapper().readerFor(Updater.class).readValue(received.body);
                         up.update(view.getModel());
-                        //updatePanel(); todo de comment when model will send all the changes in only one packet
                     } catch (JsonProcessingException e) {
                         view.emergencyExit("Client and server are not synchronized, you will be disconnect.");
                         return;
