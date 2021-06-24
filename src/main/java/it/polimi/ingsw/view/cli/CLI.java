@@ -388,7 +388,7 @@ class CliInGameState extends CliState {
                 } catch (IllegalArgumentException arg) {
                     context.notifyPlayerError(data.get(--i) + " Doesn't exist. Type help for accepted values");
                 } catch (IndexOutOfBoundsException out) {
-                    context.notifyPlayerError("You missed some parameter");
+                    context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ProductionCommand().jsonfy()));
                 }
                 break;
 
@@ -438,7 +438,6 @@ class CliInGameState extends CliState {
 
             case "normalizeproduction":
             case "normalize":
-                i = 1;
                 try {
                     ProductionID prod = ProductionID.valueOf(data.get(i++).toUpperCase());
 
@@ -550,6 +549,7 @@ class CliInGameState extends CliState {
                 break;
 
             case "discounts":
+            case "disc":
                 CasualPrinter.printDiscounts(context.getModel().getDiscounts(context.getModel().getMe()));
                 break;
             case "conversion":
@@ -559,9 +559,21 @@ class CliInGameState extends CliState {
             case "players":
                 CasualPrinter.printPlayers(context.model);
                 break;
-            default:
-                context.notifyPlayerError("Unknown command, try again!");
+
+            //----------------------CHEAT---------------------------
+            case "rescheat":
+                context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ResourceCheatCommand().jsonfy()));
                 break;
+            case "fpcheat":
+                try {
+                    context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new FaithPointCheatCommand(Integer.parseInt(data.get(i))).jsonfy()));
+                } catch (Exception e){
+                    System.out.println("Insert a valid number!");
+                }
+                break;
+            default:
+            context.notifyPlayerError("Unknown command, try again!");
+            break;
         }
     }
 }

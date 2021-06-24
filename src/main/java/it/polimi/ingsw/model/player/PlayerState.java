@@ -12,6 +12,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.resource.Resource;
+import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 /**
@@ -187,8 +188,44 @@ public abstract class PlayerState implements PlayerAction {
         return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
     }
 
+    /**
+     * Used during the buydevcard/production phase to return to the initial warehouse state.
+     * @return a warning packet
+     */
     @Override
     public Packet rollBack() {
         return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    }
+
+    /**
+     * Player asks to use productions
+     * @return the result of the operation
+     */
+    @Override
+    public Packet production() {
+        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    }
+
+    /**
+     * Cheat commands used to make test faster
+     * @return the result of the operation
+     */
+    @Override
+    public Packet resourceCheat() {
+        ResourceType[] temp = {ResourceType.COIN, ResourceType.SERVANT, ResourceType.SHIELD, ResourceType.STONE};
+        for (ResourceType loop : temp) {
+            this.context.obtainResource(DepotSlot.STRONGBOX, ResourceBuilder.buildFromType(loop,50));
+        }
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Cheat codes activated! You got 50 resource of any type in the strongbox");
+    }
+
+    /**
+     * Cheat commands used to make test faster
+     * @return the result of the operation
+     */
+    @Override
+    public Packet fpCheat(int fp) {
+        this.context.obtainResource(DepotSlot.STRONGBOX, ResourceBuilder.buildFaithPoint(fp));
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Cheat codes activated! You move forward in the faith track");
     }
 }

@@ -112,66 +112,15 @@ public class NoActionDonePlayerState extends PlayerState {
         return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Move the needed resource for the chosen card into the devbuffer");
     }
 
-    /**
-     * This method takes the resources from the Depots and the Strongbox to
-     * activate the productions and insert the Resources obtained into the Strongbox
-     * @return the result of the operation
-     */
-    @Override
-    public Packet activateProductions() {
-        try {
-            this.context.personalBoard.activateProductions();
-        }
-
-        catch (EndGameException e) {
-            this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
-            this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
-            return new Packet(HeaderTypes.END_GAME, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
-        }
-
-        catch (Exception e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
-        }
-
-        this.context.setState(new MainActionDonePlayerState(this.context));
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You activated the production");
-    }
 
     /**
-     * This method set the normal production of an unknown production
-     *
-     * @param normalProduction the input new normal production
-     * @param id the id of the unknown production
+     * This method moves the player into the production phase
      * @return the succeed of the operation
      */
     @Override
-    public Packet setNormalProduction(ProductionID id, NormalProduction normalProduction) {
-        try {
-            this.context.personalBoard.setNormalProduction(id, normalProduction);
-        } catch (IllegalNormalProduction e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
-        }
-
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You have normalized the " + id.name().toLowerCase() + " production");
-    }
-
-    /**
-     * This method moves a resource from a depot to a production
-     * @param from the source of the resource to move
-     * @param dest the destination of the resource to move
-     * @param loot the resource to move
-     * @return the succeed of the operation
-     */
-    @Override
-    public Packet moveInProduction(DepotSlot from, ProductionID dest, Resource loot) {
-        try {
-            this.context.personalBoard.moveInProduction(from, dest, loot);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
-        }
-
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Resources moved in production");
+    public Packet production() {
+        this.context.setState(new ProductionPlayerState(this.context));
+        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Now you can move resources into productions");
     }
 
     /**

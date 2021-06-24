@@ -1,12 +1,20 @@
 package it.polimi.ingsw.view.gui.panels.graphicComponents;
 
+import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
+import it.polimi.ingsw.communication.packet.Packet;
+import it.polimi.ingsw.communication.packet.commands.FaithPointCheatCommand;
+import it.polimi.ingsw.communication.packet.commands.ResourceCheatCommand;
 import it.polimi.ingsw.view.gui.GUI;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Key;
 
 public class BgJPanel extends JPanel {
 
@@ -47,4 +55,5 @@ public class BgJPanel extends JPanel {
         super.paintComponent(g);
         g.drawImage(background, x, y,null);
     }
+
 }

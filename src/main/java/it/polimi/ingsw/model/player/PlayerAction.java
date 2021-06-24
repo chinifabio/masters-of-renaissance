@@ -104,8 +104,26 @@ public interface PlayerAction {
     Packet endThisTurn();
 
     /**
-     * Used during the buydevcard phase to return to the initial warehouse state.
+     * Used during the buydevcard/production phase to return to the initial warehouse state.
      * @return a warning packet
      */
     Packet rollBack();
+
+    /**
+     * Player asks to use productions
+     * @return the result of the operation
+     */
+    Packet production();
+
+    /**
+     * Cheat commands used to make test faster
+     * @return the result of the operation
+     */
+    Packet resourceCheat();
+
+    /**
+     * Cheat commands used to make test faster
+     * @return the result of the operation
+     */
+    Packet fpCheat(int num);
 }

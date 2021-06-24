@@ -193,6 +193,7 @@ public class PlayerTest{
 
         game.currentPlayer().test_getPB().insertInDepot(DepotSlot.BUFFER,ResourceBuilder.buildShield(2));
         game.currentPlayer().test_getPB().moveResourceDepot(DepotSlot.BUFFER,DepotSlot.BOTTOM,ResourceBuilder.buildShield(2));
+        game.currentPlayer().production();
         game.currentPlayer().moveInProduction(DepotSlot.BOTTOM,ProductionID.CENTER,ResourceBuilder.buildShield(2));
         game.currentPlayer().activateProductions();
 
@@ -206,8 +207,10 @@ public class PlayerTest{
         game.currentPlayer().test_getPB().addDevCard(DevCardSlot.CENTER, c4);
         game.currentPlayer().test_getPB().addProduction(prod4,DevCardSlot.CENTER);
         assertEquals(prod4, game.currentPlayer().test_getPB().possibleProduction().get(ProductionID.CENTER));
+        game.currentPlayer().production();
         game.currentPlayer().moveInProduction(DepotSlot.BUFFER,ProductionID.CENTER,ResourceBuilder.buildCoin());
         assertEquals(0,game.currentPlayer().test_getPB().faithTrack.getPlayerPosition());
+        game.currentPlayer().production();
         game.currentPlayer().activateProductions();
         assertEquals(1,game.currentPlayer().test_getPB().faithTrack.getPlayerPosition());
     }

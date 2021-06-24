@@ -1,24 +1,23 @@
-package it.polimi.ingsw.view.gui.panels;
+package it.polimi.ingsw.view.gui.panels.movePanels;
 
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
+import it.polimi.ingsw.communication.packet.commands.ActivateProductionCommand;
+import it.polimi.ingsw.communication.packet.commands.ReturnCommand;
 import it.polimi.ingsw.communication.packet.commands.SetNormalProductionCommand;
 import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.gui.GUI;
+import it.polimi.ingsw.view.gui.panels.GuiPanel;
+import it.polimi.ingsw.view.gui.panels.PersonalBoardPanel;
 import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
-import it.polimi.ingsw.view.gui.panels.movePanels.BufferMovePanel;
-import it.polimi.ingsw.view.gui.panels.movePanels.ExtraDepotMovePanel;
-import it.polimi.ingsw.view.gui.panels.movePanels.MoveResourcesPanel;
-import it.polimi.ingsw.view.gui.panels.movePanels.WarehouseMovePanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -28,7 +27,7 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.List;
 
-public class ProductionsPanel extends GuiPanel{
+public class ProductionsPanel extends GuiPanel {
 
     public ProductionsPanel(GUI gui) {
         super(gui);
@@ -48,13 +47,25 @@ public class ProductionsPanel extends GuiPanel{
         middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.X_AXIS));
         middlePanel.setOpaque(false);
 
+        JPanel buttonPanel = new JPanel();
         //--------BACK BUTTON----------
-        JPanel backPanel = new JPanel();
         JButton back = new JButton("Return to PB");
-        back.addActionListener(e -> gui.switchPanels(new PersonalBoardPanel(gui)));
-        backPanel.add(back);
-        backPanel.add(Box.createRigidArea(new Dimension(900,0)));
-        backPanel.setOpaque(false);
+        back.addActionListener(e -> {
+            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ReturnCommand().jsonfy()));
+            gui.switchPanels(new PersonalBoardPanel(gui));
+        });
+        buttonPanel.add(back);
+        buttonPanel.setOpaque(false);
+
+        //--------ACTIVATE PRODUCTION BUTTON----------
+        JButton activate = new JButton("Activate productions");
+        activate.addActionListener(e -> {
+            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ActivateProductionCommand().jsonfy()));
+            gui.switchPanels(new PersonalBoardPanel(gui));
+        });
+        buttonPanel.add(activate);
+        buttonPanel.add(Box.createRigidArea(new Dimension(800,0)));
+        buttonPanel.setOpaque(false);
 
         //--------PRODS PANEL----------
         JPanel prodPanel = new JPanel();
@@ -66,30 +77,37 @@ public class ProductionsPanel extends GuiPanel{
         }
         prodPanel.setOpaque(false);
 
+        //JPanel activeProdPanel = new JPanel();
+        //for (Map.Entry<ProductionID, LiteProduction> entry : prods.entrySet()) {
+        //    JPanel prod = new ActivePanel(entry.getKey(), entry.getValue(), gui);
+        //    prod.setOpaque(false);
+        //    activeProdPanel.add(new JPanel().add(prod));
+        //}
+        //activeProdPanel.setOpaque(false);
 
         //------------BUFFER-------------
-        JPanel bufferContainer = new JPanel();
-        JPanel buffer = new BufferMovePanel(gui);
-        bufferContainer.setLayout(new BoxLayout(bufferContainer, BoxLayout.Y_AXIS));
-        buffer.setPreferredSize(new Dimension(275,100));
-        bufferContainer.setOpaque(false);
-        bufferContainer.add(Box.createRigidArea(new Dimension(0,200)));
-        bufferContainer.add(buffer);
+        //JPanel bufferContainer = new JPanel();
+        //JPanel buffer = new BufferMovePanel(gui);
+        //bufferContainer.setLayout(new BoxLayout(bufferContainer, BoxLayout.Y_AXIS));
+        //buffer.setPreferredSize(new Dimension(275,100));
+        //bufferContainer.setOpaque(false);
+        //bufferContainer.add(Box.createRigidArea(new Dimension(0,200)));
+        //bufferContainer.add(buffer);
 
         JPanel bufferPanel = new JPanel();
-        bufferPanel.add(bufferContainer);
+        //bufferPanel.add(bufferContainer);
         bufferPanel.setOpaque(false);
 
         //----------WareHouse------------
         JPanel warehousPanel = new JPanel();
-        WarehouseMovePanel warehouse = new WarehouseMovePanel(gui);
-        warehouse.setPreferredSize(new Dimension(350, 500));
+        ProductionMovePanel warehouse = new ProductionMovePanel(gui);
+        warehouse.setPreferredSize(new Dimension(350, 535));
         warehousPanel.add(warehouse);
         warehousPanel.setOpaque(false);
 
         //--------ExtraDepot------------
         JPanel extraPanel = new JPanel();
-        ExtraDepotMovePanel extraDepotPanel = new ExtraDepotMovePanel(gui);
+        ExtraDepotProductionPanel extraDepotPanel = new ExtraDepotProductionPanel(gui);
         extraPanel.setPreferredSize(new Dimension(350,100));
         extraDepotPanel.setOpaque(false);
         extraPanel.add(extraDepotPanel);
@@ -102,8 +120,9 @@ public class ProductionsPanel extends GuiPanel{
         depotAndBufferPanel.setOpaque(false);
 
 
-        result.add(backPanel);
+        result.add(buttonPanel);
         result.add(prodPanel);
+        //result.add(activeProdPanel);
         middlePanel.add(warehousPanel);
         middlePanel.add(Box.createRigidArea(new Dimension(100, 0)));
         middlePanel.add(depotAndBufferPanel);
@@ -125,6 +144,7 @@ class ProdPanel extends JPanel {
         // placing the name of the production
         JLabel nameLabel = new JLabel(name.name());
         nameLabel.setAlignmentX(CENTER_ALIGNMENT);
+        nameLabel.setForeground(Color.WHITE);
         add(nameLabel);
 
         // render of the production
@@ -161,9 +181,40 @@ class ProdPanel extends JPanel {
             normalizer.setAlignmentX(CENTER_ALIGNMENT);
             add(normalizer);
         }
+        else{
+            add(Box.createRigidArea(new Dimension(0, 26)));
+        }
+
+        for(LiteResource p : prod.getAdded()) add(new ResourceLabel(p.getType(), p.getAmount()));
 
         setBorder(BorderFactory.createLineBorder(GUI.borderColor, 2));
     }
+}
+
+class ActivePanel extends JPanel{
+
+    public ActivePanel(ProductionID name, LiteProduction prod, GUI gui) throws IOException {
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setOpaque(false);
+
+        // render of the added productions
+
+        JPanel book = new JPanel();
+
+        JPanel added = new JPanel();
+        added.setLayout(new GridLayout(0, 1));
+        added.setOpaque(false);
+        for(LiteResource p : prod.getAdded()) added.add(new ResourceLabel(p.getType(), p.getAmount()));
+
+        book.add(added);
+        book.setOpaque(false);
+
+        book.setAlignmentX(CENTER_ALIGNMENT);
+        add(book);
+
+        setBorder(BorderFactory.createLineBorder(GUI.borderColor, 2));
+    }
+
 }
 
 class BookBackgroundPanel extends JPanel {

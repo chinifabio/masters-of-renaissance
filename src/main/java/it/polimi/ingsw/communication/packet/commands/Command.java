@@ -23,10 +23,13 @@ import it.polimi.ingsw.model.player.PlayerAction;
         @JsonSubTypes.Type(name = "DiscardLeader", value = DiscardLeaderCommand.class),
         @JsonSubTypes.Type(name = "EndTurn", value = EndTurnCommand.class),
         @JsonSubTypes.Type(name = "MoveDepot", value = MoveDepotCommand.class),
+        @JsonSubTypes.Type(name = "Production", value = ProductionCommand.class),
         @JsonSubTypes.Type(name = "MoveInProduction", value = MoveInProductionCommand.class),
         @JsonSubTypes.Type(name = "PaintMarble", value = PaintMarbleCommand.class),
         @JsonSubTypes.Type(name = "SetNormalProduction", value = SetNormalProductionCommand.class),
-        @JsonSubTypes.Type(name = "UseMarketTray", value = UseMarketTrayCommand.class)
+        @JsonSubTypes.Type(name = "UseMarketTray", value = UseMarketTrayCommand.class),
+        @JsonSubTypes.Type(name = "ResourceCheatCommand", value = ResourceCheatCommand.class),
+        @JsonSubTypes.Type(name = "FaithPointCheatCommand", value = FaithPointCheatCommand.class)
 })
 public abstract class Command {
     /**

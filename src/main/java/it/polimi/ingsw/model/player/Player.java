@@ -369,10 +369,24 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         return this.playerState.endThisTurn();
     }
 
+    /**
+     * Used during the buydevcard/production phase to return to the initial warehouse state.
+     * @return a warning packet
+     */
     @Override
     public Packet rollBack() {
         return this.playerState.rollBack();
     }
+
+    /**
+     * Player asks to use productions
+     * @return the result of the operation
+     */
+    @Override
+    public Packet production() {
+        return this.playerState.production();
+    }
+
 
     /**
      * Set a chosen resource attribute in player
@@ -491,6 +505,17 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     public void reconnect() {
         this.playerState = this.reconnectionState;
+    }
+
+    // FOR CHEATING
+    @Override
+    public Packet resourceCheat() {
+        return this.playerState.resourceCheat();
+    }
+
+    @Override
+    public Packet fpCheat(int fp) {
+        return this.playerState.fpCheat(fp);
     }
 
     // FOR TESTING

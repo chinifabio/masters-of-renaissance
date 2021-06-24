@@ -84,12 +84,11 @@ public class ProductionTest {
             );
         } catch (IllegalTypeInProduction ignore) {}
 
-        try{
-            assert test != null;
-            test.insertResource(ResourceBuilder.buildShield());
-            test.insertResource(ResourceBuilder.buildCoin());
-            fail();
-        } catch (UnknownUnspecifiedException ignore) {}
+
+        assert test != null;
+        assertFalse(test.insertResource(ResourceBuilder.buildShield()));
+        assertFalse(test.insertResource(ResourceBuilder.buildCoin()));
+
 
         // normal production ok to be added
         try {
@@ -179,6 +178,8 @@ public class ProductionTest {
             player.test_discardLeader();
             player.test_discardLeader();
             player.endThisTurn();
+
+            player.production();
 
             // normalizing the basic production
             player.setNormalProduction(ProductionID.BASIC, new NormalProduction(

@@ -269,7 +269,7 @@ public class PersonalBoard {
      * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
      * @throws WrongDepotException if the Player can't take Resources from that Depot
      */
-    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws UnknownUnspecifiedException, NegativeResourcesDepotException, WrongDepotException {
+    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource loot) throws NegativeResourcesDepotException, WrongDepotException {
         return this.warehouse.moveInProduction(from, dest, loot);
     }
 
@@ -280,8 +280,8 @@ public class PersonalBoard {
      * @throws EndGameException if the Player can't do this action
      * @throws WrongDepotException if the Player can't insert Resources in that Depot
      */
-    public void activateProductions() throws UnobtainableResourceException, EndGameException, WrongDepotException {
-        this.warehouse.activateProductions();
+    public boolean activateProductions() throws UnobtainableResourceException, EndGameException, WrongDepotException {
+        return this.warehouse.activateProductions();
     }
 
     /**
@@ -295,6 +295,10 @@ public class PersonalBoard {
         return this.warehouse.setNormalProduction(id, normalProduction);
     }
 
+
+    public void restoreProd(){
+        this.warehouse.clearProduction();
+    }
     /**
      * This method stores the resource in the buffer depot, then it will be the player to move
      * from buffer depot to a legal one

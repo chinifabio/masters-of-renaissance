@@ -71,6 +71,7 @@ public class BuyCardPlayerState extends PlayerState{
         }
 
         catch (Exception e) {
+            rollBack();
             return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
         }
 

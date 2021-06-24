@@ -4,14 +4,21 @@ import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.EndTurnCommand;
+import it.polimi.ingsw.communication.packet.commands.FaithPointCheatCommand;
+import it.polimi.ingsw.communication.packet.commands.ProductionCommand;
+import it.polimi.ingsw.communication.packet.commands.ResourceCheatCommand;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.buycardPanels.CardsGridPanel;
 import it.polimi.ingsw.view.gui.panels.graphicComponents.*;
 import it.polimi.ingsw.view.gui.panels.movePanels.MoveResourcesPanel;
+import it.polimi.ingsw.view.gui.panels.movePanels.ProductionsPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -78,7 +85,10 @@ public class PersonalBoardPanel  extends GuiPanel {
         viewGrid.addActionListener(e -> gui.switchPanels(new CardsGridPanel(gui)));
 
         JButton activateProduction = new JButton("Productions");
-        activateProduction.addActionListener(e -> gui.switchPanels(new ProductionsPanel(gui)));
+        activateProduction.addActionListener(e -> {
+            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ProductionCommand().jsonfy()));
+            gui.switchPanels(new ProductionsPanel(gui));
+        });
 
         JButton moveResources = new JButton("Move Resources");
         moveResources.addActionListener(e -> gui.switchPanels(new MoveResourcesPanel(gui)));
@@ -146,5 +156,36 @@ public class PersonalBoardPanel  extends GuiPanel {
         result.revalidate();
 
         return result;
+    }
+}
+
+class KeyCheats implements KeyListener {
+
+    private final GUI gui;
+
+    public KeyCheats(GUI gui) {
+        this.gui=gui;
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+        System.out.println("pulsante");
+        if(key == KeyEvent.VK_F4) {
+            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new FaithPointCheatCommand(1).jsonfy()));
+        }
+        if (key == KeyEvent.VK_F5) {
+            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new FaithPointCheatCommand(5).jsonfy()));
+        }
+        if(key == KeyEvent.VK_F6) {
+            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ResourceCheatCommand().jsonfy()));
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 }

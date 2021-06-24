@@ -144,7 +144,7 @@ public abstract class Production implements MappableToLiteVersion {
      * @param resource the resource to insert
      * @return the succeed of the operation
      */
-    public abstract boolean insertResource(Resource resource) throws UnknownUnspecifiedException;
+    public abstract boolean insertResource(Resource resource);
 
     /**
      * This method allow to set the normal production in case of unknown resource

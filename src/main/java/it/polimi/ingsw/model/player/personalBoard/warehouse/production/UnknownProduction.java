@@ -115,13 +115,8 @@ public class UnknownProduction extends Production{
      * @return the succeed of the operation
      */
     @Override
-    public boolean insertResource(Resource resource) throws UnknownUnspecifiedException {
-        if (normal.isEmpty()){
-            throw new UnknownUnspecifiedException();
-        }
-        boolean result = normal.get().insertResource(resource);
-        if (result) selected = true;
-        return result;
+    public boolean insertResource(Resource resource) {
+        return normal.isPresent() && normal.get().insertResource(resource);
     }
 
     /**

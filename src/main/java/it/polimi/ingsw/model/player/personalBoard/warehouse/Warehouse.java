@@ -30,6 +30,7 @@ public class Warehouse {
      */
     private final Map<ProductionID, Production> availableProductions;
 
+
     /**
      * This attribute associates the Depot with its DepotSlot
      */
@@ -44,7 +45,7 @@ public class Warehouse {
      * This attribute is a list of all the movements done to activate the Productions, it wil be used to restore the Depot
      * status if the Productions won't be activated
      */
-    private final LinkedList<ProductionRecord> movesCache;
+    private LinkedList<ProductionRecord> movesCache;
 
     /**
      * The owner of the warehouse
@@ -167,7 +168,7 @@ public class Warehouse {
      * @throws UnknownUnspecifiedException if the Production is unspecified
      * @throws WrongDepotException is the Player can't take resources from that Depot
      */
-    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource resource) throws NegativeResourcesDepotException, UnknownUnspecifiedException, WrongDepotException {
+    public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource resource) throws NegativeResourcesDepotException, WrongDepotException {
         ProductionRecord temp = new ProductionRecord(from, dest, resource);
         if (removeFromDepot(from, resource)){
             if (availableProductions.get(dest).insertResource(resource)){
@@ -191,6 +192,7 @@ public class Warehouse {
      * @throws WrongDepotException if the Resources can't be stored when a production is activated
      */
     public boolean activateProductions() throws UnobtainableResourceException, EndGameException, WrongDepotException {
+        if(movesCache.isEmpty()) return false;
 
         for (Map.Entry<ProductionID, Production> entry : availableProductions.entrySet()) {
             if (entry.getValue().isSelected() && !entry.getValue().activate()){
@@ -209,7 +211,7 @@ public class Warehouse {
             entry.getValue().reset();
             updateProduction(entry.getKey());
         }
-
+        movesCache.clear();
         updateDepot(DepotSlot.BUFFER);
         return true;
     }
@@ -298,12 +300,13 @@ public class Warehouse {
 
     /**
      * This method restore the Resources taken to activate the Production if it failed
-     * @throws WrongDepotException if the Resources can be restored
+     * @throws WrongDepotException if the Resources can't be restored
      */
-    public void restoreProductions() throws WrongDepotException {
+    private void restoreProductions() throws WrongDepotException {
         for (ProductionRecord record : movesCache){
             insertInDepot(record.getFrom(), record.getResources());
         }
+        movesCache.clear();
     }
 
     /**
