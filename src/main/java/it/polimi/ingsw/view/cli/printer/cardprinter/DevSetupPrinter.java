@@ -1,15 +1,26 @@
 package it.polimi.ingsw.view.cli.printer.cardprinter;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
-import it.polimi.ingsw.model.cards.DevSetup;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import java.io.IOException;
 
+/**
+ * This class is the Printer of the DevCards' Grid
+ */
 public class DevSetupPrinter {
 
+    /**
+     * This attribute is the height of the DevCards' Grid
+     */
     private static final int HEIGHT = 10*3; //rows.
+
+    /**
+     * This attribute is the width of the DevCards' Grid
+     */
     private static final int WIDTH = 14*4; //cols.
 
+    /**
+     * This method prints the DevCards' Grid
+     * @param Setup is the DevCards' Grid to show
+     */
     public static void printDevSetup(LiteDevSetup Setup){
         String[][] devSetup = new String[HEIGHT][WIDTH];
         LiteDevCard[][] toShow = new LiteDevCard[3][4];
@@ -45,10 +56,13 @@ public class DevSetupPrinter {
 
     }
 
+    /*
     public static void main(String[] args) throws EmptyDeckException, IOException {
         DevSetup set = new DevSetup();
         LiteDevSetup devSetup = set.liteVersion();
 
         printDevSetup(devSetup);
     }
+
+     */
 }

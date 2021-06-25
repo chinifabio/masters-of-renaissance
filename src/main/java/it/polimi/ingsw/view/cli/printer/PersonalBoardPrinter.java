@@ -1,31 +1,35 @@
 package it.polimi.ingsw.view.cli.printer;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.LiteModel;
-import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
-import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
-import it.polimi.ingsw.model.resource.ResourceBuilder;
-import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.cli.printer.cardprinter.DevDecksPrinter;
 import it.polimi.ingsw.view.cli.printer.cardprinter.ShowLeaderCards;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
+/**
+ * This class is the Printer of the PersonalBoard
+ */
 public class PersonalBoardPrinter {
 
-
+    /**
+     * This attribute is the height of the PersonalBoard
+     */
     private static final int HEIGHT = 33; //rows.
+
+    /**
+     * This attribute is the width of the PersonalBoard
+     */
     private static final int WIDTH = 133; //cols.
 
+    /**
+     * This method prints the PersonalBoard
+     * @param model is the Model of the match
+     * @param nickname is the Nickname of the Player
+     */
     public static void printPersonalBoard(LiteModel model, String nickname){
         List<LiteLeaderCard> leaderCards = model.getLeader(nickname);
         HashMap<DevCardSlot, List<LiteDevCard>> devCards = model.getDevelop(nickname);
@@ -66,7 +70,6 @@ public class PersonalBoardPrinter {
         WarehousePrinter.createWarehouse(personalBoard, model, nickname,8,12);
         WarehousePrinter.createBuffer(personalBoard, model, nickname,15,12);
         ShowLeaderCards.createLeaderCardsSlot(personalBoard, leaderCards, 3, 68);
-        //DevCardSlotPrinter.createDevCardSlot(personalBoard, devCards, 15, 68 );
         DevDecksPrinter.createDevCardSlot(personalBoard, devCards, 15, 68);
 
         for (int i = 0; i< HEIGHT-1; i++){
@@ -78,6 +81,7 @@ public class PersonalBoardPrinter {
         System.out.println();
     }
 
+    /*
     public static void main(String[] args) throws IOException {
         //LeaderCards
         List<LiteLeaderCard> names = new ArrayList<>();
@@ -155,4 +159,5 @@ public class PersonalBoardPrinter {
 
         //PersonalBoardPrinter.printPersonalBoard(model, "gino", names, deck );
     }
+     */
 }

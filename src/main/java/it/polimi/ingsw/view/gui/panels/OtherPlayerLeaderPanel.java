@@ -33,8 +33,8 @@ public class OtherPlayerLeaderPanel extends GuiPanel {
             result.add(new OtherLeaderCardPanel(card.getCardID(), gui, card.isActivated()));
         }
 
-        JButton back = new JButton("Return to PB");
-        back.addActionListener(e -> gui.switchPanels(new OtherPlayersPanel(gui, nickname)));
+        JButton back = new JButton("Return");
+        back.addActionListener(e -> gui.switchPanels(new OtherPlayersPanel(gui, nickname, false)));
         result.add(back);
 
         return result;

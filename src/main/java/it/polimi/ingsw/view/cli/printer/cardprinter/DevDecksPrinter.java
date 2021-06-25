@@ -1,18 +1,29 @@
 package it.polimi.ingsw.view.cli.printer.cardprinter;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 
-import java.io.IOException;
 import java.util.*;
 
+/**
+ * This class is the Printer of the DevCards slots in the PersonalBoard
+ */
 public class DevDecksPrinter {
 
+    /**
+     * This attribute is the height of the slots
+     */
     private static final int HEIGHT = 17; //rows.
+
+    /**
+     * This attribute is the width of the slots
+     */
     private static final int WIDTH = 46; //cols.
 
+    /**
+     * This method prints the Decks of DevCards in the PersonalBoard's slots
+     * @param devDecks is the List of DevCards to show
+     */
     public static void printDevDecks(HashMap<DevCardSlot, List<LiteDevCard>> devDecks){
         String[][] devCards = new String[HEIGHT][WIDTH];
         for (int i = 0; i< HEIGHT-1; i++){
@@ -32,6 +43,13 @@ public class DevDecksPrinter {
         System.out.println();
     }
 
+    /**
+     * This method creates the DevCards Slots
+     * @param display is where the DevCards Decks will be created
+     * @param toShow is the List of Cards to show
+     * @param x is the horizontal coordinate
+     * @param y is the vertical coordinate
+     */
     public static void createDevCardSlot(String[][] display,HashMap<DevCardSlot, List<LiteDevCard>>  toShow, int x, int y){
         int indexCols = y;
         int indexRows = x + 5;
@@ -48,6 +66,7 @@ public class DevDecksPrinter {
         }
     }
 
+    /*
     public static void main(String[] args) throws IOException {
         List<List<LiteDevCard>> cardFile;
         HashMap<DevCardSlot, List<LiteDevCard>> deck = new HashMap<DevCardSlot, List<LiteDevCard>>(){{
@@ -75,5 +94,7 @@ public class DevDecksPrinter {
 
         printDevDecks(deck);
     }
+
+     */
 
 }

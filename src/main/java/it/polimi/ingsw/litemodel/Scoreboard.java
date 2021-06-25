@@ -37,17 +37,21 @@ public class Scoreboard {
      * @param res the number of resource of the player
      */
     public void addPlayerScore(String nickname, int score, int res) {
+        System.out.println(nickname);
+        System.out.println(board);
         board.add(new BoardEntry(nickname, score, res));
         board.sort((o1, o2) -> {
             int temp = -1;
             for (int i = 0; temp != 0; i++) {
+                System.out.println(temp);
                 switch (i) {
                     case 0 -> temp = o1.score - o2.score;
-                    case 1 -> temp = o1.resources - o2.resources;
-                    case 2 -> temp = o1.nickname.compareTo(o2.nickname);
+                    case 1 -> temp = o2.resources - o1.resources;
+                    case 2 -> temp = o2.nickname.compareTo(o1.nickname);
                     default -> temp = 1;
                 }
             }
+            System.out.println(board);
             return temp;
         });
     }
@@ -63,7 +67,7 @@ public class Scoreboard {
     /**
      * This class represent a entry of the leaderboard
      */
-    public static class BoardEntry {
+    public static class BoardEntry implements Comparable<BoardEntry>{
 
         /**
          * The nickname of the player
@@ -110,7 +114,42 @@ public class Scoreboard {
         public int getResources() {
             return resources;
         }
+
+        @Override
+        public String toString() {
+            return "BoardEntry{" +
+                    "nickname = '" + nickname + '\'' +
+                    ", score = " + score +
+                    ", resources = " + resources +
+                    '}';
+        }
+
+        /**
+         * Compares this object with the specified object for order.  Returns a
+         * negative integer, zero, or a positive integer as this object is less
+         * than, equal to, or greater than the specified object.
+         *
+         * @throws NullPointerException if the specified object is null
+         * @throws ClassCastException   if the specified object's type prevents it
+         *                              from being compared to this object.
+         */
+        @Override
+        public int compareTo(Scoreboard.BoardEntry other) {
+                int temp = -1;
+                for (int i = 0; temp != 0; i++) {
+                    System.out.println(temp);
+                    switch (i) {
+                        case 0 -> temp = other.score - this.score;
+                        case 1 -> temp = other.resources - this.resources;
+                        case 2 -> temp = other.nickname.compareTo(this.nickname);
+                        default -> temp = 1;
+                    }
+                }
+                return Integer.compare(temp, 0);
+        }
     }
+
+
 }
 
 

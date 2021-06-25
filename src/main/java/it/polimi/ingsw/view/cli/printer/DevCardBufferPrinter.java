@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.cli.printer;
 
-
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -15,15 +14,34 @@ import java.util.List;
 
 import static it.polimi.ingsw.view.cli.printer.WarehousePrinter.createWarehouse;
 
+/**
+ * This class is the Printer of the Development Cards buffer
+ */
 public class DevCardBufferPrinter {
 
+    /**
+     * This attribute is the vertical size of the warehouse
+     */
     private static final int MAX_VERT = 7; //rows.
+
+    /**
+     * This attribute is the horizontal size of the buffer
+     */
     private static final int MAX_HORIZ = 40; //cols.
 
-    private static final int MAX_VERT_BUFFER = 3; //cols.
+    /**
+     * This attribute is vertical size of the buffer
+     */
+    private static final int MAX_VERT_BUFFER = 3; //rows.
 
-
-
+    /**
+     * This method creates the buffer of the Development Cards
+     * @param buffer is the Development Cards' Buffer
+     * @param model is the Model of the match
+     * @param nickname is the Nickname of the Player
+     * @param x is the horizontal coordinate
+     * @param y is the vertical coordinate
+     */
     public static void createDevBuffer(String[][] buffer, LiteModel model, String nickname, int x, int y){
 
         for (int i = x; i< MAX_VERT_BUFFER; i++){
@@ -76,6 +94,11 @@ public class DevCardBufferPrinter {
         }
     }
 
+    /**
+     * This method prints the BuyDevCard phase
+     * @param model is the model of the Match
+     * @param nickname is the Nickname of the Player
+     */
     public static void printDevCardPhase(LiteModel model, String nickname){
 
         String[][] warehouse = new String[MAX_VERT][MAX_HORIZ];
@@ -109,6 +132,7 @@ public class DevCardBufferPrinter {
         System.out.println(legend);
     }
 
+    /*
     public static void main(String[] args){
         LiteModel model = new LiteModel();
         model.createPlayer("gino");
@@ -153,5 +177,7 @@ public class DevCardBufferPrinter {
 
         printDevCardPhase(model, "gino");
     }
+
+     */
 
 }

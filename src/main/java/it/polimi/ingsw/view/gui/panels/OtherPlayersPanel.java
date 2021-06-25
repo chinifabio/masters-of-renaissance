@@ -13,9 +13,12 @@ public class OtherPlayersPanel extends GuiPanel{
 
     private final String player;
 
-    public OtherPlayersPanel(GUI gui, String player) {
+    private final boolean isEnd;
+
+    public OtherPlayersPanel(GUI gui, String player, boolean isEnd) {
         super(gui);
         this.player = player;
+        this.isEnd = isEnd;
     }
 
     @Override
@@ -24,8 +27,12 @@ public class OtherPlayersPanel extends GuiPanel{
 
         //--------BACK BUTTON----------
         JPanel backPanel = new JPanel();
-        JButton back = new JButton("Return to PB");
-        back.addActionListener(e -> gui.switchPanels(new PersonalBoardPanel(gui)));
+        JButton back = new JButton("Return");
+        if (!isEnd) {
+            back.addActionListener(e -> gui.switchPanels(new PersonalBoardPanel(gui)));
+        } else {
+            back.addActionListener(e -> gui.switchPanels(new WaitingEndGamePanel(gui)));
+        }
         backPanel.add(back);
         backPanel.setOpaque(false);
 

@@ -1,20 +1,30 @@
 package it.polimi.ingsw.view.cli.printer.cardprinter;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litecards.LiteSoloActionToken;
-import it.polimi.ingsw.model.cards.SoloActionToken;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
 import it.polimi.ingsw.view.cli.Colors;
 
-import java.io.IOException;
-import java.util.List;
-
+/**
+ * This class is the Printer of Solo Action Tokens
+ */
 public class SoloActionTokenPrinter {
 
+    /**
+     * This attribute is the height of the Solo Action Token
+     */
     private static final int HEIGHT = 7;
+
+    /**
+     * This attribute is the width of the Solo Action Token
+     */
     private  static final int WIDTH = 13;
 
+    /**
+     * This methos creates the SoloActionToken
+     * @param token is the Solo Action Token to show
+     * @param display is where the Solo Action Token will be created
+     * @param x is the horizontal coordinate
+     * @param y is the vertical coordinate
+     */
     private static void createToken(LiteSoloActionToken token, String[][] display, int x, int y){
         final String squareToken =
                 "╔Solo Action╗" +
@@ -50,6 +60,10 @@ public class SoloActionTokenPrinter {
 
     }
 
+    /**
+     * This method prints the Solo Action Token
+     * @param token is the Solo Action Token to show
+     */
     public static void printSoloActionToken(LiteSoloActionToken token){
         String[][] toPrint = new String[HEIGHT][WIDTH];
         createToken(token, toPrint, 0, 0);
@@ -63,6 +77,7 @@ public class SoloActionTokenPrinter {
         System.out.println();
     }
 
+    /*
     public static void main(String[] args) throws EmptyDeckException, IOException {
         List<SoloActionToken> tokens;
 
@@ -75,4 +90,6 @@ public class SoloActionTokenPrinter {
             printSoloActionToken(token.liteVersion());
         }
     }
+
+     */
 }

@@ -116,7 +116,7 @@ public class PersonalBoardPanel  extends GuiPanel {
                         JOptionPane.QUESTION_MESSAGE, null,
                         players.toArray(), players.get(0));
                 if (toSee != null) {
-                    gui.switchPanels(new OtherPlayersPanel(gui, toSee));
+                    gui.switchPanels(new OtherPlayersPanel(gui, toSee, false));
                 }
             });
             buttons.add(viewPlayer);

@@ -7,7 +7,6 @@ import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class ScoreboardPanel extends GuiPanel {
@@ -23,7 +22,7 @@ public class ScoreboardPanel extends GuiPanel {
 
         JPanel totalPanel = new JPanel();
         totalPanel.setLayout(new BoxLayout(totalPanel, BoxLayout.Y_AXIS));
-        totalPanel.add(Box.createRigidArea(new Dimension(0,100)));
+        totalPanel.add(Box.createRigidArea(new Dimension(0,50)));
         totalPanel.setOpaque(false);
         JPanel leaderBoard = new JPanel();
         JLabel ranking = new JLabel();
@@ -32,7 +31,7 @@ public class ScoreboardPanel extends GuiPanel {
         leaderBoard.add(ranking);
         leaderBoard.setOpaque(false);
         totalPanel.add(leaderBoard);
-        totalPanel.add(Box.createRigidArea(new Dimension(0,100)));
+        totalPanel.add(Box.createRigidArea(new Dimension(0,50)));
 
 
         JPanel mainPanel = new JPanel();

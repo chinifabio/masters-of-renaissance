@@ -1,21 +1,32 @@
 package it.polimi.ingsw.view.cli.printer.cardprinter;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequisite;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.view.cli.Colors;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * This class is the Printer of the Development Card
+ */
 public class DevCardPrinter {
+
+    /**
+     * This attribute is the height of the card
+     */
     private static final int HEIGHT = 9; //rows.
+
+    /**
+     * This attribute is the width of the card
+     */
     private static final int WIDTH = 12; //cols.
 
+    /**
+     * This metod create the devCard to show in the Display
+     * @param display is where the devCard will be created
+     * @param toPrint is the DevCard to create
+     * @param x is the horizontal coordinate
+     * @param y is the vertical coordinate
+     */
     public static void createDevCard(String[][] display, LiteDevCard toPrint, int x, int y){
         boolean notEmpty = toPrint.getLevel() != LevelDevCard.NOLEVEL || toPrint.getColor() != ColorDevCard.NOCOLOR;
         String colorCard;
@@ -80,19 +91,7 @@ public class DevCardPrinter {
     }
 
 
-    public void printDevCard(LiteDevCard devCardToPrint){
-        String[][] devCard = new String[HEIGHT][WIDTH];
-
-        createDevCard(devCard, devCardToPrint, 0, 0);
-        for (int r = 0; r < (HEIGHT); r++) {
-            System.out.println();
-            for (int c = 0; c < (WIDTH); c++) {
-                System.out.print(devCard[r][c]);
-            }
-        }
-
-    }
-
+    /*
     public static void main(String[] args) throws IOException {
         DevCardPrinter printer = new DevCardPrinter();
         List<LiteDevCard> devCards = new ArrayList<>();
@@ -115,5 +114,7 @@ public class DevCardPrinter {
         }
 
     }
+
+     */
 
 }

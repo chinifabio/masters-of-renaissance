@@ -1,18 +1,30 @@
 package it.polimi.ingsw.view.cli.printer;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarketTray;
-import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.match.markettray.MarketTray;
 import it.polimi.ingsw.view.cli.CLI;
 
-import java.io.IOException;
-
+/**
+ * This class is the Printer of the Market Tray
+ */
 public class MarketTrayPrinter {
 
+    /**
+     * This attribute is the height of the Market Tray
+     */
     private static final int HEIGHT = 12;
+
+    /**
+     * This attribute is the width of the Market Tray
+     */
     private  static final int WIDTH = 26;
 
+    /**
+     * This method creates the Market Tray
+     * @param tray is the Market Tray to show
+     * @param display is where the Market Tray will be created
+     * @param x is the horizontal coordinate
+     * @param y is the vertical coordinate
+     */
     private static void createMarketTray(LiteMarketTray tray, String[][] display, int x, int y){
 
         LiteMarble[][] marbles = new LiteMarble[3][4];
@@ -58,6 +70,10 @@ public class MarketTrayPrinter {
 
     }
 
+    /**
+     * This method prints the Market Tray
+     * @param tray is the Market tray to show
+     */
     public static void printMarketTray(LiteMarketTray tray){
         String[][] marketTray = new String[HEIGHT][WIDTH];
 
@@ -73,6 +89,7 @@ public class MarketTrayPrinter {
 
     }
 
+    /*
     public static void main(String[] args) throws EmptyDeckException, IOException {
         MarketTray marketTray = new ObjectMapper()
                 .readerFor(MarketTray.class)
@@ -81,7 +98,5 @@ public class MarketTrayPrinter {
         printMarketTray(liteTray);
     }
 
-
-
-
+     */
 }

@@ -13,11 +13,28 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is the Printer of the productions
+ */
 public class ProductionPrinter {
 
+    /**
+     * This attribute is the height of the productions
+     */
     private static final int HEIGHT = 15; //rows.
+
+    /**
+     * This attribute is the width of the productions
+     */
     private static final int WIDTH = 100; //cols.
 
+    /**
+     * This method creates the Productions
+     * @param display is where the Productions will be created
+     * @param productions is the Map of ProductionID and Productions to show
+     * @param x is the horizontal coordinate
+     * @param y is the vertical coordinate
+     */
     public static void createProductions(String[][] display, Map<ProductionID, LiteProduction> productions, int x, int y){
 
 
@@ -167,10 +184,13 @@ public class ProductionPrinter {
             }
         }
 
-
-
     }
 
+    /**
+     * This method prints the Productions
+     * @param model is the Model of the Match
+     * @param nickname is the Nickname of the Player
+     */
     public static void printProductions(LiteModel model, String nickname){
         Map<ProductionID, LiteProduction> productions = model.getAllProductions(nickname);
         String[][] display = new String[HEIGHT][WIDTH];

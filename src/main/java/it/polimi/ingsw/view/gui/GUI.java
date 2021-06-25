@@ -98,7 +98,7 @@ public class GUI extends JFrame implements View {
 
     @Override
     public void fireGameEnded() {
-        JOptionPane.showMessageDialog(null, "Work in progress");
+        switchPanels(new WaitingEndGamePanel(this));
     }
 
     @Override

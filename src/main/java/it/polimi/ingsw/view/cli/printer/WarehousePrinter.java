@@ -12,14 +12,35 @@ import it.polimi.ingsw.view.cli.Colors;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is the Printer of the Warehouse
+ */
 public class WarehousePrinter {
 
+    /**
+     * This attribute is the vertical size of the Warehouse
+     */
     private static final int MAX_VERT = 7; //rows.
+
+    /**
+     * This attribute is the horizontal size of the Warehouse
+     */
     private static final int MAX_HORIZ = 40; //cols.
 
+    /**
+     * This attribute is the vertical size of the Buffer
+     */
     private static final int MAX_VERT_BUFFER = 3; //cols.
 
 
+    /**
+     * This method creates the Warehouse
+     * @param display is where the Warehouse will be created
+     * @param model is the Model of the match
+     * @param nickname is the Nickname of the Player
+     * @param x is the horizontal coordinate
+     * @param y is the vertical coordinate
+     */
     public static void createWarehouse(String[][] display, LiteModel model, String nickname, int x, int y) {
 
         for (int i = x; i< MAX_VERT; i++){
@@ -216,10 +237,16 @@ public class WarehousePrinter {
             initSpecialX = x + 3;
         }
 
-
-
     }
 
+    /**
+     * This method creates the Buffer
+     * @param buffer is the Buffer to show
+     * @param model is the Model of the match
+     * @param nickname is the Nickname of the Player
+     * @param x is the horizontal coordinate
+     * @param y is the vertical coordinate
+     */
     public static void createBuffer(String[][] buffer, LiteModel model, String nickname, int x, int y){
 
         for (int i = x; i< MAX_VERT_BUFFER; i++){
@@ -272,6 +299,11 @@ public class WarehousePrinter {
         }
     }
 
+    /**
+     * This method prints the Warehouse
+     * @param model is the Model of the match
+     * @param nickname is the Nickname of the Player
+     */
     public static void printWarehouse(LiteModel model, String nickname){
 
         String[][] warehouse = new String[MAX_VERT][MAX_HORIZ];
@@ -296,6 +328,7 @@ public class WarehousePrinter {
         System.out.println();
     }
 
+    /*
     public static void main(String[] args){
         LiteModel model = new LiteModel();
         model.createPlayer("gino");
@@ -339,5 +372,7 @@ public class WarehousePrinter {
 
         printWarehouse(model, "gino");
     }
+
+     */
 
 }

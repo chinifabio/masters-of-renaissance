@@ -1,21 +1,31 @@
 package it.polimi.ingsw.view.cli.printer.cardprinter;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequisite;
 import it.polimi.ingsw.view.cli.Colors;
 
-import java.awt.*;
-import java.io.IOException;
-import java.util.List;
-
+/**
+ * This class is the Printer of the LeaderCards
+ */
 public class LeaderCardPrinter {
 
+    /**
+     * This attribute is the height of the Leader Card
+     */
     private static final int HEIGHT = 9; //rows.
+
+    /**
+     * This attribute is the width of the Leader Card
+     */
     private static final int WIDTH = 12; //cols.
 
-
+    /**
+     * This method creates the LeaderCard to show in CLI mode
+     * @param display is where the LeaderCard will be created
+     * @param toPrint is the LeaderCard to show
+     * @param x is the horizontal coordinate
+     * @param y is the vertical coordinate
+     * @param activated indicates if the LeaderCard is activated or not
+     */
     public static void createLeaderCard(String[][] display, LiteLeaderCard toPrint, int x, int y, boolean activated){
         String color = Colors.CYAN;
         if(activated) color = Colors.GREEN_BRIGHT;
@@ -58,19 +68,7 @@ public class LeaderCardPrinter {
         }
     }
 
-    public void printLeaderCard(LiteLeaderCard leaderToPrint){
-        String[][] leaderCard = new String[HEIGHT][WIDTH];
-
-        createLeaderCard(leaderCard, leaderToPrint, 0,0,leaderToPrint.isActivated());
-        for (int r = 0; r < (HEIGHT); r++) {
-            System.out.println();
-            for (int c = 0; c < (WIDTH); c++) {
-                System.out.print(leaderCard[r][c]);
-            }
-        }
-
-    }
-
+    /*
     public static void main(String[] args) throws IOException {
         LeaderCardPrinter printer = new LeaderCardPrinter();
         List<LiteLeaderCard> leaderCards;
@@ -86,5 +84,7 @@ public class LeaderCardPrinter {
         }
 
     }
+
+     */
 
 }

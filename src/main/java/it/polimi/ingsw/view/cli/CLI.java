@@ -31,8 +31,14 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.util.*;
 
+/**
+ * This is the class that manages the Command Line Interface
+ */
 public class CLI implements View {
 
+    /**
+     * This attribute maps the ResourceType to a ASCII symbol
+     */
     public static Map<ResourceType, String> colorResource = new EnumMap<>(ResourceType.class) {{
         put(ResourceType.COIN, Colors.color(Colors.YELLOW_BRIGHT, "©"));
         put(ResourceType.SHIELD, Colors.color(Colors.BLUE_BRIGHT, "▼"));
@@ -43,6 +49,9 @@ public class CLI implements View {
         put(ResourceType.FAITHPOINT, Colors.color(Colors.RED, "┼"));
     }};
 
+    /**
+     * This attribute maps the MarbleColor to a ASCII symbol
+     */
     public static Map<MarbleColor, String> colorMarbles = new EnumMap<>(MarbleColor.class) {{
         put(MarbleColor.YELLOW, Colors.color(Colors.YELLOW_BRIGHT, "●"));
         put(MarbleColor.BLUE, Colors.color(Colors.BLUE_BRIGHT, "●"));
@@ -52,14 +61,37 @@ public class CLI implements View {
         put(MarbleColor.RED, Colors.color(Colors.RED, "●"));
     }};
 
+    /**
+     * This attribute is the model
+     */
     public final LiteModel model = new LiteModel();
+
+    /**
+     * This attribute is the Printer of the FaithTrack
+     */
     public final FaithTrackPrinter faithTrackPrinter = new FaithTrackPrinter();
+
+    /**
+     * This attribute is the SocketListener of packet
+     */
     public final SocketListener socket;
 
+    /**
+     * This attribute is the state of the Client in CLI mode
+     */
     private CliState state;
 
+    /**
+     * This attribute is the lock to synchronize the Printers
+     */
     public final Object printerLock = new Object();
 
+    /**
+     * This method is the constructor of the class
+     * @param address is the IP address
+     * @param port is the port of the Server
+     * @throws IOException if an I/O error occurs when creating the socket.
+     */
     public CLI(String address, int port) throws IOException {
         titleName();
         System.out.println(Colors.color(Colors.YELLOW_BRIGHT, "\nAt the start of the game, you have to discard two leader cards and, based on your position in the sequence, you can select up to 2 initial resources.\nAfter that, end your turn. You can type \"help\" to see again the possible moves.\n"));
@@ -68,6 +100,9 @@ public class CLI implements View {
         setState(new ChooseNicknameCLI(this));
     }
 
+    /**
+     * This method prints the title of the Game
+     */
     private static void titleName(){
         String title = "\n" +
                 Colors.casualColorYellow("                                             ███╗   ███╗ █████╗ ███████╗████████╗███████╗██████╗ ███████╗               \n") +
@@ -126,6 +161,9 @@ public class CLI implements View {
         return this.model;
     }
 
+    /**
+     * This method prints the SoloActionToken in singleplayer
+     */
     @Override
     public void popUpLorenzoMoves() {
         try {
@@ -137,6 +175,10 @@ public class CLI implements View {
         }
     }
 
+    /**
+     * This method closes the application
+     * @param message is the error message
+     */
     @Override
     public void emergencyExit(String message) {
         notifyPlayerError(message);
@@ -160,6 +202,10 @@ public class CLI implements View {
         new ClientPacketHandler(this, socket).start();
     }
 
+    /**
+     * This method manages the input of the User
+     * @param nextLine is the message of the User
+     */
     private void handleUserInput(String nextLine) {
         state.handleInput(nextLine);
     }
@@ -189,47 +235,76 @@ public class CLI implements View {
         }
     }
 
+    /**
+     *
+     */
     @Override
     public void refresh() {
         //notifyPlayer(state.entryMessage);
     }
 
+    /**
+     * This message sets the Client State
+     * @param state is the next state of the Player
+     */
     public void setState(CliState state) {
         this.state = state;
         notifyPlayer("");
         notifyPlayer(state.entryMessage);
     }
 
+    /**
+     * This method sets the state of the Client in CliSetPlayersNumberState
+     */
     @Override
     public void fireGameCreator() {
         setState(new CliSetPlayersNumberState(this));
     }
 
+    /**
+     * This method sets the state of the Client in CliLobbyWaitState
+     */
     @Override
     public void fireLobbyWait() {
         setState(new CliLobbyWaitState(this));
     }
 
+    /**
+     * This method sets the state of the Client in CliInitGameState
+     */
     @Override
     public void fireGameInit() {
         setState(new CliInitGameState(this));
     }
 
+    /**
+     * This method sets the state of the Client in CliInGameState
+     */
     @Override
     public void fireGameSession() {
         setState(new CliInGameState(this));
     }
 
+    /**
+     * This method sets the state of the Client in CliWaitResultState
+     */
     @Override
     public void fireGameEnded() {
         setState(new CliWaitResultState(this));
     }
 
+    /**
+     * This method sets the state of the Client in CliResultState
+     */
     @Override
     public void fireGameResult() {
         setState(new CliResultState(this));
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         try {
             new CLI("localhost", 4444).start();
@@ -239,26 +314,56 @@ public class CLI implements View {
     }
 }
 
+/**
+ * This class manages the Client States in CLI mode
+ */
 abstract class CliState {
 
+    /**
+     * This attribute is the CLI
+     */
     protected final CLI context;
+
+    /**
+     * This attribute is the message that the Server
+     */
     public final String entryMessage;
 
 
+    /**
+     * This method is the constructor of the class
+     * @param context is the CLI that will change its state
+     * @param entryMessage is the message of the Server
+     */
     protected CliState(CLI context, String entryMessage) {
         this.context = context;
         this.entryMessage = entryMessage;
     }
 
+    /**
+     * This method manages the input of the user
+     * @param userInput is the user's input
+     */
     public abstract void handleInput(String userInput);
 }
 
+/**
+ * This class is the State of the CLI where the Player waits the end of the game
+ */
 class CliWaitResultState extends CliState {
 
+    /**
+     * This is the constructor of the class
+     * @param context is the CLI that will changes its state
+     */
     CliWaitResultState(CLI context) {
         super(context, "There was an error, quitting");
     }
 
+    /**
+     * This method manages the
+     * @param userInput is the user's input
+     */
     @Override
     public void handleInput(String userInput) {
         List<String> data = Arrays.asList(userInput.split(" "));
@@ -289,12 +394,23 @@ class CliWaitResultState extends CliState {
     }
 }
 
+/**
+ * This class is the State of the CLI where the Player choose his nickname
+ */
 class ChooseNicknameCLI extends CliState {
 
+    /**
+     * This is the constructor of the class
+     * @param context is the CLI that will changes its state
+     */
     ChooseNicknameCLI(CLI context) {
         super(context, "Choose your nickname:");
     }
 
+    /**
+     * This method manages the
+     * @param userInput is the user's input
+     */
     @Override
     public void handleInput(String userInput) {
         context.model.setMyNickname(userInput);
@@ -304,10 +420,18 @@ class ChooseNicknameCLI extends CliState {
 
 class CliSetPlayersNumberState extends CliState {
 
+    /**
+     * This is the constructor of the class
+     * @param context is the CLI that will changes its state
+     */
     CliSetPlayersNumberState(CLI context) {
         super(context, "How many players?");
     }
 
+    /**
+     * This method manages the
+     * @param userInput is the user's input
+     */
     @Override
     public void handleInput(String userInput) {
         int number;
@@ -328,10 +452,18 @@ class CliSetPlayersNumberState extends CliState {
 
 class CliLobbyWaitState extends CliState {
 
+    /**
+     * This is the constructor of the class
+     * @param context is the CLI that will changes its state
+     */
     CliLobbyWaitState(CLI context) {
         super(context, "waiting for other players...");
     }
 
+    /**
+     * This method manages the
+     * @param userInput is the user's input
+     */
     @Override
     public void handleInput(String userInput) {
         context.notifyPlayerError("trimone ho detto che devi aspettare");
@@ -340,10 +472,18 @@ class CliLobbyWaitState extends CliState {
 
 class CliInGameState extends CliState {
 
+    /**
+     * This is the constructor of the class
+     * @param context is the CLI that will changes its state
+     */
     CliInGameState(CLI context) {
         super(context, "Choose an action. Type help for commands.");
     }
 
+    /**
+     * This method manages the
+     * @param userInput is the user's input
+     */
     @Override
     public void handleInput(String userInput) {
         List<String> data = Arrays.asList(userInput.split(" "));
@@ -604,10 +744,18 @@ class CliInGameState extends CliState {
 
 class CliInitGameState extends CliState {
 
+    /**
+     * This is the constructor of the class
+     * @param context is the CLI that will changes its state
+     */
     CliInitGameState(CLI context) {
         super(context, "You have to discard leader cards and choose resource");
     }
 
+    /**
+     * This method manages the
+     * @param userInput is the user's input
+     */
     @Override
     public void handleInput(String userInput) {
         List<String> data = Arrays.asList(userInput.split(" "));
@@ -667,10 +815,19 @@ class CliInitGameState extends CliState {
 }
 
 class CliResultState extends CliState {
+
+    /**
+     * This is the constructor of the class
+     * @param context is the CLI that will changes its state
+     */
     CliResultState(CLI context) {
         super(context, "Leaderboard");
     }
 
+    /**
+     * This method manages the
+     * @param userInput is the user's input
+     */
     @Override
     public void handleInput(String userInput) {
         System.out.println("work in progress");
