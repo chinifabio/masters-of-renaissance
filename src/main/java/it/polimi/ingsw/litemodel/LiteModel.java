@@ -198,7 +198,7 @@ public class LiteModel {
                 MarbleColor temp = colors[0];
                 colors = new MarbleColor[colors.length+1];
                 colors[0] = temp;
-                colors[1] = convert(list, 0).get();
+                colors[1] = convert(list, 1).get();
             }
         }
         return colors;

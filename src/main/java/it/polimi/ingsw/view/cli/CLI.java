@@ -604,7 +604,7 @@ class CliInGameState extends CliState {
             case "normalize":
                 try {
                     ProductionID prod = ProductionID.valueOf(data.get(i++).toUpperCase());
-
+                    if(!data.get(i++).equals("x")){ throw new IndexOutOfBoundsException();}
                     List<Resource> required = new ArrayList<>();
                     while (!data.get(i).equals("x")) {
                         required.add(ResourceBuilder.buildFromType(
@@ -621,7 +621,6 @@ class CliInGameState extends CliState {
                                 Integer.parseInt(data.get(i++))
                         ));
                     }
-
                     context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new SetNormalProductionCommand(
                             prod,
                             new NormalProduction(required, output)

@@ -68,7 +68,7 @@ you can enter the following commands:
             - productions: BASIC, LEFT, CENTER, RIGHT, SPECIAL1, SPECIAL2
             - resource types: COIN, STONE, SHIELD, SERVANT
 
-        normalizeproduction/normalize [destination production] x [list of [resource type] [amount]] x [resource type] [amount]
+        normalizeproduction/normalize [destination production] x [list of [resource type] [amount]] x [list of [resource type] [amount]] x
             - create a normal production to replace an unknown production
             - dire della lista
             - productions: BASIC, LEFT, CENTER, RIGHT, SPECIAL1, SPECIAL2

@@ -1,6 +1,11 @@
 package it.polimi.ingsw.view.gui;
 
 import it.polimi.ingsw.communication.SocketListener;
+import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.HeaderTypes;
+import it.polimi.ingsw.communication.packet.Packet;
+import it.polimi.ingsw.communication.packet.commands.FaithPointCheatCommand;
+import it.polimi.ingsw.communication.packet.commands.ResourceCheatCommand;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.ClientPacketHandler;
@@ -10,6 +15,8 @@ import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.Socket;
@@ -146,6 +153,9 @@ public class GUI extends JFrame implements View {
         actualPanel = new AskNickname(this);
         gamePanel.add(actualPanel.update());
 
+        setFocusable(true);
+        addKeyListener(new KeyCheats(this));
+
         pack();
         setVisible(true);
     }
@@ -205,5 +215,35 @@ public class GUI extends JFrame implements View {
         g2.dispose();
 
         return resizedImg;
+    }
+}
+
+class KeyCheats implements KeyListener {
+
+    private final GUI gui;
+
+    public KeyCheats(GUI gui) {
+        this.gui=gui;
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+        if(key == KeyEvent.VK_F4) {
+            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new FaithPointCheatCommand(1).jsonfy()));
+        }
+        if (key == KeyEvent.VK_F5) {
+            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new FaithPointCheatCommand(5).jsonfy()));
+        }
+        if(key == KeyEvent.VK_F6) {
+            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ResourceCheatCommand().jsonfy()));
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 }

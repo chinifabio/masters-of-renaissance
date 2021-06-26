@@ -16,7 +16,6 @@ import it.polimi.ingsw.view.gui.panels.movePanels.ProductionsPanel;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
@@ -156,36 +155,5 @@ public class PersonalBoardPanel  extends GuiPanel {
         result.revalidate();
 
         return result;
-    }
-}
-
-class KeyCheats implements KeyListener {
-
-    private final GUI gui;
-
-    public KeyCheats(GUI gui) {
-        this.gui=gui;
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
-        System.out.println("pulsante");
-        if(key == KeyEvent.VK_F4) {
-            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new FaithPointCheatCommand(1).jsonfy()));
-        }
-        if (key == KeyEvent.VK_F5) {
-            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new FaithPointCheatCommand(5).jsonfy()));
-        }
-        if(key == KeyEvent.VK_F6) {
-            gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ResourceCheatCommand().jsonfy()));
-        }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-    @Override
-    public void keyReleased(KeyEvent e) {
     }
 }

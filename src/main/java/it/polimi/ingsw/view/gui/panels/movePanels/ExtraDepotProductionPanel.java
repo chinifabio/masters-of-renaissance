@@ -88,7 +88,7 @@ public class ExtraDepotProductionPanel extends JPanel {
                             JOptionPane.QUESTION_MESSAGE, null,
                             possibleValuesProductions.toArray(), possibleValuesProductions.get(0));
                     if (destProd != null) {
-                        gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveInProductionCommand(DepotSlot.STRONGBOX, destProd, ResourceBuilder.buildFromType(tempRes.getType(), 1)).jsonfy()));
+                        gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new MoveInProductionCommand(slot, destProd, ResourceBuilder.buildFromType(tempRes.getType(), 1)).jsonfy()));
                     }
                 });
             }

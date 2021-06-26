@@ -9,6 +9,7 @@ import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.GuiPanel;
+import it.polimi.ingsw.view.gui.panels.PersonalBoardPanel;
 import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 
 import javax.imageio.ImageIO;
@@ -65,7 +66,7 @@ public class MoveResourcesBuyCardPanel extends GuiPanel {
                     possibleValues, possibleValues[0]);
             if (slot != null){
                 gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new BuyDevCardCommand(gui.model.getDevSetup().getDevSetup()[r][c].getLevel(), gui.model.getDevSetup().getDevSetup()[r][c].getColor(), slot).jsonfy()));
-                gui.switchPanels(new CardsGridPanel(gui));
+                gui.switchPanels(new PersonalBoardPanel(gui));
             }
         });
 

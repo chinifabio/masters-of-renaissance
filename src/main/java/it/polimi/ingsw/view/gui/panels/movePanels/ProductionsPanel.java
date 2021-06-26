@@ -77,23 +77,6 @@ public class ProductionsPanel extends GuiPanel {
         }
         prodPanel.setOpaque(false);
 
-        //JPanel activeProdPanel = new JPanel();
-        //for (Map.Entry<ProductionID, LiteProduction> entry : prods.entrySet()) {
-        //    JPanel prod = new ActivePanel(entry.getKey(), entry.getValue(), gui);
-        //    prod.setOpaque(false);
-        //    activeProdPanel.add(new JPanel().add(prod));
-        //}
-        //activeProdPanel.setOpaque(false);
-
-        //------------BUFFER-------------
-        //JPanel bufferContainer = new JPanel();
-        //JPanel buffer = new BufferMovePanel(gui);
-        //bufferContainer.setLayout(new BoxLayout(bufferContainer, BoxLayout.Y_AXIS));
-        //buffer.setPreferredSize(new Dimension(275,100));
-        //bufferContainer.setOpaque(false);
-        //bufferContainer.add(Box.createRigidArea(new Dimension(0,200)));
-        //bufferContainer.add(buffer);
-
         JPanel bufferPanel = new JPanel();
         //bufferPanel.add(bufferContainer);
         bufferPanel.setOpaque(false);
@@ -184,37 +167,13 @@ class ProdPanel extends JPanel {
         else{
             add(Box.createRigidArea(new Dimension(0, 26)));
         }
-
-        for(LiteResource p : prod.getAdded()) add(new ResourceLabel(p.getType(), p.getAmount()));
-
-        setBorder(BorderFactory.createLineBorder(GUI.borderColor, 2));
-    }
-}
-
-class ActivePanel extends JPanel{
-
-    public ActivePanel(ProductionID name, LiteProduction prod, GUI gui) throws IOException {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        setOpaque(false);
-
-        // render of the added productions
-
-        JPanel book = new JPanel();
-
         JPanel added = new JPanel();
-        added.setLayout(new GridLayout(0, 1));
+        added.setLayout(new BoxLayout(added, BoxLayout.X_AXIS));
         added.setOpaque(false);
         for(LiteResource p : prod.getAdded()) added.add(new ResourceLabel(p.getType(), p.getAmount()));
-
-        book.add(added);
-        book.setOpaque(false);
-
-        book.setAlignmentX(CENTER_ALIGNMENT);
-        add(book);
-
+        add(added);
         setBorder(BorderFactory.createLineBorder(GUI.borderColor, 2));
     }
-
 }
 
 class BookBackgroundPanel extends JPanel {
@@ -282,6 +241,8 @@ class ProductionNormalizer extends GuiPanel {
 
     @Override
     public JPanel update() throws IOException {
+        JPanel background = new BgJPanel("/Background.png",GUI.width-300, GUI.height);
+        background.setPreferredSize(new Dimension(GUI.gameWidth, GUI.gameHeight));
         JPanel result = new JPanel();
 
         for (ResourceType storable : ResourceType.storable()) possibleValues.add(storable.name());
@@ -418,15 +379,19 @@ class ProductionNormalizer extends GuiPanel {
 
         //result.setOpaque(false);
         result.add(backPanel);
-        result.add(new JLabel("Click on resource to normalize the unknown"));
+        JLabel text = new JLabel("Click on resource to normalize the unknown");
+        text.setForeground(Color.WHITE);
+        result.add(text);
         mainPanel.add(req);
         mainPanel.add(Box.createRigidArea(new Dimension(50,0)));
         mainPanel.add(out);
         mainPanel.setOpaque(false);
+        result.setOpaque(false);
         result.add(mainPanel);
         result.add(confirm);
+        background.add(result);
 
-        return result;
+        return background;
     }
 
     public JButton resourceButtonProd(ResourceType type) throws IOException {

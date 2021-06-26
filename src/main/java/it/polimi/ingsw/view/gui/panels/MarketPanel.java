@@ -17,6 +17,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MarketPanel extends GuiPanel {
 
@@ -105,14 +107,46 @@ public class MarketPanel extends GuiPanel {
         tray.setOpaque(false);
         bigPanel.add(tray);
 
+        //-------CONVERSION POWERS------
+
+        List<MarbleColor> temp = new ArrayList<>(gui.getModel().getConversion(gui.getModel().getMe()));
+        if(!temp.isEmpty()){
+            JPanel preConv = new JPanel();
+            JLabel textConv = new JLabel("Available conversion:");
+            preConv.setOpaque(false);
+            preConv.add(textConv);
+            textConv.setForeground(Color.WHITE);
+            bigPanel.add(preConv);
+            JPanel convMarbles = new JPanel();
+            convMarbles.setOpaque(false);
+            convMarbles.setLayout(new BoxLayout(convMarbles,BoxLayout.X_AXIS));
+            convMarbles.add(Box.createRigidArea(new Dimension(140,0)));
+            convMarbles.setPreferredSize(new Dimension(150,50));
+            for(MarbleColor marble : temp){ ;
+                JPanel conv = new BgJPanel("/MarketTrayImages/MarblesPNG/" + marble.name() + ".png",35,35);
+                conv.setPreferredSize(new Dimension(30,30));
+                conv.setOpaque(false);
+                convMarbles.add(conv);
+            }
+            if(temp.size()==2){
+                convMarbles.add(Box.createRigidArea(new Dimension(100,0)));
+            }
+            bigPanel.add(convMarbles);
+        }
+
+
         //--------BACK BUTTON----------
         JButton back = new JButton("Return to PB");
 
         back.addActionListener(e -> gui.switchPanels(new PersonalBoardPanel(gui)));
+        JPanel backB = new JPanel();
+        backB.add(back);
+        backB.add(Box.createRigidArea(new Dimension(10,0)));
+        backB.setOpaque(false);
         bigPanel.add(Box.createRigidArea(new Dimension(0, 30)));
-        bigPanel.add(back);
-        result.add(bigPanel);
+        bigPanel.add(backB);
 
+        result.add(bigPanel);
         return result;
     }
 
@@ -155,8 +189,10 @@ public class MarketPanel extends GuiPanel {
                             colors,
                             colors[0]);
                     System.out.println(index);
-                    if(selected.equals(colors[0])) gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new PaintMarbleCommand(0,index).jsonfy()));
-                    else gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new PaintMarbleCommand(1,index).jsonfy()));
+                    if(selected != null) {
+                        if (selected.equals(colors[0])) gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new PaintMarbleCommand(0, index).jsonfy()));
+                        else gui.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new PaintMarbleCommand(1, index).jsonfy()));
+                    }
                 });
             }
             else{

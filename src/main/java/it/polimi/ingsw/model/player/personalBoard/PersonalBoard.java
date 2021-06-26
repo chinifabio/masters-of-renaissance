@@ -103,10 +103,10 @@ public class PersonalBoard {
     public boolean addDevCard(DevCardSlot slot, DevCard card) throws EndGameException, AlreadyInDeckException {
         int sum = 0;
         for (DevCardSlot key : DevCardSlot.values()) sum += devDeck.get(key).getNumberOfCards();
-        if (sum >= 7) throw new EndGameException();
         if (checkDevCard(slot, card)) {
             this.devDeck.get(slot).insertCard(card);
             this.updateDevCard();
+            if (sum >= 7) throw new EndGameException();
             return true;
         }
         return false;

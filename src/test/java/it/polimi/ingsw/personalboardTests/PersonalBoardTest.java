@@ -398,7 +398,7 @@ public class PersonalBoardTest {
 
             //Do nothing
             try {
-                assertTrue(board.addDevCard(DevCardSlot.LEFT, nothing));
+                board.addDevCard(DevCardSlot.LEFT, nothing);
             } catch (EndGameException ignore) {}
             assertEquals(54, board.getVictoryPointsDevCards());
         });

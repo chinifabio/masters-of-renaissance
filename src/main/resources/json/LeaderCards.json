@@ -186,7 +186,7 @@
       "type": "WhiteMarble",
       "marble": {
         "type": "Normal",
-        "color": "YELLOW",
+        "color": "PURPLE",
         "toResource": "SERVANT"
       }
     },

@@ -429,14 +429,16 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
             return false;
         }
 
+        List<Requisite> discountedReq = new ArrayList<>(req.size());
+        discountedReq.addAll(req);
         //discount
         for (Resource resLoop : this.marketDiscount) {
-            for (int j = 0; j < req.size(); j++) {
+            for (int j = 0; j < discountedReq.size(); j++) {
                 try {
-                    if (req.get(j).getType().equals(resLoop.type())) {
-                        Resource tempRes = ResourceBuilder.buildFromType(req.get(j).getType(), req.get(j).getAmount() - 1);
+                    if (discountedReq.get(j).getType().equals(resLoop.type())) {
+                        Resource tempRes = ResourceBuilder.buildFromType(discountedReq.get(j).getType(), discountedReq.get(j).getAmount() - 1);
                         ResourceRequisite tempReq = new ResourceRequisite(tempRes);
-                        req.set(j,tempReq);
+                        discountedReq.set(j,tempReq);
                     }
                 } catch (LootTypeException ignored) {
                 }
@@ -446,7 +448,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         //resource check
         List<Resource> tempBufferRes;
         tempBufferRes = this.personalBoard.viewDepotResource(DepotSlot.DEVBUFFER);
-        for (Requisite reqLoop : req) {
+        for (Requisite reqLoop : discountedReq) {
             for (Resource tempListResLoop : tempBufferRes) {
                 if (tempListResLoop.type().equals(reqLoop.getType())) {
                     if ( !(tempListResLoop.amount() == reqLoop.getAmount()) ) return false;
