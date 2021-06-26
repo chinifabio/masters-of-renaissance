@@ -79,7 +79,7 @@ public class OtherPlayersPanel extends GuiPanel{
         JPanel buttons = new JPanel();
 
         JButton otherLeader = new JButton("View " + player + "'s Leaders");
-        otherLeader.addActionListener(e -> gui.switchPanels(new OtherPlayerLeaderPanel(gui, player)));
+        otherLeader.addActionListener(e -> gui.switchPanels(new OtherPlayerLeaderPanel(gui, player, isEnd)));
         buttons.add(otherLeader);
         buttons.add(backPanel);
 

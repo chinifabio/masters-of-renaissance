@@ -5,16 +5,19 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.BuyDevCardCommand;
 import it.polimi.ingsw.communication.packet.commands.ReturnCommand;
+import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.GuiPanel;
 import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class MoveResourcesBuyCardPanel extends GuiPanel {
 
@@ -86,11 +89,51 @@ public class MoveResourcesBuyCardPanel extends GuiPanel {
         bufferPanel.setOpaque(false);
 
         //----------WareHouse------------
+        JPanel mainWarehouseDiscPanel = new JPanel();
+        mainWarehouseDiscPanel.setOpaque(false);
+        mainWarehouseDiscPanel.setLayout(new BoxLayout(mainWarehouseDiscPanel, BoxLayout.X_AXIS));
+
         JPanel warehousePanel = new JPanel();
         WarehouseBuyCardPanel warehouse = new WarehouseBuyCardPanel(gui);
         warehouse.setPreferredSize(new Dimension(350, 500));
         warehousePanel.add(warehouse);
         warehousePanel.setOpaque(false);
+
+
+        if (!gui.model.getDiscounts(gui.model.getMe()).isEmpty()) {
+        JPanel discountPanel = new JPanel();
+        discountPanel.setOpaque(false);
+        discountPanel.setPreferredSize(new Dimension(200,300));
+        JPanel textPanel = new JPanel();
+        JTextArea textDiscount = new JTextArea();
+        textDiscount.setText("You have these \n discounts available:");
+        textDiscount.setFont(new Font("Times New Roman",Font.ITALIC,22));
+        textDiscount.setBackground(GUI.borderColor);
+        textDiscount.setForeground(new Color(51, 123, 175));
+        textPanel.add(textDiscount);
+        discountPanel.add(textPanel);
+        textPanel.setOpaque(false);
+
+
+            for (LiteResource resource : gui.model.getDiscounts(gui.model.getMe())) {
+                JPanel resPanel = new JPanel();
+                resPanel.setBackground(new Color(220, 179, 120, 183));
+                JLabel res = new JLabel();
+                createResourceLabel(res, GUI.resourceImages.get(resource.getType()));
+                JLabel amount = new JLabel();
+                amount.setText("-" + resource.getAmount());
+                amount.setFont(new Font("Times New Roman", Font.BOLD, 22));
+                resPanel.add(amount);
+                resPanel.add(res);
+                discountPanel.add(resPanel);
+            }
+
+            mainWarehouseDiscPanel.add(discountPanel);
+        }
+
+
+        mainWarehouseDiscPanel.add(warehousePanel);
+
 
         //--------ExtraDepot------------
         JPanel extraPanel = new JPanel();
@@ -115,7 +158,6 @@ public class MoveResourcesBuyCardPanel extends GuiPanel {
         message.setForeground(new Color(51, 123, 175));
         message.setEditable(false);
         messagePanel.add(Box.createRigidArea(new Dimension(10,0)));
-        //message.setOpaque(false);
 
         JLabel cardImage = new JLabel();
         Image cardScaled = GUI.getScaledImage(image,462/4, 698/4);
@@ -132,7 +174,7 @@ public class MoveResourcesBuyCardPanel extends GuiPanel {
         result.add(Box.createRigidArea(new Dimension(0, 20)));
         result.add(messagePanel);
         result.add(Box.createRigidArea(new Dimension(0, 20)));
-        middlePanel.add(warehousePanel);
+        middlePanel.add(mainWarehouseDiscPanel);
         middlePanel.add(Box.createRigidArea(new Dimension(100, 0)));
         middlePanel.add(depotAndBufferPanel);
         result.add(middlePanel);
@@ -141,5 +183,16 @@ public class MoveResourcesBuyCardPanel extends GuiPanel {
         result.setOpaque(false);
         background.add(result);
         return background;
+    }
+
+    public void createResourceLabel(JLabel button, String resource) throws IOException {
+        InputStream url = this.getClass().getResourceAsStream("/" + resource);
+        assert url != null;
+        Image scaledImage = GUI.getScaledImage(ImageIO.read(url), 42, 42);
+
+        ImageIcon icon1 = new ImageIcon(scaledImage);
+        button.setIcon(icon1);
+        button.setPreferredSize(new Dimension(44, 44));
+
     }
 }

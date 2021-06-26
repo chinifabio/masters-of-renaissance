@@ -45,13 +45,13 @@ public class Scoreboard {
             for (int i = 0; temp != 0; i++) {
                 System.out.println(temp);
                 switch (i) {
-                    case 0 -> temp = o1.score - o2.score;
-                    case 1 -> temp = o2.resources - o1.resources;
-                    case 2 -> temp = o2.nickname.compareTo(o1.nickname);
+                    //TODO Non funziona
+                    case 0 -> temp = Integer.compare(o2.score, o1.score);
+                    case 1 -> temp = o1.resources - o2.resources;
+                    case 2 -> temp = o1.nickname.compareTo(o2.nickname);
                     default -> temp = 1;
                 }
             }
-            System.out.println(board);
             return temp;
         });
     }
@@ -139,13 +139,13 @@ public class Scoreboard {
                 for (int i = 0; temp != 0; i++) {
                     System.out.println(temp);
                     switch (i) {
-                        case 0 -> temp = other.score - this.score;
+                        case 0 -> temp = Integer.compare(this.score, other.score);
                         case 1 -> temp = other.resources - this.resources;
                         case 2 -> temp = other.nickname.compareTo(this.nickname);
                         default -> temp = 1;
                     }
                 }
-                return Integer.compare(temp, 0);
+                return temp;
         }
     }
 

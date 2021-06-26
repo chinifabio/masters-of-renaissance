@@ -16,9 +16,12 @@ public class OtherPlayerLeaderPanel extends GuiPanel {
 
     private final String nickname;
 
-    public OtherPlayerLeaderPanel(GUI gui, String nickname) {
+    private final boolean isEnd;
+
+    public OtherPlayerLeaderPanel(GUI gui, String nickname, boolean isEnd) {
         super(gui);
         this.nickname = nickname;
+        this.isEnd = isEnd;
     }
 
     @Override
@@ -34,7 +37,7 @@ public class OtherPlayerLeaderPanel extends GuiPanel {
         }
 
         JButton back = new JButton("Return");
-        back.addActionListener(e -> gui.switchPanels(new OtherPlayersPanel(gui, nickname, false)));
+        back.addActionListener(e -> gui.switchPanels(new OtherPlayersPanel(gui, nickname, isEnd)));
         result.add(back);
 
         return result;

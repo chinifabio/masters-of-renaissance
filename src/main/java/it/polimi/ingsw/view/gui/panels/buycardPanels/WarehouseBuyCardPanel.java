@@ -95,7 +95,7 @@ public class WarehouseBuyCardPanel extends JPanel {
                 int value = 0;
                 boolean valid = true;
 
-                String str = JOptionPane.showInputDialog(null, "How many resources do you want to move?");
+                String str = JOptionPane.showInputDialog(null, "How many resources do you want to move?", "1");
                 try{
                     value = Integer.parseInt(str);
                 } catch (Exception notParsable){

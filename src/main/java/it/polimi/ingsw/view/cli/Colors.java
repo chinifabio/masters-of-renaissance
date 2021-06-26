@@ -6,21 +6,50 @@ import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.*;
 
+/**
+ * This class is used to change colors of strings in CLI mode
+ */
 public class Colors {
+
+    /**
+     * This method colors a string with the selected color
+     * @param Colors is the color selected to color the string
+     * @param text is the string to color
+     * @return the colored string
+     */
     public static String color(String Colors, String text){
         return Colors + text + RESET ;
     }
 
+    /**
+     * This method colors a string with also a colored background
+     * @param Colors is the color selected to color the string
+     * @param background is the color selected to color the background
+     * @param text is the string to color
+     * @return the colored string with the colored background
+     */
     public static String colorBackGround(String Colors, String background, String text){
         return Colors  + background + text + RESET ;
     }
 
-
+    /**
+     * This method colors a string with a casual YELLOW color
+     * @param text is the string to color
+     * @return the colored string with colored background
+     */
     public static String casualColorYellow(String text){
         return getString(text, YELLOW_BRIGHT, YELLOW, YELLOW_BOLD);
 
     }
 
+    /**
+     * This method colors a string with a casual color range
+     * @param text is the string to color
+     * @param bright is the bright color
+     * @param normal is the normal color
+     * @param bold is the bold color
+     * @return the colored string
+     */
     private static String getString(String text, String bright, String normal, String bold) {
         Random random = new Random();
         List<String> casual = new ArrayList<>();
@@ -31,24 +60,11 @@ public class Colors {
         return  casual.get(random.nextInt(casual.size())) + text + RESET;
     }
 
-    public static String casualColorRed(String text){
-        return getString(text, RED_BRIGHT, RED, RED_BOLD);
-
-    }
-
-    public static String colorResourceType(ResourceType resourceType){
-        Map<ResourceType, String> colors = new EnumMap<>(ResourceType.class);
-        colors.put(ResourceType.COIN, YELLOW_BRIGHT);
-        colors.put(ResourceType.FAITHPOINT, RED_BRIGHT);
-        colors.put(ResourceType.SERVANT, PURPLE_BRIGHT);
-        colors.put(ResourceType.STONE, WHITE_BRIGHT);
-        colors.put(ResourceType.SHIELD, BLUE_BRIGHT);
-        colors.put(ResourceType.EMPTY, WHITE);
-        colors.put(ResourceType.UNKNOWN, WHITE);
-
-        return colors.get(resourceType) + resourceType.name() + RESET;
-    }
-
+    /**
+     * This method colors the DevCard in CLI mode
+     * @param devCard is the color of the DevCard
+     * @return the color of the devCard
+     */
     public static String colorDevCard(ColorDevCard devCard){
         Map<ColorDevCard, String> colors = new EnumMap<>(ColorDevCard.class);
         colors.put(ColorDevCard.YELLOW, YELLOW);
@@ -56,19 +72,6 @@ public class Colors {
         colors.put(ColorDevCard.GREEN, GREEN);
         colors.put(ColorDevCard.PURPLE, PURPLE);
         return colors.get(devCard) + devCard.name() + RESET;
-    }
-
-
-    public static String colorMarbleType(MarbleColor marbleColor) {
-        Map<MarbleColor, String> colors = new EnumMap<>(MarbleColor.class);
-        colors.put(MarbleColor.BLUE, BLUE_BRIGHT);
-        colors.put(MarbleColor.PURPLE, PURPLE_BRIGHT);
-        colors.put(MarbleColor.RED, RED_BRIGHT);
-        colors.put(MarbleColor.WHITE, WHITE_BRIGHT);
-        colors.put(MarbleColor.YELLOW, YELLOW_BRIGHT);
-        colors.put(MarbleColor.GRAY, WHITE_BOLD);
-
-        return colors.get(marbleColor) + marbleColor.name() + RESET;
     }
 
     // Reset
