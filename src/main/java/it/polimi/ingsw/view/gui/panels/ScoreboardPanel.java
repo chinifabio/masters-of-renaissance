@@ -9,12 +9,25 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * This class is the GUI Panel of the Leaderboard
+ */
 public class ScoreboardPanel extends GuiPanel {
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the needed info
+     */
     public ScoreboardPanel(GUI gui) {
         super(gui);
     }
 
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
         JPanel background = new BgJPanel("/Background.png",GUI.width-300, GUI.height);
@@ -76,5 +89,6 @@ public class ScoreboardPanel extends GuiPanel {
         background.add(totalPanel);
         return background;
     }
+
 
 }

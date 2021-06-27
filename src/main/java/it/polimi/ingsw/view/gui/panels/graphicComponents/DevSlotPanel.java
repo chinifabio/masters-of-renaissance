@@ -12,10 +12,22 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * This class is the GUI Panel of the DevCards slots of the PersonalBoard
+ */
 public class DevSlotPanel extends JPanel {
 
-    private GUI gui;
+    /**
+     * This attribute is the GUI that contains all the needed info of the DevCards Slots
+     */
+    private final GUI gui;
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the needed info
+     * @param player is the nickname of the Player that own the DevCardSlots
+     * @throws IOException if there is an I/O problem
+     */
     public DevSlotPanel(GUI gui, String player) throws IOException {
         this.gui = gui;
 
@@ -43,6 +55,13 @@ public class DevSlotPanel extends JPanel {
         this.setOpaque(false);
     }
 
+    /**
+     * This method creates the DevCardsSpace panel by adding the cards in the right order
+     * @param space is the Panel where the cards will be added
+     * @param slot is the DevCardSlot that contains the cards
+     * @param player is the nickname of the player that own the DevCardsSlots
+     * @throws IOException if there is an I/O problem
+     */
     public void createDevSpace(JPanel space, DevCardSlot slot, String player) throws IOException {
 
         float i = 0;

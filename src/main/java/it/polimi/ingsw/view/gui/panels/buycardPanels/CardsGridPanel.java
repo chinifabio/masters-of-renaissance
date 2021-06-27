@@ -17,13 +17,30 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * This class is the GUI Panel for the Development Cards' Grid
+ */
 public class CardsGridPanel extends GuiPanel {
+
+    /**
+     * This attribute is the DevCardSlot where the card will be placed
+     */
     JOptionPane devSlot = new JOptionPane();
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains info
+     */
     public CardsGridPanel(GUI gui) {
         super(gui);
     }
 
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
         JPanel background = new BgJPanel("/Background.png",GUI.width-300, GUI.height);
@@ -97,6 +114,14 @@ public class CardsGridPanel extends GuiPanel {
         return background;
     }
 
+
+    /**
+     * This method create the JButton of the DevCard inside the DevCards' Grid
+     * @param button is the JButton that will be changed
+     * @param name is the ID of the card
+     * @param r is the row of the DevCards' Grid
+     * @param c is the column of the DevCards' Grid
+     */
     public void generateDevCardButton(JButton button, String name, int r, int c){
         InputStream url = this.getClass().getResourceAsStream("/DevCardsImages/" + name + ".png");
         BufferedImage img = null;

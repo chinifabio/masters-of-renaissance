@@ -8,11 +8,24 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * This class is the GUI Panel when the Player has to wait other players before starting the match
+ */
 public class LoadingPanel extends GuiPanel {
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the info
+     */
     public LoadingPanel(GUI gui) {
         super(gui);
     }
 
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
         JPanel result = new BgJPanel("/Background.png", GUI.gameWidth, GUI.gameHeight);
@@ -44,4 +57,5 @@ public class LoadingPanel extends GuiPanel {
 
         return result;
     }
+
 }

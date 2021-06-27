@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.gui.panels.movePanels;
 
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.*;
 import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
@@ -9,14 +8,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * This class is the GUI Panel where the Player can move resources into Productions
+ */
 public class MoveResourcesPanel extends GuiPanel {
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains info
+     */
     public MoveResourcesPanel(GUI gui){
         super(gui);
     }
 
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
+
         JPanel background = new BgJPanel("/brickBackground.png",GUI.width-370, GUI.height-78,35,35);
         JPanel result = new JPanel();
 
@@ -88,4 +101,6 @@ public class MoveResourcesPanel extends GuiPanel {
         background.add(result);
         return background;
     }
+
+
 }

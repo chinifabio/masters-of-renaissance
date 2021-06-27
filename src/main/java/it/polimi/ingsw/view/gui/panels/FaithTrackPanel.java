@@ -11,8 +11,14 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Random;
 
+/**
+ * This class is the GUI Panel of the FaithTrack
+ */
 public class FaithTrackPanel extends JPanel {
 
+    /**
+     * This attribute is the map that connects the player position with the right row of Panels
+     */
     HashMap<Integer, Integer> playerPos = new HashMap<>(){{
         put(0,2);
         put(1,2);
@@ -42,6 +48,9 @@ public class FaithTrackPanel extends JPanel {
         put(25,0);
     }};
 
+    /**
+     * This attribute is the map that connects the player position to the right panel of the top row of Panels
+     */
     HashMap<Integer, Integer> topRow = new HashMap<>(){{
         put(4,3);
         put(5,4);
@@ -59,12 +68,18 @@ public class FaithTrackPanel extends JPanel {
         put(25,20);
     }};
 
+    /**
+     * This attribute is the map that connects the player position to the right panel of the middle row of Panels
+     */
     HashMap<Integer, Integer> centerRow = new HashMap<>(){{
         put(3,3);
         put(10,8);
         put(17,13);
     }};
 
+    /**
+     * This attribute is the map that connects the player position to the right panel of the bottom row of Panels
+     */
     HashMap<Integer, Integer> bottomRow = new HashMap<>(){{
         put(0,1);
         put(1,2);
@@ -77,10 +92,16 @@ public class FaithTrackPanel extends JPanel {
         put(16,13);
     }};
 
-    int player;
     /**
-     * Creates a new <code>JPanel</code> with a double buffer
-     * and a flow layout.
+     * This attribute is the position of the player
+     */
+    int player;
+
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the needed info
+     * @param nickname is the nickname of the Player
+     * @throws IOException if there is an I/O problem
      */
     public FaithTrackPanel(GUI gui, String nickname) throws IOException {
 

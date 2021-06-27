@@ -27,14 +27,28 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.List;
 
+/**
+ * This class is the GUI Panel for the Productions
+ */
 public class ProductionsPanel extends GuiPanel {
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the info needed
+     */
     public ProductionsPanel(GUI gui) {
         super(gui);
     }
 
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
+
         JPanel background = new BgJPanel("/brickBackground.png",GUI.width-370, GUI.height-78,35,35);
         JPanel result = new JPanel();
 
@@ -116,10 +130,21 @@ public class ProductionsPanel extends GuiPanel {
         background.add(result);
         return background;
     }
+
 }
 
+/**
+ * This class is the GUI Panel of the single Production
+ */
 class ProdPanel extends JPanel {
 
+    /**
+     * This is the constructor of the class
+     * @param name is the ID of the Production
+     * @param prod is the Production that will be showed
+     * @param gui is the GUI that contains all the Production's info
+     * @throws IOException if there is an I/O problem
+     */
     public ProdPanel(ProductionID name, LiteProduction prod, GUI gui) throws IOException {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setOpaque(false);
@@ -176,13 +201,30 @@ class ProdPanel extends JPanel {
     }
 }
 
+/**
+ * This class is the GUI Panel of the Productions' Book
+ */
 class BookBackgroundPanel extends JPanel {
 
+    /**
+     * This attribute is the background image
+     */
     private final Image bg;
 
+    /**
+     * This attribute is the width of the image
+     */
     public static final int w = 373/2;
+
+    /**
+     * This attribute is the height of the image
+     */
     public static final int h = 261/2;
 
+    /**
+     * This is the constructor of the class
+     * @throws IOException if there is an I/O problem
+     */
     public BookBackgroundPanel() throws IOException {
         InputStream img = this.getClass().getResourceAsStream("/production.png");
         assert img != null;
@@ -190,6 +232,9 @@ class BookBackgroundPanel extends JPanel {
         setOpaque(false);
     }
 
+    /**
+     * Draw the background
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -197,7 +242,16 @@ class BookBackgroundPanel extends JPanel {
     }
 }
 
+/**
+ * This class is the GUI Panel of the Resources
+ */
 class ResourceLabel extends JPanel {
+    /**
+     * This is the constructor of the class
+     * @param type is the Resource type
+     * @param am is the amount of the resource
+     * @throws IOException if there is an I/O problem
+     */
     public ResourceLabel(ResourceType type, int am) throws IOException {
         setLayout(new OverlayLayout(this));
         this.setBackground(new Color(0,0,0,30));
@@ -222,14 +276,39 @@ class ResourceLabel extends JPanel {
     }
 }
 
-
+/**
+ * This class is the GUI Panel of the Production Normalizer
+ */
 class ProductionNormalizer extends GuiPanel {
 
+    /**
+     * This attribute is the List of resources required for the production
+     */
     private final List<LiteResource> required;
+
+    /**
+     * This attribute is the List of resources that the player will obtain after the production
+     */
     private final List<LiteResource> output;
+
+    /**
+     * This attribute is the ID of the Production to normalize
+     */
     private final ProductionID id;
+
+    /**
+     * This attribute is the list of Resources that the player can choose
+     */
     List<String> possibleValues = new ArrayList<>();
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the info
+     * @param required is the list of resources required
+     * @param output is the list of resources that the player could obtain
+     * @param id is the ID of the Production to normalize
+     * @throws IOException if there is an I/O problem
+     */
     public ProductionNormalizer(GUI gui, List<LiteResource> required, List<LiteResource> output, ProductionID id) throws IOException {
         super(gui);
 
@@ -239,6 +318,29 @@ class ProductionNormalizer extends GuiPanel {
         this.id = id;
     }
 
+    /**
+     * This method create the JButton of the resource
+     * @param type is the Resource type
+     * @return the JButton of the Resource created
+     * @throws IOException if there is an I/O problem
+     */
+    public JButton resourceButtonProd(ResourceType type) throws IOException {
+        JButton butt = new JButton();
+
+        InputStream img = getClass().getResourceAsStream("/WarehouseRes/"+type.name().toLowerCase()+".png");
+        assert img != null;
+        butt.setIcon(new ImageIcon(GUI.getScaledImage(ImageIO.read(img), 25, 25)));
+        butt.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        return butt;
+    }
+
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
         JPanel background = new BgJPanel("/Background.png",GUI.width-300, GUI.height);
@@ -314,7 +416,6 @@ class ProductionNormalizer extends GuiPanel {
                 ResourceLabel resource = new ResourceLabel(p.getType(), p.getAmount());
                 req.add(resource);
             }
-
         }
 
         JPanel out = new JPanel();
@@ -325,27 +426,27 @@ class ProductionNormalizer extends GuiPanel {
         out.setOpaque(false);
         for(LiteResource p : output) {
             if (p.getType() == ResourceType.UNKNOWN){
-            for (int i = 0; i < p.getAmount(); i++){
-                JButton resource = resourceButtonProd(p.getType());
-                resource.setOpaque(false);
-                resource.setContentAreaFilled(false);
-                resource.addActionListener(e -> {
-                    String chosenResource = (String) JOptionPane.showInputDialog(null, "Choose the Resource", "Normalize",
-                            JOptionPane.QUESTION_MESSAGE, null,
-                            possibleValues.toArray(), possibleValues.get(0));
-                    if (chosenResource != null){
-                        newOut.add(ResourceBuilder.buildFromType(ResourceType.valueOf(chosenResource), 1).liteVersion());
-                        newOut.remove(ResourceBuilder.buildFromType(ResourceType.UNKNOWN,1).liteVersion());
-                        try {
-                            gui.switchPanels(new ProductionNormalizer(gui, newReq, newOut, id));
-                        } catch (IOException ioException) {
-                            ioException.printStackTrace();
+                for (int i = 0; i < p.getAmount(); i++){
+                    JButton resource = resourceButtonProd(p.getType());
+                    resource.setOpaque(false);
+                    resource.setContentAreaFilled(false);
+                    resource.addActionListener(e -> {
+                        String chosenResource = (String) JOptionPane.showInputDialog(null, "Choose the Resource", "Normalize",
+                                JOptionPane.QUESTION_MESSAGE, null,
+                                possibleValues.toArray(), possibleValues.get(0));
+                        if (chosenResource != null){
+                            newOut.add(ResourceBuilder.buildFromType(ResourceType.valueOf(chosenResource), 1).liteVersion());
+                            newOut.remove(ResourceBuilder.buildFromType(ResourceType.UNKNOWN,1).liteVersion());
+                            try {
+                                gui.switchPanels(new ProductionNormalizer(gui, newReq, newOut, id));
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
                         }
-                    }
-                });
-                out.add(resource);
-            }
-         } else {
+                    });
+                    out.add(resource);
+                }
+            } else {
                 ResourceLabel resource = new ResourceLabel(p.getType(), p.getAmount());
                 out.add(resource);
             }
@@ -392,16 +493,5 @@ class ProductionNormalizer extends GuiPanel {
         background.add(result);
 
         return background;
-    }
-
-    public JButton resourceButtonProd(ResourceType type) throws IOException {
-        JButton butt = new JButton();
-
-        InputStream img = getClass().getResourceAsStream("/WarehouseRes/"+type.name().toLowerCase()+".png");
-        assert img != null;
-        butt.setIcon(new ImageIcon(GUI.getScaledImage(ImageIO.read(img), 25, 25)));
-        butt.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        return butt;
     }
 }

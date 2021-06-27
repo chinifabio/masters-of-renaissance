@@ -10,12 +10,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * This class is the GUI Panel where the Player waits that the other players end their last turn
+ */
 public class WaitingEndGamePanel extends GuiPanel{
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the needed info
+     */
     public WaitingEndGamePanel(GUI gui) {
         super(gui);
     }
 
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
         JPanel background = new BgJPanel("/Background.png",GUI.width-300, GUI.height);
@@ -62,4 +75,5 @@ public class WaitingEndGamePanel extends GuiPanel{
 
         return background;
     }
+
 }

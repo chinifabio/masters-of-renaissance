@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.gui.panels;
 
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.view.gui.GUI;
 
@@ -11,19 +10,39 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * This class is the GUI Panel that allows the player to see other players' LeaderCards
+ */
 public class OtherPlayerLeaderPanel extends GuiPanel {
 
-
+    /**
+     * This attribute is the nickname of the Player
+     */
     private final String nickname;
 
+    /**
+     * This attribute indicates if the Player is in the EndGame phase so he can only see other player
+     */
     private final boolean isEnd;
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the needed info
+     * @param nickname is the nickname of the player
+     * @param isEnd indicates if the Player in in the endgame or not
+     */
     public OtherPlayerLeaderPanel(GUI gui, String nickname, boolean isEnd) {
         super(gui);
         this.nickname = nickname;
         this.isEnd = isEnd;
     }
 
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
         JPanel result = new JPanel();
@@ -33,7 +52,7 @@ public class OtherPlayerLeaderPanel extends GuiPanel {
         result.setLayout(new BoxLayout(result, BoxLayout.X_AXIS));
 
         for (LiteLeaderCard card : gui.model.getLeader(nickname)){
-            result.add(new OtherLeaderCardPanel(card.getCardID(), gui, card.isActivated()));
+            result.add(new OtherLeaderCardPanel(card.getCardID(), card.isActivated()));
         }
 
         JButton back = new JButton("Return");
@@ -44,9 +63,17 @@ public class OtherPlayerLeaderPanel extends GuiPanel {
     }
 }
 
+/**
+ * This class is the GUI Panel of the LeaderCard of other players
+ */
 class OtherLeaderCardPanel extends JPanel {
 
-    public OtherLeaderCardPanel(String id, GUI gui, boolean activated) {
+    /**
+     * This is the constructor of the class
+     * @param id is the ID of the card
+     * @param activated indicates if the LeaderCard is activated or not
+     */
+    public OtherLeaderCardPanel(String id, boolean activated) {
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 

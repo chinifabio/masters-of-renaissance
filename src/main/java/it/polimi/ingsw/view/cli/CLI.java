@@ -73,7 +73,7 @@ public class CLI implements View {
     public final FaithTrackPrinter faithTrackPrinter = new FaithTrackPrinter();
 
     /**
-     * This attribute is the SocketListener of packet
+     * This attribute is the SocketListener that manage the packets
      */
     public final SocketListener socket;
 
@@ -88,7 +88,7 @@ public class CLI implements View {
     public final Object printerLock = new Object();
 
     /**
-     * This method is the constructor of the class
+     * This is the constructor of the class
      * @param address is the IP address
      * @param port is the port of the Server
      * @throws IOException if an I/O error occurs when creating the socket.
@@ -237,7 +237,7 @@ public class CLI implements View {
     }
 
     /**
-     *
+     * This method do nothing
      */
     @Override
     public void refresh() {
@@ -245,7 +245,7 @@ public class CLI implements View {
     }
 
     /**
-     * This message sets the Client State
+     * This method sets the Client State
      * @param state is the next state of the Player
      */
     public void setState(CliState state) {
@@ -360,7 +360,7 @@ class CliWaitResultState extends CliState {
     }
 
     /**
-     * This method manages the
+     * This method manages the user's input
      * @param userInput is the user's input
      */
     @Override
@@ -412,7 +412,7 @@ class ChooseNicknameCLI extends CliState {
     }
 
     /**
-     * This method manages the
+     * This method manages the user's input
      * @param userInput is the user's input
      */
     @Override
@@ -422,6 +422,9 @@ class ChooseNicknameCLI extends CliState {
     }
 }
 
+/**
+ * This class is the State of the CLI where the Player choose the number of players of the match
+ */
 class CliSetPlayersNumberState extends CliState {
 
     /**
@@ -438,7 +441,7 @@ class CliSetPlayersNumberState extends CliState {
     }
 
     /**
-     * This method manages the
+     * This method manages the user's input
      * @param userInput is the user's input
      */
     @Override
@@ -459,6 +462,9 @@ class CliSetPlayersNumberState extends CliState {
     }
 }
 
+/**
+ * This class is the State of the CLI where the Player waits for other players to connect to the match
+ */
 class CliLobbyWaitState extends CliState {
 
     /**
@@ -475,7 +481,7 @@ class CliLobbyWaitState extends CliState {
     }
 
     /**
-     * This method manages the
+     * This method manages the user's input
      * @param userInput is the user's input
      */
     @Override
@@ -484,6 +490,9 @@ class CliLobbyWaitState extends CliState {
     }
 }
 
+/**
+ * This class is the State of the CLI where the Player can do all the main actions
+ */
 class CliInGameState extends CliState {
 
     /**
@@ -500,7 +509,7 @@ class CliInGameState extends CliState {
     }
 
     /**
-     * This method manages the
+     * This method manages the user's input
      * @param userInput is the user's input
      */
     @Override
@@ -760,6 +769,9 @@ class CliInGameState extends CliState {
     }
 }
 
+/**
+ * This class is the State of the CLI where the Player choose LeaderCards and Resources
+ */
 class CliInitGameState extends CliState {
 
     /**
@@ -770,13 +782,16 @@ class CliInitGameState extends CliState {
         super(context);
     }
 
+    /**
+     * This method show the LeaderCards of the Player when the game starts
+     */
     @Override
     public void onEntry() {
         ShowLeaderCards.printLeaderCardsPlayer(context.model.getLeader(context.model.getMe()));
     }
 
     /**
-     * This method manages the
+     * This method manages the user's input
      * @param userInput is the user's input
      */
     @Override
@@ -837,6 +852,9 @@ class CliInitGameState extends CliState {
     }
 }
 
+/**
+ * This class is the State of the CLI where the Player can see the Leaderboard
+ */
 class CliResultState extends CliState {
 
     /**
@@ -847,6 +865,9 @@ class CliResultState extends CliState {
         super(context);
     }
 
+    /**
+     * This method shows to the player the Leaderboard
+     */
     @Override
     public void onEntry() {
         context.notifyPlayer("Leaderboard\n");
@@ -870,7 +891,7 @@ class CliResultState extends CliState {
     }
 
     /**
-     * This method manages the
+     * This method manages the user's input
      * @param userInput is the user's input
      */
     @Override

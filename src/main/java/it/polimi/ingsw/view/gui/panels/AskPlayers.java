@@ -10,12 +10,25 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * This class is the GUI Panel where the player can choose the number of player
+ */
 public class AskPlayers extends GuiPanel {
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the needed info
+     */
     public AskPlayers(GUI gui) {
         super(gui);
     }
 
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
         JPanel result = new BgJPanel("/LogoMasters.png", GUI.gameWidth, GUI.gameHeight);
@@ -62,4 +75,5 @@ public class AskPlayers extends GuiPanel {
 
         return result;
     }
+
 }

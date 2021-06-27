@@ -20,14 +20,28 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is the GUI Panel of the MarketTray
+ */
 public class MarketPanel extends GuiPanel {
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the info needed to create the Market Tray Panel
+     */
     public MarketPanel(GUI gui) {
         super(gui);
     }
 
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
+
         JPanel result = new BgJPanel("/brickBackground.png",GUI.width-370, GUI.height-78,35,35);
         result.setPreferredSize(new Dimension(GUI.gameWidth, GUI.gameHeight));
         result.setOpaque(false);
@@ -122,7 +136,7 @@ public class MarketPanel extends GuiPanel {
             convMarbles.setLayout(new BoxLayout(convMarbles,BoxLayout.X_AXIS));
             convMarbles.add(Box.createRigidArea(new Dimension(140,0)));
             convMarbles.setPreferredSize(new Dimension(150,50));
-            for(MarbleColor marble : temp){ ;
+            for(MarbleColor marble : temp){
                 JPanel conv = new BgJPanel("/MarketTrayImages/MarblesPNG/" + marble.name() + ".png",35,35);
                 conv.setPreferredSize(new Dimension(30,30));
                 conv.setOpaque(false);
@@ -150,6 +164,13 @@ public class MarketPanel extends GuiPanel {
         return result;
     }
 
+
+    /**
+     * This method create the Panel of each Marble of the Market Tray
+     * @param index is the Tray's index where the marble is located
+     * @param color is the color of the Marble
+     * @return the JPanel of the Marble
+     */
     private JPanel drawMarble(int index, MarbleColor color) {
 
         JPanel panel = new JPanel();

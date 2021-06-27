@@ -9,25 +9,35 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.gui.GUI;
-import it.polimi.ingsw.view.gui.panels.GuiPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * This class is the GUI Panel of the Warehouse in BuyCard state
+ */
 public class WarehouseBuyCardPanel extends JPanel {
 
+    /**
+     * This attribute is the GUI that contains info
+     */
     private final GUI gui;
 
-    private Image warehouseImage;
+    /**
+     * This attribute is the image of the Warehouse
+     */
+    private final Image warehouseImage;
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that has the Warehouse info
+     * @throws IOException if there is an I/O problem
+     */
     public WarehouseBuyCardPanel(GUI gui) throws IOException {
-        //super(gui);
         this.gui = gui;
 
         InputStream is = getClass().getResourceAsStream("/warehouse.png");
@@ -64,8 +74,6 @@ public class WarehouseBuyCardPanel extends JPanel {
 
         bottomDepot.setOpaque(false);
         bottomDepot.setPreferredSize(new Dimension(75, 10));
-
-
 
 
         JPanel bigStrong = new JPanel();
@@ -131,14 +139,11 @@ public class WarehouseBuyCardPanel extends JPanel {
 
     }
 
-    //@Override
-    //public void reactToPacket(Packet packet) throws IOException {
-    //    switch (packet.header) {
-    //        case OK -> gui.switchPanels(new WarehouseBuyCardPanel(gui));
-    //        case INVALID -> gui.notifyPlayerError(packet.body);
-    //    }
-    //}
-
+    /**
+     * This method changes the passed button by adding the resource image
+     * @param button is the button to change
+     * @param resource is the path of the resource image
+     */
     public void createResourceLabel(JButton button, String resource){
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
         BufferedImage img = null;
@@ -156,6 +161,11 @@ public class WarehouseBuyCardPanel extends JPanel {
         button.setContentAreaFilled(false);
     }
 
+    /**
+     * This method creates the Resources inside the Panel of the Depot
+     * @param depot is the Panel where the resource will be placed
+     * @param slot is the DepotSlot that contains the resources
+     */
     public void insertResourceInDepot(JPanel depot, DepotSlot slot){
         depot.add(Box.createRigidArea(new Dimension(35,0)));
         LiteResource tempRes = gui.model.getDepot(gui.getModel().getMe(), slot).getResourcesInside().get(0);

@@ -12,8 +12,16 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * This class is the GUI Panel of the Resource Buffer
+ */
 public class BufferPanel extends BgJPanel{
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains the Buffer info
+     * @throws IOException if there is a I/O problem
+     */
     public BufferPanel(GUI gui) throws IOException {
         super("/buffer.png", 275,100);
 
@@ -62,6 +70,11 @@ public class BufferPanel extends BgJPanel{
         this.add(bigPanel);
     }
 
+    /**
+     * This method changes the passed label by adding the resource image
+     * @param label is the button to change
+     * @param resource is the path of the resource image
+     */
     public void createResourceLabel(JLabel label, String resource){
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
         BufferedImage img = null;

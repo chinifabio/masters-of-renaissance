@@ -9,13 +9,10 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.gui.GUI;
-import it.polimi.ingsw.view.gui.panels.GuiPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,19 +20,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class is the GUI Panel of the Warehouse when the player has to move resources
+ */
 public class WarehouseMovePanel  extends JPanel {
 
-    private DepotSlot destDepot;
-
+    /**
+     * This attribute is a list of Depots where the player can move resources
+     */
     DepotSlot[] initValueDepot = { DepotSlot.TOP, DepotSlot.MIDDLE, DepotSlot.BOTTOM, DepotSlot.BUFFER};
 
-    private Image warehouseImage;
+    /**
+     * This attribute is the image of the warehouse
+     */
+    private final Image warehouseImage;
 
+    /**
+     * This attribute is the GUI that contains all the needed info about warehouse
+     */
     private final GUI gui;
 
     /**
-     * Creates a new <code>JPanel</code> with a double buffer
-     * and a flow layout.
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the needed info
+     * @throws IOException if there is an I/O problem
      */
     public WarehouseMovePanel(GUI gui) throws IOException {
         this.gui = gui;
@@ -126,6 +134,11 @@ public class WarehouseMovePanel  extends JPanel {
 
     }
 
+    /**
+     * This method changes the passed button by adding the resource image
+     * @param button is the button to change
+     * @param resource is the path of the resource image
+     **/
     public void createResourceLabel(JButton button, String resource){
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
         BufferedImage img = null;
@@ -143,6 +156,11 @@ public class WarehouseMovePanel  extends JPanel {
         button.setContentAreaFilled(false);
     }
 
+    /**
+     * This method creates the Resources inside the Panel of the Depot
+     * @param depot is the Panel where the resource will be placed
+     * @param slot is the DepotSlot that contains the resources
+     */
     public void insertResourceInDepot(JPanel depot, DepotSlot slot){
         depot.add(Box.createRigidArea(new Dimension(35,0)));
         LiteResource tempRes = gui.model.getDepot(gui.getModel().getMe(), slot).getResourcesInside().get(0);
@@ -154,7 +172,6 @@ public class WarehouseMovePanel  extends JPanel {
 
                 label.setActionCommand("depotResourcePressed");
                 label.addActionListener(e -> {
-                    destDepot = null;
 
                     List<DepotSlot> possibleValuesDepots = new ArrayList<>(Arrays.asList(initValueDepot));
 

@@ -9,22 +9,28 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.gui.GUI;
-import it.polimi.ingsw.view.gui.panels.GuiPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * This class is the GUI Panel for the Extra Depot added by the Special Ability of Leader Cards
+ */
 public class ExtraDepotBuyCardPanel extends JPanel {
 
-
+    /**
+     * This attribute is the GUI that contains info
+     */
     private final GUI gui;
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains the needed info to create the Extra Depots
+     */
     public ExtraDepotBuyCardPanel(GUI gui) {
         this.gui = gui;
 
@@ -66,6 +72,12 @@ public class ExtraDepotBuyCardPanel extends JPanel {
         this.setOpaque(false);
     }
 
+    /**
+     * This method creates the Resources inside the Panel of the Depot
+     * @param depot is the Panel where the resource will be placed
+     * @param slot is the DepotSlot that contains the resources
+     * @param player is the Player that own the Depot
+     */
     public void insertResourceInDepot(JPanel depot, DepotSlot slot, String player){
         depot.add(Box.createRigidArea(new Dimension(5,0)));
         LiteResource tempRes = gui.model.getDepot(player, slot).getResourcesInside().get(0);
@@ -92,6 +104,11 @@ public class ExtraDepotBuyCardPanel extends JPanel {
         }
     }
 
+    /**
+     * This method changes the passed button by adding the resource image
+     * @param button is the button to change
+     * @param resource is the path of the resource image
+     **/
     public void createResourceLabel(JButton button, String resource){
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
         BufferedImage img = null;

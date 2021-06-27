@@ -6,18 +6,13 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.MoveDepotCommand;
 import it.polimi.ingsw.litemodel.LiteResource;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.gui.GUI;
-import it.polimi.ingsw.view.gui.panels.GuiPanel;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,12 +20,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class is the GUI Panel of the Buffer when the Player has to move resources
+ */
 public class BufferMovePanel extends JPanel {
 
-    private DepotSlot slot;
-
+    /**
+     * This attribute is the background image of the buffer
+     */
     Image buffer;
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains the needed info
+     * @throws IOException if there is an I/O problem
+     */
     public BufferMovePanel(GUI gui) throws IOException {
         InputStream is = getClass().getResourceAsStream("/buffer.png");
         assert is != null;
@@ -68,7 +72,6 @@ public class BufferMovePanel extends JPanel {
             createResourceLabel(image, GUI.resourceImages.get(res.getType()));
 
             image.addActionListener(e -> {
-                slot = null;
                 int value = 0;
                 boolean valid = true;
                 List<DepotSlot> possibleValues = new ArrayList<>(Arrays.asList(initValue));
@@ -117,6 +120,11 @@ public class BufferMovePanel extends JPanel {
 
     }
 
+    /**
+     * This method changes the passed button by adding the resource image
+     * @param button is the button to change
+     * @param resource is the path of the resource image
+     **/
     public void createResourceLabel(JButton button, String resource){
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
         BufferedImage img = null;
@@ -135,6 +143,9 @@ public class BufferMovePanel extends JPanel {
 
     }
 
+    /**
+     * Draw the background
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

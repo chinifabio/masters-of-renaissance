@@ -16,12 +16,25 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * This class is the GUI Panel of the Leader Cards
+ */
 public class LeaderPanel extends GuiPanel {
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the needed info
+     */
     public LeaderPanel(GUI gui) {
         super(gui);
     }
 
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
         JPanel background = new BgJPanel("/Background.png",GUI.width-300, GUI.height);
@@ -45,10 +58,20 @@ public class LeaderPanel extends GuiPanel {
         background.add(result);
         return background;
     }
+
 }
 
+/**
+ * This class is the GUI Panel of the Leader Card
+ */
 class LeaderCardPanel extends JPanel {
 
+    /**
+     * This is the constructor of the class
+     * @param id is the ID of the Leader Card
+     * @param gui is the GUI that contains all the needed info
+     * @param activated indicates if the LeaderCard is activated or not
+     */
     public LeaderCardPanel(String id, GUI gui, boolean activated) {
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));

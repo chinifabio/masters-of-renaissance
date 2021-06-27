@@ -20,12 +20,20 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is the GUI Panel for the Extra Depot when the player has to move resources into Productions
+ */
 public class ExtraDepotProductionPanel extends JPanel {
 
-    private ProductionID destProd;
-
+    /**
+     * This attribute is the GUI that contains info
+     */
     private final GUI gui;
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains info
+     */
     public ExtraDepotProductionPanel(GUI gui) {
         this.gui = gui;
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -66,6 +74,12 @@ public class ExtraDepotProductionPanel extends JPanel {
         this.setOpaque(false);
     }
 
+    /**
+     * This method creates the Resources inside the Panel of the Depot
+     * @param depot is the Panel where the resource will be placed
+     * @param slot is the DepotSlot that contains the resources
+     * @param player is the Player that own the Depot
+     */
     public void insertResourceInDepot(JPanel depot, DepotSlot slot, String player){
         depot.add(Box.createRigidArea(new Dimension(5,0)));
         LiteResource tempRes = gui.model.getDepot(player, slot).getResourcesInside().get(0);
@@ -78,7 +92,6 @@ public class ExtraDepotProductionPanel extends JPanel {
             if (slot != DepotSlot.STRONGBOX){
 
                 label.addActionListener(e -> {
-                    destProd = null;
 
                     List<ProductionID> possibleValuesProductions = new ArrayList<>();
 
@@ -105,6 +118,11 @@ public class ExtraDepotProductionPanel extends JPanel {
         }
     }
 
+    /**
+     * This method changes the passed button by adding the resource image
+     * @param button is the button to change
+     * @param resource is the path of the resource image
+     **/
     public void createResourceLabel(JButton button, String resource){
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
         BufferedImage img = null;

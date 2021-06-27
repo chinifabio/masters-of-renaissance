@@ -19,14 +19,28 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * This class is the GUI Panel of the Initial Phase of the game
+ */
 public class InitGamePanel extends GuiPanel {
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the needed info
+     */
     public InitGamePanel(GUI gui) {
         super(gui);
     }
 
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
+
         JPanel background = new BgJPanel("/Background.png",GUI.width-300, GUI.height);
         background.setPreferredSize(new Dimension(GUI.gameWidth, GUI.gameHeight));
         JPanel result = new JPanel();
@@ -67,10 +81,20 @@ public class InitGamePanel extends GuiPanel {
         background.add(result);
         return background;
     }
+
 }
 
+/**
+ * This class is the GUI Panel of the LeaderCards in the initial phase of the game
+ */
 class LeaderCardButton extends JButton {
 
+    /**
+     * This is the constructor of the class
+     * @param id is the ID of the LeaderCard
+     * @param gui is the GUI that contains all the needed info
+     * @throws IOException if there is an I/O problem
+     */
     public LeaderCardButton(String id, GUI gui) throws IOException {
         InputStream url = this.getClass().getResourceAsStream("/LeaderCardsImages/" + id + ".png");
         BufferedImage img;
@@ -93,11 +117,17 @@ class LeaderCardButton extends JButton {
     }
 }
 
+/**
+ * This class is the GUI Panel of the Resources in the initial phase of the game
+ */
 class ResourceButton extends JButton {
-    private final ResourceType res;
 
+    /**
+     * This is the constructor of the class
+     * @param res is the Resource type
+     * @param gui is the GUI that contains all the needed info
+     */
     ResourceButton(ResourceType res, GUI gui) {
-        this.res = res;
 
         InputStream url = this.getClass().getResourceAsStream("/WarehouseRes/" + res.name().toLowerCase() + ".png");
         BufferedImage img = null;

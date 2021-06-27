@@ -9,11 +9,31 @@ import it.polimi.ingsw.communication.packet.rendering.Lighter;
 import it.polimi.ingsw.communication.packet.updates.TokenUpdater;
 import it.polimi.ingsw.communication.packet.updates.Updater;
 
+/**
+ * This class manages the packets of the Client
+ */
 public class ClientPacketHandler {
+
+    /**
+     * This attribute is the View
+     */
     private final View view;
+
+    /**
+     * This attribute is the SocketListener that manage the packets
+     */
     private final SocketListener socket;
+
+    /**
+     * This attribute indicates if the client is connected
+     */
     private boolean activeClient = true;
 
+    /**
+     * This is the constructor of the class
+     * @param view is the view
+     * @param socket is the manager of packets
+     */
     public ClientPacketHandler(View view, SocketListener socket) {
         this.view = view;
         this.socket = socket;

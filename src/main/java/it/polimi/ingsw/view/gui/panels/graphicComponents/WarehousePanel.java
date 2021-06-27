@@ -8,17 +8,24 @@ import it.polimi.ingsw.view.gui.GUI;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * This class is the GUI Panel of the Warehouse
+ */
 public class WarehousePanel  extends JPanel {
 
+    /**
+     * This attribute is the GUI that contains info
+     */
     private final GUI gui;
 
     /**
-     * Creates a new <code>JPanel</code> with a double buffer
-     * and a flow layout.
+     * This is the constructor of the class
+     * @param gui is the GUI that has the Warehouse info
+     * @param player is the nickname of the player that own the Warehouse
+     * @throws IOException if there is an I/O problem
      */
     public WarehousePanel(GUI gui, String player) throws IOException {
         this.gui = gui;
@@ -100,6 +107,11 @@ public class WarehousePanel  extends JPanel {
 
     }
 
+    /**
+     * This method changes the passed label by adding the resource image
+     * @param label is the label to change
+     * @param resource is the path of the resource image
+     **/
     public void createResourceLabel(JLabel label, String resource) throws IOException {
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
         assert url != null;
@@ -108,6 +120,14 @@ public class WarehousePanel  extends JPanel {
         label.setIcon(icon1);
     }
 
+
+    /**
+     * This method creates the Resources inside the Panel of the Depot
+     * @param depot is the Panel where the resource will be placed
+     * @param slot is the DepotSlot that contains the resources
+     * @param player is the nickname of the player that own the warehouse
+     * @throws IOException if there is an I/O exception
+     */
     public void insertResourceInDepot(JPanel depot, DepotSlot slot, String player) throws IOException {
         depot.add(Box.createRigidArea(new Dimension(35,0)));
         LiteResource tempRes = gui.model.getDepot(player, slot).getResourcesInside().get(0);

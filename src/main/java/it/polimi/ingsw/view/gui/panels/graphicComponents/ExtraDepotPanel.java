@@ -13,10 +13,20 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * This class is the GUI Panel for the Extra Depot added by the Special Ability of Leader Cards
+ */
 public class ExtraDepotPanel extends JPanel {
-
+    /**
+     * This attribute is the GUI that contains info
+     */
     private final GUI gui;
 
+     /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains the needed info to create the Extra Depots
+     * @param nickname is the nickname of the player that own the extra depots
+     */
     public ExtraDepotPanel(GUI gui, String nickname) {
         this.gui = gui;
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -57,6 +67,12 @@ public class ExtraDepotPanel extends JPanel {
         this.setOpaque(false);
     }
 
+    /**
+     * This method creates the Resources inside the Panel of the Depot
+     * @param depot is the Panel where the resource will be placed
+     * @param slot is the DepotSlot that contains the resources
+     * @param player is the Player that own the Depot
+     */
     public void insertResourceInDepot(JPanel depot, DepotSlot slot, String player){
         depot.add(Box.createRigidArea(new Dimension(5,0)));
         LiteResource tempRes = gui.model.getDepot(player, slot).getResourcesInside().get(0);
@@ -75,6 +91,11 @@ public class ExtraDepotPanel extends JPanel {
         }
     }
 
+    /**
+     * This method changes the passed label by adding the resource image
+     * @param label is the label to change
+     * @param resource is the path of the resource image
+     **/
     public void createResourceLabel(JLabel label, String resource){
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
         BufferedImage img = null;

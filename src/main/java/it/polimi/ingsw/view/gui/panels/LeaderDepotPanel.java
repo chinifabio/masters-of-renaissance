@@ -9,9 +9,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
+/**
+ * This class is the GUI Panel of the extra Depots created after the activation of the Special Ability
+ */
 public class LeaderDepotPanel extends JPanel {
 
-
+    /**
+     * This attribute is the map of images for the extra Depots, differentiated by the type of resources they can contain
+     */
     public static HashMap<ResourceType, String> depotBackground = new HashMap<>(){{
         put(ResourceType.COIN, "/LeaderCardsImages/addDepotsImages/addCoin.png");
         put(ResourceType.SHIELD, "/LeaderCardsImages/addDepotsImages/addShield.png");
@@ -19,12 +24,14 @@ public class LeaderDepotPanel extends JPanel {
         put(ResourceType.SERVANT, "/LeaderCardsImages/addDepotsImages/addServant.png");
     }};
 
-
+    /**
+     * This attribute is the background image
+     */
     private Image background;
 
     /**
-     * Creates a new <code>JPanel</code> with a double buffer
-     * and a flow layout.
+     * This is the constructor of the class
+     * @param resourceType is the resource type of the Extra Depot
      */
     public LeaderDepotPanel(ResourceType resourceType) {
         InputStream is = getClass().getResourceAsStream(depotBackground.get(resourceType));
@@ -34,6 +41,7 @@ public class LeaderDepotPanel extends JPanel {
             e.printStackTrace();
         }
         try {
+            assert is != null;
             background = ImageIO.read(is);
         } catch (IOException e) {
             e.printStackTrace();

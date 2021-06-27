@@ -15,17 +15,36 @@ import it.polimi.ingsw.view.gui.panels.graphicComponents.BgJPanel;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * This class is the GUI Panel where the Player can move resources to buy the DevCard
+ */
 public class MoveResourcesBuyCardPanel extends GuiPanel {
 
-    private int r;
-    private  int c;
+    /**
+     * This attribute is the row of the DevCards' Grid where the Card is located
+     */
+    private final int r;
+
+    /**
+     * This attribute is the column of the DevCards' Grid where the Card is located
+     */
+    private final int c;
+
+    /**
+     * This attribute is the image of the DevCard
+     */
     Image image;
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the info needed
+     * @param r is the row of the DevCards' Grid
+     * @param c is the column of the DevCards' Grid
+     * @param card is the image of the Card
+     */
     public MoveResourcesBuyCardPanel(GUI gui, int r, int c, Image card) {
         super(gui);
         this.r = r;
@@ -33,8 +52,15 @@ public class MoveResourcesBuyCardPanel extends GuiPanel {
         this.image = card;
     }
 
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
+
         JPanel background = new BgJPanel("/brickBackground.png",GUI.width-370, GUI.height-78,35,35);
         JPanel result = new JPanel();
 
@@ -102,18 +128,18 @@ public class MoveResourcesBuyCardPanel extends GuiPanel {
 
 
         if (!gui.model.getDiscounts(gui.model.getMe()).isEmpty()) {
-        JPanel discountPanel = new JPanel();
-        discountPanel.setOpaque(false);
-        discountPanel.setPreferredSize(new Dimension(200,300));
-        JPanel textPanel = new JPanel();
-        JTextArea textDiscount = new JTextArea();
-        textDiscount.setText("You have these \n discounts available:");
-        textDiscount.setFont(new Font("Times New Roman",Font.ITALIC,22));
-        textDiscount.setBackground(GUI.borderColor);
-        textDiscount.setForeground(new Color(51, 123, 175));
-        textPanel.add(textDiscount);
-        discountPanel.add(textPanel);
-        textPanel.setOpaque(false);
+            JPanel discountPanel = new JPanel();
+            discountPanel.setOpaque(false);
+            discountPanel.setPreferredSize(new Dimension(200,300));
+            JPanel textPanel = new JPanel();
+            JTextArea textDiscount = new JTextArea();
+            textDiscount.setText("You have these \n discounts available:");
+            textDiscount.setFont(new Font("Times New Roman",Font.ITALIC,22));
+            textDiscount.setBackground(GUI.borderColor);
+            textDiscount.setForeground(new Color(51, 123, 175));
+            textPanel.add(textDiscount);
+            discountPanel.add(textPanel);
+            textPanel.setOpaque(false);
 
 
             for (LiteResource resource : gui.model.getDiscounts(gui.model.getMe())) {
@@ -186,6 +212,12 @@ public class MoveResourcesBuyCardPanel extends GuiPanel {
         return background;
     }
 
+    /**
+     * This method changes the passed button by adding the resource image
+     * @param button is the button to change
+     * @param resource is the path of the resource image
+     * @throws IOException if the method can't read the file
+     */
     public void createResourceLabel(JLabel button, String resource) throws IOException {
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
         assert url != null;

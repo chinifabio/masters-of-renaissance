@@ -1,26 +1,44 @@
 package it.polimi.ingsw.view.gui.panels;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.graphicComponents.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
+/**
+ * This class is the GUI Panel that allows the player to see other players
+ */
 public class OtherPlayersPanel extends GuiPanel{
 
+    /**
+     * This attribute is the nickname of the player
+     */
     private final String player;
 
+    /**
+     * This attribute indicates if the Player is in the Endgame phase so he can only see other player
+     */
     private final boolean isEnd;
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the needed info
+     * @param player is the nickname of the player
+     * @param isEnd indicates if the Player is in the Endgame phase
+     */
     public OtherPlayersPanel(GUI gui, String player, boolean isEnd) {
         super(gui);
         this.player = player;
         this.isEnd = isEnd;
     }
 
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
         JPanel result = new BgJPanel("/otherBoard.png", GUI.width-NotifyPanel.width+50, GUI.height-120);

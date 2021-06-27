@@ -23,8 +23,14 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Objects;
 
+/**
+ * This is the class that manages the Graphical User Interface
+ */
 public class GUI extends JFrame implements View {
 
+    /**
+     * This attribute is the map that connects the Resource type with its image
+     */
     public static HashMap<ResourceType, String> resourceImages = new HashMap<>(){{
         put(ResourceType.COIN, "WarehouseRes/coin.png");
         put(ResourceType.SHIELD, "WarehouseRes/shield.png");
@@ -34,19 +40,54 @@ public class GUI extends JFrame implements View {
         put(ResourceType.UNKNOWN,"WarehouseRes/unknown.png");
     }};
 
+    /**
+     * This attribute is the color of the border in the background image
+     */
     public static Color borderColor = new Color(220,179,120);
+
+    /**
+     * This attribute is the Model of the match
+     */
     public final LiteModel model = new LiteModel();
+
+    /**
+     * This attribute is the SocketListener that manage the packets
+     */
     public final SocketListener socket;
 
+    /**
+     * This attribute is the panel where the user can interact with the game
+     */
     private final JPanel gamePanel = new BgJPanel("/LogoMasters.png", gameWidth, gameHeight);
+
+    /**
+     * This attribute is the panel where the player is notified during the match
+     */
     private final NotifyPanel notifyPanel = new NotifyPanel();
 
+    /**
+     * This attribute is the width of the application window
+     */
     public static final int width = 1640;
+
+    /**
+     * This attribute is the height of the application window
+     */
     public static final int height = 810;
 
+    /**
+     * This attribute is the width of the gamePanel
+     */
     public static final int gameWidth = 1340;
+
+    /**
+     * This attribute is the height of the gamePanel
+     */
     public static final int gameHeight = 810;
 
+    /**
+     * This attribute indicates the actual Panel of the GamePanel
+     */
     private GuiPanel actualPanel;
 
     /**
@@ -69,6 +110,9 @@ public class GUI extends JFrame implements View {
         notifyPanel.appendMessage(errorMessage, new Color(255, 110, 102));
     }
 
+    /**
+     * This method show to the Player the Lorenzo move in the SinglePlayer Mode
+     */
     @Override
     public void popUpLorenzoMoves() {
         try {
@@ -93,42 +137,70 @@ public class GUI extends JFrame implements View {
         return this.model;
     }
 
+    /**
+     * This method change the current panel to the InitGamePanel when the match starts
+     */
     @Override
     public void fireGameInit() {
         switchPanels(new InitGamePanel(this));
     }
 
+    /**
+     * This method change the current panel to the PersonalBoardPanel
+     */
     @Override
     public void fireGameSession() {
         switchPanels(new PersonalBoardPanel(this));
     }
 
+    /**
+     * This method change the current panel to the WaitingEndGamePanel when a player ends his match and has to wait the other players
+     */
     @Override
     public void fireGameEnded() {
         switchPanels(new WaitingEndGamePanel(this));
     }
 
+    /**
+     * This method change the current panel to the ScoreboardPanel when the game ends
+     */
     @Override
     public void fireGameResult() {
         switchPanels(new ScoreboardPanel(this));
     }
 
+    /**
+     * This method close the application
+     * @param message is the message that explain why the application will be closed
+     */
     @Override
     public void emergencyExit(String message) {
         JOptionPane.showMessageDialog(null, message);
         System.exit(0);
     }
 
+    /**
+     * This method change the current panel to the AskPlayers panel at the beginning of the game
+     */
     @Override
     public void fireGameCreator() {
         switchPanels(new AskPlayers(this));
     }
 
+    /**
+     * This method change the current panel to the LoadingPanel when the player has to wait for other players to connect to the game
+     */
     @Override
     public void fireLobbyWait() {
         switchPanels(new LoadingPanel(this));
     }
 
+    /**
+     * This is the constructor of the class
+     * @param address is the IP address
+     * @param port is the port of the Server
+     * @throws IOException if an I/O error occurs when creating the socket.
+     */
     public GUI(String address, int port) throws IOException {
         super ("Master of Renaissance");
         
@@ -160,12 +232,19 @@ public class GUI extends JFrame implements View {
         setVisible(true);
     }
 
+    /**
+     * Read data from command line when needed
+     */
     @Override
     public void start() {
         new Thread(socket).start();
         new ClientPacketHandler(this, socket).start();
     }
 
+    /**
+     * This method change the current panel with the one passed
+     * @param panelGenerator is the new Panel to show
+     */
     public void switchPanels(GuiPanel panelGenerator){
         synchronized (gamePanel) {
             actualPanel = panelGenerator;
@@ -173,6 +252,9 @@ public class GUI extends JFrame implements View {
         }
     }
 
+    /**
+     * This method recreate the Panel after a change
+     */
     @Override
     public void refresh() {
         try {
@@ -195,6 +277,13 @@ public class GUI extends JFrame implements View {
         }
     }
 
+    /**
+     * This method change the passed image size
+     * @param srcImg is the image that will be scaled
+     * @param w is the new width of the image
+     * @param h is the new height of the image
+     * @return the image with new dimension
+     */
     public static Image getScaledImage(Image srcImg, int w, int h){
         BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = resizedImg.createGraphics();
@@ -207,14 +296,28 @@ public class GUI extends JFrame implements View {
     }
 }
 
+/**
+ * This class introduce the cheats to the game
+ */
 class KeyCheats implements KeyListener {
 
+    /**
+     * This attribute is the GUI that contains all the needed info
+     */
     private final GUI gui;
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the needed info
+     */
     public KeyCheats(GUI gui) {
         this.gui=gui;
     }
 
+    /**
+     * This method react to a keyboard's button pressed to generate cheat
+     * @param e is the keyboard event
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
@@ -229,10 +332,15 @@ class KeyCheats implements KeyListener {
         }
     }
 
+    /**
+     * This method do nothing
+     */
     @Override
-    public void keyTyped(KeyEvent e) {
-    }
+    public void keyTyped(KeyEvent e) {}
+
+    /**
+     * This method do nothing
+     */
     @Override
-    public void keyReleased(KeyEvent e) {
-    }
+    public void keyReleased(KeyEvent e) {}
 }

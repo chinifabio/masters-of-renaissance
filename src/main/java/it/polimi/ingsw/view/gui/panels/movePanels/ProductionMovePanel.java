@@ -3,11 +3,9 @@ package it.polimi.ingsw.view.gui.panels.movePanels;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.communication.packet.commands.MoveDepotCommand;
 import it.polimi.ingsw.communication.packet.commands.MoveInProductionCommand;
 import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -20,21 +18,27 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class is the GUI Panel where the Player can move resources to use Productions
+ */
 public class ProductionMovePanel extends JPanel{
 
-    private ProductionID destProd;
+    /**
+     * This attribute is the background image of the warehouse
+     */
+    private final Image warehouseImage;
 
-    private Image warehouseImage;
-
+    /**
+     * This attribute is the GUI that contains all the needed info of the Warehouse
+     */
     private final GUI gui;
 
     /**
-     * Creates a new <code>JPanel</code> with a double buffer
-     * and a flow layout.
+     * This is the constructor of the class
+     * @param gui is the GUI that contains all the needed info
+     * @throws IOException if there is an I/O problem
      */
     public ProductionMovePanel(GUI gui) throws IOException {
         this.gui = gui;
@@ -100,7 +104,6 @@ public class ProductionMovePanel extends JPanel{
             createResourceLabel(image, GUI.resourceImages.get(res.getType()));
             image.setActionCommand("depotResourcePressed");
             image.addActionListener(e -> {
-                destProd = null;
 
                 List<ProductionID> possibleValuesProductions = new ArrayList<>();
 
@@ -144,6 +147,11 @@ public class ProductionMovePanel extends JPanel{
         this.add(finale);
     }
 
+    /**
+     * This method changes the passed button by adding the resource image
+     * @param button is the button to change
+     * @param resource is the path of the resource image
+     */
     public void createResourceLabel(JButton button, String resource){
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
         BufferedImage img = null;
@@ -161,6 +169,11 @@ public class ProductionMovePanel extends JPanel{
         button.setContentAreaFilled(false);
     }
 
+    /**
+     * This method creates the Resources inside the Panel of the Depot
+     * @param depot is the Panel where the resource will be placed
+     * @param slot is the DepotSlot that contains the resources
+     */
     public void insertResourceInDepot(JPanel depot, DepotSlot slot){
         depot.add(Box.createRigidArea(new Dimension(35,0)));
         LiteResource tempRes = gui.model.getDepot(gui.getModel().getMe(), slot).getResourcesInside().get(0);
@@ -172,7 +185,6 @@ public class ProductionMovePanel extends JPanel{
 
                 label.setActionCommand("depotResourcePressed");
                 label.addActionListener(e -> {
-                    destProd = null;
 
                     List<ProductionID> possibleValuesProductions = new ArrayList<>();
 

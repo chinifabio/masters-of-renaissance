@@ -12,8 +12,16 @@ import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * This class is the GUI Panel for the DevCard Buffer
+ */
 public class BufferDevCardPanel extends BgJPanel {
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUI that contains the Buffer's info inside the Model
+     * @throws IOException after failed or interrupted I/O operations.
+     */
     public BufferDevCardPanel(GUI gui) throws IOException {
         super("/buffer.png", 250, 100);
 
@@ -24,8 +32,6 @@ public class BufferDevCardPanel extends BgJPanel {
 
         JPanel bigPanel = new JPanel();
         JPanel bufferPanel = new JPanel();
-
-        //bigPanel.setPreferredSize(new Dimension(250, 100));
 
         for (LiteResource res : gui.model.getDepot(gui.model.getMe(), DepotSlot.DEVBUFFER).getResourcesInside()){
             JPanel resource = new JPanel();
@@ -65,6 +71,12 @@ public class BufferDevCardPanel extends BgJPanel {
 
     }
 
+    /**
+     * This method changes the passed button by adding the resource image
+     * @param button is the button to change
+     * @param resource is the path of the resource image
+     * @throws IOException if the method can't read the file
+     */
     public void createResourceLabel(JLabel button, String resource) throws IOException {
         InputStream url = this.getClass().getResourceAsStream("/" + resource);
         assert url != null;
@@ -75,12 +87,4 @@ public class BufferDevCardPanel extends BgJPanel {
         button.setPreferredSize(new Dimension(44, 44));
 
     }
-
-    //@Override
-    //protected void paintComponent(Graphics g) {
-    //    super.paintComponent(g);
-    //    int width = 250;
-    //    int height = 100;
-    //    g.drawImage(buffer, 15, 0,width,height, null);
-    //}
 }

@@ -4,9 +4,7 @@ import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.EndTurnCommand;
-import it.polimi.ingsw.communication.packet.commands.FaithPointCheatCommand;
 import it.polimi.ingsw.communication.packet.commands.ProductionCommand;
-import it.polimi.ingsw.communication.packet.commands.ResourceCheatCommand;
 import it.polimi.ingsw.view.gui.GUI;
 import it.polimi.ingsw.view.gui.panels.buycardPanels.CardsGridPanel;
 import it.polimi.ingsw.view.gui.panels.graphicComponents.*;
@@ -16,19 +14,30 @@ import it.polimi.ingsw.view.gui.panels.movePanels.ProductionsPanel;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is the constructor of the class
+ */
 public class PersonalBoardPanel  extends GuiPanel {
 
+    /**
+     * This is the constructor of the class
+     * @param gui is the GUi that contains all the needed info
+     */
     public PersonalBoardPanel(GUI gui) {
         super(gui);
     }
 
+    /**
+     * This method update the current panel after a change
+     *
+     * @return the current Panel updated
+     * @throws IOException if there is an I/O problem
+     */
     @Override
     public JPanel update() throws IOException {
         JPanel result = new BgJPanel("/board.png", GUI.width-NotifyPanel.width+50, GUI.height-120);
@@ -156,4 +165,5 @@ public class PersonalBoardPanel  extends GuiPanel {
 
         return result;
     }
+
 }
