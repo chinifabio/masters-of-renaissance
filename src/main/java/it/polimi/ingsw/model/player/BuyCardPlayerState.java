@@ -54,10 +54,9 @@ public class BuyCardPlayerState extends PlayerState{
      * @param row         the row of the card required
      * @param col         the column of the card required
      * @param destination the slot where put the dev card slot
-     * @return true if there where no issue, false instead
      */
     @Override
-    public Packet buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
+    public void buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
         this.context.slotDestination = destination;
         boolean res;
         try {
@@ -67,24 +66,24 @@ public class BuyCardPlayerState extends PlayerState{
         catch (EndGameException e) {
             this.context.match.startEndGameLogic();                                                 // stop the game when the last player end his turn
             this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
-            return new Packet(HeaderTypes.END_GAME, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
+            return;
         }
 
         catch (Exception e) {
+            context.view.sendPlayerError(context.nickname, e.getMessage());
             rollBack();
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            return;
         }
 
         if (res) {
+            context.view.sendPlayerMessage(context.nickname, "You bought the develop card requested");
             this.context.setState(new MainActionDonePlayerState(this.context));
             this.history = new ArrayList<>();
         }
         else {
+            context.view.sendPlayerError(context.nickname, "You have not enough requisite to buy the card");
             rollBack();
         }
-        return res ?
-                new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You bought the develop card requested"):
-                new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You have no requisite to buy the card");
     }
 
     /**
@@ -94,36 +93,37 @@ public class BuyCardPlayerState extends PlayerState{
      * @param loot resource to move
      */
     @Override
-    public Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
+    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
         if(from == DepotSlot.BUFFER || to != DepotSlot.DEVBUFFER){
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You can't do that!");
+            context.view.sendPlayerError(context.nickname, "You can't use resource from you buffer or strongbox");
+            return;
         }
 
         try {
             this.context.personalBoard.moveResourceDepot(from, to, loot);
         } catch (Exception e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            context.view.sendPlayerError(context.nickname, e.getMessage());
+            return;
         }
+
         this.history.add(0,new MoveResource(from,to,loot));
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Resource moved successfully");
+        context.view.sendPlayerMessage(context.nickname, "Resource moved successfully");;
     }
 
     /**
      * The warehouse returns to the initial state
-     * @return true if success, false otherwise
      */
     @Override
-    public Packet rollBack() {
+    public void rollBack() {
         for(MoveResource mr : this.history) {
             try {
-                this.context.obtainResource(mr.getFrom(),mr.getResources());
+                context.obtainResource(mr.getFrom(),mr.getResources());
             } catch (Exception e) {
-                System.out.println("Problema!");
-                System.out.println(mr.getDest().toString() + mr.getFrom().toString() + mr.getResources().toString());
+                context.view.sendPlayerError(context.nickname, "Problem occurred: " + mr.getDest().toString() + mr.getFrom().toString() + mr.getResources().toString());
             }
         }
-        this.context.setState(new NoActionDonePlayerState(this.context));
-        this.context.personalBoard.flushBufferDevCard();
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Action cancelled. Initial warehouse resource position restored.");
+        context.setState(new NoActionDonePlayerState(this.context));
+        context.personalBoard.flushBufferDevCard();
+        context.view.sendPlayerMessage(context.nickname, "Action cancelled. Initial warehouse resource position restored.");
     }
 }

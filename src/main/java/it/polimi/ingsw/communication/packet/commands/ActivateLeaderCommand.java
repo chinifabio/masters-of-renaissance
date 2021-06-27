@@ -30,7 +30,7 @@ public class ActivateLeaderCommand extends Command{
      * @param player the player on which execute the command
      */
     @Override
-    public Packet execute(PlayerAction player) {
-        return player.activateLeaderCard(this.card);
+    public void execute(PlayerAction player) {
+        player.activateLeaderCard(this.card);
     }
 }

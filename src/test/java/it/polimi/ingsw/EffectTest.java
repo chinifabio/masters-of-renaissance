@@ -1,6 +1,6 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.model.Dispatcher;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.*;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class EffectTest {
     private Player gino;
 
-    Dispatcher view = new Dispatcher();
+    VirtualView view = new VirtualView();
     private SingleplayerMatch singleplayer;
 
     @BeforeEach
@@ -52,7 +52,8 @@ public class EffectTest {
         gino = new Player("gino", singleplayer, view);
         assertTrue(singleplayer.playerJoin(gino));
 
-        //assertTrue(singleplayer.startGame());
+        singleplayer.initialize();
+        assertTrue(singleplayer.isGameOnAir());
 
         // the player discard the first two leader card
         assertDoesNotThrow(()->singleplayer.currentPlayer().test_discardLeader());
@@ -71,7 +72,7 @@ public class EffectTest {
 
         DevCard c = new DevCard("000", new AddProductionEffect(p), 2, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
 
-        Player player = new Player("dummy", null, new Dispatcher());
+        Player player = new Player("dummy", null, new VirtualView());
 
         PersonalBoard personalBoard = new PersonalBoard(player);
 
@@ -95,7 +96,7 @@ public class EffectTest {
         DevCard c = new DevCard("000", new AddDepotEffect(ResourceType.COIN), 2, LevelDevCard.LEVEL1, ColorDevCard.GREEN, req);
 
         assertDoesNotThrow(()->{
-            Player player = new Player("gino", null, new Dispatcher());
+            Player player = new Player("gino", null, new VirtualView());
 
             c.useEffect(player);
             try {
@@ -125,7 +126,7 @@ public class EffectTest {
             Production extraProd = new UnknownProduction(Collections.singletonList(ResourceBuilder.buildUnknown()), Arrays.asList(ResourceBuilder.buildUnknown(), ResourceBuilder.buildFaithPoint()));
             LeaderCard c = new LeaderCard("000", new AddExtraProductionEffect(extraProd), 1, req);
 
-            Player player = new Player("gino", null, new Dispatcher());
+            Player player = new Player("gino", null, new VirtualView());
 
             c.useEffect(player);
             assertEquals(extraProd, player.test_getPB().possibleProduction().get(ProductionID.LEADER1));

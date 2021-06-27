@@ -2,7 +2,7 @@ package it.polimi.ingsw.personalboardTests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.Dispatcher;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
@@ -18,7 +18,6 @@ import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +27,7 @@ public class ProductionTest {
      * create a production as normal production and test all the methods of the production class to check if it works correctly
      */
     @Test
-    public void normalProductionCreation() throws UnknownUnspecifiedException {
+    public void normalProductionCreation() {
         List<Resource> req = Arrays.asList(ResourceBuilder.buildCoin(2), ResourceBuilder.buildShield());
         List<Resource> out = Collections.singletonList(ResourceBuilder.buildFaithPoint());
 
@@ -64,7 +63,7 @@ public class ProductionTest {
      * create a production as normal production and test all the methods of the production class to check if it works correctly
      */
     @Test
-    public void unknownProductionCreation() throws UnknownUnspecifiedException {
+    public void unknownProductionCreation() {
         Production test = null;
         NormalProduction ok = null;
         NormalProduction illegal = null;
@@ -168,12 +167,13 @@ public class ProductionTest {
     @Test
     public void activateUnknownProduction() {
         assertDoesNotThrow(()->{
-            Dispatcher view = new Dispatcher();
+            VirtualView view = new VirtualView();
             Match match = new SingleplayerMatch(view);
 
             Player player = new Player("Dummy", match, view);
 
             match.playerJoin(player);
+            match.initialize();
 
             player.test_discardLeader();
             player.test_discardLeader();

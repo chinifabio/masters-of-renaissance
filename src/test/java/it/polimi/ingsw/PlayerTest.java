@@ -1,7 +1,6 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.model.Dispatcher;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.DevCard;
 import it.polimi.ingsw.model.cards.LeaderCard;
@@ -46,7 +45,7 @@ public class PlayerTest{
     Player player1;
     Player player2;
 
-    Dispatcher view = new Dispatcher();
+    VirtualView view = new VirtualView();
     Match game;
 
     List<Player> order = new ArrayList<>();
@@ -67,19 +66,19 @@ public class PlayerTest{
         assertTrue(game.playerJoin(player2));
         order.add(player2);
 
+        game.initialize();
         Collections.rotate(order, order.indexOf(game.currentPlayer()));
-
         assertTrue(game.isGameOnAir());
 
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
-        assertEquals(HeaderTypes.GAME_START, order.get(0).endThisTurn().header);
+        order.get(0).endThisTurn();
 
-        assertEquals(HeaderTypes.OK, order.get(1).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN).header);
+        order.get(1).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN);
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(() -> assertEquals(order.get(1).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
-        assertEquals(HeaderTypes.GAME_START, order.get(1).endThisTurn().header);
+        order.get(1).endThisTurn();
 
     }
 

@@ -44,7 +44,7 @@ public class MoveInProductionCommand extends Command {
      * @param player the player on which execute the command
      */
     @Override
-    public Packet execute(PlayerAction player) {
-        return player.moveInProduction(this.from, this.dest, this.loot);
+    public void execute(PlayerAction player) {
+        player.moveInProduction(this.from, this.dest, this.loot);
     }
 }

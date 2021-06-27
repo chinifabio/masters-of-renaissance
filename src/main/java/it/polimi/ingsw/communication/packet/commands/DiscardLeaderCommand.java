@@ -31,8 +31,8 @@ public class DiscardLeaderCommand extends Command {
      * @param player the player on which execute the command
      */
     @Override
-    public Packet execute(PlayerAction player) {
-        return player.discardLeader(this.leaderID);
+    public void execute(PlayerAction player) {
+        player.discardLeader(this.leaderID);
     }
 
     /**

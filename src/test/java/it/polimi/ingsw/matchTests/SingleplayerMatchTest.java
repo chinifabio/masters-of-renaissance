@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.model.Dispatcher;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.cards.Deck;
 import it.polimi.ingsw.model.cards.SoloActionToken;
 import it.polimi.ingsw.model.exceptions.card.MissingCardException;
@@ -25,7 +25,7 @@ import java.util.List;
 public class SingleplayerMatchTest {
     private Player gino;
 
-    Dispatcher view = new Dispatcher();
+    VirtualView view = new VirtualView();
     private Match singleplayer;
 
     int oldLorenzoPos = 0;
@@ -42,7 +42,7 @@ public class SingleplayerMatchTest {
         gino = new Player("gino", singleplayer, view);
         assertTrue(singleplayer.playerJoin(gino));
 
-        //assertTrue(singleplayer.startGame());
+        singleplayer.initialize();
 
         // the player discard the first two leader card
         assertDoesNotThrow(()->singleplayer.currentPlayer().test_discardLeader());
@@ -96,7 +96,7 @@ public class SingleplayerMatchTest {
     public void endGameByLorenzo() {
         assertDoesNotThrow(()-> {
             while (singleplayer.isGameOnAir()) {
-                assertEquals(HeaderTypes.OK, singleplayer.currentPlayer().useMarketTray(RowCol.ROW, 1).header);
+                singleplayer.currentPlayer().useMarketTray(RowCol.ROW, 1);
                 singleplayer.currentPlayer().test_endTurnNoMain();
             }
         });

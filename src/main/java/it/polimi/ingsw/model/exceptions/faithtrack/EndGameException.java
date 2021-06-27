@@ -8,7 +8,7 @@ public class EndGameException extends Exception {
      * call to {@link #initCause}.
      */
     public EndGameException() {
-        super("The player can't do this move!");
+        super();
     }
 
     /**

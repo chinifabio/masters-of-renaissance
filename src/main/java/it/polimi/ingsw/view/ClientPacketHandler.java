@@ -20,7 +20,7 @@ public class ClientPacketHandler {
     }
 
     /**
-     *
+     * While the client is connected read packets sent by the server and handle their behavior
      */
     public void start() {
         while (activeClient) {
@@ -31,21 +31,12 @@ public class ClientPacketHandler {
                     if (received.header == HeaderTypes.INVALID) view.notifyPlayerError(received.body);
                 }
 
-                case PLAYER_ACTIONS -> {
-                    // todo send with OK header the new model
-                    if (received.header != HeaderTypes.INVALID) {
-                        view.notifyPlayer(received.body);
-                    } else {
-                        view.notifyPlayerError(received.body);
-                    }
-                    view.refresh();
-                }
-
                 case UPDATE_LITE_MODEL -> {
                     Updater up;
                     try {
                         up = new ObjectMapper().readerFor(Updater.class).readValue(received.body);
                         up.update(view.getModel());
+                        view.refresh();
                     } catch (JsonProcessingException e) {
                         view.emergencyExit("Client and server are not synchronized, you will be disconnect.");
                         return;
@@ -67,10 +58,12 @@ public class ClientPacketHandler {
 
                 case CONNECTION_STATUS -> {
                     if (received.header == HeaderTypes.TIMEOUT) {
-                        view.emergencyExit("You lost the connection to server, quitting.");
-                        return;
+                        view.emergencyExit("You lost the connection to the server, quitting.");
+                        activeClient = false;
                     }
                 }
+
+                default -> {}
             }
         }
     }

@@ -1,9 +1,5 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.communication.packet.ChannelTypes;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.match.markettray.RowCol;
@@ -68,11 +64,10 @@ public abstract class PlayerState implements PlayerAction {
      * Use the market tray
      * @param rc enum to identify if I am pushing row or col
      * @param index the index of the row or column of the tray
-     * @return the result of the operation
      */
     @Override
-    public Packet useMarketTray(RowCol rc, int index) {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    public void useMarketTray(RowCol rc, int index) {
+        context.view.sendPlayerError(context.nickname, errorMessage);
     }
 
     /**
@@ -82,39 +77,36 @@ public abstract class PlayerState implements PlayerAction {
      * @param marbleIndex the index of the marble conversions available
      */
     @Override
-    public Packet paintMarbleInTray(int conversionsIndex, int marbleIndex) {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    public void paintMarbleInTray(int conversionsIndex, int marbleIndex) {
+        context.view.sendPlayerError(context.nickname, errorMessage);
     }
 
     /**
-     * Player confirms the buy of a devcard
+     * Player confirms the buy of a dev card
      * @param row the row of the card required
      * @param col the column of the card required
      * @param destination the slot where put the dev card slot
-     * @return true if there where no issue, false instead
      */
     @Override
-    public Packet buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    public void buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
+        context.view.sendPlayerError(context.nickname, errorMessage);
     }
 
     /**
-     * Player asks to buy a devcard
-     * @return the result of the operation
+     * Player asks to buy a dev card
      */
     @Override
-    public Packet buyCard() {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    public void buyCard() {
+        context.view.sendPlayerError(context.nickname, errorMessage);
     }
 
     /**
      * This method takes the resources from the Depots and the Strongbox to
      * activate the productions and insert the Resources obtained into the Strongbox
-     * @return the result of the operation
      */
     @Override
-    public Packet activateProductions() {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    public void activateProductions() {
+        context.view.sendPlayerError(context.nickname, errorMessage);
     }
 
     /**
@@ -122,22 +114,20 @@ public abstract class PlayerState implements PlayerAction {
      * @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
-     * @return true if the resources are correctly moved in Production
      */
     @Override
-    public Packet moveInProduction(DepotSlot from, ProductionID dest, Resource loot) {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) {
+        context.view.sendPlayerError(context.nickname, errorMessage);
     }
 
     /**
      * This method set the normal production of an unknown production
      * @param id the id of the unknown production
      * @param normalProduction the input new normal production
-     * @return the succeed of the operation
      */
     @Override
-    public Packet setNormalProduction(ProductionID id, NormalProduction normalProduction)  {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    public void setNormalProduction(ProductionID id, NormalProduction normalProduction)  {
+        context.view.sendPlayerError(context.nickname, errorMessage);
     }
 
     /**
@@ -147,8 +137,8 @@ public abstract class PlayerState implements PlayerAction {
      * @param loot is the Resource to move
      */
     @Override
-    public Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
+        context.view.sendPlayerError(context.nickname, errorMessage);
     }
 
     /**
@@ -156,8 +146,8 @@ public abstract class PlayerState implements PlayerAction {
      * @param leaderId the string that identify the leader card
      */
     @Override
-    public Packet activateLeaderCard(String leaderId) {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    public void activateLeaderCard(String leaderId) {
+        context.view.sendPlayerError(context.nickname, errorMessage);
     }
 
     /**
@@ -165,17 +155,16 @@ public abstract class PlayerState implements PlayerAction {
      * @param leaderId the string that identify the leader card to be discarded
      */
     @Override
-    public Packet discardLeader(String leaderId) {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    public void discardLeader(String leaderId) {
+        context.view.sendPlayerError(context.nickname, errorMessage);
     }
 
     /**
      * The Player ends its turn
-     * @return true if success, false otherwise
      */
     @Override
-    public Packet endThisTurn() {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    public void endThisTurn() {
+        context.view.sendPlayerError(context.nickname, errorMessage);
     }
 
     /**
@@ -184,48 +173,41 @@ public abstract class PlayerState implements PlayerAction {
      * @param chosen the resource chosen
      */
     @Override
-    public Packet chooseResource(DepotSlot slot, ResourceType chosen) {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    public void chooseResource(DepotSlot slot, ResourceType chosen) {
+        context.view.sendPlayerError(context.nickname, errorMessage);
     }
 
     /**
-     * Used during the buydevcard/production phase to return to the initial warehouse state.
-     * @return a warning packet
+     * Used during the buy dev card/production phase to return to the initial warehouse state.
      */
     @Override
-    public Packet rollBack() {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    public void rollBack() {
+        context.view.sendPlayerError(context.nickname, errorMessage);
     }
 
     /**
      * Player asks to use productions
-     * @return the result of the operation
      */
     @Override
-    public Packet production() {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, errorMessage);
+    public void production() {
+        context.view.sendPlayerError(context.nickname, errorMessage);
     }
 
     /**
      * Cheat commands used to make test faster
-     * @return the result of the operation
      */
     @Override
-    public Packet resourceCheat() {
-        ResourceType[] temp = {ResourceType.COIN, ResourceType.SERVANT, ResourceType.SHIELD, ResourceType.STONE};
-        for (ResourceType loop : temp) {
-            this.context.obtainResource(DepotSlot.STRONGBOX, ResourceBuilder.buildFromType(loop,50));
-        }
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Cheat codes activated! You got 50 resource of any type in the strongbox");
+    public void resourceCheat() {
+        for (ResourceType loop : ResourceType.storable()) context.obtainResource(DepotSlot.STRONGBOX, ResourceBuilder.buildFromType(loop,50));
+        context.view.sendPlayerMessage(context.nickname, "Cheat codes activated! You got 50 resource of any type in the strongbox");
     }
 
     /**
      * Cheat commands used to make test faster
-     * @return the result of the operation
      */
     @Override
-    public Packet fpCheat(int fp) {
+    public void fpCheat(int fp) {
         this.context.obtainResource(DepotSlot.STRONGBOX, ResourceBuilder.buildFaithPoint(fp));
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Cheat codes activated! You move forward in the faith track");
+        context.view.sendPlayerMessage(context.nickname, "Cheat codes activated! You move forward in the faith track");
     }
 }

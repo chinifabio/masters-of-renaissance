@@ -22,7 +22,7 @@ public class FaithPointCheatCommand extends Command{
     }
 
     @Override
-    public Packet execute(PlayerAction player) {
-        return player.fpCheat(fp);
+    public void execute(PlayerAction player) {
+        player.fpCheat(fp);
     }
 }

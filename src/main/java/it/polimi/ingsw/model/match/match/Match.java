@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.communication.packet.updates.DevSetupUpdater;
 import it.polimi.ingsw.communication.packet.updates.TrayUpdater;
 import it.polimi.ingsw.litemodel.Scoreboard;
-import it.polimi.ingsw.model.Dispatcher;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.PlayerStateException;
@@ -61,7 +61,7 @@ public abstract class Match implements PlayerToMatch {
     /**
      * The view to send all the changes in the state
      */
-    protected final Dispatcher view;
+    protected final VirtualView view;
 
     protected Model model;
 
@@ -75,7 +75,7 @@ public abstract class Match implements PlayerToMatch {
      * @param gameSize indicates the number of players that can play this match
      * @param view the view on which notify all changes
      */
-    protected Match(int gameSize, Dispatcher view) throws IOException {
+    protected Match(int gameSize, VirtualView view) throws IOException {
         this.gameSize = gameSize;
         this.view = view;
 
@@ -301,4 +301,8 @@ public abstract class Match implements PlayerToMatch {
         this.view.publish(new DevSetupUpdater(this.devSetup.liteVersion()));
     }
 
+    /**
+     * Randomize the inkwell player and give the initial resources
+     */
+    public abstract void initialize();
 }

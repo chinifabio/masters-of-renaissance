@@ -21,7 +21,7 @@ public class ActivateProductionCommand extends Command{
      * @param player the player on which execute the command
      */
     @Override
-    public Packet execute(PlayerAction player) {
-        return player.activateProductions();
+    public void execute(PlayerAction player) {
+        player.activateProductions();
     }
 }

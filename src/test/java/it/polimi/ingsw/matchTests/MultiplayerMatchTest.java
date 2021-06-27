@@ -1,7 +1,6 @@
 package it.polimi.ingsw.matchTests;
 
-import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.model.Dispatcher;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.match.match.Match;
@@ -29,7 +28,7 @@ public class MultiplayerMatchTest {
 
     List<Player> order = new ArrayList<>();
 
-    Dispatcher view = new Dispatcher();
+    VirtualView view = new VirtualView();
     Match multiplayer;
 
     @BeforeEach
@@ -56,7 +55,9 @@ public class MultiplayerMatchTest {
         assertTrue(multiplayer.playerJoin(tino));
         order.add(tino);
 
+        multiplayer.initialize();
         Collections.rotate(order, -order.indexOf(multiplayer.currentPlayer()));
+        assertTrue(multiplayer.isGameOnAir());
 
         // initializing player section
         /*
@@ -68,30 +69,30 @@ public class MultiplayerMatchTest {
 
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
-        assertEquals(HeaderTypes.GAME_START, order.get(0).endThisTurn().header);
+        order.get(0).endThisTurn();
 
         assertDoesNotThrow(()-> order.get(1).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(() -> assertEquals(order.get(1).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
-        assertEquals(HeaderTypes.GAME_START, order.get(1).endThisTurn().header);
+        order.get(1).endThisTurn();
 
         assertDoesNotThrow(()-> order.get(2).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN));
         assertDoesNotThrow(()-> order.get(2).test_discardLeader());
         assertDoesNotThrow(()-> order.get(2).test_discardLeader());
         assertEquals(1, order.get(2).test_getPB().getFT_forTest().getPlayerPosition());
         assertDoesNotThrow(() -> assertEquals(order.get(2).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
-        assertEquals(HeaderTypes.GAME_START, order.get(2).endThisTurn().header);
+        order.get(2).endThisTurn();
 
-        assertDoesNotThrow(()-> assertEquals(HeaderTypes.OK, order.get(3).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN).header));
-        assertDoesNotThrow(()-> assertEquals(HeaderTypes.INVALID, order.get(3).chooseResource(DepotSlot.BOTTOM, ResourceType.STONE).header));
-        assertDoesNotThrow(()-> assertEquals(HeaderTypes.OK, order.get(3).chooseResource(DepotSlot.MIDDLE, ResourceType.STONE).header));
+        order.get(3).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN);
+        order.get(3).chooseResource(DepotSlot.BOTTOM, ResourceType.STONE);
+        order.get(3).chooseResource(DepotSlot.MIDDLE, ResourceType.STONE);
         assertDoesNotThrow(()-> order.get(3).test_discardLeader());
         assertDoesNotThrow(()-> order.get(3).test_discardLeader());
         assertEquals(1, order.get(3).test_getPB().getFT_forTest().getPlayerPosition());
         assertDoesNotThrow(() -> assertEquals(order.get(3).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         assertDoesNotThrow(() -> assertEquals(order.get(3).test_getPB().getDepots().get(DepotSlot.MIDDLE).viewResources().get(0), ResourceBuilder.buildStone()));
-        assertEquals(HeaderTypes.GAME_START, order.get(3).endThisTurn().header);
+        order.get(3).endThisTurn();
 
         // creating a list of the players in order to have player(0) = inkwell player
         Collections.rotate(order, -order.indexOf(multiplayer.currentPlayer()));
@@ -117,9 +118,10 @@ public class MultiplayerMatchTest {
     @Test
     public void buildMultiplayerTest() {
         for(int i = 0; i < this.multiplayer.playerInGame(); i++){
-            assertEquals(order.get(i).useMarketTray(RowCol.COL, 2).header, HeaderTypes.OK);
-            assertEquals(order.get(i).useMarketTray(RowCol.COL, 2).header, HeaderTypes.INVALID);
-            assertEquals(order.get(i).endThisTurn().header, HeaderTypes.OK);
+            // todo guardare che le risorse prese siano giuste
+            order.get(i).useMarketTray(RowCol.COL, 2);
+            order.get(i).useMarketTray(RowCol.COL, 2);
+            order.get(i).endThisTurn();
         }
     }
 }

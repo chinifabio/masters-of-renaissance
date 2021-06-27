@@ -51,7 +51,7 @@ public class Controller implements Runnable {
     private boolean disconnected = false;
 
     /**
-     * Create a contrller from server and socket
+     * Create a controller from server and socket
      * @param socket the socket used for the communication
      * @param server the server
      * @throws IOException when creator is unable to create a socketListener
@@ -73,12 +73,19 @@ public class Controller implements Runnable {
     }
 
     /**
-     * Create and invalid packet for the player action channel
-     * @param message the message to handle
-     * @return the created packet
+     * Send an error message to the client
+     * @param message the message to send
      */
-    public Packet invalid(String message) {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, message);
+    public void invalid(String message) {
+        socket.send(new Packet(HeaderTypes.INVALID, ChannelTypes.MESSENGER, message));
+    }
+
+    /**
+     * Send a message to the client
+     * @param message the message to send
+     */
+    public void sendMessage(String message) {
+        socket.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.MESSENGER, message));
     }
 
     /**
@@ -137,9 +144,8 @@ public class Controller implements Runnable {
             switch (received.channel) {
                 case PLAYER_ACTIONS -> {
                     System.out.println(Colors.color(Colors.CYAN, nickname) + ": " + received);
-
-                    // save the result of the operation
-                    socket.send(state.handleMessage(received, this));
+                    state.handleMessage(received, this);
+                    socket.send(new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Communication ended"));
                 }
 
                 case MESSENGER -> {
@@ -163,9 +169,8 @@ interface ControllerState {
      * handle the client message and create a response Packet
      * @param packet the message to handle
      * @param context the context of the state
-     * @return the response message
      */
-    Packet handleMessage(Packet packet, Controller context);
+    void handleMessage(Packet packet, Controller context);
 
     /**
      * Handle the disconnection of the controller based on his state
@@ -185,19 +190,21 @@ class ChooseNickname implements ControllerState {
      * handle the client message and create a response Packet
      *
      * @param packet the message to handle
-     * @return the response message
+     * @param context the context of the state
      */
     @Override
-    public Packet handleMessage(Packet packet, Controller context) {
-        if (packet.header != HeaderTypes.HELLO)
-            return context.invalid("invalid packet: " + packet.header + "; expected " + HeaderTypes.HELLO);
+    public void handleMessage(Packet packet, Controller context) {
+        if (packet.header != HeaderTypes.HELLO) {
+            context.invalid("invalid packet: " + packet.header + "; expected " + HeaderTypes.HELLO);
+            return;
+        }
 
         // check if the player where disconnected
         if (context.server.reconnect(packet.body, context)) {
             context.nickname = packet.body;
-            return context.model.reconnectPlayer(context.nickname, context) ?
-                    new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "reconnect") :
-                    context.invalid("fail in reconnection");
+            if (context.model.reconnectPlayer(context.nickname, context)) context.sendMessage("You were reconnect");
+            else context.invalid("Fail in reconnection");
+            return;
         }
 
         // check if the player chose a valid nickname
@@ -209,26 +216,30 @@ class ChooseNickname implements ControllerState {
                 assert temp != null;
                 context.model = temp;
 
-                context.setState(new WaitingInLobby());
                 try {
                     temp.login(context, context.nickname);
+                    context.setState(new WaitingInLobby());
+                    temp.checkStart();
                 } catch (Exception e) {
-                    return context.invalid(e.getMessage());
+                    context.invalid(e.getMessage());
+                    return;
                 }
 
-                return new Packet(HeaderTypes.GAME_INIT, ChannelTypes.PLAYER_ACTIONS, "You joined a Lobby of " + context.model.gameSize + " players.");
+                return;
             }
 
             if (context.server.needACreator()) {
+                context.sendMessage("Empty match, you have to create one.");
                 context.setState(new ChoosePlayerNumber());
-                return new Packet(HeaderTypes.SET_PLAYERS_NUMBER, ChannelTypes.PLAYER_ACTIONS, "Empty match, you have to create one.");
+                return;
             }
 
             context.server.cleanNickname(context.nickname);
-            return context.invalid("Wait! Someone is creating the match...");
+            context.invalid("Wait! Someone is creating the match...");
+            return;
         }
 
-        return context.invalid("Please change the nickname, " + packet.body + " is not valid");
+        context.invalid("Please change the nickname, " + packet.body + " is not valid");
     }
 
     /**
@@ -258,42 +269,48 @@ class ChoosePlayerNumber implements ControllerState {
      *
      * @param packet  the message to handle
      * @param context the context of the state
-     * @return the response message
      */
     @Override
-    public Packet handleMessage(Packet packet, Controller context) {
-        if (packet.header != HeaderTypes.SET_PLAYERS_NUMBER)
-            return context.invalid("invalid packet: " + packet.header + "; expected " + HeaderTypes.SET_PLAYERS_NUMBER);
-
+    public void
+    handleMessage(Packet packet, Controller context) {
+        if (packet.header != HeaderTypes.SET_PLAYERS_NUMBER) {
+            context.invalid("invalid packet: " + packet.header + "; expected " + HeaderTypes.SET_PLAYERS_NUMBER);
+            return;
+        }
         try {
             int n = -1;
             try {
               n = Integer.parseInt(packet.body);
-              if(n < 1 || n > 4) return context.invalid(n + " is not a legal game size.");
+              if(n < 1 || n > 4) {
+                  context.invalid(n + " is not a legal game size.");
+                  return;
+              }
             } catch (NumberFormatException e){
-                return context.invalid(n + " is not a number");
+                context.invalid(n + " is not a number");
+                return;
             } catch (NullPointerException e){
-                return context.invalid("insert a number");
+                context.invalid("insert a number");
+                return;
             }
 
             context.model = new Model(n);
             context.server.hereSTheModel(context.model);
 
         } catch (NumberFormatException e) {
-            return context.invalid("invalid number format: " + packet.body);
+            context.invalid("invalid number format: " + packet.body);
+            return;
         } catch (IOException e) {
-            return context.invalid("fail while creating mach");
+            context.invalid("fail while creating mach");
+            return;
         }
 
-
-        context.setState(new WaitingInLobby());
         try {
             context.model.login(context, context.nickname);
+            context.setState(new WaitingInLobby());
+            context.model.checkStart();
         } catch (Exception e) {
-            return context.invalid(e.getMessage());
+            context.invalid(e.getMessage());
         }
-
-        return new Packet(HeaderTypes.GAME_INIT, ChannelTypes.PLAYER_ACTIONS, "You joined a Lobby of " + context.model.gameSize + " players.");
     }
 
     /**
@@ -324,11 +341,10 @@ class WaitingInLobby implements ControllerState {
      *
      * @param packet  the message to handle
      * @param context the context of the state
-     * @return the response message
      */
     @Override
-    public Packet handleMessage(Packet packet, Controller context) {
-        return context.invalid("Wait that other player join!");
+    public void handleMessage(Packet packet, Controller context) {
+        context.invalid("Wait that other player join!");
     }
 
     /**
@@ -359,18 +375,20 @@ class GameInit implements ControllerState {
      *
      * @param packet  the message to handle
      * @param context the context of the state
-     * @return the response message
      */
     @Override
-    public Packet handleMessage(Packet packet, Controller context) {
-        if (packet.header != HeaderTypes.DO_ACTION)
-            return context.invalid("invalid packet received: " + packet.header + "; expected " + HeaderTypes.DO_ACTION);
+    public void handleMessage(Packet packet, Controller context) {
+        if (packet.header != HeaderTypes.DO_ACTION) {
+            context.invalid("invalid packet received: " + packet.header + "; expected " + HeaderTypes.DO_ACTION);
+            return;
+        }
 
         try {
-            Command c = new ObjectMapper().readerFor(Command.class).readValue(packet.body);
-            return context.model.handleClientCommand(context, c);
+            context.model.handleClientCommand(context,
+                    new ObjectMapper().readerFor(Command.class).readValue(packet.body));
+            //context.model.virtualView.updateClients();
         } catch (JsonProcessingException e) {
-            return context.invalid(e.getMessage());
+            context.invalid("Invalid packet received!" + e.getMessage());
         }
     }
 
@@ -403,18 +421,20 @@ class InGameState implements ControllerState {
      *
      * @param packet  the message to handle
      * @param context the context of the state
-     * @return the response message
      */
     @Override
-    public Packet handleMessage(Packet packet, Controller context) {
-        if (packet.header != HeaderTypes.DO_ACTION)
-            return context.invalid("invalid packet received: " + packet.header + "; expected " + HeaderTypes.DO_ACTION);
+    public void handleMessage(Packet packet, Controller context) {
+        if (packet.header != HeaderTypes.DO_ACTION) {
+            context.invalid("invalid packet received: " + packet.header + "; expected " + HeaderTypes.DO_ACTION);
+            return;
+        }
 
         try {
-            Command c = new ObjectMapper().readerFor(Command.class).readValue(packet.body);
-            return context.model.handleClientCommand(context, c);
+            context.model.handleClientCommand(context,
+                    new ObjectMapper().readerFor(Command.class).readValue(packet.body));
+            //context.model.virtualView.updateClients();
         } catch (JsonProcessingException e) {
-            return context.invalid(e.getMessage());
+            context.invalid("Invalid packet received!" + e.getMessage());
         }
     }
 
@@ -445,11 +465,10 @@ class WaitingResult implements ControllerState {
      *
      * @param packet  the message to handle
      * @param context the context of the state
-     * @return the response message
      */
     @Override
-    public Packet handleMessage(Packet packet, Controller context) {
-        return context.invalid("The match is still running, wait that all the players end their turn!");
+    public void handleMessage(Packet packet, Controller context) {
+        context.invalid("The match is still running, wait that all the players end their turn!");
     }
 
     /**
@@ -480,11 +499,10 @@ class GameScoreboard implements ControllerState {
      *
      * @param packet  the message to handle
      * @param context the context of the state
-     * @return the response message
      */
     @Override
-    public Packet handleMessage(Packet packet, Controller context) {
-        return context.invalid("The match is ended!");
+    public void handleMessage(Packet packet, Controller context) {
+        context.invalid("The match is ended!");
     }
 
     /**

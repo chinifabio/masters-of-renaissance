@@ -7,12 +7,9 @@ import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
-import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
-import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.resource.Resource;
 
 /**
@@ -45,6 +42,7 @@ public class NoActionDonePlayerState extends PlayerState {
      */
     @Override
     public PlayerState reconnectionState() {
+        context.endThisTurn();
         return new NotHisTurnPlayerState(this.context);
     }
 
@@ -56,28 +54,26 @@ public class NoActionDonePlayerState extends PlayerState {
      * Uses the Market Tray
      * @param rc    enum to identify if I am pushing row or col
      * @param index the index of the row or column of the tray
-     * @return true if the MarketTray is correctly used
      */
     @Override
-    public Packet useMarketTray(RowCol rc, int index) {
+    public void useMarketTray(RowCol rc, int index) {
         try {
             // using market tray
             this.context.match.useMarketTray(rc, index);
-
         }
 
         catch (EndGameException e) {
             this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
             this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
-            return new Packet(HeaderTypes.END_GAME, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
+            return;
         }
 
         catch (Exception e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            context.view.sendPlayerMessage(context.nickname, e.getMessage());
+            return;
         }
 
         this.context.setState(new MainActionDonePlayerState(this.context));
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Used market tray successfully");
     }
 
     /**
@@ -87,40 +83,38 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param marbleIndex      the index of chosen tray's marble to color
      */
     @Override
-    public Packet paintMarbleInTray(int conversionsIndex, int marbleIndex) {
+    public void paintMarbleInTray(int conversionsIndex, int marbleIndex) {
         try {
-            this.context.match.paintMarbleInTray(this.context.marbleConversions.get(conversionsIndex).copy(), marbleIndex);
+            context.match.paintMarbleInTray(this.context.marbleConversions.get(conversionsIndex).copy(), marbleIndex);
+            context.view.sendPlayerMessage(context.nickname, "Marble painted successfully");
         } catch (UnpaintableMarbleException e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            context.view.sendPlayerError(context.nickname, e.getMessage());
         }
 
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Marble painted successfully");
     }
 
     @Override
-    public Packet buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You have to enter the buycard phase by typing \"buycard\"!");
+    public void buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
+        context.view.sendPlayerError(context.nickname, "You have to enter the buy card phase!");
     }
 
     /**
-     *  Player asks to buy a devcard
-     *  @return the result of the operation
+     *  Player asks to buy a dev card
      */
     @Override
-    public Packet buyCard() {
-        this.context.setState(new BuyCardPlayerState(this.context));
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Move the needed resource for the chosen card into the devbuffer");
+    public void buyCard() {
+        context.setState(new BuyCardPlayerState(this.context));
+        context.view.sendPlayerMessage(context.nickname, "Move the needed resource for the chosen card into the dev buffer");
     }
 
 
     /**
      * This method moves the player into the production phase
-     * @return the succeed of the operation
      */
     @Override
-    public Packet production() {
-        this.context.setState(new ProductionPlayerState(this.context));
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Now you can move resources into productions");
+    public void production() {
+        context.setState(new ProductionPlayerState(this.context));
+        context.view.sendPlayerMessage(context.nickname, "Now you can move resources into productions");
     }
 
     /**
@@ -130,16 +124,19 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param loot resource to move
      */
     @Override
-    public Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
-        if(to == DepotSlot.DEVBUFFER) return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You can't do that!");
-        try {
-            this.context.personalBoard.moveResourceDepot(from, to, loot);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e + " " + e.getCause() + " " + e.getMessage());
+    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
+        if(to == DepotSlot.DEVBUFFER) {
+            context.view.sendPlayerError(context.nickname, "You can't move resources into " + to);
+            return;
         }
 
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Resource moved successfully");
+        try {
+            context.personalBoard.moveResourceDepot(from, to, loot);
+            context.view.sendPlayerMessage(context.nickname, "Resource moved successfully");
+        } catch (Exception e) {
+            context.view.sendPlayerError(context.nickname, e.getMessage());
+        }
+
     }
 
     /**
@@ -147,13 +144,12 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param leaderId the string that identify the leader card
      */
     @Override
-    public Packet activateLeaderCard(String leaderId) {
+    public void activateLeaderCard(String leaderId) {
         try {
-            return this.context.personalBoard.activateLeaderCard(leaderId) ?
-                    new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You have activate "+leaderId):
-                    new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You have no requisite to activate the leader");
+            if (context.personalBoard.activateLeaderCard(leaderId)) context.view.sendMessage("You activated "+leaderId);
+            else context.view.sendPlayerError(context.nickname, "You have not enough requisite to activate the leader");
         } catch (Exception e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            context.view.sendPlayerError(context.nickname, e.getMessage());
         }
     }
 
@@ -162,30 +158,29 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param leaderId the string that identify the leader card to be discarded
      */
     @Override
-    public Packet discardLeader(String leaderId) {
+    public void discardLeader(String leaderId) {
         try {
             this.context.personalBoard.discardLeaderCard(leaderId);
         } catch (Exception e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            context.view.sendPlayerError(context.nickname, e.getMessage());
+            return;
         }
 
         try {
-            this.context.personalBoard.moveFaithMarker(1, this.context.match);
+            context.personalBoard.moveFaithMarker(1, context.match);
+            context.view.sendPlayerMessage(context.nickname, "You discarded " + leaderId);
         } catch (EndGameException e) {
-            this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
-            this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
-            return new Packet(HeaderTypes.END_GAME, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
+            context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
+            context.setState(new CountingPointsPlayerState(context));                     // set the player state to counting point so he can't do nothing more
         }
 
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You discarded " + leaderId);
     }
 
     /**
      * The player ends its turn
-     * @return true if success, false otherwise
      */
     @Override
-    public Packet endThisTurn() {
-        return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "Your can't end your turn until you do the main action!");
+    public void endThisTurn() {
+        context.view.sendPlayerError(context.nickname, "Your can't end your turn until you do the main action!");
     }
 }

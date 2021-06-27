@@ -42,8 +42,8 @@ public class UseMarketTrayCommand extends Command{
      * @param player the player on which execute the command
      */
     @Override
-    public Packet execute(PlayerAction player) {
-        return player.useMarketTray(this.rc, this.index);
+    public void execute(PlayerAction player) {
+        player.useMarketTray(this.rc, this.index);
     }
 
     /**

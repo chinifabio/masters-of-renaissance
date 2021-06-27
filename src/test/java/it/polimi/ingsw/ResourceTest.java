@@ -2,7 +2,7 @@ package it.polimi.ingsw;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.Dispatcher;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.PlayableCardReaction;
@@ -68,7 +68,7 @@ public class ResourceTest {
     @Test
     public void nonObtainable() throws IllegalTypeInProduction, IOException {
         Resource unknown = ResourceBuilder.buildUnknown();
-        PlayableCardReaction player = new Player("dummy", null, new Dispatcher());
+        PlayableCardReaction player = new Player("dummy", null, new VirtualView());
 
         try {
             unknown.onObtain(player);

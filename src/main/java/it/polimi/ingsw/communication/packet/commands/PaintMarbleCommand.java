@@ -38,7 +38,7 @@ public class PaintMarbleCommand extends Command {
      * @param player the player on which execute the command
      */
     @Override
-    public Packet execute(PlayerAction player) {
-        return player.paintMarbleInTray(this.conversion, this.index);
+    public void execute(PlayerAction player) {
+        player.paintMarbleInTray(this.conversion, this.index);
     }
 }

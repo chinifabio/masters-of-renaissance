@@ -46,7 +46,7 @@ public class MoveDepotCommand extends Command{
      * @param player the player on which execute the command
      */
     @Override
-    public Packet execute(PlayerAction player) {
-        return player.moveBetweenDepot(this.from, this.dest, this.loot);
+    public void execute(PlayerAction player) {
+        player.moveBetweenDepot(this.from, this.dest, this.loot);
     }
 }

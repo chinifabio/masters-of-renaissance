@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.match.match;
 import it.polimi.ingsw.communication.packet.updates.PlayerOrderUpdater;
 import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.model.Pair;
-import it.polimi.ingsw.model.Dispatcher;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.player.CountingPointsPlayerState;
 import it.polimi.ingsw.model.player.NotHisTurnPlayerState;
 import it.polimi.ingsw.model.player.Player;
@@ -44,7 +44,7 @@ public class MultiplayerMatch extends Match{
      * and require at least 2 player to be started
      * @param number the game size of the match
      */
-    public MultiplayerMatch(int number, Dispatcher view) throws IOException {
+    public MultiplayerMatch(int number, VirtualView view) throws IOException {
         super(number, view);
     }
 
@@ -57,37 +57,35 @@ public class MultiplayerMatch extends Match{
     @Override
     public boolean playerJoin(Player joined) {
         if (connectedPlayers.size() >= gameSize || connectedPlayers.contains(joined)) return false;
-
-        connectedPlayers.add(joined);
-
-        if (connectedPlayers.size() == gameSize) {
-            Random rand = new Random();
-            Collections.rotate(connectedPlayers, rand.nextInt(connectedPlayers.size()));
-
-            List<String> playerOrder = new ArrayList<>();
-            connectedPlayers.forEach(x -> playerOrder.add(x.getNickname()));
-            view.publish(new PlayerOrderUpdater(playerOrder));
-
-
-            List<Pair<Integer>> initialResourcesSetup = new ArrayList<>();
-
-            initialResourcesSetup.add(new Pair<>(0, 0));
-            initialResourcesSetup.add(new Pair<>(1, 0));
-            initialResourcesSetup.add(new Pair<>(1, 1));
-            initialResourcesSetup.add(new Pair<>(2, 1));
-
-            for (int i = 0; i < connectedPlayers.size(); i++) {
-                connectedPlayers.get(i).initialSetup = initialResourcesSetup.get(i);
-            }
-
-            connectedPlayers.forEach(Player::startHisTurn); // set the state of all player as InitSelectionState
-            gameOnAir = true;
-        }
-
-        return true;
+        return connectedPlayers.add(joined);
     }
 
+    /**
+     * Randomize the inkwell player and give the initial resources
+     */
+    @Override
+    public void initialize() {
+        Random rand = new Random();
+        Collections.rotate(connectedPlayers, rand.nextInt(connectedPlayers.size()));
 
+        List<String> playerOrder = new ArrayList<>();
+        connectedPlayers.forEach(x -> playerOrder.add(x.getNickname())); // save player order into the lite model
+        view.publish(new PlayerOrderUpdater(playerOrder));
+
+        List<Pair<Integer>> initialResourcesSetup = new ArrayList<>();
+
+        initialResourcesSetup.add(new Pair<>(0, 0));
+        initialResourcesSetup.add(new Pair<>(1, 0));
+        initialResourcesSetup.add(new Pair<>(1, 1));
+        initialResourcesSetup.add(new Pair<>(2, 1));
+
+        for (int i = 0; i < connectedPlayers.size(); i++) {
+            connectedPlayers.get(i).setInitialSetup(initialResourcesSetup.get(i));
+        }
+
+        connectedPlayers.forEach(Player::startHisTurn); // set the state of all player as InitSelectionState
+        gameOnAir = true;
+    }
 
     /**
      * request to other player to flip the pope tile passed in the parameter

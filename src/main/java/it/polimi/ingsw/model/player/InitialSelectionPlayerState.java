@@ -7,7 +7,6 @@ import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
-import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
@@ -53,10 +52,15 @@ public class InitialSelectionPlayerState extends PlayerState {
         this.toChoose = initRes.one;
 
         try {
+            // todo addLeaderCards take a list of card as parameter so you don't send 4 update leader packets
             for(LeaderCard ld : this.context.match.requestLeaderCard()) this.context.personalBoard.addLeaderCard(ld);
         } catch (EmptyDeckException | AlreadyInDeckException e) {
             context.view.sendError(e.getMessage());
         }
+
+        context.view.sendPlayerMessage(context.nickname, initRes.one > 0 ?
+                "Please discard 2 leader cards and choose " + initRes.one + " resources" :
+                "Please discard 2 leader cards");
     }
 
     /**
@@ -93,33 +97,31 @@ public class InitialSelectionPlayerState extends PlayerState {
      * @param leaderId the string that identify the leader card to be discarded
      */
     @Override
-    public Packet discardLeader(String leaderId) {
+    public void discardLeader(String leaderId) {
         if (discarded < toDiscard) {
             try {
-                this.context.personalBoard.discardLeaderCard(leaderId);
+                context.personalBoard.discardLeaderCard(leaderId);
                 discarded ++;
-                return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You discarded " + leaderId + " | " + "discarded leader " + discarded + "/" + toDiscard+"; chosen resources " + chosen + "/" + toChoose);
+                context.view.sendPlayerMessage(context.nickname, "You discarded " + leaderId);
             } catch (Exception e) {
-                return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+                context.view.sendPlayerError(context.nickname, e.getMessage());
             }
-        } else return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "you already discarded " + toDiscard + " cards");
+        } else context.view.sendPlayerError(context.nickname, "you already discarded " + toDiscard + " cards");
     }
 
 
     /**
      * The player ends its turn
-     * @return true if success, false otherwise
      */
     @Override
-    public Packet endThisTurn() {
+    public void endThisTurn() {
         if (chosen == toChoose && discarded == toDiscard) {
-
             this.context.setState(new PendingMatchStartPlayerState(this.context));
+            context.view.sendMessage(context.nickname + " finished his game initialization");
             this.context.match.initialSelectionDone();
-            return new Packet(HeaderTypes.GAME_START, ChannelTypes.PLAYER_ACTIONS, "Initial phase done!");
-
-        } else
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "<.(*_*).> You have to complete your job: discarded leader " + discarded + "/" + toDiscard+"; chosen resources " + chosen + "/" + toChoose);
+        } else {
+            context.view.sendPlayerError(context.nickname, "You have to complete your job: discarded leader " + discarded + "/" + toDiscard + "; chosen resources " + chosen + "/" + toChoose);
+        }
     }
 
     /**
@@ -128,31 +130,22 @@ public class InitialSelectionPlayerState extends PlayerState {
      * @param res the resource chosen
      */
     @Override
-    public Packet chooseResource(DepotSlot slot, ResourceType res) {
-        if (slot == DepotSlot.STRONGBOX || slot == DepotSlot.BUFFER)
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "Invalid destination");
-        if (this.chosen < this.toChoose) {
+    public void chooseResource(DepotSlot slot, ResourceType res) {
+        if (slot == DepotSlot.STRONGBOX || slot == DepotSlot.BUFFER) {
+            context.view.sendPlayerError(context.nickname, "You can't place you resource in: " + slot);
+            return;
+        }
+        if (chosen < toChoose) {
             try {
-                if (this.context.obtainResource(slot, ResourceBuilder.buildFromType(res, 1))) {
-                    this.chosen++;
-                    return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You obtained " + res.name().toLowerCase() + " | " + "discarded leader " + discarded + "/" + toDiscard+"; chosen resources " + chosen + "/" + toChoose);
-                } else
-                    return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "Can't override resource");
+                if (context.obtainResource(slot, ResourceBuilder.buildFromType(res, 1))) {
+                    chosen++;
+                    context.view.sendPlayerMessage(context.nickname, "You obtained " + res.name().toLowerCase());
+                } else context.view.sendPlayerError(context.nickname, "You can't override resource");
 
             } catch (Exception e) {
-                return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+                context.view.sendPlayerError(context.nickname, e.getMessage());
             }
-        } else return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You already chose " + toChoose + " resources");
-    }
-
-    /**
-     * Returns a string representation of the object.
-     *
-     * @return a string representation of the object.
-     */
-    @Override
-    public String toString() {
-        return "LeaderSelection state";
+        } else context.view.sendPlayerError(context.nickname, "You already chose " + toChoose + " resources");
     }
 }
 

@@ -166,35 +166,24 @@ public class GUI extends JFrame implements View {
         new ClientPacketHandler(this, socket).start();
     }
 
-    public void switchPanels(GuiPanel toSee){
+    public void switchPanels(GuiPanel panelGenerator){
         synchronized (gamePanel) {
-            gamePanel.removeAll();
-            actualPanel = toSee;
-
-            try {
-                gamePanel.add(toSee.update());
-            } catch (Exception | Error e) {
-                e.printStackTrace();
-                emergencyExit("You missed some resource " + e.getMessage());
-            }
-
-            gamePanel.repaint();
-            gamePanel.revalidate();
+            actualPanel = panelGenerator;
+            refresh();
         }
     }
 
     @Override
     public void refresh() {
-        gamePanel.removeAll();
-
         try {
-            gamePanel.add(actualPanel.update());
+            JPanel newPanel = actualPanel.update();
+            gamePanel.removeAll();
+            gamePanel.add(newPanel);
+            gamePanel.repaint();
+            gamePanel.revalidate();
         } catch (Exception | Error e) {
             emergencyExit("You missed some resource" + e.getMessage());
         }
-
-        gamePanel.repaint();
-        gamePanel.revalidate();
     }
 
     public static void main(String[] args){

@@ -3,8 +3,7 @@ package it.polimi.ingsw;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.model.Dispatcher;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
 import it.polimi.ingsw.model.match.markettray.DimensionReader;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble;
@@ -28,7 +27,7 @@ public class MarketTrayTest {
     Player player1;
     Player player2;
 
-    Dispatcher view = new Dispatcher();
+    VirtualView view = new VirtualView();
     Match game;
 
     List<Player> order = new ArrayList<>();
@@ -49,18 +48,19 @@ public class MarketTrayTest {
         assertTrue(game.playerJoin(player2));
         order.add(player2);
 
+        game.initialize();
         Collections.rotate(order, order.indexOf(game.currentPlayer()));
         assertTrue(game.isGameOnAir());
 
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
         assertDoesNotThrow(()-> order.get(0).test_discardLeader());
-        assertEquals(HeaderTypes.GAME_START, order.get(0).endThisTurn().header);
+        order.get(0).endThisTurn();
 
-        assertEquals(HeaderTypes.OK, order.get(1).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN).header);
+        order.get(1).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN);
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(()-> order.get(1).test_discardLeader());
         assertDoesNotThrow(() -> assertEquals(order.get(1).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
-        assertEquals(HeaderTypes.GAME_START, order.get(1).endThisTurn().header);
+        order.get(1).endThisTurn();
     }
 
     /**
@@ -120,7 +120,6 @@ public class MarketTrayTest {
      */
     @Test
     public void pushRow() {
-        int row = 3;
         int col = 4;
 
         MarketTray tray = null;
@@ -272,11 +271,11 @@ public class MarketTrayTest {
 
     @Test
     public void outOfBound() {
-
         for (int i = 0; i < 5; i++) {
-            assertEquals(HeaderTypes.INVALID, game.currentPlayer().useMarketTray(RowCol.COL, 6).header);
+            List<Marble> before = game.viewMarketTray();
+            game.currentPlayer().useMarketTray(RowCol.COL, 6);
+            assertArrayEquals(before.toArray(), game.viewMarketTray().toArray());
         }
-
     }
 
     @Test

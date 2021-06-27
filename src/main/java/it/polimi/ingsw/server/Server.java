@@ -73,10 +73,10 @@ public class Server {
     public void start() {
         // server stopping mechanism
         new Thread(()-> {
-            if (new Scanner(System.in).nextLine().equalsIgnoreCase("stop")) System.exit(0);
+            while (true) if (new Scanner(System.in).nextLine().equalsIgnoreCase("quit")) System.exit(0);
         }).start();
 
-        System.out.println("Server ready. Type stop to quit");
+        System.out.println("Server ready. Type quit to stop the server.");
         while (active) {
             try {
                 Controller controller = new Controller(serverSocket.accept(), this);

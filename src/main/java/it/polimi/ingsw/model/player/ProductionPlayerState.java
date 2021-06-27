@@ -5,7 +5,6 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
-import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
@@ -46,19 +45,17 @@ public class ProductionPlayerState extends PlayerState{
     /**
      * This method set the normal production of an unknown production
      *
-     * @param normalProduction the input new normal production
      * @param id the id of the unknown production
-     * @return the succeed of the operation
+     * @param normalProduction the input new normal production
      */
     @Override
-    public Packet setNormalProduction(ProductionID id, NormalProduction normalProduction) {
+    public void setNormalProduction(ProductionID id, NormalProduction normalProduction) {
         try {
-            this.context.personalBoard.setNormalProduction(id, normalProduction);
+            context.personalBoard.setNormalProduction(id, normalProduction);
+            context.view.sendPlayerMessage(context.nickname, "You normalized " + id + " production");
         } catch (IllegalNormalProduction e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            context.view.sendPlayerError(context.nickname, e.getMessage());
         }
-
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You have normalized the " + id.name().toLowerCase() + " production");
     }
 
     /**
@@ -66,58 +63,47 @@ public class ProductionPlayerState extends PlayerState{
      * @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
-     * @return the succeed of the operation
      */
     @Override
-    public Packet moveInProduction(DepotSlot from, ProductionID dest, Resource loot) {
+    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) {
         try {
-            this.context.personalBoard.moveInProduction(from, dest, loot);
+            context.personalBoard.moveInProduction(from, dest, loot);
+            context.view.sendPlayerMessage(context.nickname, "Resources moved in production");
         } catch (Exception e) {
-            e.printStackTrace();
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            context.view.sendPlayerError(context.nickname, e.getMessage());
         }
-
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Resources moved in production");
     }
 
     /**
      * This method takes the resources from the Depots and the Strongbox to
      * activate the productions and insert the Resources obtained into the Strongbox
-     * @return the result of the operation
      */
     @Override
-    public Packet activateProductions() {
-        boolean res = false;
+    public void activateProductions() {
         try {
-            res = this.context.personalBoard.activateProductions();
+            if(context.personalBoard.activateProductions()) {
+                context.setState(new MainActionDonePlayerState(this.context));
+                context.view.sendPlayerMessage(context.nickname, "You activated the selected productions");
+            } else {
+                context.setState(new NoActionDonePlayerState(this.context));
+                context.view.sendPlayerError(context.nickname, "Incompatible added resources to activate the selected productions");
+            }
         }
 
         catch (EndGameException e) {
             this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
             this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
-            return new Packet(HeaderTypes.END_GAME, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
         }
 
         catch (Exception e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            context.view.sendPlayerError(context.nickname, e.getMessage());
         }
-
-        if(res){
-            this.context.setState(new MainActionDonePlayerState(this.context));
-        }
-        else{
-            this.context.setState(new NoActionDonePlayerState(this.context));
-        }
-
-        return res ?
-                new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You activated the selected productions"):
-                new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You have no requisites activate productions");
     }
 
     @Override
-    public Packet rollBack() {
-        this.context.setState(new NoActionDonePlayerState(this.context));
-        this.context.personalBoard.restoreProd();
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Action cancelled. Initial warehouse resource position restored.");
+    public void rollBack() {
+        context.setState(new NoActionDonePlayerState(this.context));
+        context.personalBoard.restoreProd();
+        context.view.sendPlayerMessage(context.nickname, "Action cancelled. Initial warehouse resource position restored.");
     }
 }

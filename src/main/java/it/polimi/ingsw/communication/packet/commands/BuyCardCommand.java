@@ -13,7 +13,7 @@ public class BuyCardCommand extends Command{
      * @param player the player on which execute the command
      */
     @Override
-    public Packet execute(PlayerAction player) {
-        return player.buyCard();
+    public void execute(PlayerAction player) {
+        player.buyCard();
     }
 }

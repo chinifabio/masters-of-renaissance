@@ -50,7 +50,7 @@ public class BuyDevCardCommand extends Command {
      * @param player the player on which execute the command
      */
     @Override
-    public Packet execute(PlayerAction player) {
-        return player.buyDevCard(this.row, this.col, this.destination);
+    public void execute(PlayerAction player) {
+        player.buyDevCard(this.row, this.col, this.destination);
     }
 }

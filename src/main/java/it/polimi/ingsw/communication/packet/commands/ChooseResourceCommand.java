@@ -19,7 +19,7 @@ public class ChooseResourceCommand extends Command{
     private final ResourceType res;
 
     /**
-     * The depot where place the choosen resource
+     * The depot where place the chosen resource
      */
     private final DepotSlot dest;
 
@@ -40,7 +40,7 @@ public class ChooseResourceCommand extends Command{
      * @param player the player on which execute the command
      */
     @Override
-    public Packet execute(PlayerAction player) {
-        return player.chooseResource(this.dest, this.res);
+    public void execute(PlayerAction player) {
+        player.chooseResource(this.dest, this.res);
     }
 }

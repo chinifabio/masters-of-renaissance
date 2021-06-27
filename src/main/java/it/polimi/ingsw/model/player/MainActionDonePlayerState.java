@@ -39,6 +39,7 @@ public class MainActionDonePlayerState extends PlayerState {
      */
     @Override
     public PlayerState reconnectionState() {
+        context.endThisTurn();
         return new NotHisTurnPlayerState(this.context);
     }
 
@@ -51,15 +52,20 @@ public class MainActionDonePlayerState extends PlayerState {
      * @param loot resource to move
      */
     @Override
-    public Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
-        if(to == DepotSlot.DEVBUFFER) return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You can't do that!");
+    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
+        if(to == DepotSlot.DEVBUFFER) {
+            context.view.sendPlayerError(context.nickname, "You can't do that!");
+            return;
+        }
+
         try {
             this.context.personalBoard.moveResourceDepot(from, to, loot);
         } catch (Exception e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            context.view.sendPlayerError(context.nickname, e.getMessage());
+            return;
         }
 
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Resource moved successfully");
+        context.view.sendPlayerMessage(context.nickname, "Resource moved successfully");
     }
 
     /**
@@ -67,13 +73,12 @@ public class MainActionDonePlayerState extends PlayerState {
      * @param leaderId the string that identify the leader card
      */
     @Override
-    public Packet activateLeaderCard(String leaderId) {
+    public void activateLeaderCard(String leaderId) {
         try {
-            return this.context.personalBoard.activateLeaderCard(leaderId) ?
-                    new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You have activate "+leaderId):
-                    new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, "You have no requisite to activate the leader");
+            if (this.context.personalBoard.activateLeaderCard(leaderId)) context.view.sendMessage("You activated "+leaderId);
+            else context.view.sendPlayerError(context.nickname, "You have not enough requisite to activate the leader");
         } catch (Exception e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            context.view.sendPlayerError(context.nickname, e.getMessage());
         }
     }
 
@@ -82,11 +87,12 @@ public class MainActionDonePlayerState extends PlayerState {
      * @param leaderId the string that identify the leader card to be discarded
      */
     @Override
-    public Packet discardLeader(String leaderId) {
+    public void discardLeader(String leaderId) {
         try {
             this.context.personalBoard.discardLeaderCard(leaderId);
         } catch (Exception e) {
-            return new Packet(HeaderTypes.INVALID, ChannelTypes.PLAYER_ACTIONS, e.getMessage());
+            context.view.sendPlayerError(context.nickname, e.getMessage());
+            return;
         }
 
         try {
@@ -96,21 +102,19 @@ public class MainActionDonePlayerState extends PlayerState {
         catch (EndGameException e) {
             this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
             this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
-            return new Packet(HeaderTypes.END_GAME, ChannelTypes.PLAYER_ACTIONS, e.getMessage());   // send the result
+            return;
         }
 
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "You discarded " + leaderId);
+        context.view.sendPlayerMessage(context.nickname, "You discarded " + leaderId);
     }
 
     /**
      * This method ends the turn of the Player
-     * @return true if the turn is correctly ended
      */
     @Override
-    public Packet endThisTurn() {
-        this.context.personalBoard.flushBufferDepot(this.context.match);
-        this.context.setState(new NotHisTurnPlayerState(this.context));
-        this.context.match.turnDone();
-        return new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Your turn is ended");
+    public void endThisTurn() {
+        context.personalBoard.flushBufferDepot(context.match);
+        context.setState(new NotHisTurnPlayerState(context));
+        context.match.turnDone();
     }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.communication.packet.updates.FaithTrackUpdater;
 import it.polimi.ingsw.litemodel.litefaithtrack.LiteFaithTrack;
-import it.polimi.ingsw.model.Dispatcher;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.match.PlayerToMatch;
@@ -38,7 +38,7 @@ public class FaithTrack implements MappableToLiteVersion {
     /**
      * the owner of the faith track
      */
-    private final Dispatcher view;
+    private final VirtualView view;
 
     /**
      * Nickname of the owner of the faith track
@@ -49,7 +49,7 @@ public class FaithTrack implements MappableToLiteVersion {
      * This method is the constructor of the class, it reads from a file the details of the track and creates a list of cells,
      * also it initialize the Player position to 0.
      */
-    public FaithTrack(Dispatcher view, String nickname) throws IOException {
+    public FaithTrack(VirtualView view, String nickname) throws IOException {
 
         this.track = new ObjectMapper().readValue(
                     getClass().getResourceAsStream("/json/FaithTrack.json"),

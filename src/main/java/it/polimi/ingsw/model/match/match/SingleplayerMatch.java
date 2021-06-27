@@ -7,7 +7,7 @@ import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.model.Pair;
 import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
 import it.polimi.ingsw.communication.packet.updates.TokenUpdater;
-import it.polimi.ingsw.model.Dispatcher;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
@@ -62,7 +62,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     /**
      * Build a single player game instance: the number of player that the game accept is 1 and the minimum 1
      */
-    public SingleplayerMatch(Dispatcher view) throws IOException {
+    public SingleplayerMatch(VirtualView view) throws IOException {
         super(1, view);
 
         List<SoloActionToken> init = new ObjectMapper().readValue(
@@ -115,16 +115,22 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
         if (player != null) return false;
 
         player = joined;
-        player.initialSetup = new Pair<>(0, 0);
+        return true;
+    }
+
+    /**
+     * Randomize the inkwell player and give the initial resources
+     */
+    @Override
+    public void initialize() {
+        player.setInitialSetup(new Pair<>(0, 0));
 
         List<String> playerOrder = new ArrayList<>();
         playerOrder.add(this.player.getNickname());
         view.publish(new PlayerOrderUpdater(playerOrder));
 
-
         player.startHisTurn();
         gameOnAir = true;
-        return true;
     }
 
     /**
@@ -192,19 +198,21 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      */
     @Override
     public void turnDone() {
-        try {
-            SoloActionToken s = this.soloToken.useAndDiscard();
-            s.useEffect(this);
-            view.sendMessage("Lorenzo used " + s.getCardID());
-            updateToken(s);
-        } catch (EmptyDeckException e) {
-            view.sendError("Lorenzo broke the game using a solo action token");
-        }
+        if (gameOnAir) {
+            try {
+                SoloActionToken s = this.soloToken.useAndDiscard();
+                s.useEffect(this);
+                view.sendMessage("Lorenzo used " + s.getCardID());
+                updateToken(s);
+            } catch (EmptyDeckException e) {
+                view.sendError("Lorenzo broke the game using a solo action token");
+            }
 
-        this.marketTray.unPaint();
-        updateTray();
-        if (gameOnAir) player.startHisTurn();
-        view.sendMessage("It is you turn!");
+            this.marketTray.unPaint();
+            updateTray();
+            player.startHisTurn();
+            view.sendMessage("It is you turn!");
+        }
     }
 
     /**
@@ -224,7 +232,6 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
         gameOnAir = false;
         if (model != null) model.matchEnded();
         player.setState(new CountingPointsPlayerState(player));
-        player.endThisTurn();
     }
 
     /**

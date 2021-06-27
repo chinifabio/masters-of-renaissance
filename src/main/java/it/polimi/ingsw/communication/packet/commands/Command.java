@@ -36,7 +36,7 @@ public abstract class Command {
      * The command to execute on a player action interface
      * @param player the player on which execute the command
      */
-    public abstract Packet execute(PlayerAction player);
+    public abstract void execute(PlayerAction player);
 
     /**
      * Return a json representation of the command

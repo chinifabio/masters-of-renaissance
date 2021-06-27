@@ -1,11 +1,10 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.Pair;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.updates.ConversionUpdater;
 import it.polimi.ingsw.communication.packet.updates.DiscountUpdater;
 import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
-import it.polimi.ingsw.model.Dispatcher;
+import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
@@ -41,7 +40,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     /**
      * This virtual view is used to notify all clients for changes in player holdings
      */
-    public final Dispatcher view;
+    public final VirtualView view;
 
     /**
      * this attribute flag the waiting state
@@ -88,7 +87,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * the first integer refer to the amount of resource to choose
      * second one integer refer to the amount of fait point player initially receive
      */
-    public Pair<Integer> initialSetup = new Pair<>(0,0);
+    protected Pair<Integer> initialSetup = new Pair<>(0,0);
 
     /**
      * the player state to set in case of reconnection
@@ -100,7 +99,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param nickname (type String) identifies the player
      * @throws IllegalTypeInProduction if the Basic Production of the PersonalBoard has IllegalResources
      */
-    public Player(String nickname, PlayerToMatch match, Dispatcher view) throws IllegalTypeInProduction, IOException {
+    public Player(String nickname, PlayerToMatch match, VirtualView view) throws IllegalTypeInProduction, IOException {
         this.view = view;
         this.nickname = nickname;
 
@@ -116,6 +115,18 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         this.match = match;
     }
 
+    /**
+     * Set the initial resource of the player in the game init
+     * @param integerPair a pair of integer representing the number of resources
+     */
+    public void setInitialSetup(Pair<Integer> integerPair) {
+        initialSetup = integerPair;
+    }
+
+    /**
+     * Return the total victory points obtained by the player in the match
+     * @return the victory points
+     */
     public int calculateVictoryPoints() {
         return personalBoard.getTotalVictoryPoints();
     }
@@ -257,11 +268,10 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * Use the market tray
      *  @param rc enum to identify if I am pushing row or col
      * @param index the index of the row or column of the tray
-     * @return true if the MarketTray is correctly used
      */
     @Override
-    public Packet useMarketTray(RowCol rc, int index) {
-        return this.playerState.useMarketTray(rc, index);
+    public void useMarketTray(RowCol rc, int index) {
+        playerState.useMarketTray(rc, index);
     }
 
     /**
@@ -271,8 +281,8 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param marbleIndex the index of chosen tray's marble to color
      */
     @Override
-    public Packet paintMarbleInTray(int conversionsIndex, int marbleIndex) {
-        return this.playerState.paintMarbleInTray(conversionsIndex, marbleIndex);
+    public void paintMarbleInTray(int conversionsIndex, int marbleIndex) {
+        playerState.paintMarbleInTray(conversionsIndex, marbleIndex);
     }
 
     /**
@@ -280,41 +290,38 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param row the row of the card required
      * @param col the column of the card required
      * @param destination the slot where put the dev card slot
-     * @return true if there where no issue, false instead
      */
     @Override
-    public Packet buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
-        return this.playerState.buyDevCard(row, col, destination);
+    public void buyDevCard(LevelDevCard row, ColorDevCard col, DevCardSlot destination) {
+        playerState.buyDevCard(row, col, destination);
     }
 
     /**
      *
      */
     @Override
-    public Packet buyCard() {
-        return this.playerState.buyCard();
+    public void buyCard() {
+        playerState.buyCard();
     }
 
     /**
      * This method takes the resources from the Depots and the Strongbox to
      * activate the productions and insert the Resources obtained into the Strongbox
-     * @return true if success
      */
     @Override
-    public Packet activateProductions() {
-        return this.playerState.activateProductions();
+    public void activateProductions() {
+        playerState.activateProductions();
     }
 
     /**
      * This method set the normal production of an unknown production
      *
-     * @param normalProduction the input new normal production
      * @param id the id of the unknown production
-     * @return the succeed of the operation
+     * @param normalProduction the input new normal production
      */
     @Override
-    public Packet setNormalProduction(ProductionID id, NormalProduction normalProduction) {
-        return this.playerState.setNormalProduction(id, normalProduction);
+    public void setNormalProduction(ProductionID id, NormalProduction normalProduction) {
+        playerState.setNormalProduction(id, normalProduction);
     }
 
     /**
@@ -322,11 +329,10 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param from the source of the resource to move
      * @param dest the destination of the resource to move
      * @param loot the resource to move
-     * @return the succeed of the operation
      */
     @Override
-    public Packet moveInProduction(DepotSlot from, ProductionID dest, Resource loot) {
-        return this.playerState.moveInProduction(from, dest, loot);
+    public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) {
+        playerState.moveInProduction(from, dest, loot);
     }
 
 
@@ -337,8 +343,8 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param loot the resource to move
      */
     @Override
-    public Packet moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
-        return this.playerState.moveBetweenDepot(from, to, loot);
+    public void moveBetweenDepot(DepotSlot from, DepotSlot to, Resource loot) {
+        playerState.moveBetweenDepot(from, to, loot);
     }
 
     /**
@@ -346,8 +352,8 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param leaderId the string that identify the leader card
      */
     @Override
-    public Packet activateLeaderCard(String leaderId) {
-        return this.playerState.activateLeaderCard(leaderId);
+    public void activateLeaderCard(String leaderId) {
+        playerState.activateLeaderCard(leaderId);
     }
 
 
@@ -356,35 +362,32 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param leaderId the string that identify the leader card to be discarded
      */
     @Override
-    public Packet discardLeader(String leaderId) {
-        return this.playerState.discardLeader(leaderId);
+    public void discardLeader(String leaderId) {
+        playerState.discardLeader(leaderId);
     }
 
     /**
      * The player ends its turn
-     * @return true if success, false otherwise
      */
     @Override
-    public Packet endThisTurn() {
-        return this.playerState.endThisTurn();
+    public void endThisTurn() {
+        playerState.endThisTurn();
     }
 
     /**
      * Used during the buydevcard/production phase to return to the initial warehouse state.
-     * @return a warning packet
      */
     @Override
-    public Packet rollBack() {
-        return this.playerState.rollBack();
+    public void rollBack() {
+        playerState.rollBack();
     }
 
     /**
      * Player asks to use productions
-     * @return the result of the operation
      */
     @Override
-    public Packet production() {
-        return this.playerState.production();
+    public void production() {
+        playerState.production();
     }
 
 
@@ -394,8 +397,8 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * @param chosen the resource chosen
      */
     @Override
-    public Packet chooseResource(DepotSlot slot, ResourceType chosen) {
-        return this.playerState.chooseResource(slot, chosen);
+    public void chooseResource(DepotSlot slot, ResourceType chosen) {
+        playerState.chooseResource(slot, chosen);
     }
 
     // match to player implementation
@@ -494,7 +497,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     @Override
     public String toString() {
-        return this.nickname;
+        return nickname;
     }
 
     /**
@@ -511,13 +514,13 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
 
     // FOR CHEATING
     @Override
-    public Packet resourceCheat() {
-        return this.playerState.resourceCheat();
+    public void resourceCheat() {
+        playerState.resourceCheat();
     }
 
     @Override
-    public Packet fpCheat(int fp) {
-        return this.playerState.fpCheat(fp);
+    public void fpCheat(int fp) {
+        playerState.fpCheat(fp);
     }
 
     // FOR TESTING
@@ -549,13 +552,6 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     public List<Marble> test_getConv() {
         return this.marbleConversions;
     }
-
-    public String test_getState() {
-        return this.playerState.toString();
-    }
-
-    //for testing
-    public LeaderCard test_getLeader(int x){ return this.personalBoard.test_getLeader(x); }
 
     // for testing
     public void test_endTurnNoMain() {

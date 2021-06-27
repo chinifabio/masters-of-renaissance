@@ -6,6 +6,7 @@ import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.*;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
@@ -250,7 +251,7 @@ public class CLI implements View {
     public void setState(CliState state) {
         this.state = state;
         notifyPlayer("");
-        notifyPlayer(state.entryMessage);
+        state.onEntry();
     }
 
     /**
@@ -301,10 +302,6 @@ public class CLI implements View {
         setState(new CliResultState(this));
     }
 
-    /**
-     *
-     * @param args
-     */
     public static void main(String[] args) {
         try {
             new CLI("localhost", 4444).start();
@@ -325,26 +322,23 @@ abstract class CliState {
     protected final CLI context;
 
     /**
-     * This attribute is the message that the Server
-     */
-    public final String entryMessage;
-
-
-    /**
-     * This method is the constructor of the class
-     * @param context is the CLI that will change its state
-     * @param entryMessage is the message of the Server
-     */
-    protected CliState(CLI context, String entryMessage) {
-        this.context = context;
-        this.entryMessage = entryMessage;
-    }
-
-    /**
      * This method manages the input of the user
      * @param userInput is the user's input
      */
     public abstract void handleInput(String userInput);
+
+    /**
+     * Function called on the entry of the state
+     */
+    protected abstract void onEntry();
+
+    /**
+     * This method is the constructor of the class
+     * @param context is the CLI that will change its state
+     */
+    protected CliState(CLI context) {
+        this.context = context;
+    }
 }
 
 /**
@@ -357,7 +351,12 @@ class CliWaitResultState extends CliState {
      * @param context is the CLI that will changes its state
      */
     CliWaitResultState(CLI context) {
-        super(context, "There was an error, quitting");
+        super(context);
+    }
+
+    @Override
+    public void onEntry() {
+        context.notifyPlayer("You ended you game, wait other player do their moves.");
     }
 
     /**
@@ -404,7 +403,12 @@ class ChooseNicknameCLI extends CliState {
      * @param context is the CLI that will changes its state
      */
     ChooseNicknameCLI(CLI context) {
-        super(context, "Choose your nickname:");
+        super(context);
+    }
+
+    @Override
+    public void onEntry() {
+        context.notifyPlayer("Type your nickname");
     }
 
     /**
@@ -425,7 +429,12 @@ class CliSetPlayersNumberState extends CliState {
      * @param context is the CLI that will changes its state
      */
     CliSetPlayersNumberState(CLI context) {
-        super(context, "How many players?");
+        super(context);
+    }
+
+    @Override
+    public void onEntry() {
+        context.notifyPlayer("How many players?");
     }
 
     /**
@@ -457,7 +466,12 @@ class CliLobbyWaitState extends CliState {
      * @param context is the CLI that will changes its state
      */
     CliLobbyWaitState(CLI context) {
-        super(context, "waiting for other players...");
+        super(context);
+    }
+
+    @Override
+    public void onEntry() {
+        context.notifyPlayer("waiting for other players...");
     }
 
     /**
@@ -477,7 +491,12 @@ class CliInGameState extends CliState {
      * @param context is the CLI that will changes its state
      */
     CliInGameState(CLI context) {
-        super(context, "Choose an action. Type help for commands.");
+        super(context);
+    }
+
+    @Override
+    public void onEntry() {
+        context.notifyPlayer("Choose an action. Type help for commands.");
     }
 
     /**
@@ -748,7 +767,12 @@ class CliInitGameState extends CliState {
      * @param context is the CLI that will changes its state
      */
     CliInitGameState(CLI context) {
-        super(context, "You have to discard leader cards and choose resource");
+        super(context);
+    }
+
+    @Override
+    public void onEntry() {
+        ShowLeaderCards.printLeaderCardsPlayer(context.model.getLeader(context.model.getMe()));
     }
 
     /**
@@ -820,7 +844,29 @@ class CliResultState extends CliState {
      * @param context is the CLI that will changes its state
      */
     CliResultState(CLI context) {
-        super(context, "Leaderboard");
+        super(context);
+    }
+
+    @Override
+    public void onEntry() {
+        context.notifyPlayer("Leaderboard\n");
+
+        List<String> medals = new ArrayList<>();
+        medals.add(Colors.YELLOW_BRIGHT);
+        medals.add(Colors.WHITE);
+        medals.add(Colors.YELLOW);
+        medals.add(Colors.WHITE_BRIGHT);
+
+        //context.notifyPlayer("pos - nickname - victory points - resource number\n");
+
+        int pos = 0;
+        for (Scoreboard.BoardEntry entry : context.model.getScoreboard().getBoard()) {
+            context.notifyPlayer(Colors.color(medals.get(Math.min(pos, 3)),
+                    (pos + 1) + "° - " +
+                    entry.getNickname() + (entry.getScore() >= 0 ? " - VP: " + entry.getScore() : ""
+            )));
+            pos++;
+        }
     }
 
     /**
@@ -829,6 +875,6 @@ class CliResultState extends CliState {
      */
     @Override
     public void handleInput(String userInput) {
-        System.out.println("work in progress");
+        if (userInput.equalsIgnoreCase("quit")) System.exit(0);
     }
 }

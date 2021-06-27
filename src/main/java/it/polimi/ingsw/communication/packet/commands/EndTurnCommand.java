@@ -1,6 +1,5 @@
 package it.polimi.ingsw.communication.packet.commands;
 
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.player.PlayerAction;
 
 /**
@@ -13,7 +12,7 @@ public class EndTurnCommand extends Command{
      * @param player the player on which execute the command
      */
     @Override
-    public Packet execute(PlayerAction player) {
-        return player.endThisTurn();
+    public void execute(PlayerAction player) {
+        player.endThisTurn();
     }
 }

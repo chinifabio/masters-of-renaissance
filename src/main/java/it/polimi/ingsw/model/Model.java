@@ -31,7 +31,7 @@ public class Model {
     /**
      * The virtual view used to notify all changes to clients
      */
-    public final Dispatcher dispatcher = new Dispatcher();
+    public final VirtualView virtualView = new VirtualView();
 
     /**
      * selected game size of the match
@@ -42,8 +42,8 @@ public class Model {
         gameSize = size;
 
         match = size == 1 ?
-                new SingleplayerMatch(dispatcher):
-                new MultiplayerMatch(size, dispatcher);
+                new SingleplayerMatch(virtualView):
+                new MultiplayerMatch(size, virtualView);
 
         match.setModel(this);
     }
@@ -52,10 +52,9 @@ public class Model {
      * This method execute the command passed on the mapped player of the passed client
      * @param client the player who run the command
      * @param command the command to execute
-     * @return the packet containing the result of the command to send back to the client
      */
-    public Packet handleClientCommand(Controller client, Command command) {
-        return command.execute(this.players.get(client));
+    public void handleClientCommand(Controller client, Command command) {
+        command.execute(players.get(client));
     }
 
     /**
@@ -64,15 +63,27 @@ public class Model {
      * @param nickname the nickname of the controller
      */
     public void login(Controller client, String nickname) throws Exception {
-        if (this.players.containsKey(client)) throw new Exception("Something strange is going on ༼ つ ◕_◕ ༽つ");
+        if (players.containsKey(client)) throw new Exception("Something strange is going on ༼ つ ◕_◕ ༽つ");
 
-        this.dispatcher.subscribe(nickname, client.socket);
+        Player p = new Player(nickname, match, virtualView);
+        if (!match.playerJoin(p)) throw new Exception("Something strange is going on ༼ つ ◕_◕ ༽つ");
 
-        Player p = new Player(nickname, this.match, this.dispatcher);
-        this.players.put(client, p);
-        if (!this.match.playerJoin(p)) throw new Exception("Something strange is going on ༼ つ ◕_◕ ༽つ");
+        virtualView.sendMessage(nickname + " joined the lobby!");
+        virtualView.subscribe(nickname, client.socket);
+        players.put(client, p);
 
+        virtualView.sendPlayerMessage(nickname, gameSize == 1 ?
+                "You joined a singleplayer match" :
+                "You joined a match of " + gameSize + " players");
+    }
+
+    /**
+     * Check if the connected player are equals to the game size. If true then start the game
+     */
+    public void checkStart() {
         if (match.playerInGame() == match.gameSize) {
+            match.initialize();
+            //virtualView.updateClients();
             players.forEach((controller, player) -> controller.gameInit());
         }
     }
@@ -85,10 +96,16 @@ public class Model {
         return gameSize - match.playerInGame();
     }
 
+    /**
+     * Set all the client render as in game so they can use market, productions ecc
+     */
     public void gameSetupDone() {
         players.forEach((controller, player) -> controller.gameStart());
     }
 
+    /**
+     * The current player end the game
+     */
     public void playerEndGame() {
         players
                 .entrySet()
@@ -97,10 +114,12 @@ public class Model {
                 .forEach(e -> e.getKey().gameEnd());
     }
 
+    /**
+     * Send the scoreboard to all the player and than fire the render of it
+     */
     public void matchEnded() {
-        dispatcher.publish(new ScoreboardUpdater(match.winnerCalculator()));
+        virtualView.publish(new ScoreboardUpdater(match.winnerCalculator()));
         players.forEach((controller, player) -> controller.gameScoreboard());
-
     }
 
     /**
@@ -120,7 +139,7 @@ public class Model {
      */
     public boolean reconnectPlayer(String nickname, Controller context) {
         this.players.put(context, this.match.reconnectPlayer(nickname));
-        this.dispatcher.subscribe(nickname, context.socket);
+        this.virtualView.subscribe(nickname, context.socket);
         System.out.println(Colors.color(Colors.GREEN_BRIGHT, nickname) + " reconnected");
         context.fireReconnection();
         return true;
