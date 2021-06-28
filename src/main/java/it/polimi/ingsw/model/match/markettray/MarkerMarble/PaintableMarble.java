@@ -30,16 +30,6 @@ public class PaintableMarble extends Marble{
     }
 
     /**
-     * build a new white marble which is paintable
-     * @param color is EMPTY because initially the white marble isn't painted
-     * @param optional the marble painted
-     */
-    private PaintableMarble(MarbleColor color, Optional<Marble> optional) {
-        super(color, ResourceType.EMPTY);
-        this.marble = optional;
-    }
-
-    /**
      * paints this marble
      * @return true because white marble is paintable
      */
@@ -56,6 +46,7 @@ public class PaintableMarble extends Marble{
     @Override
     public void paint(Marble painted){
         this.marble = Optional.of(painted);
+        color = painted.color;
     }
 
     /**
@@ -77,6 +68,7 @@ public class PaintableMarble extends Marble{
     @Override
     public void unPaint() {
         this.marble = Optional.empty();
+        color = MarbleColor.WHITE;
     }
 
     /**
@@ -86,7 +78,9 @@ public class PaintableMarble extends Marble{
      */
     @Override
     public Marble copy() {
-        return new PaintableMarble(MarbleColor.WHITE, this.marble);
+        return marble.isPresent() ?
+                marble.get().copy():
+                new PaintableMarble(MarbleColor.WHITE);
     }
 
     /**

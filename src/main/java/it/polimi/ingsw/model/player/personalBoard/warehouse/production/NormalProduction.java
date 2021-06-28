@@ -50,8 +50,6 @@ public class NormalProduction extends Production{
      * @param input the resource to insert
      * @return the succeed of the operation
      */
-    // todo return false if resource goes out of upper bound
-    // todo improve the code below so you don't need to create so many variables
     @Override
     public boolean insertResource(Resource input) {
         if (illegalType.contains(input.type())) return false;

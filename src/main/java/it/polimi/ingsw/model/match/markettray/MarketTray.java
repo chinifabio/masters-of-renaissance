@@ -154,7 +154,6 @@ public class MarketTray implements MappableToLiteVersion {
     /**
      * restore all marble in the tray
      */
-    //TODO TO TEST
     public void unPaint(){
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
@@ -173,7 +172,8 @@ public class MarketTray implements MappableToLiteVersion {
         LiteMarble[][] config = new LiteMarble[this.row][this.col];
 
         for (int i = 0; i < this.row; i++) {
-            System.arraycopy(Arrays.stream(this.marbles[i]).map(Marble::liteVersion).toArray(), 0, config[i], 0, this.col);
+            System.arraycopy(Arrays.stream(this.marbles[i]).map(Marble::liteVersion).toArray(), 0,
+                    config[i], 0, this.col);
         }
 
         return new LiteMarketTray(config, this.slideMarble.liteVersion(), this.row, this.col);

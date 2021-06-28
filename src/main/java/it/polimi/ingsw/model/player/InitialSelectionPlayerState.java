@@ -52,7 +52,6 @@ public class InitialSelectionPlayerState extends PlayerState {
         this.toChoose = initRes.one;
 
         try {
-            // todo addLeaderCards take a list of card as parameter so you don't send 4 update leader packets
             for(LeaderCard ld : this.context.match.requestLeaderCard()) this.context.personalBoard.addLeaderCard(ld);
         } catch (EmptyDeckException | AlreadyInDeckException e) {
             context.view.sendError(e.getMessage());

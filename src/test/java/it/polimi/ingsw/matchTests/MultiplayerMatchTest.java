@@ -109,19 +109,4 @@ public class MultiplayerMatchTest {
 
         assertFalse(multiplayer.isGameOnAir());
     }
-
-    /**
-     * create a single player match, a lorenzo player and some other test player.
-     * Then try to do some operation to the match and with assertion check if the return value of it is right,
-     * so you can know if the operation is succeed of failed.
-     */
-    @Test
-    public void buildMultiplayerTest() {
-        for(int i = 0; i < this.multiplayer.playerInGame(); i++){
-            // todo guardare che le risorse prese siano giuste
-            order.get(i).useMarketTray(RowCol.COL, 2);
-            order.get(i).useMarketTray(RowCol.COL, 2);
-            order.get(i).endThisTurn();
-        }
-    }
 }

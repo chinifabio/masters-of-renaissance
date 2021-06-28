@@ -17,6 +17,7 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,11 +41,11 @@ public class MarketTrayTest {
             fail(e.getMessage());
         }
 
-        assertDoesNotThrow(()->player1 = new Player("gino", game, view));
+        assertDoesNotThrow(() -> player1 = new Player("gino", game, view));
         assertTrue(game.playerJoin(player1));
         order.add(player1);
 
-        assertDoesNotThrow(()->player2 = new Player("pino", game, view));
+        assertDoesNotThrow(() -> player2 = new Player("pino", game, view));
         assertTrue(game.playerJoin(player2));
         order.add(player2);
 
@@ -52,13 +53,13 @@ public class MarketTrayTest {
         Collections.rotate(order, order.indexOf(game.currentPlayer()));
         assertTrue(game.isGameOnAir());
 
-        assertDoesNotThrow(()-> order.get(0).test_discardLeader());
-        assertDoesNotThrow(()-> order.get(0).test_discardLeader());
+        assertDoesNotThrow(() -> order.get(0).test_discardLeader());
+        assertDoesNotThrow(() -> order.get(0).test_discardLeader());
         order.get(0).endThisTurn();
 
         order.get(1).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN);
-        assertDoesNotThrow(()-> order.get(1).test_discardLeader());
-        assertDoesNotThrow(()-> order.get(1).test_discardLeader());
+        assertDoesNotThrow(() -> order.get(1).test_discardLeader());
+        assertDoesNotThrow(() -> order.get(1).test_discardLeader());
         assertDoesNotThrow(() -> assertEquals(order.get(1).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
         order.get(1).endThisTurn();
     }
@@ -85,7 +86,7 @@ public class MarketTrayTest {
         List<Marble> beforePush;
         Marble slide;
 
-        assertEquals(12,tray.showMarketTray().size());
+        assertEquals(12, tray.showMarketTray().size());
 
         beforePush = tray.showMarketTray();
         slide = tray.showSlideMarble();
@@ -103,13 +104,13 @@ public class MarketTrayTest {
         Marble temp = slide;
 
         slide = beforePush.get(shiftCol);
-        for(int i = shiftCol; i < shiftCol+(row-1)*col; i += col) {
-            beforePush.set(i, beforePush.get(i+col));
+        for (int i = shiftCol; i < shiftCol + (row - 1) * col; i += col) {
+            beforePush.set(i, beforePush.get(i + col));
         }
-        beforePush.set(shiftCol+(row-1)*col, temp);
+        beforePush.set(shiftCol + (row - 1) * col, temp);
 
         assertArrayEquals(beforePush.toArray(), tray.showMarketTray().toArray());
-        assertEquals(slide,tray.showSlideMarble());
+        assertEquals(slide, tray.showSlideMarble());
 
     }
 
@@ -139,7 +140,7 @@ public class MarketTrayTest {
 
         int shiftRow = 1;
 
-        try{
+        try {
             tray.pushRow(shiftRow, this.game.currentPlayer());
         } catch (Exception e) {
             e.printStackTrace();
@@ -147,13 +148,13 @@ public class MarketTrayTest {
         }
 
         Marble temp = slide;
-        int startPos = shiftRow*col;
+        int startPos = shiftRow * col;
 
         slide = beforePush.get(startPos);
         for (int i = 0; i < col - 1; i++) {
-            beforePush.set(startPos+i,(beforePush.get(startPos+i+1)));
+            beforePush.set(startPos + i, (beforePush.get(startPos + i + 1)));
         }
-        beforePush.set(startPos+col-1, temp);
+        beforePush.set(startPos + col - 1, temp);
 
         assertArrayEquals(beforePush.toArray(), tray.showMarketTray().toArray());
         assertEquals(slide, tray.showSlideMarble());
@@ -179,7 +180,7 @@ public class MarketTrayTest {
         List<Marble> initConfig = tray.showMarketTray();
 
         initConfig.forEach((Marble m) -> {
-            if(map.containsKey(m.color())){
+            if (map.containsKey(m.color())) {
                 int j = map.get(m.color());
                 map.put(m.color(), ++j);
             } else {
@@ -187,9 +188,9 @@ public class MarketTrayTest {
             }
         });
 
-        for(MarbleColor marbleColor : MarbleColor.values()){
-            if(!map.containsKey(marbleColor)){
-                map.put(marbleColor,0);
+        for (MarbleColor marbleColor : MarbleColor.values()) {
+            if (!map.containsKey(marbleColor)) {
+                map.put(marbleColor, 0);
             }
         }
 
@@ -244,7 +245,6 @@ public class MarketTrayTest {
         try {
             tray.paintMarble(conversion, i);
         } catch (UnpaintableMarbleException e) {
-            e.printStackTrace();
             fail();
         }
 
@@ -280,24 +280,39 @@ public class MarketTrayTest {
 
     @Test
     public void flushBufferTest() {
-        assertDoesNotThrow(()->game.currentPlayer().useMarketTray(RowCol.ROW, 0));
+        assertDoesNotThrow(() -> game.currentPlayer().useMarketTray(RowCol.ROW, 0));
 
         List<Resource> list = this.game.currentPlayer().test_getPB().getWH_forTest().viewResourcesInDepot(DepotSlot.BUFFER);
         int sum = 0;
-        for(Resource res : list) sum += res.amount();
+        for (Resource res : list) sum += res.amount();
 
-        assertDoesNotThrow(()->game.currentPlayer().endThisTurn());
+        assertDoesNotThrow(() -> game.currentPlayer().endThisTurn());
 
         assertEquals(sum, game.currentPlayer().test_getPB().getFT_forTest().getPlayerPosition());
-        assertDoesNotThrow(()->game.currentPlayer().endThisTurn());
+        assertDoesNotThrow(() -> game.currentPlayer().endThisTurn());
 
         assertEquals(ResourceBuilder.buildListOfStorable(), game.currentPlayer().test_getPB().getWH_forTest().viewResourcesInDepot(DepotSlot.BUFFER));
     }
 
     @Test
-    public void readingDimensions(){
-        DimensionReader dimensionReader = new DimensionReader(4,5);
+    public void readingDimensions() {
+        DimensionReader dimensionReader = new DimensionReader(4, 5);
         assertEquals(5, dimensionReader.col);
         assertEquals(4, dimensionReader.row);
+    }
+
+    @Test
+    public void unPainting() {
+        game.currentPlayer().addMarbleConversion(new Marble(MarbleColor.BLUE, ResourceType.SHIELD));
+
+        int i = 0;
+        List<Marble> marbles = game.viewMarketTray();
+
+        while (marbles.get(i).color() != MarbleColor.WHITE) i++;
+        game.currentPlayer().paintMarbleInTray(0, i);
+        assertFalse(Arrays.equals(marbles.toArray(), game.viewMarketTray().toArray()));
+
+        game.currentPlayer().test_endTurnNoMain();
+        assertArrayEquals(marbles.toArray(), game.viewMarketTray().toArray());
     }
 }
