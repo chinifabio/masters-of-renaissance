@@ -2,8 +2,6 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.communication.packet.updates.DevSetupUpdater;
-import it.polimi.ingsw.communication.packet.updates.TrayUpdater;
 import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.Model;
@@ -145,8 +143,8 @@ public abstract class Match implements PlayerToMatch {
     @Override
     public void useMarketTray(RowCol rc, int index) throws OutOfBoundMarketTrayException, UnobtainableResourceException, EndGameException, WrongDepotException {
         switch (rc) {
-            case COL: this.marketTray.pushCol(index, currentPlayer()); break;
-            case ROW: this.marketTray.pushRow(index, currentPlayer()); break;
+            case COL -> this.marketTray.pushCol(index, currentPlayer());
+            case ROW -> this.marketTray.pushRow(index, currentPlayer());
         }
 
         view.sendMessage(currentPlayer().getNickname() + " used market tray");
@@ -291,14 +289,14 @@ public abstract class Match implements PlayerToMatch {
      * Update in the lite model the market Tray
      */
     protected void updateTray() {
-        this.view.publish(new TrayUpdater(this.marketTray.liteVersion()));
+        view.publish(model -> model.setMarketTray(marketTray.liteVersion()));
     }
 
     /**
      * Update in the lite model the dev setup
      */
     protected void updateDevSetup() {
-        this.view.publish(new DevSetupUpdater(this.devSetup.liteVersion()));
+        this.view.publish(model -> model.setDevSetup(devSetup.liteVersion()));
     }
 
     /**

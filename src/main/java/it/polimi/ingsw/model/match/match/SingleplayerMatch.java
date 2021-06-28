@@ -2,11 +2,8 @@ package it.polimi.ingsw.model.match.match;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.communication.packet.updates.PlayerOrderUpdater;
 import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.model.Pair;
-import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
-import it.polimi.ingsw.communication.packet.updates.TokenUpdater;
 import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
@@ -75,7 +72,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
         this.discardedFromToken = new Deck<>();
 
-        this.view.publish(new NewPlayerUpdater(lorenzoNickname));
+        this.view.publish(model -> model.createPlayer(lorenzoNickname));
     }
 
     /**
@@ -125,9 +122,8 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     public void initialize() {
         player.setInitialSetup(new Pair<>(0, 0));
 
-        List<String> playerOrder = new ArrayList<>();
-        playerOrder.add(this.player.getNickname());
-        view.publish(new PlayerOrderUpdater(playerOrder));
+        // save the player order as a singleton list into the lite model
+        view.publish(model -> model.setPlayerOrder(Collections.singletonList(player.getNickname())));
 
         player.startHisTurn();
         gameOnAir = true;
@@ -202,10 +198,12 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
             try {
                 SoloActionToken s = this.soloToken.useAndDiscard();
                 s.useEffect(this);
-                view.sendMessage("Lorenzo used " + s.getCardID());
-                updateToken(s);
+                // update client regards lorenzo move
+                //view.sendMessage("Lorenzo used " + s.getCardID());
+                view.publish(model -> model.setSoloToken(s.liteVersion()));
             } catch (EmptyDeckException e) {
-                view.sendError("Lorenzo broke the game using a solo action token");
+                view.sendError("Lorenzo broke the game while using a solo action token");
+                startEndGameLogic();
             }
 
             this.marketTray.unPaint();
@@ -297,14 +295,6 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
         else scoreboard.addPlayerScore(lorenzoNickname, -1, -1);
 
         return scoreboard;
-    }
-
-    /**
-     * Update the solo token used by lorenzo into the lite model
-     * @param used solo token used
-     */
-    private void updateToken(SoloActionToken used) {
-        this.view.publish(new TokenUpdater(used.liteVersion()));
     }
 
     /**

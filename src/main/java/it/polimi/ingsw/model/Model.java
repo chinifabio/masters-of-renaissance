@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.Command;
-import it.polimi.ingsw.communication.packet.updates.ScoreboardUpdater;
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
@@ -83,7 +81,7 @@ public class Model {
     public void checkStart() {
         if (match.playerInGame() == match.gameSize) {
             match.initialize();
-            //virtualView.updateClients();
+            virtualView.updateClients();
             players.forEach((controller, player) -> controller.gameInit());
         }
     }
@@ -118,7 +116,8 @@ public class Model {
      * Send the scoreboard to all the player and than fire the render of it
      */
     public void matchEnded() {
-        virtualView.publish(new ScoreboardUpdater(match.winnerCalculator()));
+        virtualView.publish(model -> model.setScoreboard(match.winnerCalculator()));
+        virtualView.updateClients();
         players.forEach((controller, player) -> controller.gameScoreboard());
     }
 
@@ -128,7 +127,7 @@ public class Model {
      * @return the succeed of the operation
      */
     public boolean disconnectPlayer(Controller controller) {
-        return match.disconnectPlayer(players.get(controller));
+        return match.disconnectPlayer(players.remove(controller));
     }
 
     /**
@@ -138,8 +137,8 @@ public class Model {
      * @return the succeed of the operation
      */
     public boolean reconnectPlayer(String nickname, Controller context) {
-        this.players.put(context, this.match.reconnectPlayer(nickname));
-        this.virtualView.subscribe(nickname, context.socket);
+        players.put(context, match.reconnectPlayer(nickname));
+        virtualView.subscribe(nickname, context.socket);
         System.out.println(Colors.color(Colors.GREEN_BRIGHT, nickname) + " reconnected");
         context.fireReconnection();
         return true;

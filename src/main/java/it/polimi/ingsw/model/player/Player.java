@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.Pair;
-import it.polimi.ingsw.communication.packet.updates.ConversionUpdater;
-import it.polimi.ingsw.communication.packet.updates.DiscountUpdater;
-import it.polimi.ingsw.communication.packet.updates.NewPlayerUpdater;
 import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.exceptions.ExtraProductionException;
@@ -32,6 +29,7 @@ import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class identifies the Player
@@ -103,7 +101,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         this.view = view;
         this.nickname = nickname;
 
-        this.view.publish(new NewPlayerUpdater(nickname));
+        this.view.publish(model -> model.createPlayer(nickname));
 
         this.personalBoard = new PersonalBoard(this);
 
@@ -213,7 +211,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     public void addDiscount(ResourceType discount) {
         Resource temp = ResourceBuilder.buildFromType(discount, 1);
         this.marketDiscount.add(temp);
-        this.view.publish(new DiscountUpdater(this.nickname, new ArrayList<>(this.marketDiscount)));
+        view.publish(model -> model.setDiscounts(nickname, ResourceBuilder.mapResource(marketDiscount)));
     }
 
     /**
@@ -222,8 +220,8 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      */
     @Override
     public void addMarbleConversion(Marble newConversion) {
-        this.marbleConversions.add(newConversion);
-        this.view.publish(new ConversionUpdater(this.nickname, new ArrayList<>(this.marbleConversions)));
+        marbleConversions.add(newConversion);
+        view.publish(model -> model.setConversions(nickname, marbleConversions.stream().map(Marble::color).collect(Collectors.toList())));
     }
 
     /**

@@ -2,7 +2,6 @@ package it.polimi.ingsw.model.player.personalBoard.faithTrack;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.communication.packet.updates.FaithTrackUpdater;
 import it.polimi.ingsw.litemodel.litefaithtrack.LiteFaithTrack;
 import it.polimi.ingsw.model.VirtualView;
 import it.polimi.ingsw.model.MappableToLiteVersion;
@@ -53,7 +52,7 @@ public class FaithTrack implements MappableToLiteVersion {
 
         this.track = new ObjectMapper().readValue(
                     getClass().getResourceAsStream("/json/FaithTrack.json"),
-                    new TypeReference<List<Cell>>(){});
+                    new TypeReference<>(){});
 
         this.playerPosition = 0;
 
@@ -166,7 +165,7 @@ public class FaithTrack implements MappableToLiteVersion {
     }
 
     protected void updateFaithTrack() {
-        this.view.publish(new FaithTrackUpdater(this.nickname, this.liteVersion()));
+        view.publish(model -> model.updateFaithTrack(nickname, liteVersion()));
     }
 
     //Only for testing

@@ -1,10 +1,6 @@
 package it.polimi.ingsw.model.player.personalBoard;
 
-import it.polimi.ingsw.communication.packet.updates.DepotUpdater;
-import it.polimi.ingsw.communication.packet.updates.DevelopUpdater;
-import it.polimi.ingsw.communication.packet.updates.LeaderUpdater;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
-import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.model.cards.*;
 import it.polimi.ingsw.model.cards.effects.AddDiscountEffect;
 import it.polimi.ingsw.model.exceptions.ExtraProductionException;
@@ -29,13 +25,13 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalPro
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.requisite.Requisite;
-import it.polimi.ingsw.model.requisite.RequisiteType;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class identify the Player's PersonalBoard
@@ -163,23 +159,18 @@ public class PersonalBoard {
 
         for (Requisite req : card.getRequirements()) {
             switch (req.getRequisiteType()) {
-
-                case RESOURCE:
-                    Resource inWarehouse = warehouse.getTotalResources().stream().filter(x-> {
+                case RESOURCE -> {
+                    Resource inWarehouse = warehouse.getTotalResources().stream().filter(x -> {
                         try {
-                            return req.getType()==x.type();
+                            return req.getType() == x.type();
                         } catch (LootTypeException e) {
                             return false;
                         }
                     }).findAny().orElse(ResourceBuilder.buildEmpty());
-
                     if (req.getAmount() > inWarehouse.amount()) return false;
-                    //for (Resource resource : warehouse.getTotalResources()) {
-                    //    if (resource.equalsType(req.) && resource.amount() < req.getAmount()) return false;
-                    //}
-                    break;
+                }
 
-                case COLOR:
+                case COLOR -> {
                     int pbAmountColor = 0;
                     for (Map.Entry<DevCardSlot, Deck<DevCard>> entry : devDeck.entrySet()) {
                         for (DevCard devCard : entry.getValue().getCards()) {
@@ -189,9 +180,9 @@ public class PersonalBoard {
                         }
                     }
                     if (pbAmountColor < req.getAmount()) return false;
-                    break;
+                }
 
-                case CARD:
+                case CARD -> {
                     int pbAmountCard = 0;
                     for (Map.Entry<DevCardSlot, Deck<DevCard>> entry : devDeck.entrySet()) {
                         for (DevCard devCard : entry.getValue().getCards()) {
@@ -201,7 +192,7 @@ public class PersonalBoard {
                         }
                     }
                     if (pbAmountCard < req.getAmount()) return false;
-                    break;
+                }
             }
         }
 
@@ -265,7 +256,6 @@ public class PersonalBoard {
      * @param dest the destination of the resource to move
      * @param loot the resource to move
      * @return true if the Resources are correctly moved in Production
-     * @throws UnknownUnspecifiedException if the Production is Unspecified
      * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
      * @throws WrongDepotException if the Player can't take Resources from that Depot
      */
@@ -422,16 +412,16 @@ public class PersonalBoard {
     }
 
     private void updateLeader() {
-        List<LiteLeaderCard> deck = new ArrayList<>();
-        for (LeaderCard c : this.viewLeaderCard().getCards()) deck.add(c.liteVersion());
-
-        this.player.view.publish(new LeaderUpdater(this.player.getNickname(), deck));
+        player.view.publish(model -> model.setLeader(
+                player.getNickname(),
+                viewLeaderCard().getCards().stream().map(LeaderCard::liteVersion).collect(Collectors.toList())
+        ));
     }
 
     private void updateDevCard() {
         DevCard nullCard = new DevCard("Empty", new AddDiscountEffect(ResourceType.SERVANT), 0, LevelDevCard.NOLEVEL, ColorDevCard.NOCOLOR,  new ArrayList<>());
 
-        HashMap<DevCardSlot, List<LiteDevCard>> deck = new HashMap<DevCardSlot, List<LiteDevCard>>(){{
+        HashMap<DevCardSlot, List<LiteDevCard>> deck = new HashMap<>(){{
             put(DevCardSlot.LEFT, new ArrayList<>());
             put(DevCardSlot.CENTER, new ArrayList<>());
             put(DevCardSlot.RIGHT, new ArrayList<>());
@@ -450,19 +440,12 @@ public class PersonalBoard {
             }
         }
 
-        this.player.view.publish(new DevelopUpdater(this.player.getNickname(), deck));
+        player.view.publish(model -> model.setDevelop(player.getNickname(), deck));
     }
-    
-
-    protected void updateDepot(DepotSlot slot){
-        this.player.view.publish(new DepotUpdater(this.player.getNickname(), getDepots().get(slot).liteVersion(), slot));
-    }
-
 
     public Map<DepotSlot, Depot> getDepots() {
         return this.warehouse.getDepot();
     }
-
 
     // only for testing
     public FaithTrack getFT_forTest() {

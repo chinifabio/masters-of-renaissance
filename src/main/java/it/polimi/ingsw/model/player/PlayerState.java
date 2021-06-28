@@ -198,8 +198,8 @@ public abstract class PlayerState implements PlayerAction {
      */
     @Override
     public void resourceCheat() {
-        for (ResourceType loop : ResourceType.storable()) context.obtainResource(DepotSlot.STRONGBOX, ResourceBuilder.buildFromType(loop,50));
         context.view.sendPlayerMessage(context.nickname, "Cheat codes activated! You got 50 resource of any type in the strongbox");
+        for (ResourceType loop : ResourceType.storable()) context.obtainResource(DepotSlot.STRONGBOX, ResourceBuilder.buildFromType(loop,50));
     }
 
     /**
@@ -207,7 +207,7 @@ public abstract class PlayerState implements PlayerAction {
      */
     @Override
     public void fpCheat(int fp) {
-        this.context.obtainResource(DepotSlot.STRONGBOX, ResourceBuilder.buildFaithPoint(fp));
         context.view.sendPlayerMessage(context.nickname, "Cheat codes activated! You move forward in the faith track");
+        this.context.obtainResource(DepotSlot.STRONGBOX, ResourceBuilder.buildFaithPoint(fp));
     }
 }

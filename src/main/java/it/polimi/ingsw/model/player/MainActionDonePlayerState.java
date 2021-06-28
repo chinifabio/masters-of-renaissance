@@ -39,7 +39,7 @@ public class MainActionDonePlayerState extends PlayerState {
      */
     @Override
     public PlayerState reconnectionState() {
-        context.endThisTurn();
+        context.match.turnDone();
         return new NotHisTurnPlayerState(this.context);
     }
 

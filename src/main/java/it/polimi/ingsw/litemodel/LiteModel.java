@@ -2,6 +2,7 @@ package it.polimi.ingsw.litemodel;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
@@ -27,17 +28,20 @@ public class LiteModel {
     private LiteMarketTray tray;
     private LiteDevSetup devSetup;
 
-    private LiteSoloActionToken soloToken;
+    private LiteSoloActionToken soloToken = new LiteSoloActionToken("null", null);
 
     private List<String> playerOrder = new ArrayList<>();
 
     private Scoreboard scoreboard;
 
+    @JsonIgnore
+    private boolean updatedToken;
+
     @JsonCreator
     public LiteModel(){}
 
     public synchronized void createPlayer(String nickname) {
-        this.players.put(nickname, new LitePersonalBoard());
+        players.put(nickname, new LitePersonalBoard());
     }
 
     /**
@@ -45,14 +49,19 @@ public class LiteModel {
      * @param model model of the view
      */
     public void replaceModel(LiteModel model) {
-        model.players.forEach(this.players::put);
+        model.players.forEach(players::put);
         playerOrder = model.playerOrder;
 
-        this.tray = model.getTray();
-        this.devSetup = model.getDevSetup();
+        tray = model.getTray();
+        devSetup = model.getDevSetup();
 
-        this.soloToken = model.soloToken;
-        this.scoreboard = model.scoreboard;
+        updatedToken = !model.soloToken.equals(soloToken);
+        soloToken = model.soloToken;
+        scoreboard = model.scoreboard;
+    }
+
+    public boolean tokenWereUpdated() {
+        return updatedToken;
     }
 
 // --------------- SETTER METHODS ------------------
@@ -98,9 +107,8 @@ public class LiteModel {
     }
 
     public synchronized void setSoloToken(LiteSoloActionToken token) {
-            this.soloToken = token;
+        soloToken = token;
     }
-
 
     public synchronized void setDiscounts(String nickname, List<LiteResource> discounts) {
         this.players.get(nickname).setDiscounts(discounts);
@@ -109,6 +117,7 @@ public class LiteModel {
     public synchronized void setConversions(String nickname, List<MarbleColor> collect) {
         this.players.get(nickname).setConversions(collect);
     }
+
 
     public synchronized void setPlayerOrder(List<String> playerOrder){
         this.playerOrder = playerOrder;

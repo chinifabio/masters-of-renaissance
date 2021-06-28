@@ -1,11 +1,11 @@
-package it.polimi.ingsw.communication.packet.updates;
+package it.polimi.ingsw.communication.packet.clientexecutable;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.view.View;
 
-public class ModelUpdater extends Updater {
+public class ModelUpdater extends ClientExecutable {
     private final LiteModel model;
 
     @JsonCreator
@@ -16,10 +16,12 @@ public class ModelUpdater extends Updater {
     /**
      * Take a lite model as input and apply to the implementing function
      *
-     * @param liteModel the lite model on the client
+     * @param view the lite model on the client
      */
     @Override
-    public void update(LiteModel liteModel) {
-        liteModel.replaceModel(this.model);
+    public void execute(View view) {
+        view.getModel().replaceModel(model);
+        if (view.getModel().tokenWereUpdated()) view.popUpLorenzoMoves();
+        view.refresh();
     }
 }

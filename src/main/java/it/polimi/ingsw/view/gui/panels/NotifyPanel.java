@@ -27,7 +27,7 @@ public class NotifyPanel extends JPanel{
      * @param message is the new message to append
      * @param bg is the color of the message
      */
-    public void appendMessage(String message, Color bg) {
+    public synchronized void appendMessage(String message, Color bg) {
         JLabel label = new JLabel();
         label.setOpaque(true);
         label.setBackground(bg);

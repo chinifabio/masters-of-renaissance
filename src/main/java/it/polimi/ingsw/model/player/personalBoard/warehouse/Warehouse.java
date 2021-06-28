@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model.player.personalBoard.warehouse;
 
-import it.polimi.ingsw.communication.packet.updates.DepotUpdater;
-import it.polimi.ingsw.communication.packet.updates.ProductionUpdater;
 import it.polimi.ingsw.model.exceptions.ExtraProductionException;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
@@ -165,7 +163,6 @@ public class Warehouse {
      * @param resource is the resources to move
      * @return true if the resources are correctly moved
      * @throws NegativeResourcesDepotException if the Depot hasn't enough resources
-     * @throws UnknownUnspecifiedException if the Production is unspecified
      * @throws WrongDepotException is the Player can't take resources from that Depot
      */
     public boolean moveInProduction(DepotSlot from, ProductionID dest, Resource resource) throws NegativeResourcesDepotException, WrongDepotException {
@@ -399,11 +396,11 @@ public class Warehouse {
     }
 
     protected void updateDepot(DepotSlot depot) {
-        this.player.view.publish(new DepotUpdater(this.player.getNickname(), this.depots.get(depot).liteVersion(), depot));
+        player.view.publish(model -> model.setDepot(player.getNickname(), depot, depots.get(depot).liteVersion()));
     }
 
     protected void updateProduction(ProductionID prod) {
-        this.player.view.publish(new ProductionUpdater(this.player.getNickname(), this.availableProductions.get(prod).liteVersion(), prod));
+        player.view.publish(model -> model.setProduction(player.getNickname(), availableProductions.get(prod).liteVersion(), prod));
     }
 
     // for testing
@@ -414,6 +411,4 @@ public class Warehouse {
     public Map<ProductionID, Production> test_getProduction() {
         return this.availableProductions;
     }
-
-
 }

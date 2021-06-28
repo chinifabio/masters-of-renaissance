@@ -3,6 +3,8 @@ package it.polimi.ingsw.litemodel.litecards;
 import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
 
+import java.util.HashMap;
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonSubTypes({
@@ -28,5 +30,15 @@ public abstract class LiteCard {
 
     public LiteEffect getEffect() {
         return effect;
+    }
+
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     * @return true the two card are equals from their ID
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof LiteCard) return cardID.equals(((LiteCard) obj).cardID);
+        else return false;
     }
 }

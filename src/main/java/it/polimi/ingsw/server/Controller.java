@@ -4,10 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.communication.SocketListener;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
+import it.polimi.ingsw.communication.packet.clientexecutable.ClientExecutable;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
+import it.polimi.ingsw.communication.packet.clientexecutable.*;
 import it.polimi.ingsw.communication.packet.commands.Command;
-import it.polimi.ingsw.communication.packet.rendering.*;
 import it.polimi.ingsw.model.Model;
 import it.polimi.ingsw.view.cli.Colors;
 
@@ -77,7 +78,7 @@ public class Controller implements Runnable {
      * @param message the message to send
      */
     public void invalid(String message) {
-        socket.send(new Packet(HeaderTypes.INVALID, ChannelTypes.MESSENGER, message));
+        socket.send(new Packet(HeaderTypes.INVALID, ChannelTypes.MESSENGER, new PlayerError(message).jsonfy()));
     }
 
     /**
@@ -85,7 +86,7 @@ public class Controller implements Runnable {
      * @param message the message to send
      */
     public void sendMessage(String message) {
-        socket.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.MESSENGER, message));
+        socket.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.MESSENGER, new PlayerMessage(message).jsonfy()));
     }
 
     /**
@@ -145,11 +146,6 @@ public class Controller implements Runnable {
                 case PLAYER_ACTIONS -> {
                     System.out.println(Colors.color(Colors.CYAN, nickname) + ": " + received);
                     state.handleMessage(received, this);
-                    socket.send(new Packet(HeaderTypes.OK, ChannelTypes.PLAYER_ACTIONS, "Communication ended"));
-                }
-
-                case MESSENGER -> {
-                    // model.sendChat()
                 }
 
                 case CONNECTION_STATUS -> {
@@ -182,7 +178,7 @@ interface ControllerState {
      * Return a scene to render in the view of the client
      * @return a packet that fire the render of a scene
      */
-    Lighter renderCannonAmmo();
+    ClientExecutable renderCannonAmmo();
 }
 
 class ChooseNickname implements ControllerState {
@@ -258,7 +254,7 @@ class ChooseNickname implements ControllerState {
      * @return a packet that fire the render of a scene
      */
     @Override
-    public Lighter renderCannonAmmo() {
+    public ClientExecutable renderCannonAmmo() {
         return null; // client always start with this render
     }
 }
@@ -273,10 +269,6 @@ class ChoosePlayerNumber implements ControllerState {
     @Override
     public void
     handleMessage(Packet packet, Controller context) {
-        if (packet.header != HeaderTypes.SET_PLAYERS_NUMBER) {
-            context.invalid("invalid packet: " + packet.header + "; expected " + HeaderTypes.SET_PLAYERS_NUMBER);
-            return;
-        }
         try {
             int n = -1;
             try {
@@ -330,7 +322,7 @@ class ChoosePlayerNumber implements ControllerState {
      * @return a packet that fire the render of a scene
      */
     @Override
-    public Lighter renderCannonAmmo() {
+    public ClientExecutable renderCannonAmmo() {
         return new FireGameCreator();
     }
 }
@@ -364,7 +356,7 @@ class WaitingInLobby implements ControllerState {
      * @return a packet that fire the render of a scene
      */
     @Override
-    public Lighter renderCannonAmmo() {
+    public ClientExecutable renderCannonAmmo() {
         return new FireLobbyWait();
     }
 }
@@ -386,7 +378,7 @@ class GameInit implements ControllerState {
         try {
             context.model.handleClientCommand(context,
                     new ObjectMapper().readerFor(Command.class).readValue(packet.body));
-            //context.model.virtualView.updateClients();
+            context.model.virtualView.updateClients();
         } catch (JsonProcessingException e) {
             context.invalid("Invalid packet received!" + e.getMessage());
         }
@@ -409,7 +401,7 @@ class GameInit implements ControllerState {
      * @return a packet that fire the render of a scene
      */
     @Override
-    public Lighter renderCannonAmmo() {
+    public ClientExecutable renderCannonAmmo() {
         return new FireGameInit();
     }
 }
@@ -432,7 +424,7 @@ class InGameState implements ControllerState {
         try {
             context.model.handleClientCommand(context,
                     new ObjectMapper().readerFor(Command.class).readValue(packet.body));
-            //context.model.virtualView.updateClients();
+            context.model.virtualView.updateClients();
         } catch (JsonProcessingException e) {
             context.invalid("Invalid packet received!" + e.getMessage());
         }
@@ -454,7 +446,7 @@ class InGameState implements ControllerState {
      * @return a packet that fire the render of a scene
      */
     @Override
-    public Lighter renderCannonAmmo() {
+    public ClientExecutable renderCannonAmmo() {
         return new FireGameSession();
     }
 }
@@ -488,7 +480,7 @@ class WaitingResult implements ControllerState {
      * @return a packet that fire the render of a scene
      */
     @Override
-    public Lighter renderCannonAmmo() {
+    public ClientExecutable renderCannonAmmo() {
         return new FireGameEnded();
     }
 }
@@ -521,7 +513,7 @@ class GameScoreboard implements ControllerState {
      * @return a packet that fire the render of a scene
      */
     @Override
-    public Lighter renderCannonAmmo() {
+    public ClientExecutable renderCannonAmmo() {
         return new FireGameResult();
     }
 }

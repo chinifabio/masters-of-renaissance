@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.match.match;
 
-import it.polimi.ingsw.communication.packet.updates.PlayerOrderUpdater;
 import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.model.Pair;
 import it.polimi.ingsw.model.VirtualView;
@@ -11,6 +10,7 @@ import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class represents the MultiplayerMatch
@@ -68,9 +68,8 @@ public class MultiplayerMatch extends Match{
         Random rand = new Random();
         Collections.rotate(connectedPlayers, rand.nextInt(connectedPlayers.size()));
 
-        List<String> playerOrder = new ArrayList<>();
-        connectedPlayers.forEach(x -> playerOrder.add(x.getNickname())); // save player order into the lite model
-        view.publish(new PlayerOrderUpdater(playerOrder));
+        // save player order into the lite model
+        view.publish(model -> model.setPlayerOrder(connectedPlayers.stream().map(Player::getNickname).collect(Collectors.toList())));
 
         List<Pair<Integer>> initialResourcesSetup = new ArrayList<>();
 

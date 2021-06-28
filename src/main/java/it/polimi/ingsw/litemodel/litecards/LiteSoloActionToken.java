@@ -10,4 +10,13 @@ public class LiteSoloActionToken extends LiteCard {
         super(cardID, effect);
     }
 
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return getCardID();
+    }
 }

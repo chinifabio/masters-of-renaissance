@@ -4,13 +4,14 @@ import it.polimi.ingsw.communication.SocketListener;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.communication.packet.rendering.Lighter;
-import it.polimi.ingsw.communication.packet.updates.ModelUpdater;
-import it.polimi.ingsw.communication.packet.updates.Updater;
+import it.polimi.ingsw.communication.packet.clientexecutable.PlayerError;
+import it.polimi.ingsw.communication.packet.clientexecutable.PlayerMessage;
+import it.polimi.ingsw.communication.packet.clientexecutable.ModelUpdater;
 import it.polimi.ingsw.litemodel.LiteModel;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * The virtual view is used to send the the client packet of messenger and update lite model channels
@@ -41,7 +42,10 @@ public class VirtualView {
      * @param message the message to send
      */
     public void sendMessage(String message) {
-        for (SocketListener x : listeners.values()) x.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.MESSENGER, message));
+        String exe = new PlayerMessage(message).jsonfy();
+        for (SocketListener x : listeners.values()) x.send(
+                new Packet(HeaderTypes.NOTIFY, ChannelTypes.MESSENGER, exe)
+        );
     }
 
     /**
@@ -49,7 +53,10 @@ public class VirtualView {
      * @param message the error message
      */
     public void sendError(String message) {
-        for (SocketListener x : listeners.values()) x.send(new Packet(HeaderTypes.INVALID, ChannelTypes.MESSENGER, message));
+        String exe = new PlayerError(message).jsonfy();
+        for (SocketListener x : listeners.values()) x.send(
+                new Packet(HeaderTypes.INVALID, ChannelTypes.MESSENGER, exe)
+        );
     }
 
     /**
@@ -62,7 +69,9 @@ public class VirtualView {
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().equals(nickname))
-                .forEach(entry -> entry.getValue().send(new Packet(HeaderTypes.INVALID, ChannelTypes.MESSENGER, message)));
+                .forEach(entry -> entry.getValue().send(
+                        new Packet(HeaderTypes.INVALID, ChannelTypes.MESSENGER, new PlayerError(message).jsonfy())
+                ));
     }
 
     /**
@@ -75,30 +84,22 @@ public class VirtualView {
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().equals(nickname))
-                .forEach(entry -> entry.getValue().send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.MESSENGER, message)));
-    }
-
-    /**
-     * Send a packet to the nickname client the render for a scene that need to be render
-     * @param ammo the render of the scene
-     */
-    public void sendRenderAmmo(String nickname, Lighter ammo) {
-        listeners
-                .entrySet()
-                .stream()
-                .filter(entry -> entry.getKey().equals(nickname))
-                .forEach(entry -> entry.getValue().send(new Packet(HeaderTypes.INVALID, ChannelTypes.RENDER_CANNON, ammo.jsonfy())));
+                .forEach(entry -> entry.getValue().send(
+                        new Packet(HeaderTypes.NOTIFY, ChannelTypes.MESSENGER, new PlayerMessage(message).jsonfy())
+                ));
     }
 
     /**
      * Send a lite model updater packet to all the player before applying it to the local lite model so it is updated
      * @param updater the lite model update
      */
-    public void publish(Updater updater) {
-        updater.update(model);
-        for (SocketListener x : listeners.values()) x.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.UPDATE_LITE_MODEL, updater.jsonfy()));
+    public void publish(Consumer<LiteModel> updater) {
+        updater.accept(model);
     }
 
+    /**
+     * Send a copy of the lite model to all the subscribed clients
+     */
     public void updateClients() {
         for (SocketListener sock : listeners.values())
             sock.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.UPDATE_LITE_MODEL, new ModelUpdater(model).jsonfy()));

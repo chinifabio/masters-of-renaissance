@@ -245,18 +245,16 @@ public class GUI extends JFrame implements View {
      * This method change the current panel with the one passed
      * @param panelGenerator is the new Panel to show
      */
-    public void switchPanels(GuiPanel panelGenerator){
-        synchronized (gamePanel) {
-            actualPanel = panelGenerator;
-            refresh();
-        }
+    public synchronized void switchPanels(GuiPanel panelGenerator){
+        actualPanel = panelGenerator;
+        refresh();
     }
 
     /**
      * This method recreate the Panel after a change
      */
     @Override
-    public void refresh() {
+    public synchronized void refresh() {
         try {
             JPanel newPanel = actualPanel.update();
             gamePanel.removeAll();
