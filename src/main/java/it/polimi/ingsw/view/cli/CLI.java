@@ -8,6 +8,7 @@ import it.polimi.ingsw.communication.packet.commands.*;
 import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.Scoreboard;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
+import it.polimi.ingsw.litemodel.litecards.LiteSoloActionToken;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
@@ -164,12 +165,13 @@ public class CLI implements View {
 
     /**
      * This method prints the SoloActionToken in singleplayer
+     * @param token token to show
      */
     @Override
-    public void popUpLorenzoMoves() {
+    public void popUpLorenzoMoves(LiteSoloActionToken token) {
         try {
             synchronized (printerLock) {
-                SoloActionTokenPrinter.printSoloActionToken(model.getSoloToken());
+                SoloActionTokenPrinter.printSoloActionToken(token);
             }
         } catch (NullPointerException nul) {
             notifyPlayerError("No token to visualize");

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.litemodel.litecards.LiteSoloActionToken;
 
 /**
  * This interface is the View
@@ -21,8 +22,9 @@ public interface View {
 
     /**
      * Show to the player the move performed by Lorenzo
+     * @param token token to show
      */
-    void popUpLorenzoMoves();
+    void popUpLorenzoMoves(LiteSoloActionToken token);
 
     /**
      * This method changes the state of the Client interface in the initial state

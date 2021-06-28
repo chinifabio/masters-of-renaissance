@@ -4,10 +4,12 @@ import it.polimi.ingsw.communication.SocketListener;
 import it.polimi.ingsw.communication.packet.ChannelTypes;
 import it.polimi.ingsw.communication.packet.HeaderTypes;
 import it.polimi.ingsw.communication.packet.Packet;
+import it.polimi.ingsw.communication.packet.clientexecutable.LorenzoPopUp;
 import it.polimi.ingsw.communication.packet.clientexecutable.PlayerError;
 import it.polimi.ingsw.communication.packet.clientexecutable.PlayerMessage;
 import it.polimi.ingsw.communication.packet.clientexecutable.ModelUpdater;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.model.cards.SoloActionToken;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -103,5 +105,10 @@ public class VirtualView {
     public void updateClients() {
         for (SocketListener sock : listeners.values())
             sock.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.UPDATE_LITE_MODEL, new ModelUpdater(model).jsonfy()));
+    }
+
+    public void sendToken(SoloActionToken token) {
+        for (SocketListener socketListener : listeners.values())
+            socketListener.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.UPDATE_LITE_MODEL, new LorenzoPopUp(token.liteVersion()).jsonfy()));
     }
 }

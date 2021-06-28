@@ -7,6 +7,7 @@ import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.communication.packet.commands.FaithPointCheatCommand;
 import it.polimi.ingsw.communication.packet.commands.ResourceCheatCommand;
 import it.polimi.ingsw.litemodel.LiteModel;
+import it.polimi.ingsw.litemodel.litecards.LiteSoloActionToken;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.ClientPacketHandler;
 import it.polimi.ingsw.view.View;
@@ -112,11 +113,12 @@ public class GUI extends JFrame implements View {
 
     /**
      * This method show to the Player the Lorenzo move in the SinglePlayer Mode
+     * @param token token to show
      */
     @Override
-    public void popUpLorenzoMoves() {
+    public void popUpLorenzoMoves(LiteSoloActionToken token) {
         try {
-            ImageIcon icon = new ImageIcon(Objects.requireNonNull(this.getClass().getResource("/SoloActionTokenImages/" + model.getSoloToken().getCardID() + ".png")));
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(this.getClass().getResource("/SoloActionTokenImages/" + token + ".png")));
             JOptionPane.showMessageDialog(
                     null,
                     null,

@@ -21,7 +21,6 @@ public class ModelUpdater extends ClientExecutable {
     @Override
     public void execute(View view) {
         view.getModel().replaceModel(model);
-        if (view.getModel().tokenWereUpdated()) view.popUpLorenzoMoves();
         view.refresh();
     }
 }

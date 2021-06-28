@@ -28,14 +28,10 @@ public class LiteModel {
     private LiteMarketTray tray;
     private LiteDevSetup devSetup;
 
-    private LiteSoloActionToken soloToken = new LiteSoloActionToken("null", null);
-
     private List<String> playerOrder = new ArrayList<>();
 
     private Scoreboard scoreboard;
 
-    @JsonIgnore
-    private boolean updatedToken;
 
     @JsonCreator
     public LiteModel(){}
@@ -55,13 +51,7 @@ public class LiteModel {
         tray = model.getTray();
         devSetup = model.getDevSetup();
 
-        updatedToken = !model.soloToken.equals(soloToken);
-        soloToken = model.soloToken;
         scoreboard = model.scoreboard;
-    }
-
-    public boolean tokenWereUpdated() {
-        return updatedToken;
     }
 
 // --------------- SETTER METHODS ------------------
@@ -104,10 +94,6 @@ public class LiteModel {
 
     public synchronized void setDepot(String nickname, DepotSlot slot, LiteDepot depot) {
         this.players.get(nickname).setDepot(slot, depot);
-    }
-
-    public synchronized void setSoloToken(LiteSoloActionToken token) {
-        soloToken = token;
     }
 
     public synchronized void setDiscounts(String nickname, List<LiteResource> discounts) {
@@ -179,10 +165,6 @@ public class LiteModel {
 
     public synchronized int playersInGame() {
         return this.players.values().size();
-    }
-
-    public synchronized LiteSoloActionToken getSoloToken() {
-        return this.soloToken;
     }
 
     public synchronized String getMe() {

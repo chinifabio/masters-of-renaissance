@@ -1,13 +1,17 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.server.Server;
+import it.polimi.ingsw.view.View;
 import it.polimi.ingsw.view.cli.CLI;
 import it.polimi.ingsw.view.gui.GUI;
 
 import java.awt.*;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Hello world!
@@ -18,6 +22,7 @@ public class Launcher
     public static void main(String[] arg){
 
         List<String> arguments = Arrays.asList(arg);
+        View view;
 
         try {
             switch (arguments.get(0)) {

@@ -153,6 +153,8 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
         List<LevelDevCard> levels = new ArrayList<>(Arrays.asList(LevelDevCard.values()));
         levels.remove(LevelDevCard.NOLEVEL);
 
+        view.sendMessage("Lorenzo discards " + toDiscard + " " + color.name().toLowerCase() + " cards");
+
         for(int i = 0; i < toDiscard; i++) {
             Iterator<LevelDevCard> levelDevCardIterator = levels.iterator();
             boolean res = false;
@@ -198,9 +200,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
             try {
                 SoloActionToken s = this.soloToken.useAndDiscard();
                 s.useEffect(this);
-                // update client regards lorenzo move
-                //view.sendMessage("Lorenzo used " + s.getCardID());
-                view.publish(model -> model.setSoloToken(s.liteVersion()));
+                view.sendToken(s);
             } catch (EmptyDeckException e) {
                 view.sendError("Lorenzo broke the game while using a solo action token");
                 startEndGameLogic();

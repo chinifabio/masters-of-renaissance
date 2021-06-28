@@ -76,20 +76,4 @@ public class SoloActionTokenPrinter {
         }
         System.out.println();
     }
-
-    /*
-    public static void main(String[] args) throws EmptyDeckException, IOException {
-        List<SoloActionToken> tokens;
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        tokens = objectMapper.readValue(
-                SoloActionTokenPrinter.class.getResourceAsStream("/json/SoloActionTokens.json"),
-                new TypeReference<List<SoloActionToken>>(){});
-        for (SoloActionToken token : tokens){
-            printSoloActionToken(token.liteVersion());
-        }
-    }
-
-     */
 }

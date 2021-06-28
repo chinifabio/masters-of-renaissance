@@ -19,6 +19,7 @@ import it.polimi.ingsw.view.View;
         @JsonSubTypes.Type(name = "GameCreator", value = FireGameCreator.class),
 
         @JsonSubTypes.Type(name = "Model", value = ModelUpdater.class),
+        @JsonSubTypes.Type(name = "Lorenzo", value = LorenzoPopUp.class),
 
         @JsonSubTypes.Type(name = "Message", value = PlayerMessage.class),
         @JsonSubTypes.Type(name = "Error", value = PlayerError.class),

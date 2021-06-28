@@ -50,6 +50,7 @@ public class ClientPacketHandler {
                         ClientExecutable ce = new ObjectMapper().readerFor(ClientExecutable.class).readValue(received.body);
                         ce.execute(view);
                     } catch (Exception e) {
+                        e.printStackTrace();
                         view.emergencyExit("Client and server are not synchronized, you will be disconnect.");
                         return;
                     }
