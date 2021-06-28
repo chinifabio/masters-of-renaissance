@@ -214,7 +214,7 @@ public class MultiplayerMatch extends Match{
         Scoreboard board = new Scoreboard("Here's the results!");
 
         for (Player p : connectedPlayers) {
-            board.addPlayerScore(p.getNickname(), p.calculateVictoryPoints(), 123); // todo get total resources
+            board.addPlayerScore(p.getNickname(), p.calculateVictoryPoints(), p.resourcesNumber());
         }
 
         return board;

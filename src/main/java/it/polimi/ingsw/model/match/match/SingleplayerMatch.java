@@ -291,7 +291,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
                 "Lorenzo il magnifico wins the match!" :
                 "You won against Lorenzo il Magnifico" );
 
-        if (!lorenzoWinner) scoreboard.addPlayerScore(player.getNickname(), player.calculateVictoryPoints(), 0); // todo get total resources
+        if (!lorenzoWinner) scoreboard.addPlayerScore(player.getNickname(), player.calculateVictoryPoints(), player.resourcesNumber());
         else scoreboard.addPlayerScore(lorenzoNickname, -1, -1);
 
         return scoreboard;

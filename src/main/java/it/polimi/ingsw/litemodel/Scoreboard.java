@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,23 +38,8 @@ public class Scoreboard {
      * @param res the number of resource of the player
      */
     public void addPlayerScore(String nickname, int score, int res) {
-        System.out.println(nickname);
-        System.out.println(board);
         board.add(new BoardEntry(nickname, score, res));
-        board.sort((o1, o2) -> {
-            int temp = -1;
-            for (int i = 0; temp != 0; i++) {
-                System.out.println(temp);
-                switch (i) {
-                    //TODO Non funziona
-                    case 0 -> temp = Integer.compare(o2.score, o1.score);
-                    case 1 -> temp = o1.resources - o2.resources;
-                    case 2 -> temp = o1.nickname.compareTo(o2.nickname);
-                    default -> temp = 1;
-                }
-            }
-            return temp;
-        });
+        Collections.sort(board);
     }
 
     /**
@@ -135,21 +121,18 @@ public class Scoreboard {
          */
         @Override
         public int compareTo(Scoreboard.BoardEntry other) {
-                int temp = -1;
-                for (int i = 0; temp != 0; i++) {
-                    System.out.println(temp);
+                int temp = 0;
+                for (int i = 0; temp == 0; i++) {
                     switch (i) {
-                        case 0 -> temp = Integer.compare(this.score, other.score);
-                        case 1 -> temp = other.resources - this.resources;
-                        case 2 -> temp = other.nickname.compareTo(this.nickname);
+                        case 0 -> temp = Integer.compare(other.score, score);
+                        case 1 -> temp = other.resources - resources;
+                        case 2 -> temp = nickname.compareTo(other.nickname);
                         default -> temp = 1;
                     }
                 }
                 return temp;
         }
     }
-
-
 }
 
 

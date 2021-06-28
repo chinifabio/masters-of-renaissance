@@ -337,17 +337,10 @@ public class Warehouse {
      * @return the value of VictoryPoints of the Warehouse
      */
     public int countPointsWarehouse(){
-        int total = 0;
-        for (Map.Entry<DepotSlot, Depot> entry : depots.entrySet()){
-            if (!(entry.getValue() == null || entry.getKey() == DepotSlot.STRONGBOX || entry.getKey()==DepotSlot.BUFFER)){
-                total = total + entry.getValue().viewResources().get(0).amount();
-            }
-        }
-        for (Resource res : viewResourcesInDepot(DepotSlot.STRONGBOX)){
-            total = total + res.amount();
-        }
-
-        return total/5;
+        return getTotalResources()
+                .stream()
+                .map(Resource::amount)
+                .reduce(0, (temp, res) -> temp+=res) / 5;
     }
 
     /**

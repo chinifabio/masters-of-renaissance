@@ -114,6 +114,14 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
     }
 
     /**
+     * Calculate the number of the resources owned by the player
+     * @return the number of resources
+     */
+    public int resourcesNumber() {
+        return personalBoard.warehouse.countPointsWarehouse();
+    }
+
+    /**
      * Set the initial resource of the player in the game init
      * @param integerPair a pair of integer representing the number of resources
      */
