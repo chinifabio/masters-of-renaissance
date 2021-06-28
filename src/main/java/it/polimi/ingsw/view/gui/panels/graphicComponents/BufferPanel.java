@@ -22,7 +22,7 @@ public class BufferPanel extends BgJPanel{
      * @param gui is the GUI that contains the Buffer info
      * @throws IOException if there is a I/O problem
      */
-    public BufferPanel(GUI gui) throws IOException {
+    public BufferPanel(GUI gui, String nickname) throws IOException {
         super("/buffer.png", 275,100);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -35,7 +35,7 @@ public class BufferPanel extends BgJPanel{
 
         bigPanel.setPreferredSize(new Dimension(400, 100));
 
-        for (LiteResource res : gui.model.getDepot(gui.model.getMe(), DepotSlot.BUFFER).getResourcesInside()){
+        for (LiteResource res : gui.model.getDepot(nickname, DepotSlot.BUFFER).getResourcesInside()){
             JPanel resource = new JPanel();
             resource.setLayout(new OverlayLayout(resource));
             resource.setOpaque(false);

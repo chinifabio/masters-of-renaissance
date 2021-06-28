@@ -160,6 +160,9 @@ public class Controller implements Runnable {
     }
 }
 
+/**
+ * This class manages the Controller States
+ */
 interface ControllerState {
     /**
      * handle the client message and create a response Packet
@@ -181,6 +184,9 @@ interface ControllerState {
     ClientExecutable renderCannonAmmo();
 }
 
+/**
+ * This class is the State of the Controller where the Player choose his nickname
+ */
 class ChooseNickname implements ControllerState {
     /**
      * handle the client message and create a response Packet
@@ -259,6 +265,9 @@ class ChooseNickname implements ControllerState {
     }
 }
 
+/**
+ * This class is the State of the Controller where the Player choose the number of the players in the match
+ */
 class ChoosePlayerNumber implements ControllerState {
     /**
      * handle the client message and create a response Packet
@@ -327,6 +336,9 @@ class ChoosePlayerNumber implements ControllerState {
     }
 }
 
+/**
+ * This class is the State of the Controller where the Player waits for other players to connect to the match
+ */
 class WaitingInLobby implements ControllerState {
     /**
      * handle the client message and create a response Packet
@@ -361,6 +373,9 @@ class WaitingInLobby implements ControllerState {
     }
 }
 
+/**
+ * This class is the State of the Controller where the Player choose LeaderCards and Resources at the beginning of the game
+ */
 class GameInit implements ControllerState {
     /**
      * handle the client message and create a response Packet
@@ -406,6 +421,9 @@ class GameInit implements ControllerState {
     }
 }
 
+/**
+ * This class is the State of the Controller where Player can do all the main actions
+ */
 class InGameState implements ControllerState {
 
     /**
@@ -450,7 +468,9 @@ class InGameState implements ControllerState {
         return new FireGameSession();
     }
 }
-
+/**
+ * This class is the State of the Controller where the Player waits the end of the game
+ */
 class WaitingResult implements ControllerState {
     /**
      * handle the client message and create a response Packet
@@ -485,6 +505,9 @@ class WaitingResult implements ControllerState {
     }
 }
 
+/**
+ * This class is the State of the Controller where the Player can see the Leaderboard
+ */
 class GameScoreboard implements ControllerState {
     /**
      * handle the client message and create a response Packet

@@ -138,7 +138,7 @@ public class PersonalBoardPanel  extends GuiPanel {
 
         result.add(boardPanel);
 
-        JPanel buffer = new BufferPanel(gui);
+        JPanel buffer = new BufferPanel(gui, gui.getModel().getMe());
         buffer.setPreferredSize(new Dimension(400,100));
         bottomPanel.add(Box.createRigidArea(new Dimension(35,0)));
         bottomPanel.add(buffer);

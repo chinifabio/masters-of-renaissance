@@ -124,7 +124,7 @@ public class OtherPlayersPanel extends GuiPanel{
         text.setEditable(false);
         panelText.add(text);
 
-        JPanel buffer = new BufferPanel(gui);
+        JPanel buffer = new BufferPanel(gui, player);
         buffer.setPreferredSize(new Dimension(400,100));
         bottomPanel.add(Box.createRigidArea(new Dimension(30,0)));
         bottomPanel.add(buffer);
