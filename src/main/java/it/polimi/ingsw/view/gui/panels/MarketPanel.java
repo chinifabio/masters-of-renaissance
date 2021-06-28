@@ -196,7 +196,7 @@ public class MarketPanel extends GuiPanel {
         button.setBorder(BorderFactory.createEmptyBorder());
         button.setContentAreaFilled(false);
 
-        MarbleColor[] colors = gui.model.getConversionArray(gui.model.getMe());
+        MarbleColor[] colors = gui.getModel().getConversionArray(gui.getModel().getMe());
 
         //--------PAINT MARBLE----------
         if(color.equals(MarbleColor.WHITE)){

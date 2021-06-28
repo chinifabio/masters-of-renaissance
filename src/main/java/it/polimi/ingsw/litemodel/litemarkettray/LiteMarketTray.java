@@ -5,16 +5,38 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Arrays;
 
+/**
+ * This class represents the lite version of the MarketTray
+ */
 public class LiteMarketTray {
 
-    public final int col;
-
+    /**
+     * This attributes is the number of rows of the tray
+     */
     public final int row;
 
+    /**
+     * This attributes is the number of columns of the tray
+     */
+    public final int col;
+
+    /**
+     * This attributes is the matrix that contains the LiteMarbles
+     */
     private final LiteMarble[][] marbles;
 
+    /**
+     * This attribute is the slideMarble
+     */
     private final LiteMarble slideMarble;
 
+    /**
+     * This is the constructor of the class: after setting every attribute, it fills the matrix
+     * @param marbles of the matrix
+     * @param slideMarble slide one
+     * @param row number of rows
+     * @param col number of columns
+     */
     @JsonCreator
     public LiteMarketTray(@JsonProperty("marbles") LiteMarble[][] marbles, @JsonProperty("slideMarble") LiteMarble slideMarble, @JsonProperty("row") int row, @JsonProperty("col") int col) {
         this.col = col;
@@ -28,7 +50,10 @@ public class LiteMarketTray {
         this.slideMarble = slideMarble;
     }
 
-
+    /**
+     * This method returns the matrix of marbles
+     * @return a matrix of LiteMarbles
+     */
     public LiteMarble[][] getMarbles() {
         LiteMarble[][] res = new LiteMarble[row][col];
 
@@ -39,24 +64,12 @@ public class LiteMarketTray {
         return res;
     }
 
+    /**
+     * This method returns the slideMarble
+     * @return the slideMarble
+     */
     public LiteMarble getSlideMarble() {
         return slideMarble;
     }
 
-
-
-    public String toString(int n) {
-        String temp = "";
-        //for(LiteMarble[] row : this.marbles){
-        //    for(LiteMarble marble : row){
-        //        temp = temp + marble.toString();
-        //    }
-        //    temp = temp + "\n";
-        //}
-
-        for(int i=0;i<4;i++){
-            temp = temp + " " + this.marbles[n][i];
-        }
-        return temp;
-    }
 }

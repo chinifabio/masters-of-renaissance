@@ -7,19 +7,39 @@ import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.view.cli.CLI;
 
+/**
+ * This class represents on of the effect of the cards
+ */
 public class LiteAddProductionEffect extends LiteEffect{
 
+    /**
+     * This attribute is the added production
+     */
     private final LiteProduction prod;
 
+    /**
+     * This is the constructor of the class:
+     * @param prod LiteProduction to add
+     */
     @JsonCreator
     public LiteAddProductionEffect(@JsonProperty("prod") LiteProduction prod) {
         this.prod = prod;
     }
 
+    /**
+     * This method returns the production
+     * @return the LiteProduction
+     */
     public LiteProduction getProd() {
         return prod;
     }
 
+    /**
+     * This method is used to print the effect in cli
+     * @param leaderCard to print
+     * @param x horizontal position
+     * @param y vertical position
+     */
     @Override
     public void printEffect(String[][] leaderCard, int x, int y) {
 

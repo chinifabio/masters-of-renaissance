@@ -91,14 +91,11 @@ public class ProductionsPanel extends GuiPanel {
         }
         prodPanel.setOpaque(false);
 
-        JPanel bufferPanel = new JPanel();
-        //bufferPanel.add(bufferContainer);
-        bufferPanel.setOpaque(false);
-
         //----------WareHouse------------
         JPanel warehousPanel = new JPanel();
         ProductionMovePanel warehouse = new ProductionMovePanel(gui);
-        warehouse.setPreferredSize(new Dimension(350, 535));
+        warehouse.setPreferredSize(new Dimension(350, 532));
+
         warehousPanel.add(warehouse);
         warehousPanel.setOpaque(false);
 
@@ -113,7 +110,7 @@ public class ProductionsPanel extends GuiPanel {
         JPanel depotAndBufferPanel = new JPanel();
         depotAndBufferPanel.setLayout(new BoxLayout(depotAndBufferPanel, BoxLayout.Y_AXIS));
         depotAndBufferPanel.add(extraPanel);
-        depotAndBufferPanel.add(bufferPanel);
+        //depotAndBufferPanel.add(bufferPanel);
         depotAndBufferPanel.setOpaque(false);
 
 
@@ -175,10 +172,24 @@ class ProdPanel extends JPanel {
         book.add(out);
 
         book.setAlignmentX(CENTER_ALIGNMENT);
-        add(book);
+
+        JPanel all = new JPanel();
+        all.setOpaque(false);
+        all.setLayout(new BoxLayout(all,BoxLayout.Y_AXIS));
+
+        JPanel temp = new JPanel();
+        temp.setOpaque(false);
+        temp.setLayout(new BoxLayout(temp,BoxLayout.Y_AXIS));
+
+        temp.add(book);
+
+        JPanel added = new JPanel();
+        added.setLayout(new BoxLayout(added, BoxLayout.X_AXIS));
+        added.setOpaque(false);
 
         if (prod.isUnknown()) {
             JButton normalizer = new JButton("Normalize");
+            normalizer.setPreferredSize(new Dimension(10,29));
             normalizer.addActionListener(e -> {
                 try {
                     gui.switchPanels(new ProductionNormalizer(gui, prod.getRequired(), prod.getOutput(),name));
@@ -187,16 +198,20 @@ class ProdPanel extends JPanel {
                 }
             });
             normalizer.setAlignmentX(CENTER_ALIGNMENT);
-            add(normalizer);
+            temp.add(normalizer);
         }
         else{
-            add(Box.createRigidArea(new Dimension(0, 26)));
+            if(!prod.getAdded().isEmpty()){
+                for(LiteResource p : prod.getAdded()) added.add(new ResourceLabel(p.getType(), p.getAmount()));
+            }
+            else {
+                temp.add(Box.createRigidArea(new Dimension(0, 29)));
+                all.add(temp);
+            }
         }
-        JPanel added = new JPanel();
-        added.setLayout(new BoxLayout(added, BoxLayout.X_AXIS));
-        added.setOpaque(false);
-        for(LiteResource p : prod.getAdded()) added.add(new ResourceLabel(p.getType(), p.getAmount()));
-        add(added);
+        all.add(temp);
+        all.add(added);
+        add(all);
         setBorder(BorderFactory.createLineBorder(GUI.borderColor, 2));
     }
 }

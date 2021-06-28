@@ -6,13 +6,25 @@ import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.view.cli.Colors;
 
+/**
+ * This class represents the requisite to activate a LeaderCard
+ */
 public class LiteCardRequisite extends LiteRequisite {
 
-    private LevelDevCard level;
+    /**
+     * This attribute is the required level of the LeaderCard
+     */
+    private final LevelDevCard level;
 
-    private ColorDevCard color;
+    /**
+     * This attribute is the required color of the LeaderCard
+     */
+    private final ColorDevCard color;
 
-    private int amount;
+    /**
+     * This attribute is the required number of cards to activate a LeaderCard
+     */
+    private final int amount;
 
     @JsonCreator
     public LiteCardRequisite(@JsonProperty("level") LevelDevCard level, @JsonProperty("color") ColorDevCard color, @JsonProperty("amount") int amount) {
@@ -21,18 +33,12 @@ public class LiteCardRequisite extends LiteRequisite {
         this.amount = amount;
     }
 
-    public LevelDevCard getLevel() {
-        return level;
-    }
-
-    public ColorDevCard getColor() {
-        return color;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
+    /**
+     * This method is used to print the requisite in CLI
+     * @param leaderCard to print
+     * @param x horizontal position
+     * @param y vertical position
+     */
     @Override
     public void printRequisite(String[][] leaderCard, int x, int y) {
         leaderCard[x + 1][y + 2] = String.valueOf(this.amount);
