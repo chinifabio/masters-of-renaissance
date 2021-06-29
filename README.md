@@ -1,18 +1,14 @@
 # Prova Finale di Ingegneria del Software - AA 2020-2021 : Masters of Renaissance
-![alt text](src/main/resources/LogoMasters.png)
+![alt text](src/main/resources/LogoMastersGIT.png)
 
-This is the implementation of the board game: [Masters of Renaissance](http://www.craniocreations.it/prodotto/masters-of-renaissance/).
-
-The project is composed by a single server that can manages several clients.
-
-This game can be played both in CLI and GUI mode
+This project is the JAVA implemantation of the board game: [Masters of Renaissance](http://www.craniocreations.it/prodotto/masters-of-renaissance/).
 
 ## Documentation
 
 ### UML
 These are the diagrams of the classes, the first one is the UML created at the beginning of the project, the last one is the final UML created at the end of the project. 
 
-- [Initial UML](//Da aggiungere)
+- [Initial UML](deliveries/UML/UML_Initial_Model.mdj)
 - [Final UML](//Da aggiugere)
 
 ### JavaDoc
@@ -44,16 +40,23 @@ Numerous tests have been performed using Junit, you can consult the coverage rep
 #### Legend
 [![RED](http://placehold.it/15/f03c15/f03c15)]() Not Implemented &nbsp;&nbsp;&nbsp;&nbsp;[![GREEN](http://placehold.it/15/44bb44/44bb44)]() Implemented
 
-//Aggiungere i software utilizzati: StarUML, IntelliJ
 
-### Jars
+## Software
 
-## Execution of Jar
+**StarUML** - UML diagrams and sequence diagrams
+
+**Intellij IDEA Ultimate** - main IDE 
+
+
+## Jars
+
+The Jars of this project can be found here: [JARS] (//Da aggiungere)
+
+### Execution of Jar
 
 ### Client
 The following instructions describe how to successfully start the application in GUI and CLI.
 Due to the limitations of the windows command line, it is necessary to use WSL in order to play in CLI mode with this operating system.
-
 
 #### CLI
 //Descrizione di come lanciare la CLI
@@ -62,7 +65,7 @@ Due to the limitations of the windows command line, it is necessary to use WSL i
 
 //Descrizione di come lanciare la GUI
 
-### Server
+#### Server
 //Descrizione di come lanciare il server
 
 #### Parameters
