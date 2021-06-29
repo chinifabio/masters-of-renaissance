@@ -25,7 +25,7 @@ public class BuyCardPlayerState extends PlayerState{
      * @param context        the context
      */
     protected BuyCardPlayerState(Player context) {
-        super(context, "");
+        super(context, "You are in the buy card phase");
     }
 
     /**
@@ -43,7 +43,8 @@ public class BuyCardPlayerState extends PlayerState{
      * @return the reconnection player state
      */
     @Override
-    public PlayerState reconnectionState() {
+    public PlayerState handleDisconnection() {
+        context.rollBack();
         return new NotHisTurnPlayerState(this.context);
     }
 
@@ -107,7 +108,7 @@ public class BuyCardPlayerState extends PlayerState{
         }
 
         this.history.add(0,new MoveResource(from,to,loot));
-        context.view.sendPlayerMessage(context.nickname, "Resource moved successfully");;
+        context.view.sendPlayerMessage(context.nickname, "Resource moved successfully");
     }
 
     /**

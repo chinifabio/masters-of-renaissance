@@ -22,7 +22,7 @@ public class NoActionDonePlayerState extends PlayerState {
      * @param context        the context
      */
     protected NoActionDonePlayerState(Player context) {
-        super(context, "");
+        super(context, "You have no action done");
     }
 
     /**
@@ -40,7 +40,7 @@ public class NoActionDonePlayerState extends PlayerState {
      * @return the reconnection player state
      */
     @Override
-    public PlayerState reconnectionState() {
+    public PlayerState handleDisconnection() {
         context.match.turnDone();
         return new NotHisTurnPlayerState(this.context);
     }

@@ -510,7 +510,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
      * make the player disconnect so he skip his turn if it is his turn
      */
     public void disconnect() {
-        this.reconnectionState = this.playerState.reconnectionState();
+        this.reconnectionState = this.playerState.handleDisconnection();
         this.playerState = new DisconnectedPlayerState(this);
     }
 

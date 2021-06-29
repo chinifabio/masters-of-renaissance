@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.communication.packet.ChannelTypes;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
@@ -18,7 +15,7 @@ public class ProductionPlayerState extends PlayerState{
      * @param context   is the context
      */
     protected ProductionPlayerState(Player context) {
-        super(context, "production phase");
+        super(context, "You are in the production phase");
     }
 
     /**
@@ -36,7 +33,8 @@ public class ProductionPlayerState extends PlayerState{
      * @return the reconnection player state
      */
     @Override
-    public PlayerState reconnectionState() {
+    public PlayerState handleDisconnection() {
+        context.rollBack();
         return new NotHisTurnPlayerState(this.context);
     }
 

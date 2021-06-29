@@ -38,7 +38,7 @@ public class MainActionDonePlayerState extends PlayerState {
      * @return the reconnection player state
      */
     @Override
-    public PlayerState reconnectionState() {
+    public PlayerState handleDisconnection() {
         context.match.turnDone();
         return new NotHisTurnPlayerState(this.context);
     }

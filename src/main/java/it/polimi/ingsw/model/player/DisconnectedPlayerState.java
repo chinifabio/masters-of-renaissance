@@ -1,9 +1,5 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.communication.packet.ChannelTypes;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.Packet;
-
 public class DisconnectedPlayerState extends PlayerState {
     /**
      * the constructor take the two final attribute of the state that are the personal board and the context.
@@ -20,7 +16,8 @@ public class DisconnectedPlayerState extends PlayerState {
      */
     @Override
     public void starTurn() {
-        this.context.match.turnDone();
+        context.view.sendMessage("skipped turn of " + context.nickname);
+        context.match.turnDone();
     }
 
     /**
@@ -29,7 +26,7 @@ public class DisconnectedPlayerState extends PlayerState {
      * @return the reconnection player state
      */
     @Override
-    public PlayerState reconnectionState() {
+    public PlayerState handleDisconnection() {
         return this;
     }
 

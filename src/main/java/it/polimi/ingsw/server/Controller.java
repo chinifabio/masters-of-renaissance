@@ -144,14 +144,14 @@ public class Controller implements Runnable {
             Packet received = socket.pollPacket();
             switch (received.channel) {
                 case PLAYER_ACTIONS -> {
-                    System.out.println(Colors.color(Colors.CYAN, nickname) + ": " + received);
+                    server.print(Colors.color(Colors.CYAN, nickname) + ": " + received);
                     state.handleMessage(received, this);
                 }
 
                 case CONNECTION_STATUS -> {
                     if (received.header == HeaderTypes.TIMEOUT) {
                         state.handleDisconnection(this);
-                        System.out.println(Colors.color(Colors.RED, nickname) + " disconnected");
+                        server.print(Colors.color(Colors.RED, nickname) + " disconnected");
                         disconnected = true;
                     }
                 }
@@ -294,7 +294,7 @@ class ChoosePlayerNumber implements ControllerState {
                 return;
             }
 
-            context.model = new Model(n);
+            context.model = new Model(n, context.server);
             context.server.hereSTheModel(context.model);
 
         } catch (NumberFormatException e) {

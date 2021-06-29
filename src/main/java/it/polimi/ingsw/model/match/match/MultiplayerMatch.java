@@ -39,6 +39,11 @@ public class MultiplayerMatch extends Match{
     private int initializedPlayers = 0;
 
     /**
+     * The number of disconnected players
+     */
+    private int disconnected = 0;
+
+    /**
      * build a multiplayer match.
      * A multiplayer match has a game size of 4 players
      * and require at least 2 player to be started
@@ -133,7 +138,6 @@ public class MultiplayerMatch extends Match{
 
         curPlayer = (curPlayer + 1) % connectedPlayers.size();
         currentPlayer().startHisTurn();
-        view.sendMessage("The turn of " + currentPlayer().getNickname() + " is started!");
     }
 
     /**
@@ -144,9 +148,8 @@ public class MultiplayerMatch extends Match{
         initializedPlayers++;
         if (initializedPlayers == gameSize) {
             connectedPlayers.forEach(player -> player.setState(new NotHisTurnPlayerState(player)));
-            connectedPlayers.get(curPlayer).startHisTurn();
             view.sendMessage("All players passed game initialization");
-            view.sendMessage("Is the turn of " + currentPlayer());
+            connectedPlayers.get(curPlayer).startHisTurn();
             if (model != null) model.gameSetupDone();
         }
     }
@@ -179,8 +182,12 @@ public class MultiplayerMatch extends Match{
      */
     @Override
     public boolean disconnectPlayer(Player player) {
-        view.sendMessage(player.getNickname() + " disconnected from the game");
+        view.sendError(player.getNickname() + " disconnected from the game");
         if (gameOnAir) {
+            if ((disconnected++) == gameSize) {
+                if(model != null) model.closeMatch();
+                return false;
+            }
             player.disconnect();
             return true;
         }
@@ -228,5 +235,15 @@ public class MultiplayerMatch extends Match{
     @Override
     public Player currentPlayer() {
         return connectedPlayers.get(curPlayer);
+    }
+
+    /**
+     * Return a list of all nicknames of the players in the match
+     *
+     * @return a list of nicknames
+     */
+    @Override
+    public List<String> nicknames() {
+        return connectedPlayers.stream().map(Player::getNickname).collect(Collectors.toList());
     }
 }

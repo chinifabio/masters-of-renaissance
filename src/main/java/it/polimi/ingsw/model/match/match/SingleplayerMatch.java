@@ -299,7 +299,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
     /**
      * Obtain the solo action token in the game
-     * @return a new deck of solo action tocken
+     * @return a new deck of solo action token
      */
     public Deck<SoloActionToken> obtainSoloTokens() {
         return this.soloToken;
@@ -327,6 +327,16 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
      */
     public Player currentPlayer(){
         return this.player;
+    }
+
+    /**
+     * Return a list of all nicknames of the players in the match
+     *
+     * @return a list of nicknames
+     */
+    @Override
+    public List<String> nicknames() {
+        return Collections.singletonList(player.getNickname());
     }
 
     // for testing

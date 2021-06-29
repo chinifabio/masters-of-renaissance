@@ -39,7 +39,7 @@ public class PendingInitPlayerState extends PlayerState {
      * @return the reconnection player state
      */
     @Override
-    public PlayerState reconnectionState() {
+    public PlayerState handleDisconnection() {
         return this;
     }
 }

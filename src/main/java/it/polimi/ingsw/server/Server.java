@@ -106,10 +106,10 @@ public class Server {
         if (
                 nickname.equalsIgnoreCase("lorenzo il magnifico") ||
                 nickname.length() > 20 || nickname.length() <= 0 ||
-                connectedClient.containsKey(nickname)
+                connectedClient.containsKey(nickname.toLowerCase())
         ) return false;
 
-        connectedClient.put(nickname, controller);
+        connectedClient.put(nickname.toLowerCase(), controller);
         return true;
     }
 
@@ -191,5 +191,13 @@ public class Server {
     public void cleanNickname(String nickname) {
         connectedClient.remove(nickname);
         disconnectedClient.remove(nickname);
+    }
+
+    /**
+     * Print a log message in output
+     * @param s the log message
+     */
+    public synchronized void print(String s) {
+        System.out.println(s);
     }
 }

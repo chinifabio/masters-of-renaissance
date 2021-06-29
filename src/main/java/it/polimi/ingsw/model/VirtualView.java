@@ -40,6 +40,14 @@ public class VirtualView {
     }
 
     /**
+     * Remove the socket associated to the passed nickname from the listeners
+     * @param nickname the key of the socket to remove
+     */
+    public void unsubscribe(String nickname) {
+        listeners.remove(nickname);
+    }
+
+    /**
      * Send a message to all the subscribed client
      * @param message the message to send
      */
@@ -107,6 +115,10 @@ public class VirtualView {
             sock.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.UPDATE_LITE_MODEL, new ModelUpdater(model).jsonfy()));
     }
 
+    /**
+     * Send the used solo token to the client
+     * @param token the token to send into the lorenzo popup packet
+     */
     public void sendToken(SoloActionToken token) {
         for (SocketListener socketListener : listeners.values())
             socketListener.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.UPDATE_LITE_MODEL, new LorenzoPopUp(token.liteVersion()).jsonfy()));

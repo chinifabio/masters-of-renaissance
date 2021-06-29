@@ -303,4 +303,10 @@ public abstract class Match implements PlayerToMatch {
      * Randomize the inkwell player and give the initial resources
      */
     public abstract void initialize();
+
+    /**
+     * Return a list of all nicknames of the players in the match
+     * @return a list of nicknames
+     */
+    public abstract List<String> nicknames();
 }

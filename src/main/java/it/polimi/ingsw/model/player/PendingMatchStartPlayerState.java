@@ -35,6 +35,7 @@ public class PendingMatchStartPlayerState extends PlayerState {
     @Override
     public void starTurn() {
         this.context.setState(new NoActionDonePlayerState(this.context));
+        context.view.sendMessage("The turn of " + context.nickname + " is started!");
     }
 
     /**
@@ -43,7 +44,7 @@ public class PendingMatchStartPlayerState extends PlayerState {
      * @return the reconnection player state
      */
     @Override
-    public PlayerState reconnectionState() {
+    public PlayerState handleDisconnection() {
         return new NotHisTurnPlayerState(this.context);
     }
 

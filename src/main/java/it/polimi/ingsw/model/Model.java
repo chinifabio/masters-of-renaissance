@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.server.Controller;
+import it.polimi.ingsw.server.Server;
 import it.polimi.ingsw.view.cli.Colors;
 
 import java.io.IOException;
@@ -36,8 +37,14 @@ public class Model {
      */
     public final int gameSize;
 
-    public Model(int size) throws IOException {
+    /**
+     * A reference to the server used for clean nicknames
+     */
+    private final Server server;
+
+    public Model(int size, Server server) throws IOException {
         gameSize = size;
+        this.server = server;
 
         match = size == 1 ?
                 new SingleplayerMatch(virtualView):
@@ -51,7 +58,7 @@ public class Model {
      * @param client the player who run the command
      * @param command the command to execute
      */
-    public void handleClientCommand(Controller client, Command command) {
+    public synchronized void handleClientCommand(Controller client, Command command) {
         command.execute(players.get(client));
     }
 
@@ -60,7 +67,7 @@ public class Model {
      * @param client the new client
      * @param nickname the nickname of the controller
      */
-    public void login(Controller client, String nickname) throws Exception {
+    public synchronized void login(Controller client, String nickname) throws Exception {
         if (players.containsKey(client)) throw new Exception("Something strange is going on ༼ つ ◕_◕ ༽つ");
 
         Player p = new Player(nickname, match, virtualView);
@@ -78,7 +85,7 @@ public class Model {
     /**
      * Check if the connected player are equals to the game size. If true then start the game
      */
-    public void checkStart() {
+    public synchronized void checkStart() {
         if (match.playerInGame() == match.gameSize) {
             match.initialize();
             virtualView.updateClients();
@@ -90,21 +97,21 @@ public class Model {
      * Return the number of available seats
      * @return the number of available seats
      */
-    public int availableSeat() {
+    public synchronized int availableSeat() {
         return gameSize - match.playerInGame();
     }
 
     /**
      * Set all the client render as in game so they can use market, productions ecc
      */
-    public void gameSetupDone() {
+    public synchronized void gameSetupDone() {
         players.forEach((controller, player) -> controller.gameStart());
     }
 
     /**
      * The current player end the game
      */
-    public void playerEndGame() {
+    public synchronized void playerEndGame() {
         players
                 .entrySet()
                 .stream()
@@ -115,7 +122,7 @@ public class Model {
     /**
      * Send the scoreboard to all the player and than fire the render of it
      */
-    public void matchEnded() {
+    public synchronized void matchEnded() {
         virtualView.publish(model -> model.setScoreboard(match.winnerCalculator()));
         virtualView.updateClients();
         players.forEach((controller, player) -> controller.gameScoreboard());
@@ -126,8 +133,9 @@ public class Model {
      * @param controller the disconnected controller
      * @return the succeed of the operation
      */
-    public boolean disconnectPlayer(Controller controller) {
-        return match.disconnectPlayer(players.remove(controller));
+    public synchronized boolean disconnectPlayer(Controller controller) {
+        virtualView.unsubscribe(players.get(controller).getNickname());
+        return match.disconnectPlayer(players.get(controller));
     }
 
     /**
@@ -136,11 +144,19 @@ public class Model {
      * @param context the controller to reconnect
      * @return the succeed of the operation
      */
-    public boolean reconnectPlayer(String nickname, Controller context) {
+    public synchronized boolean reconnectPlayer(String nickname, Controller context) {
         players.put(context, match.reconnectPlayer(nickname));
         virtualView.subscribe(nickname, context.socket);
-        System.out.println(Colors.color(Colors.GREEN_BRIGHT, nickname) + " reconnected");
+        server.print(Colors.color(Colors.GREEN_BRIGHT, nickname) + " reconnected");
         context.fireReconnection();
         return true;
+    }
+
+    /**
+     * Remove all the saved players and controller and clean nicknames from the server
+     */
+    public void closeMatch() {
+        for (String nickname : match.nicknames()) server.cleanNickname(nickname);
+        server.print(Colors.color(Colors.RED_BRIGHT, "A match of " + gameSize + " player were closed"));
     }
 }

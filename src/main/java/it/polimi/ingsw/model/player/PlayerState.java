@@ -53,7 +53,7 @@ public abstract class PlayerState implements PlayerAction {
      * Give the state of the player in case of reconnection
      * @return the reconnection player state
      */
-    public abstract PlayerState reconnectionState();
+    public abstract PlayerState handleDisconnection();
 
 // ----------------------------------------------------------------
 // ----- player state action as default launch an exception -------
