@@ -95,6 +95,7 @@ public class Resource implements MappableToLiteVersion {
     public boolean merge(Resource toMerge) {
         if(equalsType(toMerge)) {
             this.amount += toMerge.amount;
+            this.os = toMerge.os;
             return true;
         } else return false;
     }

@@ -116,13 +116,16 @@ public class LiteModel {
     }
 
 
-    //todo STO METODO È NEL MAIN DI UN PRINTER, SI CANCELLA?
+
+    /*
     /**
      * This method moves the player on the faith track
      */
+    /*
     public synchronized void movePlayer(String nickname, int amount) {
         this.players.get(nickname).movePlayer(amount);
     }
+    */
 
     /**
      * This method updates the whole faith track of a player: position, popetiles
@@ -292,13 +295,16 @@ public class LiteModel {
     }
 
 
-    //todo ALTRO METODO USATO SOLO IN STAMPA
+    /*
     /**
      * This method flips a PopeTile
      */
+    /*
     public synchronized void flipPopeTile(String nickname, String popeTile) {
         this.players.get(nickname).flipPopeTile(popeTile);
     }
+
+     */
 
     /**
      * This method returns every production of a given player

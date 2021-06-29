@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedE
 import it.polimi.ingsw.model.match.match.Match;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production;
@@ -181,19 +182,30 @@ public class ProductionTest {
 
             player.production();
 
+            System.out.println("Sto per creare la produzione");
+            Production prod = new NormalProduction(
+                    Collections.singletonList(ResourceBuilder.buildCoin(1)),
+                    Collections.singletonList(ResourceBuilder.buildFaithPoint(5))
+            );
+            player.personalBoard.addProduction(prod, DevCardSlot.LEFT);
+
             // normalizing the basic production
             player.setNormalProduction(ProductionID.BASIC, new NormalProduction(
                     Collections.singletonList(ResourceBuilder.buildCoin(2)),
                     Collections.singletonList(ResourceBuilder.buildServant())
             ));
+
             // cheating and getting resources
-            player.obtainResource(DepotSlot.MIDDLE, ResourceBuilder.buildCoin(2));
+            player.obtainResource(DepotSlot.BOTTOM, ResourceBuilder.buildCoin(3));
 
             // adding resource to the basic production
-            player.moveInProduction(DepotSlot.MIDDLE, ProductionID.BASIC, ResourceBuilder.buildCoin(2));
+            player.moveInProduction(DepotSlot.BOTTOM, ProductionID.BASIC, ResourceBuilder.buildCoin(2));
+            player.moveInProduction(DepotSlot.BOTTOM, ProductionID.LEFT, ResourceBuilder.buildCoin(1));
 
             // activating the production
             player.activateProductions();
+
+            assertEquals(5, player.getFT_forTest().getPlayerPosition());
 
             // checking he has stone in the strongbox
             assertTrue(player.test_getPB().getDepots().get(DepotSlot.STRONGBOX).viewResources().contains(ResourceBuilder.buildServant()));

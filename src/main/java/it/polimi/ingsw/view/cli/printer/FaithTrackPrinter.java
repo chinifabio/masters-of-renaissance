@@ -264,6 +264,7 @@ public class FaithTrackPrinter {
         System.out.println();
     }
 
+    /*
     public static void main(String[] args) throws IOException {
 
         LiteModel model = new LiteModel();
@@ -284,7 +285,7 @@ public class FaithTrackPrinter {
         model.flipPopeTile("Lorenzo il Magnifico", "THIRD");
 
 
-        FaithTrackPrinter printer = new FaithTrackPrinter(/*model*/);
+        FaithTrackPrinter printer = new FaithTrackPrinter();
 
         Random numbers = new Random();
 
@@ -296,6 +297,9 @@ public class FaithTrackPrinter {
         printer.printTrack(model);
 
     }
+
+     */
+
 
     /**
      * This method indicates if the Cell is in a VaticanSpace

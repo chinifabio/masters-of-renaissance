@@ -40,18 +40,27 @@ public class Packet {
         this.body = body;
     }
 
-    // following there is method for jackson serialization
+    // following there are methods for jackson serialization
 
+    /**
+     * @return the header of the packet
+     */
     @JsonGetter("Header")
     public HeaderTypes getHeader() {
         return header;
     }
 
+    /**
+     * @return the channel of the packet
+     */
     @JsonGetter("Channel")
     public ChannelTypes getChannel() {
         return channel;
     }
 
+    /**
+     * @return the body of the packet
+     */
     @JsonGetter("Body")
     public String getBody() {
         return body;
