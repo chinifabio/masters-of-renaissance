@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.model.Model;
+import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -76,13 +77,13 @@ public class Server {
             while (true) if (new Scanner(System.in).nextLine().equalsIgnoreCase("quit")) System.exit(0);
         }).start();
 
-        System.out.println("Server ready. Type quit to stop the server.");
+        print("Server ready. Type quit to stop the server.");
         while (active) {
             try {
                 Controller controller = new Controller(serverSocket.accept(), this);
                 this.executor.submit(controller);
             } catch (IOException e) {
-                System.out.println("Error while accepting client: " + e.getMessage());
+                print("Error while accepting client: " + e.getMessage());
             }
         }
     }
@@ -104,12 +105,12 @@ public class Server {
     public synchronized boolean connect(String nickname, Controller controller) {
         // checking the legality of the nickname
         if (
-                nickname.equalsIgnoreCase("lorenzo il magnifico") ||
+                nickname.equals(SingleplayerMatch.lorenzoNickname) ||
                 nickname.length() > 20 || nickname.length() <= 0 ||
                 connectedClient.containsKey(nickname.toLowerCase())
         ) return false;
 
-        connectedClient.put(nickname.toLowerCase(), controller);
+        connectedClient.put(nickname, controller);
         return true;
     }
 
@@ -188,7 +189,7 @@ public class Server {
      * Delete a controller from the saved ones
      * @param nickname the nickname associated to the controller
      */
-    public void cleanNickname(String nickname) {
+    public synchronized void cleanNickname(String nickname) {
         connectedClient.remove(nickname);
         disconnectedClient.remove(nickname);
     }

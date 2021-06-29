@@ -59,12 +59,6 @@ public class LiteModel {
      */
     private Scoreboard scoreboard;
 
-    /**
-     * This is the constructor of the class
-     */
-    @JsonIgnore
-    private boolean updatedToken;
-
     @JsonCreator
     public LiteModel(){}
 
@@ -99,7 +93,7 @@ public class LiteModel {
     /**
      * This method gives the player a leader card
      * @param nickname of the player
-     * @param cards
+     * @param cards leader cards to save
      */
     public synchronized void setLeader(String nickname, List<LiteLeaderCard> cards) {
         this.players.get(nickname).setLeader(cards);
@@ -115,7 +109,7 @@ public class LiteModel {
 
     /**
      * This method updates the devSetup
-     * @param LiteDevSetup to set
+     * @param devSetup to set
      */
     public synchronized void setDevSetup(LiteDevSetup devSetup) {
         this.devSetup = devSetup;
@@ -133,7 +127,7 @@ public class LiteModel {
     /**
      * This method updates the whole faith track of a player: position, popetiles
      * @param nickname of the player
-     * @param LiteFaithTrack to set
+     * @param track to set
      */
     public synchronized void updateFaithTrack(String nickname, LiteFaithTrack track) {
         this.players.get(nickname).updateFaithTrack(track);
@@ -141,7 +135,7 @@ public class LiteModel {
 
     /**
      * This method updates the Market Tray
-     * @param LiteMarketTray to set
+     * @param tray to set
      */
     public synchronized void setMarketTray(LiteMarketTray tray) {
         this.tray = tray;
@@ -150,8 +144,8 @@ public class LiteModel {
     /**
      * This method updates a production of the player
      * @param nickname of the player
-     * @param LiteProduction to set
-     * @param ProductionID to set
+     * @param prod to set
+     * @param id to set
      */
     public synchronized void setProduction(String nickname, LiteProduction prod, ProductionID id) {
         this.players.get(nickname).setProduction(id, prod);
@@ -160,8 +154,8 @@ public class LiteModel {
     /**
      * This method updates a depot of the player
      * @param nickname of the player
-     * @param DepotSlot to set
-     * @param LiteDepot to set
+     * @param slot to set
+     * @param depot to set
      */
     public synchronized void setDepot(String nickname, DepotSlot slot, LiteDepot depot) {
         this.players.get(nickname).setDepot(slot, depot);
@@ -169,7 +163,7 @@ public class LiteModel {
 
     /**
      * This method updates the SoloActionToken
-     * @param LiteSoloActionToken to set
+     * @param token to set
      */
     public synchronized void setSoloToken(LiteSoloActionToken token) {
         soloToken = token;
@@ -178,7 +172,7 @@ public class LiteModel {
     /**
      * This method updates the available discounts
      * @param nickname of the player
-     * @param list of LiteResources to set
+     * @param discounts of LiteResources to set
      */
 
     public synchronized void setDiscounts(String nickname, List<LiteResource> discounts) {
@@ -188,7 +182,7 @@ public class LiteModel {
     /**
      * This method updates the available white marble conversion
      * @param nickname of the player
-     * @param list of MarbleColors to set
+     * @param collect of MarbleColors to set
      */
     public synchronized void setConversions(String nickname, List<MarbleColor> collect) {
         this.players.get(nickname).setConversions(collect);

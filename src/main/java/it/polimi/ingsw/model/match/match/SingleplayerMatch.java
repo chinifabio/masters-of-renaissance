@@ -29,7 +29,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
     /**
      * Nickname of lorenzo
      */
-    public final String lorenzoNickname = "Lorenzo il Magnifico";
+    public static final String lorenzoNickname = "Lorenzo il Magnifico";
 
     /**
      * The representation of lorenzo faith tack
