@@ -603,6 +603,10 @@ class CliInGameState extends CliState {
                 }
                 break;
 
+            case "production":
+                context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ProductionCommand().jsonfy()));
+                break;
+
             case "activateproduction":
             case "actprod":
                 context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ActivateProductionCommand().jsonfy()));

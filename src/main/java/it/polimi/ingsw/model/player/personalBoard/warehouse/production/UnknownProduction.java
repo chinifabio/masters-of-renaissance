@@ -28,11 +28,15 @@ public class UnknownProduction extends Production{
      */
     private final int unknownInRequired;
 
-
     /**
      * contains the number of unknown resources in the output list
      */
     private final int unknownInOutput;
+
+    /**
+     * The number of faith point in the output
+     */
+    private final int fpInOutput;
 
     /**
      * This method is the constructor of the class
@@ -45,6 +49,7 @@ public class UnknownProduction extends Production{
         super(newRequired, newOutput, Collections.singletonList(ResourceType.EMPTY));
         unknownInRequired = required.stream().filter(x -> x.type() == ResourceType.UNKNOWN).findAny().orElse(ResourceBuilder.buildUnknown()).amount();
         unknownInOutput = output.stream().filter(x -> x.type() == ResourceType.UNKNOWN).findAny().orElse(ResourceBuilder.buildUnknown()).amount();
+        fpInOutput = output.stream().filter(x -> x.type() == ResourceType.FAITHPOINT).findAny().orElse(ResourceBuilder.buildFaithPoint(0)).amount();
     }
 
     /**
@@ -152,7 +157,10 @@ public class UnknownProduction extends Production{
         }
         if(counter != unknownInOutput) throw new IllegalNormalProduction("Incompatible output list of resource");
 
-
+        if (normalProduction.output.stream().filter(x -> x.type() == ResourceType.FAITHPOINT).findAny().orElse(ResourceBuilder.buildFaithPoint(fpInOutput)).amount() != fpInOutput)
+            throw new IllegalNormalProduction("Faith points in output does not match the original number (" + fpInOutput + ")");
+        if (normalProduction.required.stream().filter(x -> x.type() == ResourceType.FAITHPOINT).findAny().orElse(ResourceBuilder.buildFaithPoint(0)).amount() != 0)
+            throw new IllegalNormalProduction("You can't use faith points in required");
 
         normal = Optional.of(normalProduction);
         return true;

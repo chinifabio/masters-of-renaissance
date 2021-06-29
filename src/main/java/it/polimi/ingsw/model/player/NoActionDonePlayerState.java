@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.communication.packet.ChannelTypes;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
@@ -10,6 +7,8 @@ import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction;
+import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
 import it.polimi.ingsw.model.resource.Resource;
 
 /**
@@ -115,6 +114,17 @@ public class NoActionDonePlayerState extends PlayerState {
     public void production() {
         context.setState(new ProductionPlayerState(this.context));
         context.view.sendPlayerMessage(context.nickname, "Now you can move resources into productions");
+    }
+
+    /**
+     * This method set the normal production of an unknown production
+     *
+     * @param id               the id of the unknown production
+     * @param normalProduction the input new normal production
+     */
+    @Override
+    public void setNormalProduction(ProductionID id, NormalProduction normalProduction) {
+        context.view.sendPlayerError(context.nickname, "You are not in the production state!");
     }
 
     /**
