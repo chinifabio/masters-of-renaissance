@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace;
 
-
+/**
+ * This class represents the lite version of a FraithTrack cell
+ */
 public class LiteCell {
 
     /**

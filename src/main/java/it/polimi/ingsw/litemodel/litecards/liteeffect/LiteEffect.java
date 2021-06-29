@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+/**
+ * This class represents the effect of cards
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonSubTypes({
@@ -19,6 +22,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public abstract class LiteEffect {
 
+    /**
+     * This method is used to print the effect in cli
+     * @param leaderCard to print
+     * @param x horizontal position
+     * @param y vertical position
+     */
     @JsonIgnore
     public abstract void printEffect(String[][] leaderCard, int x, int y);
 

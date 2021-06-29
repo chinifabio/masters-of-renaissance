@@ -1,10 +1,8 @@
 package it.polimi.ingsw.model.requisite;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
 import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequisite;
 import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.cards.ColorDevCard;
