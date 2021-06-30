@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.communication.packet.ChannelTypes;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;

@@ -28,6 +28,9 @@ public enum ResourceType {
         return this.name();
     }
 
+    /**
+     * @return a List of storable resourceTypes
+     */
     public static List<ResourceType> storable() {
         List<ResourceType> result = new ArrayList<>();
         for (ResourceType t : ResourceType.values()) if (t.storable) result.add(t);

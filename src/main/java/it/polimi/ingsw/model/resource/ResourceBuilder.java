@@ -174,12 +174,13 @@ public class ResourceBuilder {
         return arranged;
     }
 
+    /**
+     * This method transforms the List of Resources in a List of LiteResources
+     * @param in is the List of Resources to transform
+     * @return a List of LiteResources
+     */
     public static List<LiteResource> mapResource(List<Resource> in) {
         return in.stream().filter(x -> x.amount() > 0).map(Resource::liteVersion).collect(Collectors.toList());
     }
 
-    public static List<LiteResource> mapStorableResource() {
-        List<Resource> in = ResourceBuilder.buildListOfStorable();
-        return in.stream().map(Resource::liteVersion).collect(Collectors.toList());
-    }
 }

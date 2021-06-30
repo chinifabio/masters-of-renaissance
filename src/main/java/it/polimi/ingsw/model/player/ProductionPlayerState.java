@@ -98,6 +98,9 @@ public class ProductionPlayerState extends PlayerState{
         }
     }
 
+    /**
+     * This method restore the original status of Productions and Depots
+     */
     @Override
     public void rollBack() {
         context.setState(new NoActionDonePlayerState(this.context));

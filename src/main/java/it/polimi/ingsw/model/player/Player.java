@@ -514,6 +514,9 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         this.playerState = new DisconnectedPlayerState(this);
     }
 
+    /**
+     * make the player reconnect
+     */
     public void reconnect() {
         this.playerState = this.reconnectionState;
     }

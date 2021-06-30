@@ -1,5 +1,8 @@
 package it.polimi.ingsw.communication.packet;
 
+/**
+ * This class identifies all the header types of the packets
+ */
 public enum HeaderTypes {
     HELLO,
     RECONNECTED,

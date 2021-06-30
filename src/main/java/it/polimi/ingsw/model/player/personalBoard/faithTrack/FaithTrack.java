@@ -164,6 +164,9 @@ public class FaithTrack implements MappableToLiteVersion {
         return lite;
     }
 
+    /**
+     * This method updates the current status of the FaithTrack in the LiteModel
+     */
     protected void updateFaithTrack() {
         view.publish(model -> model.updateFaithTrack(nickname, liteVersion()));
     }

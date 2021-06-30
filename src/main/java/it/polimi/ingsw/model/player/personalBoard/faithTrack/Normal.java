@@ -41,6 +41,9 @@ public class Normal extends Cell {
         return vaticanSpace;
     }
 
+    /**
+     * @return true if the cell is a PopeSpace
+     */
     @Override
     public boolean isPopeSpace() {
         return false;

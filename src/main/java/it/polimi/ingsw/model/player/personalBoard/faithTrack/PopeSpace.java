@@ -42,6 +42,9 @@ public class PopeSpace extends Cell {
         return this.vaticanSpace;
     }
 
+    /**
+     * @return true if the cell is a PopeSpace
+     */
     @Override
     public boolean isPopeSpace() {
         return true;

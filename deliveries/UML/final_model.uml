@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw.model</OriginalElement>
+  <nodes>
+    <node x="2231.079268292683" y="3469.0">it.polimi.ingsw.model.cards.effects.ShuffleMoveOneEffect</node>
+    <node x="1126.0" y="4699.0">it.polimi.ingsw.model.match.markettray.DimensionReader</node>
+    <node x="325.0" y="3413.5">it.polimi.ingsw.model.requisite.ColorCardRequisite</node>
+    <node x="5002.682926829268" y="2963.5">it.polimi.ingsw.model.cards.DevSetup</node>
+    <node x="3928.512195121951" y="2886.0">it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack</node>
+    <node x="2364.5" y="624.5">it.polimi.ingsw.model.match.SoloTokenReaction</node>
+    <node x="2648.329268292683" y="2736.0">it.polimi.ingsw.model.MappableToLiteVersion</node>
+    <node x="4686.079268292683" y="3435.5">it.polimi.ingsw.model.cards.DevCard</node>
+    <node x="2009.5" y="3759.0">it.polimi.ingsw.model.player.personalBoard.faithTrack.Cell</node>
+    <node x="3444.079268292683" y="3457.5">it.polimi.ingsw.model.cards.effects.DestroyCardsEffect</node>
+    <node x="383.0" y="4699.0">it.polimi.ingsw.model.match.markettray.RowCol</node>
+    <node x="3890.079268292683" y="3457.5">it.polimi.ingsw.model.cards.effects.AddDepotEffect</node>
+    <node x="0.0" y="3413.5">it.polimi.ingsw.model.requisite.CardRequisite</node>
+    <node x="825.0" y="3402.5">it.polimi.ingsw.model.player.personalBoard.warehouse.depot.SpecialDepot</node>
+    <node x="1259.0" y="3759.0">it.polimi.ingsw.model.Model</node>
+    <node x="1627.0" y="3759.0">it.polimi.ingsw.model.resource.ResourceType</node>
+    <node x="2687.5" y="0.0">it.polimi.ingsw.model.match.PlayerToMatch</node>
+    <node x="2420.0" y="3759.0">it.polimi.ingsw.model.cards.ColorDevCard</node>
+    <node x="3229.079268292683" y="3457.5">it.polimi.ingsw.model.cards.effects.WhiteMarbleEffect</node>
+    <node x="5228.0" y="3759.0">it.polimi.ingsw.model.requisite.RequisiteType</node>
+    <node x="2687.5" y="326.0">it.polimi.ingsw.model.match.match.Match</node>
+    <node x="5144.079268292683" y="3325.0">it.polimi.ingsw.model.cards.Deck</node>
+    <node x="874.0" y="3759.0">it.polimi.ingsw.model.resource.ResourceBuilder</node>
+    <node x="3706.0" y="3759.0">it.polimi.ingsw.model.cards.LevelDevCard</node>
+    <node x="1573.5" y="602.5">it.polimi.ingsw.model.player.MatchToPlayer</node>
+    <node x="0.0" y="3759.0">it.polimi.ingsw.model.player.personalBoard.PersonalBoard</node>
+    <node x="2984.0" y="3759.0">it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot</node>
+    <node x="359.7865853658536" y="2975.0">it.polimi.ingsw.model.requisite.Requisite</node>
+    <node x="5520.829268292683" y="2908.0">it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production</node>
+    <node x="842.0" y="2469.0">it.polimi.ingsw.model.player.PendingInitPlayerState</node>
+    <node x="2451.079268292683" y="3457.5">it.polimi.ingsw.model.cards.effects.AddDiscountEffect</node>
+    <node x="2703.079268292683" y="3457.5">it.polimi.ingsw.model.cards.effects.AddExtraProductionEffect</node>
+    <node x="3698.079268292683" y="3469.0">it.polimi.ingsw.model.cards.effects.MoveTwoEffect</node>
+    <node x="5479.0" y="3759.0">it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotBuilder</node>
+    <node x="1342.0" y="2370.0">it.polimi.ingsw.model.player.NoActionDonePlayerState</node>
+    <node x="4708.0" y="3876.5">it.polimi.ingsw.model.resource.strategy.DoNothingBehavior</node>
+    <node x="1358.0" y="4699.0">it.polimi.ingsw.model.Pair</node>
+    <node x="4456.0" y="3865.0">it.polimi.ingsw.model.resource.strategy.GiveFaithPointBehavior</node>
+    <node x="602.0" y="4699.0">it.polimi.ingsw.model.player.personalBoard.faithTrack.PopeTile</node>
+    <node x="2713.329268292683" y="2842.0">it.polimi.ingsw.model.resource.Resource</node>
+    <node x="1890.0" y="3413.0">it.polimi.ingsw.model.match.markettray.MarkerMarble.PaintableMarble</node>
+    <node x="1180.0" y="3402.5">it.polimi.ingsw.model.player.personalBoard.warehouse.depot.NormalDepot</node>
+    <node x="0.0" y="2391.5">it.polimi.ingsw.model.player.InitialSelectionPlayerState</node>
+    <node x="570.0" y="2458.0">it.polimi.ingsw.model.player.PendingMatchStartPlayerState</node>
+    <node x="1092.0" y="2469.0">it.polimi.ingsw.model.player.NotHisTurnPlayerState</node>
+    <node x="1508.0" y="4699.0">it.polimi.ingsw.model.exceptions</node>
+    <node x="4780.682926829268" y="2974.0">it.polimi.ingsw.model.cards.Card</node>
+    <node x="779.0" y="4699.0">it.polimi.ingsw.model.player.personalBoard.warehouse.MoveResource</node>
+    <node x="4456.0" y="3759.0">it.polimi.ingsw.model.resource.strategy.ObtainStrategy</node>
+    <node x="4985.0" y="3759.0">it.polimi.ingsw.model.player.personalBoard.DevCardSlot</node>
+    <node x="1875.0" y="2908.0">it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble</node>
+    <node x="1181.5" y="481.5">it.polimi.ingsw.model.player.PlayerAction</node>
+    <node x="2053.5" y="580.5">it.polimi.ingsw.model.player.PlayableCardReaction</node>
+    <node x="1734.0" y="2436.0">it.polimi.ingsw.model.player.ProductionPlayerState</node>
+    <node x="4127.079268292683" y="3480.0">it.polimi.ingsw.model.cards.SoloActionToken</node>
+    <node x="2271.25" y="122.5">it.polimi.ingsw.model.cards.effects.CardReaction</node>
+    <node x="3214.0" y="3759.0">it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor</node>
+    <node x="2138.0" y="3955.0">it.polimi.ingsw.model.player.personalBoard.faithTrack.Normal</node>
+    <node x="2753.0" y="2435.5">it.polimi.ingsw.model.player.BuyCardPlayerState</node>
+    <node x="2979.079268292683" y="3457.5">it.polimi.ingsw.model.cards.effects.AddProductionEffect</node>
+    <node x="2413.0" y="1392.0">it.polimi.ingsw.model.match.match.SingleplayerMatch</node>
+    <node x="3956.0" y="3759.0">it.polimi.ingsw.model.player.personalBoard.faithTrack.VaticanSpace</node>
+    <node x="0.0" y="4699.0">it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionRecord</node>
+    <node x="320.0" y="2469.0">it.polimi.ingsw.model.player.DisconnectedPlayerState</node>
+    <node x="437.0" y="3759.0">it.polimi.ingsw.model.player.personalBoard.warehouse.Warehouse</node>
+    <node x="601.0" y="3402.5">it.polimi.ingsw.model.requisite.ResourceRequisite</node>
+    <node x="5380.079268292683" y="3458.0">it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction</node>
+    <node x="1881.0" y="3955.0">it.polimi.ingsw.model.player.personalBoard.faithTrack.PopeSpace</node>
+    <node x="2126.0" y="2436.0">it.polimi.ingsw.model.player.MainActionDonePlayerState</node>
+    <node x="4371.079268292683" y="3424.5">it.polimi.ingsw.model.cards.LeaderCard</node>
+    <node x="2500.0" y="2469.0">it.polimi.ingsw.model.player.CountingPointsPlayerState</node>
+    <node x="1181.5" y="1436.5">it.polimi.ingsw.model.player.PlayerState</node>
+    <node x="1236.7865853658536" y="2975.5">it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot</node>
+    <node x="1694.5833333333333" y="1073.0">it.polimi.ingsw.model.player.Player</node>
+    <node x="3124.329268292683" y="3008.0">it.polimi.ingsw.model.cards.effects.Effect</node>
+    <node x="3458.0" y="3759.0">it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID</node>
+    <node x="1535.0" y="3413.5">it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Strongbox</node>
+    <node x="5729.079268292683" y="3347.0">it.polimi.ingsw.model.player.personalBoard.warehouse.production.UnknownProduction</node>
+    <node x="2418.329268292683" y="2897.5">it.polimi.ingsw.model.match.markettray.MarketTray</node>
+    <node x="2685.0" y="3759.0">it.polimi.ingsw.model.VirtualView</node>
+    <node x="4204.0" y="3876.5">it.polimi.ingsw.model.resource.strategy.LaunchExceptionBehavior</node>
+    <node x="2719.0" y="1469.5">it.polimi.ingsw.model.match.match.MultiplayerMatch</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.ingsw.model.cards.effects.ShuffleMoveOneEffect" target="it.polimi.ingsw.model.cards.effects.Effect" relationship="GENERALIZATION">
+      <point x="0.0" y="-50.5" />
+      <point x="2331.079268292683" y="3305.0" />
+      <point x="3210.329268292683" y="3305.0" />
+      <point x="0.0" y="50.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.match.match.SingleplayerMatch" target="it.polimi.ingsw.model.match.match.Match" relationship="GENERALIZATION">
+      <point x="71.5" y="-304.5" />
+      <point x="2627.5" y="1048.0" />
+      <point x="2847.5" y="1048.0" />
+      <point x="0.0" y="348.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.requisite.ColorCardRequisite" target="it.polimi.ingsw.model.requisite.Requisite" relationship="REALIZATION">
+      <point x="0.0" y="-106.0" />
+      <point x="453.0" y="3305.0" />
+      <point x="457.2865853658536" y="3305.0" />
+      <point x="0.0" y="83.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.Player" target="it.polimi.ingsw.model.player.PlayableCardReaction" relationship="REALIZATION">
+      <point x="153.33333333333348" y="-623.5" />
+      <point x="2077.916666666667" y="1048.0" />
+      <point x="2199.0" y="1048.0" />
+      <point x="0.0" y="94.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.match.match.MultiplayerMatch" target="it.polimi.ingsw.model.match.match.Match" relationship="GENERALIZATION">
+      <point x="0.0" y="-227.0" />
+      <point x="0.0" y="348.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.match.SoloTokenReaction" target="it.polimi.ingsw.model.cards.effects.CardReaction" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-50.0" />
+      <point x="2484.5" y="301.0" />
+      <point x="2341.75" y="301.0" />
+      <point x="0.0" y="15.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.cards.effects.AddDepotEffect" target="it.polimi.ingsw.model.cards.effects.Effect" relationship="GENERALIZATION">
+      <point x="0.0" y="-62.0" />
+      <point x="3998.579268292683" y="3305.0" />
+      <point x="3210.329268292683" y="3305.0" />
+      <point x="0.0" y="50.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.match.markettray.MarketTray" target="it.polimi.ingsw.model.MappableToLiteVersion" relationship="REALIZATION">
+      <point x="0.0" y="-161.0" />
+      <point x="2555.829268292683" y="2822.0" />
+      <point x="4019.329268292683" y="2822.0" />
+      <point x="4019.329268292683" y="2812.0" />
+      <point x="2805.829268292683" y="2812.0" />
+      <point x="52.5" y="28.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.requisite.CardRequisite" target="it.polimi.ingsw.model.requisite.Requisite" relationship="REALIZATION">
+      <point x="0.0" y="-106.0" />
+      <point x="152.5" y="3305.0" />
+      <point x="457.2865853658536" y="3305.0" />
+      <point x="0.0" y="83.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.cards.DevCard" target="it.polimi.ingsw.model.cards.Card" relationship="GENERALIZATION">
+      <point x="0.0" y="-84.0" />
+      <point x="4905.079268292683" y="3305.0" />
+      <point x="4633.762195121952" y="3305.0" />
+      <point x="4633.762195121952" y="3295.0" />
+      <point x="4831.182926829268" y="3295.0" />
+      <point x="-50.5" y="84.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.personalBoard.warehouse.depot.NormalDepot" target="it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot" relationship="REALIZATION">
+      <point x="0.0" y="-117.0" />
+      <point x="1347.5" y="3305.0" />
+      <point x="1404.2865853658536" y="3305.0" />
+      <point x="0.0" y="83.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.cards.Card" target="it.polimi.ingsw.model.MappableToLiteVersion" relationship="REALIZATION">
+      <point x="0.0" y="-84.5" />
+      <point x="4881.682926829268" y="2822.0" />
+      <point x="4019.329268292683" y="2822.0" />
+      <point x="4019.329268292683" y="2812.0" />
+      <point x="2805.829268292683" y="2812.0" />
+      <point x="52.5" y="28.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.DisconnectedPlayerState" target="it.polimi.ingsw.model.player.PlayerState" relationship="GENERALIZATION">
+      <point x="0.0" y="-61.5" />
+      <point x="435.0" y="2345.0" />
+      <point x="1367.5" y="2345.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.cards.DevSetup" target="it.polimi.ingsw.model.MappableToLiteVersion" relationship="REALIZATION">
+      <point x="0.0" y="-95.0" />
+      <point x="5187.182926829268" y="2822.0" />
+      <point x="4019.329268292683" y="2822.0" />
+      <point x="4019.329268292683" y="2812.0" />
+      <point x="2805.829268292683" y="2812.0" />
+      <point x="52.5" y="28.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.cards.effects.DestroyCardsEffect" target="it.polimi.ingsw.model.cards.effects.Effect" relationship="GENERALIZATION">
+      <point x="0.0" y="-62.0" />
+      <point x="3561.079268292683" y="3305.0" />
+      <point x="3210.329268292683" y="3305.0" />
+      <point x="0.0" y="50.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.personalBoard.warehouse.depot.SpecialDepot" target="it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot" relationship="REALIZATION">
+      <point x="0.0" y="-117.0" />
+      <point x="992.5" y="3305.0" />
+      <point x="1404.2865853658536" y="3305.0" />
+      <point x="0.0" y="83.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.MainActionDonePlayerState" target="it.polimi.ingsw.model.player.PlayerState" relationship="GENERALIZATION">
+      <point x="0.0" y="-94.5" />
+      <point x="2303.0" y="2345.0" />
+      <point x="1367.5" y="2345.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.cards.effects.Effect" target="it.polimi.ingsw.model.MappableToLiteVersion" relationship="REALIZATION">
+      <point x="0.0" y="-50.5" />
+      <point x="3210.329268292683" y="2822.0" />
+      <point x="4019.329268292683" y="2822.0" />
+      <point x="4019.329268292683" y="2812.0" />
+      <point x="2805.829268292683" y="2812.0" />
+      <point x="52.5" y="28.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.personalBoard.faithTrack.PopeSpace" target="it.polimi.ingsw.model.player.personalBoard.faithTrack.Cell" relationship="GENERALIZATION">
+      <point x="0.0" y="-73.0" />
+      <point x="1999.5" y="3930.0" />
+      <point x="2128.0" y="3930.0" />
+      <point x="0.0" y="73.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble" target="it.polimi.ingsw.model.MappableToLiteVersion" relationship="REALIZATION">
+      <point x="0.0" y="-150.5" />
+      <point x="1996.0" y="2822.0" />
+      <point x="4019.329268292683" y="2822.0" />
+      <point x="4019.329268292683" y="2812.0" />
+      <point x="2805.829268292683" y="2812.0" />
+      <point x="52.5" y="28.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.PlayableCardReaction" target="it.polimi.ingsw.model.cards.effects.CardReaction" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-94.0" />
+      <point x="2199.0" y="301.0" />
+      <point x="2341.75" y="301.0" />
+      <point x="0.0" y="15.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.requisite.Requisite" target="it.polimi.ingsw.model.MappableToLiteVersion" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-83.5" />
+      <point x="457.2865853658536" y="2822.0" />
+      <point x="1009.3292682926831" y="2822.0" />
+      <point x="1009.3292682926831" y="2812.0" />
+      <point x="2700.829268292683" y="2812.0" />
+      <point x="-52.5" y="28.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.personalBoard.faithTrack.Normal" target="it.polimi.ingsw.model.player.personalBoard.faithTrack.Cell" relationship="GENERALIZATION">
+      <point x="0.0" y="-73.0" />
+      <point x="2256.5" y="3930.0" />
+      <point x="2128.0" y="3930.0" />
+      <point x="0.0" y="73.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.Player" target="it.polimi.ingsw.model.player.PlayerAction" relationship="REALIZATION">
+      <point x="-153.33333333333348" y="-623.5" />
+      <point x="1771.2499999999998" y="1048.0" />
+      <point x="1367.5" y="1048.0" />
+      <point x="0.0" y="193.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.cards.SoloActionToken" target="it.polimi.ingsw.model.cards.Card" relationship="GENERALIZATION">
+      <point x="0.0" y="-39.5" />
+      <point x="4239.079268292683" y="3305.0" />
+      <point x="4633.762195121952" y="3305.0" />
+      <point x="4633.762195121952" y="3295.0" />
+      <point x="4831.182926829268" y="3295.0" />
+      <point x="-50.5" y="84.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.PendingMatchStartPlayerState" target="it.polimi.ingsw.model.player.PlayerState" relationship="GENERALIZATION">
+      <point x="0.0" y="-72.5" />
+      <point x="696.0" y="2345.0" />
+      <point x="1367.5" y="2345.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.InitialSelectionPlayerState" target="it.polimi.ingsw.model.player.PlayerState" relationship="GENERALIZATION">
+      <point x="0.0" y="-139.0" />
+      <point x="150.0" y="2345.0" />
+      <point x="1367.5" y="2345.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Strongbox" target="it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot" relationship="REALIZATION">
+      <point x="0.0" y="-106.0" />
+      <point x="1702.5" y="3305.0" />
+      <point x="1404.2865853658536" y="3305.0" />
+      <point x="0.0" y="83.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.resource.strategy.LaunchExceptionBehavior" target="it.polimi.ingsw.model.resource.strategy.ObtainStrategy" relationship="REALIZATION">
+      <point x="0.0" y="-39.5" />
+      <point x="4320.0" y="3840.0" />
+      <point x="4572.0" y="3840.0" />
+      <point x="0.0" y="28.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.resource.Resource" target="it.polimi.ingsw.model.MappableToLiteVersion" relationship="REALIZATION">
+      <point x="0.0" y="-216.5" />
+      <point x="2880.829268292683" y="2822.0" />
+      <point x="4019.329268292683" y="2822.0" />
+      <point x="4019.329268292683" y="2812.0" />
+      <point x="2805.829268292683" y="2812.0" />
+      <point x="52.5" y="28.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.resource.strategy.GiveFaithPointBehavior" target="it.polimi.ingsw.model.resource.strategy.ObtainStrategy" relationship="REALIZATION">
+      <point x="0.0" y="-51.0" />
+      <point x="0.0" y="28.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.cards.effects.AddProductionEffect" target="it.polimi.ingsw.model.cards.effects.Effect" relationship="GENERALIZATION">
+      <point x="0.0" y="-62.0" />
+      <point x="3094.079268292683" y="3305.0" />
+      <point x="3210.329268292683" y="3305.0" />
+      <point x="0.0" y="50.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.NotHisTurnPlayerState" target="it.polimi.ingsw.model.player.PlayerState" relationship="GENERALIZATION">
+      <point x="0.0" y="-61.5" />
+      <point x="1207.0" y="2345.0" />
+      <point x="1367.5" y="2345.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.ProductionPlayerState" target="it.polimi.ingsw.model.player.PlayerState" relationship="GENERALIZATION">
+      <point x="0.0" y="-94.5" />
+      <point x="1920.0" y="2345.0" />
+      <point x="1367.5" y="2345.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.cards.LeaderCard" target="it.polimi.ingsw.model.cards.Card" relationship="GENERALIZATION">
+      <point x="0.0" y="-95.0" />
+      <point x="4518.579268292683" y="3305.0" />
+      <point x="4633.762195121952" y="3305.0" />
+      <point x="4633.762195121952" y="3295.0" />
+      <point x="4831.182926829268" y="3295.0" />
+      <point x="-50.5" y="84.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.CountingPointsPlayerState" target="it.polimi.ingsw.model.player.PlayerState" relationship="GENERALIZATION">
+      <point x="0.0" y="-61.5" />
+      <point x="2616.5" y="2345.0" />
+      <point x="1367.5" y="2345.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.BuyCardPlayerState" target="it.polimi.ingsw.model.player.PlayerState" relationship="GENERALIZATION">
+      <point x="0.0" y="-95.0" />
+      <point x="2938.5" y="2345.0" />
+      <point x="1367.5" y="2345.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.cards.effects.AddDiscountEffect" target="it.polimi.ingsw.model.cards.effects.Effect" relationship="GENERALIZATION">
+      <point x="0.0" y="-62.0" />
+      <point x="2567.079268292683" y="3305.0" />
+      <point x="3210.329268292683" y="3305.0" />
+      <point x="0.0" y="50.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production" target="it.polimi.ingsw.model.MappableToLiteVersion" relationship="REALIZATION">
+      <point x="0.0" y="-150.5" />
+      <point x="5721.829268292683" y="2822.0" />
+      <point x="4019.329268292683" y="2822.0" />
+      <point x="4019.329268292683" y="2812.0" />
+      <point x="2805.829268292683" y="2812.0" />
+      <point x="52.5" y="28.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.personalBoard.warehouse.depot.Depot" target="it.polimi.ingsw.model.MappableToLiteVersion" relationship="INTERFACE_GENERALIZATION">
+      <point x="0.0" y="-83.0" />
+      <point x="1404.2865853658536" y="2822.0" />
+      <point x="1009.3292682926831" y="2822.0" />
+      <point x="1009.3292682926831" y="2812.0" />
+      <point x="2700.829268292683" y="2812.0" />
+      <point x="-52.5" y="28.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.personalBoard.faithTrack.FaithTrack" target="it.polimi.ingsw.model.MappableToLiteVersion" relationship="REALIZATION">
+      <point x="0.0" y="-172.5" />
+      <point x="4060.012195121951" y="2822.0" />
+      <point x="4019.329268292683" y="2822.0" />
+      <point x="4019.329268292683" y="2812.0" />
+      <point x="2805.829268292683" y="2812.0" />
+      <point x="52.5" y="28.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.PlayerState" target="it.polimi.ingsw.model.player.PlayerAction" relationship="REALIZATION">
+      <point x="0.0" y="-260.0" />
+      <point x="0.0" y="193.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.match.markettray.MarkerMarble.PaintableMarble" target="it.polimi.ingsw.model.match.markettray.MarkerMarble.Marble" relationship="GENERALIZATION">
+      <point x="0.0" y="-106.5" />
+      <point x="0.0" y="150.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.match.match.SingleplayerMatch" target="it.polimi.ingsw.model.match.SoloTokenReaction" relationship="REALIZATION">
+      <point x="-71.5" y="-304.5" />
+      <point x="0.0" y="50.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.cards.Deck" target="it.polimi.ingsw.model.cards.Card" relationship="DEPENDENCY">
+      <point x="0.0" y="-194.5" />
+      <point x="5247.579268292683" y="3305.0" />
+      <point x="4932.182926829268" y="3305.0" />
+      <point x="50.5" y="84.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.requisite.ResourceRequisite" target="it.polimi.ingsw.model.requisite.Requisite" relationship="REALIZATION">
+      <point x="0.0" y="-117.0" />
+      <point x="703.0" y="3305.0" />
+      <point x="457.2865853658536" y="3305.0" />
+      <point x="0.0" y="83.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.match.match.Match" target="it.polimi.ingsw.model.match.PlayerToMatch" relationship="REALIZATION">
+      <point x="0.0" y="-348.5" />
+      <point x="0.0" y="138.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.cards.effects.WhiteMarbleEffect" target="it.polimi.ingsw.model.cards.effects.Effect" relationship="GENERALIZATION">
+      <point x="0.0" y="-62.0" />
+      <point x="3326.579268292683" y="3305.0" />
+      <point x="3210.329268292683" y="3305.0" />
+      <point x="0.0" y="50.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.resource.strategy.DoNothingBehavior" target="it.polimi.ingsw.model.resource.strategy.ObtainStrategy" relationship="REALIZATION">
+      <point x="0.0" y="-39.5" />
+      <point x="4824.0" y="3840.0" />
+      <point x="4572.0" y="3840.0" />
+      <point x="0.0" y="28.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.personalBoard.warehouse.production.UnknownProduction" target="it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production" relationship="GENERALIZATION">
+      <point x="0.0" y="-172.5" />
+      <point x="5899.079268292683" y="3305.0" />
+      <point x="5721.829268292683" y="3305.0" />
+      <point x="0.0" y="150.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.NoActionDonePlayerState" target="it.polimi.ingsw.model.player.PlayerState" relationship="GENERALIZATION">
+      <point x="0.0" y="-160.5" />
+      <point x="1528.0" y="2345.0" />
+      <point x="1367.5" y="2345.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.Player" target="it.polimi.ingsw.model.player.MatchToPlayer" relationship="REALIZATION">
+      <point x="0.0" y="-623.5" />
+      <point x="1924.5833333333333" y="1048.0" />
+      <point x="1803.5" y="1048.0" />
+      <point x="0.0" y="72.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.personalBoard.warehouse.production.NormalProduction" target="it.polimi.ingsw.model.player.personalBoard.warehouse.production.Production" relationship="GENERALIZATION">
+      <point x="0.0" y="-61.5" />
+      <point x="5544.579268292683" y="3305.0" />
+      <point x="5721.829268292683" y="3305.0" />
+      <point x="0.0" y="150.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.player.PendingInitPlayerState" target="it.polimi.ingsw.model.player.PlayerState" relationship="GENERALIZATION">
+      <point x="0.0" y="-61.5" />
+      <point x="957.0" y="2345.0" />
+      <point x="1367.5" y="2345.0" />
+      <point x="0.0" y="260.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.cards.effects.MoveTwoEffect" target="it.polimi.ingsw.model.cards.effects.Effect" relationship="GENERALIZATION">
+      <point x="0.0" y="-50.5" />
+      <point x="3784.079268292683" y="3305.0" />
+      <point x="3210.329268292683" y="3305.0" />
+      <point x="0.0" y="50.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.model.cards.effects.AddExtraProductionEffect" target="it.polimi.ingsw.model.cards.effects.Effect" relationship="GENERALIZATION">
+      <point x="0.0" y="-62.0" />
+      <point x="2831.079268292683" y="3305.0" />
+      <point x="3210.329268292683" y="3305.0" />
+      <point x="0.0" y="50.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.4000000000000001" showDependencies="false" x="1489.9999999999995" y="5078.071428571428" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

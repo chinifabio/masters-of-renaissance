@@ -285,10 +285,14 @@ public class PersonalBoard {
         return this.warehouse.setNormalProduction(id, normalProduction);
     }
 
-
+    /**
+     * This method restore the original status of the Productions
+     */
     public void restoreProd(){
         this.warehouse.clearProduction();
     }
+
+
     /**
      * This method stores the resource in the buffer depot, then it will be the player to move
      * from buffer depot to a legal one
@@ -411,6 +415,9 @@ public class PersonalBoard {
         return points;
     }
 
+    /**
+     * This method updates the current LeaderCards in the LiteModel
+     */
     private void updateLeader() {
         player.view.publish(model -> model.setLeader(
                 player.getNickname(),
@@ -418,6 +425,9 @@ public class PersonalBoard {
         ));
     }
 
+    /**
+     * This method updates the current DevCards in the LiteModel
+     */
     private void updateDevCard() {
         DevCard nullCard = new DevCard("Empty", new AddDiscountEffect(ResourceType.SERVANT), 0, LevelDevCard.NOLEVEL, ColorDevCard.NOCOLOR,  new ArrayList<>());
 
@@ -443,6 +453,9 @@ public class PersonalBoard {
         player.view.publish(model -> model.setDevelop(player.getNickname(), deck));
     }
 
+    /**
+     * @return the Depots with the DepotSlot
+     */
     public Map<DepotSlot, Depot> getDepots() {
         return this.warehouse.getDepot();
     }

@@ -24,6 +24,9 @@ import it.polimi.ingsw.view.View;
         @JsonSubTypes.Type(name = "Message", value = PlayerMessage.class),
         @JsonSubTypes.Type(name = "Error", value = PlayerError.class),
 })
+/**
+ * This class
+ */
 public abstract class ClientExecutable {
     /**
      * Execute a command on the view
