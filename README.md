@@ -12,10 +12,10 @@ These are the diagrams of the classes, the first one is the UML created at the b
 - [Final UML](//Da aggiugere)
 
 ### JavaDoc
-This is the documentation of most of the classes and methods implemented. You can consult it at:: [Javadoc](//Da aggiungere)
+This is the documentation of all of the classes and methods implemented. You can consult it at:: [Javadoc](//Da aggiungere)
 
 ### Coverage report
-Numerous tests have been performed using Junit, you can consult the coverage report at the following link:: [Report](//Da aggiungere)
+Numerous tests have been performed using JUnit, you can consult the coverage report at the following link:: [Report](//Da aggiungere)
 
 
 ### Plugins and Libraries
@@ -27,18 +27,18 @@ Numerous tests have been performed using Junit, you can consult the coverage rep
 ## Implemented Functionalities
 | Functionality | Status |
 |:-----------------------|:------------------------------------:|
-| Basic rules | ![GREEN](http://placehold.it/15/44bb44/44bb44)|
-| Complete rules | ![GREEN](http://placehold.it/15/44bb44/44bb44)|
-| Socket |![GREEN](http://placehold.it/15/44bb44/44bb44) |
-| GUI | ![GREEN](http://placehold.it/15/44bb44/44bb44) |
-| CLI |![GREEN](http://placehold.it/15/44bb44/44bb44) |
-| Multiple games | ![GREEN](http://placehold.it/15/44bb44/44bb44)|
-| Persistence | ![RED](http://placehold.it/15/f03c15/f03c15) |
-| Parameter editor | ![RED](http://placehold.it/15/f03c15/f03c15) |
-| Local game | ![RED](http://placehold.it/15/f03c15/f03c15) |
-| Resilience to disconnections | ![GREEN](http://placehold.it/15/44bb44/44bb44)|
+| Basic rules | ![GREEN](https://dummyimage.com/20x20/00ff7b/00ff7b)|
+| Complete rules | ![GREEN](https://dummyimage.com/20x20/00ff7b/00ff7b)|
+| Socket |![GREEN](https://dummyimage.com/20x20/00ff7b/00ff7b) |
+| GUI | ![GREEN](https://dummyimage.com/20x20/00ff7b/00ff7b) |
+| CLI |![GREEN](https://dummyimage.com/20x20/00ff7b/00ff7b) |
+| Multiple games | ![GREEN](https://dummyimage.com/20x20/00ff7b/00ff7b)|
+| Persistence | ![RED](https://dummyimage.com/20x20/ff0015/ff0015) |
+| Parameter editor | ![RED](https://dummyimage.com/20x20/ff0015/ff0015) |
+| Local game | ![RED](https://dummyimage.com/20x20/ff0015/ff0015) |
+| Resilience to disconnections | ![GREEN](https://dummyimage.com/20x20/00ff7b/00ff7b)|
 #### Legend
-[![RED](http://placehold.it/15/f03c15/f03c15)]() Not Implemented &nbsp;&nbsp;&nbsp;&nbsp;[![GREEN](http://placehold.it/15/44bb44/44bb44)]() Implemented
+[![RED](https://dummyimage.com/20x20/ff0015/ff0015)]() Not Implemented &nbsp;&nbsp;&nbsp;&nbsp;[![GREEN](https://dummyimage.com/20x20/00ff7b/00ff7b)]() Implemented
 
 
 ## Software
@@ -56,7 +56,7 @@ The Jars of this project can be found here: [JARS] (//Da aggiungere)
 
 ### Client
 The following instructions describe how to successfully start the application in GUI and CLI.
-Due to the limitations of the windows command line, it is necessary to use WSL in order to play in CLI mode with this operating system.
+Due to the limitations of the Windows command line, it is necessary to use WSL in order to play in CLI mode with this operating system, instead the CLI works perfectly with Linux and macOS operating systems.
 
 #### CLI
 //Descrizione di come lanciare la CLI
