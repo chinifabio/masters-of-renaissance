@@ -8,11 +8,8 @@ This project is the JAVA implemantation of the board game: [Masters of Renaissan
 ### UML
 These are the diagrams of the classes, the first one is the UML created at the beginning of the project, the last one is the final UML created at the end of the project. 
 
-- [Initial UML](deliveries/UML/UML_Initial_Model.mdj)
-- [Final UML](//Da aggiugere)
-
-### JavaDoc
-This is the documentation of all of the classes and methods implemented. You can consult it at:: [Javadoc](//Da aggiungere)
+- [Initial UML](deliveries/UML/Model_initial_UML.jpg)
+- [Final UML](deliveries/UML/Model_final_UML.png)
 
 ### Coverage report
 Numerous tests have been performed using JUnit, you can consult the coverage report at the following link:: [Report](//Da aggiungere)
