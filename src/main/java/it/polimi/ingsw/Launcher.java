@@ -64,7 +64,7 @@ public class Launcher {
             }
         }
 
-        if (port < 1024) {
+        if (port < 1024 || port > 65535) {
             System.out.println("Illegal server port " + port);
             return;
         }
@@ -73,21 +73,21 @@ public class Launcher {
             switch (executable) {
                 case "cli" -> {
                     if (System.getProperty("os.name").contains("Windows")) {
-                        System.out.println("You can't run this JAR on windows... To fix you can try to install WSL");
+                        System.out.println("You can't run the cli on windows... To fix you can try to install WSL");
                         return;
                     }
                     new CLI(address, port).start();
                 }
                 case "server" -> {
                     if (System.getProperty("os.name").contains("Windows")) {
-                        System.out.println("You can't run this JAR on windows... To fix you can try to install WSL");
+                        System.out.println("You can't run the server on windows... To fix you can try to install WSL");
                         return;
                     }
                     new Server(port).start();
                 }
                 case "gui" -> new GUI(address, port).start();
 
-                default -> System.out.println(executable + " is an invalid executable parameter. Valid parameters are {\"cli\", \"gui\", \"server\"");
+                default -> System.out.println(executable + " is an invalid executable parameter. Valid parameters are \"cli\", \"gui\", \"server\"");
             }
         } catch (IOException e) {
             System.out.println("fail launching " + executable);

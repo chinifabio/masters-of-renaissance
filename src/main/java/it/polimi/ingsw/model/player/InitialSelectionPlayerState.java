@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.Pair;
-import it.polimi.ingsw.communication.packet.ChannelTypes;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.cards.LeaderCard;
 import it.polimi.ingsw.model.exceptions.card.AlreadyInDeckException;
 import it.polimi.ingsw.model.exceptions.card.EmptyDeckException;
@@ -60,6 +57,7 @@ public class InitialSelectionPlayerState extends PlayerState {
         context.view.sendPlayerMessage(context.nickname, initRes.one > 0 ?
                 "Please discard 2 leader cards and choose " + initRes.one + " resources" :
                 "Please discard 2 leader cards");
+        if (initRes.two > 0) context.view.sendPlayerMessage(context.nickname, "You obtained " + initRes.two + " faith points!");
     }
 
     /**
@@ -79,14 +77,6 @@ public class InitialSelectionPlayerState extends PlayerState {
     @Override
     public PlayerState handleDisconnection() {
         return this;
-    }
-
-    /**
-     * Receive the input to start the turn
-     */
-    @Override
-    public void starTurn() {
-        System.out.println("errore");
     }
 
     // -------------------- PLAYER STATE IMPLEMENTATIONS -----------------------------------
