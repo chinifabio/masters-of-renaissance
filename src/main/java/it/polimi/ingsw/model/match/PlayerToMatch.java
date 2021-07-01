@@ -84,7 +84,7 @@ public interface PlayerToMatch {
 
     /**
      * This method starts the end game logic
-     * @param endGameMessage
+     * @param endGameMessage is the end game massage
      */
     void startEndGameLogic(String endGameMessage);
 

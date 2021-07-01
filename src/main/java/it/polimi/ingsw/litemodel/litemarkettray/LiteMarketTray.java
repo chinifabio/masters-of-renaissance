@@ -3,8 +3,6 @@ package it.polimi.ingsw.litemodel.litemarkettray;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Arrays;
-
 /**
  * This class represents the lite version of the MarketTray
  */

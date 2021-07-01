@@ -88,15 +88,4 @@ public class MarketTrayPrinter {
         System.out.println();
 
     }
-
-    /*
-    public static void main(String[] args) throws EmptyDeckException, IOException {
-        MarketTray marketTray = new ObjectMapper()
-                .readerFor(MarketTray.class)
-                .readValue(MarketTrayPrinter.class.getResourceAsStream("/json/MarketTray.json"));
-        LiteMarketTray liteTray = marketTray.liteVersion();
-        printMarketTray(liteTray);
-    }
-
-     */
 }

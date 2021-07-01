@@ -7,7 +7,6 @@ import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequisite;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
-import it.polimi.ingsw.model.requisite.Requisite;
 
 import java.util.List;
 

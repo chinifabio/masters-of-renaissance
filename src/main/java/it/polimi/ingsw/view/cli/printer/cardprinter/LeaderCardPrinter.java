@@ -68,23 +68,4 @@ public class LeaderCardPrinter {
         }
     }
 
-    /*
-    public static void main(String[] args) throws IOException {
-        LeaderCardPrinter printer = new LeaderCardPrinter();
-        List<LiteLeaderCard> leaderCards;
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        leaderCards = objectMapper.readValue(
-                LeaderCardPrinter.class.getResourceAsStream("/json/LeaderCards.json"),
-                new TypeReference<List<LiteLeaderCard>>(){});
-
-        for (LiteLeaderCard card: leaderCards){
-            printer.printLeaderCard(card);
-        }
-
-    }
-
-     */
-
 }

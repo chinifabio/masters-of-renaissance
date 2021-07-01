@@ -59,8 +59,8 @@ public class LitePersonalBoard {
     }
 
     /**
-     * printer, che faccio?
-     * @param amount
+     * This method update the playerPosition
+     * @param amount is the number of the player position
      */
     public void movePlayer(int amount) {
         this.track.movePlayer(amount);
@@ -103,8 +103,8 @@ public class LitePersonalBoard {
     }
 
     /**
-     * printer
-     * @param popeTile
+     * This method flips a PopeTile given by the string
+     * @param popeTile is the popeTile to flip
      */
     public void flipPopeTile(String popeTile) {
         this.track.flipPopeTile(popeTile);

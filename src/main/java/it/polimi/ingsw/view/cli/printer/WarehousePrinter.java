@@ -1,7 +1,6 @@
 package it.polimi.ingsw.view.cli.printer;
 
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
-import it.polimi.ingsw.model.resource.ResourceBuilder;
 import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteDepot;
 import it.polimi.ingsw.litemodel.LiteModel;
@@ -175,7 +174,6 @@ public class WarehousePrinter {
         if (model.getDepot(nickname, DepotSlot.SPECIAL2) != null) {
             special.add(model.getDepot(nickname, DepotSlot.SPECIAL2));
         }
-        int index = 1;
         int initString = 0;
         String special1 = "SPECIAL";
         char firstletter;
@@ -232,7 +230,6 @@ public class WarehousePrinter {
                 display[initSpecialX][initSpecialY + 6] = "]";
             }
             initString = 0;
-            index++;
             initSpecialY = y + 29;
             initSpecialX = x + 3;
         }
@@ -327,52 +324,5 @@ public class WarehousePrinter {
         }
         System.out.println();
     }
-
-    /*
-    public static void main(String[] args){
-        LiteModel model = new LiteModel();
-        model.createPlayer("gino");
-
-        LiteResource coin = new LiteResource(ResourceType.COIN, 2);
-        LiteResource shield = new LiteResource(ResourceType.SHIELD, 1);
-        LiteResource stone = new LiteResource(ResourceType.STONE, 3);
-        LiteResource servant = new LiteResource(ResourceType.SERVANT, 5);
-
-        List<LiteResource> resourcesTop = new ArrayList<>();
-        resourcesTop.add(shield);
-        List<LiteResource> resourcesMiddle = new ArrayList<>();
-        resourcesMiddle.add(coin);
-        List<LiteResource> resourcesBottom = new ArrayList<>();
-        resourcesBottom.add(stone);
-
-        List<LiteResource> resourceSpecial = new ArrayList<>();
-        resourceSpecial.add(ResourceBuilder.buildServant(1).liteVersion());
-
-        List<LiteResource> resourcesStrongbox = new ArrayList<>();
-        resourcesStrongbox.add(new LiteResource(ResourceType.COIN, 20));
-        resourcesStrongbox.add(servant);
-        resourcesStrongbox.add(new LiteResource(ResourceType.STONE, 3));
-        resourcesStrongbox.add(new LiteResource(ResourceType.SHIELD, 15));
-
-        LiteDepot depotTop = new LiteDepot(resourcesTop);
-        LiteDepot depotBottom = new LiteDepot(resourcesBottom);
-        LiteDepot depotMiddle = new LiteDepot(resourcesMiddle);
-        LiteDepot strongbox = new LiteDepot(resourcesStrongbox);
-        LiteDepot buffer = new LiteDepot(resourcesStrongbox);
-        LiteDepot special1 = new LiteDepot(resourcesMiddle);
-        LiteDepot special2 = new LiteDepot(resourceSpecial);
-
-        model.setDepot("gino", DepotSlot.TOP, depotTop);
-        model.setDepot("gino", DepotSlot.MIDDLE, depotMiddle);
-        model.setDepot("gino", DepotSlot.BOTTOM, depotBottom);
-        model.setDepot("gino", DepotSlot.STRONGBOX, strongbox);
-        model.setDepot("gino", DepotSlot.BUFFER, buffer);
-        model.setDepot("gino", DepotSlot.SPECIAL1, special1);
-        model.setDepot("gino", DepotSlot.SPECIAL2, special2);
-
-        printWarehouse(model, "gino");
-    }
-
-     */
 
 }

@@ -5,9 +5,11 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.communication.packet.clientexecutable.*;
 import it.polimi.ingsw.view.View;
 
+/**
+ * This class executes the Client requests
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, creatorVisibility = JsonAutoDetect.Visibility.NONE)
 @JsonSubTypes({
@@ -24,9 +26,6 @@ import it.polimi.ingsw.view.View;
         @JsonSubTypes.Type(name = "Message", value = PlayerMessage.class),
         @JsonSubTypes.Type(name = "Error", value = PlayerError.class),
 })
-/**
- * This class executes the Client requests
- */
 public abstract class ClientExecutable {
     /**
      * Execute a command on the view

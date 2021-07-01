@@ -1,13 +1,10 @@
 package it.polimi.ingsw.model.cards;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
 import it.polimi.ingsw.model.cards.effects.Effect;
 import it.polimi.ingsw.model.requisite.Requisite;

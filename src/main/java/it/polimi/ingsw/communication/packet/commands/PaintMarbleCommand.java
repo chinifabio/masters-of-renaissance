@@ -1,9 +1,7 @@
 package it.polimi.ingsw.communication.packet.commands;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.player.PlayerAction;
 
 /**

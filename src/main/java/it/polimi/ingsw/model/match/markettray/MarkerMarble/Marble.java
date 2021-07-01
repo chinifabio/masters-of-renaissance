@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litemarkettray.LiteMarble;
 import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.exceptions.tray.UnpaintableMarbleException;

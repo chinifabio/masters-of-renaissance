@@ -3,7 +3,6 @@ package it.polimi.ingsw.litemodel.litecards;
 import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
 import it.polimi.ingsw.litemodel.litecards.literequirements.LiteRequisite;
-import it.polimi.ingsw.model.requisite.Requisite;
 
 import java.util.List;
 

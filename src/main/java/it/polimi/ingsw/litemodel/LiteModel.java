@@ -2,7 +2,6 @@ package it.polimi.ingsw.litemodel;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.litemodel.litecards.LiteDevSetup;
 import it.polimi.ingsw.litemodel.litecards.LiteLeaderCard;
@@ -114,18 +113,6 @@ public class LiteModel {
     public synchronized void setDevSetup(LiteDevSetup devSetup) {
         this.devSetup = devSetup;
     }
-
-
-
-    /*
-    /**
-     * This method moves the player on the faith track
-     */
-    /*
-    public synchronized void movePlayer(String nickname, int amount) {
-        this.players.get(nickname).movePlayer(amount);
-    }
-    */
 
     /**
      * This method updates the whole faith track of a player: position, popetiles
@@ -294,17 +281,6 @@ public class LiteModel {
         return scoreboard;
     }
 
-
-    /*
-    /**
-     * This method flips a PopeTile
-     */
-    /*
-    public synchronized void flipPopeTile(String nickname, String popeTile) {
-        this.players.get(nickname).flipPopeTile(popeTile);
-    }
-
-     */
 
     /**
      * This method returns every production of a given player

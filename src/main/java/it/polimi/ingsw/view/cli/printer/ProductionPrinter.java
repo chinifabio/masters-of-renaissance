@@ -4,13 +4,8 @@ import it.polimi.ingsw.litemodel.LiteModel;
 import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.ProductionID;
-import it.polimi.ingsw.model.resource.ResourceType;
 import it.polimi.ingsw.view.cli.CLI;
 import it.polimi.ingsw.view.cli.Colors;
-
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 
 /**

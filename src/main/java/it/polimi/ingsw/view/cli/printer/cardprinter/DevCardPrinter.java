@@ -90,31 +90,4 @@ public class DevCardPrinter {
 
     }
 
-
-    /*
-    public static void main(String[] args) throws IOException {
-        DevCardPrinter printer = new DevCardPrinter();
-        List<LiteDevCard> devCards = new ArrayList<>();
-        List<List<LiteDevCard>> devCardsList = new ArrayList<>();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            devCardsList = objectMapper.readValue(
-                    DevCardPrinter.class.getResourceAsStream("/json/DevCards.json"),
-                    new TypeReference<List<List<LiteDevCard>>>(){});
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-        for (List<LiteDevCard> list : devCardsList){
-            devCards.addAll(list);
-        }
-
-        for (LiteDevCard card : devCards){
-            printer.printDevCard(card);
-        }
-
-    }
-
-     */
-
 }

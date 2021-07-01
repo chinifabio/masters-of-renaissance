@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.player.PlayerAction;
 
 /**

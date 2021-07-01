@@ -1,7 +1,6 @@
 package it.polimi.ingsw.communication.packet.commands;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.player.PlayerAction;
 
 /**

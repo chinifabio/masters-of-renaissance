@@ -114,10 +114,8 @@ public class Scoreboard {
          * Compares this object with the specified object for order.  Returns a
          * negative integer, zero, or a positive integer as this object is less
          * than, equal to, or greater than the specified object.
-         *
-         * @throws NullPointerException if the specified object is null
-         * @throws ClassCastException   if the specified object's type prevents it
-         *                              from being compared to this object.
+         * @param other is the element to compare
+         * @return the value of the comparison
          */
         @Override
         public int compareTo(Scoreboard.BoardEntry other) {

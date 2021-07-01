@@ -55,14 +55,4 @@ public class DevSetupPrinter {
 
 
     }
-
-    /*
-    public static void main(String[] args) throws EmptyDeckException, IOException {
-        DevSetup set = new DevSetup();
-        LiteDevSetup devSetup = set.liteVersion();
-
-        printDevSetup(devSetup);
-    }
-
-     */
 }

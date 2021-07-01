@@ -1,7 +1,6 @@
 package it.polimi.ingsw.litemodel.litecards.liteeffect;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.litemodel.litewarehouse.LiteProduction;

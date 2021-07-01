@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.litemodel.LiteResource;
-import it.polimi.ingsw.litemodel.LiteResource;
 import it.polimi.ingsw.model.resource.ResourceType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**

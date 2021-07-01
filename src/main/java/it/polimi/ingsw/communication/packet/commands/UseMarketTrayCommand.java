@@ -3,10 +3,6 @@ package it.polimi.ingsw.communication.packet.commands;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.communication.packet.Packet;
-import it.polimi.ingsw.model.exceptions.PlayerStateException;
-import it.polimi.ingsw.model.exceptions.tray.OutOfBoundMarketTrayException;
-import it.polimi.ingsw.model.exceptions.warehouse.UnobtainableResourceException;
 import it.polimi.ingsw.model.match.markettray.RowCol;
 import it.polimi.ingsw.model.player.PlayerAction;
 

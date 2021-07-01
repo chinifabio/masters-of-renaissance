@@ -3,8 +3,6 @@ package it.polimi.ingsw.litemodel.litecards;
 import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.litemodel.litecards.liteeffect.LiteEffect;
 
-import java.util.HashMap;
-
 /**
  * This class represents the lite version of a Card
  */

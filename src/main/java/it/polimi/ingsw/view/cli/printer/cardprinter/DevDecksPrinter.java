@@ -66,35 +66,4 @@ public class DevDecksPrinter {
         }
     }
 
-    /*
-    public static void main(String[] args) throws IOException {
-        List<List<LiteDevCard>> cardFile;
-        HashMap<DevCardSlot, List<LiteDevCard>> deck = new HashMap<DevCardSlot, List<LiteDevCard>>(){{
-            put(DevCardSlot.LEFT, new ArrayList<>());
-            put(DevCardSlot.CENTER, new ArrayList<>());
-            put(DevCardSlot.RIGHT, new ArrayList<>());
-        }};
-        ObjectMapper objectMapper = new ObjectMapper();
-        Random rd = new Random();
-
-        cardFile = objectMapper.readValue(
-                DevDecksPrinter.class.getResourceAsStream("/json/DevCards.json"),
-                new TypeReference<List<List<LiteDevCard>>>(){});
-
-
-        deck.get(DevCardSlot.LEFT).add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
-        deck.get(DevCardSlot.LEFT).add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
-        deck.get(DevCardSlot.CENTER).add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
-        deck.get(DevCardSlot.CENTER).add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
-        deck.get(DevCardSlot.RIGHT).add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
-        deck.get(DevCardSlot.RIGHT).add(cardFile.get(rd.nextInt(12)).get(rd.nextInt(4)));
-
-
-
-
-        printDevDecks(deck);
-    }
-
-     */
-
 }

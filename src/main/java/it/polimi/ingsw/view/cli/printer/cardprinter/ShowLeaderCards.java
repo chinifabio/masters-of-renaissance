@@ -60,27 +60,6 @@ public class ShowLeaderCards {
         }
     }
 
-    /*
-    public static void main(String[] args) throws IOException {
-        List<LiteLeaderCard> names = new ArrayList<>();
-        List<LiteLeaderCard> leaderCards;
-        ObjectMapper objectMapper = new ObjectMapper();
-        Random rd = new Random();
-
-        leaderCards = objectMapper.readValue(
-                ShowLeaderCards.class.getResourceAsStream("/json/LeaderCards.json"),
-                new TypeReference<List<LiteLeaderCard>>(){});
-
-        names.add(leaderCards.get(rd.nextInt(16)));
-        names.add(leaderCards.get(rd.nextInt(16)));
-        names.add(leaderCards.get(rd.nextInt(16)));
-        names.add(leaderCards.get(rd.nextInt(16)));
-
-        printLeaderCardsPlayer(names);
-    }
-
-     */
-
 
 
 }

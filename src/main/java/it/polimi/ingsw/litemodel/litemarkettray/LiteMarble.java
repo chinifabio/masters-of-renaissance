@@ -3,7 +3,6 @@ package it.polimi.ingsw.litemodel.litemarkettray;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.model.MappableToLiteVersion;
 import it.polimi.ingsw.model.match.markettray.MarkerMarble.MarbleColor;
 import it.polimi.ingsw.model.resource.ResourceType;
 

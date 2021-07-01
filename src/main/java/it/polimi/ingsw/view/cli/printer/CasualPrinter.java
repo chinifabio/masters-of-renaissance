@@ -66,36 +66,5 @@ public class CasualPrinter {
         }
         System.out.println();
     }
-
-    /*
-    public static void main(String[] args) {
-        LiteModel model = new LiteModel();
-
-        model.createPlayer("Vinz");
-        model.createPlayer("Cini");
-        model.createPlayer("Lorenzo il Magnifico");
-        model.createPlayer("LastBuddy");
-
-        printPlayers(model);
-        System.out.println("");
-
-        List<MarbleColor> mb = new ArrayList<>();
-        printConversion(mb);
-        System.out.println("");
-        mb.add(MarbleColor.YELLOW);
-        mb.add(MarbleColor.GRAY);
-        printConversion(mb);
-
-        System.out.println("");
-
-        List<LiteResource> lr = new ArrayList<>();
-        printDiscounts(lr);
-        System.out.println("");
-        lr.add(new LiteResource(ResourceType.SHIELD,1));
-        lr.add(new LiteResource(ResourceType.SERVANT,1));
-        printDiscounts(lr);
-    }
-
-     */
 }
 

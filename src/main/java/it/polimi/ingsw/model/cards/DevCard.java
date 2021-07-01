@@ -2,8 +2,6 @@ package it.polimi.ingsw.model.cards;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.litemodel.litecards.LiteDevCard;
 import it.polimi.ingsw.model.cards.effects.Effect;
 import it.polimi.ingsw.model.requisite.Requisite;

@@ -264,42 +264,6 @@ public class FaithTrackPrinter {
         System.out.println();
     }
 
-    /*
-    public static void main(String[] args) throws IOException {
-
-        LiteModel model = new LiteModel();
-
-        model.createPlayer("Vinz");
-        model.createPlayer("Cini");
-        model.createPlayer("Lorenzo il Magnifico");
-        model.createPlayer("LastBuddy");
-
-        model.flipPopeTile("Vinz", "FIRST");
-        model.flipPopeTile("Vinz", "SECOND");
-
-        model.flipPopeTile("Cini", "THIRD");
-
-        model.flipPopeTile("LastBuddy", "SECOND");
-        model.flipPopeTile("LastBuddy", "THIRD");
-
-        model.flipPopeTile("Lorenzo il Magnifico", "THIRD");
-
-
-        FaithTrackPrinter printer = new FaithTrackPrinter();
-
-        Random numbers = new Random();
-
-        model.movePlayer("Vinz", numbers.nextInt(24));
-        model.movePlayer("Cini", numbers.nextInt(24));
-        model.movePlayer("LastBuddy", numbers.nextInt(24));
-        model.movePlayer("Lorenzo il Magnifico", numbers.nextInt(24));
-
-        printer.printTrack(model);
-
-    }
-
-     */
-
 
     /**
      * This method indicates if the Cell is in a VaticanSpace

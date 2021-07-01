@@ -2,14 +2,11 @@ package it.polimi.ingsw.communication.packet.commands;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.cards.ColorDevCard;
 import it.polimi.ingsw.model.cards.LevelDevCard;
 import it.polimi.ingsw.model.player.PlayerAction;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
 
-import javax.swing.*;
-import java.util.ArrayList;
 
 /**
  * This command allow the player to buy a dev card in the dev setup

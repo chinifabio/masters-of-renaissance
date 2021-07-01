@@ -2,9 +2,6 @@ package it.polimi.ingsw.model.match.markettray.MarkerMarble;
 
 import it.polimi.ingsw.view.cli.Colors;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This enumeration represents the Marbles' colors
  */

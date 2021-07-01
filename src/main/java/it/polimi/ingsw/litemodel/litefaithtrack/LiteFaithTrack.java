@@ -1,10 +1,8 @@
 package it.polimi.ingsw.litemodel.litefaithtrack;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This class represents the lite version of the FaithTrack
@@ -42,8 +40,8 @@ public class LiteFaithTrack {
 
     //TODO printer test
     /**
-     * printer test
-     * @param amount
+     * This method update the playerPosition
+     * @param amount is the number of the player position
      */
     public void movePlayer(int amount) {
         this.playerPosition = amount;

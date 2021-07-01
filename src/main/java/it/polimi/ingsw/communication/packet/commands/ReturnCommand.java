@@ -1,6 +1,4 @@
 package it.polimi.ingsw.communication.packet.commands;
-
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.player.PlayerAction;
 
 public class ReturnCommand extends Command {
