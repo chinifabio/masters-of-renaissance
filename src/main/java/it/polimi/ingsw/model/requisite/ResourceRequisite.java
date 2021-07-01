@@ -66,11 +66,6 @@ public class ResourceRequisite implements Requisite {
         return resource.amount();
     }
 
-    //Only for testing
-    public Resource getResource(){
-        return resource;
-    }
-
     @Override
     public String toString() {
         return "ResourceReq{" +

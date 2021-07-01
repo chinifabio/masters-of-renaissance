@@ -470,11 +470,10 @@ public class PersonalBoard {
         return this.warehouse;
     }
 
-
     // only for testing
     public Map<ProductionID, Production> test_getProduction() {
         return this.warehouse.test_getProduction();
     }
 
-    public LeaderCard test_getLeader(int x) { return this.leaderDeck.getCards().get(x); }
+
 }

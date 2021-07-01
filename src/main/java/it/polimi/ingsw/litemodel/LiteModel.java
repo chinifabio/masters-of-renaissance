@@ -363,35 +363,14 @@ public class LiteModel {
      * @return an array of MarbleColor
      */
     public MarbleColor[] getConversionArray(String nickname){
-        MarbleColor[] colors = new MarbleColor[0];
-        if(convert(nickname,0).isPresent()) {
-            colors = new MarbleColor[colors.length+1];
-            colors[0] = convert(nickname,0).get();
-            if(convert(nickname,1).isPresent()) {
-                MarbleColor temp = colors[0];
-                colors = new MarbleColor[colors.length+1];
-                colors[0] = temp;
-                colors[1] = convert(nickname,1).get();
-            }
+        List<MarbleColor> temp = this.getConversion(nickname);
+        MarbleColor[] colors = new MarbleColor[temp.size()];
+        int i=0;
+        for(MarbleColor marble : temp){
+            colors[i] = marble;
+            i++;
         }
         return colors;
-    }
-
-    /**
-     * This method returns an Optional of a MarbleColor - used by the method: getConversionArray(String me)
-     * It returns null if the list is empty or if its size is 1 and i'm checking the second element
-     * else return the given element
-     * @param nickname of the player
-     * @param x the wanted conversion power
-     * @return an Optional MarbleColor
-     */
-    private Optional<MarbleColor> convert(String nickname, int x){
-        List<MarbleColor> list = this.players.get(nickname).getConversions();
-        if(list.isEmpty()) return Optional.empty();
-        if(list.size()==1 && x==1) return Optional.empty();
-        Optional<MarbleColor> temp;
-        temp = Optional.ofNullable(list.get(x));
-        return temp;
     }
 
     /**

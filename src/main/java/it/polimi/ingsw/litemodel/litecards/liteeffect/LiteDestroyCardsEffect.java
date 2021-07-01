@@ -25,14 +25,6 @@ public class LiteDestroyCardsEffect extends LiteEffect{
     }
 
     /**
-     * This method returns the color of the cards to destroy
-     * @return the ColorDevCard to destroy
-     */
-    public ColorDevCard getColor() {
-        return color;
-    }
-
-    /**
      * This method is used to print the effect in cli
      * @param soloToken to print
      * @param x horizontal position

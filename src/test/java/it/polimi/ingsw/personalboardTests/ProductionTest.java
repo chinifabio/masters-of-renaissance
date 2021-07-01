@@ -182,7 +182,6 @@ public class ProductionTest {
 
             player.production();
 
-            System.out.println("Sto per creare la produzione");
             Production prod = new NormalProduction(
                     Collections.singletonList(ResourceBuilder.buildCoin(1)),
                     Collections.singletonList(ResourceBuilder.buildFaithPoint(5))

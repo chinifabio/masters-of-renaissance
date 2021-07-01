@@ -83,6 +83,7 @@ public class ProductionPlayerState extends PlayerState{
                 context.setState(new MainActionDonePlayerState(this.context));
                 context.view.sendPlayerMessage(context.nickname, "You activated the selected productions");
             } else {
+                //Non c'è rollback perché la chiama direttamente activateProductions nel caso in cui non sia legale
                 context.setState(new NoActionDonePlayerState(this.context));
                 context.view.sendPlayerError(context.nickname, "Incompatible added resources to activate the selected productions");
             }

@@ -29,6 +29,8 @@ public class VirtualView {
      */
     private final LiteModel model = new LiteModel();
 
+    private HeaderTypes test = HeaderTypes.OK;
+
     /**
      * Subscribe a socket listener, associated to a nickname of the player, to all the packet traffic
      * @param nickname the nickname of the owner of the socket listener
@@ -75,6 +77,7 @@ public class VirtualView {
      * @param message the message that need to be send
      */
     public void sendPlayerError(String nickname, String message) {
+        this.test = HeaderTypes.INVALID;
         listeners
                 .entrySet()
                 .stream()
@@ -122,5 +125,12 @@ public class VirtualView {
     public void sendToken(SoloActionToken token) {
         for (SocketListener socketListener : listeners.values())
             socketListener.send(new Packet(HeaderTypes.NOTIFY, ChannelTypes.UPDATE_LITE_MODEL, new LorenzoPopUp(token.liteVersion()).jsonfy()));
+    }
+
+
+    public HeaderTypes getTest(){
+        HeaderTypes temp = this.test;
+        this.test = HeaderTypes.OK;
+        return temp;
     }
 }

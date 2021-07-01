@@ -585,6 +585,9 @@ class CliInGameState extends CliState {
                     context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ProductionCommand().jsonfy()));
                 }
                 break;
+            case "production":
+                context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ProductionCommand().jsonfy()));
+                break;
 
             case "moveindepot":
             case "move":
@@ -601,10 +604,6 @@ class CliInGameState extends CliState {
                 } catch (IllegalArgumentException arg) {
                     context.notifyPlayerError(data.get(--i) + " Doesn't exist. Type help for accepted values");
                 }
-                break;
-
-            case "production":
-                context.socket.send(new Packet(HeaderTypes.DO_ACTION, ChannelTypes.PLAYER_ACTIONS, new ProductionCommand().jsonfy()));
                 break;
 
             case "activateproduction":
@@ -756,6 +755,10 @@ class CliInGameState extends CliState {
             case "players":
                 CasualPrinter.printPlayers(context.model);
                 break;
+                //todo vogliamo metterlo?
+            case "quit":
+                System.out.println("BB");
+                System.exit(0);
 
             //----------------------CHEAT---------------------------
             case "rescheat":

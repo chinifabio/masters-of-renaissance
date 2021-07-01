@@ -50,13 +50,4 @@ public class PendingMatchStartPlayerState extends PlayerState {
 
     // ----------------- PLAYER ACTION IMPLEMENTATIONS ---------------------------------
 
-
-    /**
-     * Returns a string representation of the object.
-     * @return a string representation of the object.
-     */
-    @Override
-    public String toString() {
-        return "PendingStart state";
-    }
 }
