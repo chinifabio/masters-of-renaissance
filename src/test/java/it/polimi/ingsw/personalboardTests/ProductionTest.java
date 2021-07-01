@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalNormalProduc
 import it.polimi.ingsw.model.exceptions.warehouse.production.IllegalTypeInProduction;
 import it.polimi.ingsw.model.exceptions.warehouse.production.UnknownUnspecifiedException;
 import it.polimi.ingsw.model.match.match.Match;
+import it.polimi.ingsw.model.match.match.MultiplayerMatch;
 import it.polimi.ingsw.model.match.match.SingleplayerMatch;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalBoard.DevCardSlot;
@@ -17,13 +18,56 @@ import it.polimi.ingsw.model.player.personalBoard.warehouse.production.Productio
 import it.polimi.ingsw.model.player.personalBoard.warehouse.production.UnknownProduction;
 import it.polimi.ingsw.model.resource.Resource;
 import it.polimi.ingsw.model.resource.ResourceBuilder;
+import it.polimi.ingsw.model.resource.ResourceType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class ProductionTest {
+    Player player1;
+    Player player2;
+
+    VirtualView view = new VirtualView();
+    Match game;
+
+    List<Player> order = new ArrayList<>();
+
+    @BeforeEach
+    public void initialization() {
+        try {
+            game = new MultiplayerMatch(2, view);
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+
+        assertDoesNotThrow(() -> player1 = new Player("gino", game, view));
+        assertTrue(game.playerJoin(player1));
+        order.add(player1);
+
+        assertDoesNotThrow(() -> player2 = new Player("pino", game, view));
+        assertTrue(game.playerJoin(player2));
+        order.add(player2);
+
+        game.initialize();
+        Collections.rotate(order, order.indexOf(game.currentPlayer()));
+        assertTrue(game.isGameOnAir());
+
+        assertDoesNotThrow(() -> order.get(0).test_discardLeader());
+        assertDoesNotThrow(() -> order.get(0).test_discardLeader());
+        order.get(0).endThisTurn();
+
+        order.get(1).chooseResource(DepotSlot.BOTTOM, ResourceType.COIN);
+        assertDoesNotThrow(() -> order.get(1).test_discardLeader());
+        assertDoesNotThrow(() -> order.get(1).test_discardLeader());
+        assertDoesNotThrow(() -> assertEquals(order.get(1).test_getPB().getDepots().get(DepotSlot.BOTTOM).viewResources().get(0), ResourceBuilder.buildCoin()));
+        order.get(1).endThisTurn();
+    }
+
     /**
      * create a production as normal production and test all the methods of the production class to check if it works correctly
      */
@@ -210,6 +254,23 @@ public class ProductionTest {
             assertTrue(player.test_getPB().getDepots().get(DepotSlot.STRONGBOX).viewResources().contains(ResourceBuilder.buildServant()));
 
         });
+    }
+
+    @Test
+    public void FaithPointProduction(){
+        final NormalProduction np = assertDoesNotThrow(()-> new NormalProduction(
+                Collections.singletonList(ResourceBuilder.buildShield()),
+                Arrays.asList(ResourceBuilder.buildCoin(),ResourceBuilder.buildFaithPoint())));
+        game.currentPlayer().test_setDest(DevCardSlot.LEFT);
+        game.currentPlayer().addProduction(np);
+        game.currentPlayer().production();
+        game.currentPlayer().obtainResource(DepotSlot.TOP,ResourceBuilder.buildShield());
+        game.currentPlayer().moveInProduction(DepotSlot.TOP,ProductionID.LEFT,ResourceBuilder.buildShield());
+        assertEquals(0,game.currentPlayer().personalBoard.faithTrack.getPlayerPosition());
+        game.currentPlayer().activateProductions();
+        //List<Resource> temp = Arrays.asList(ResourceBuilder.buildCoin(1),ResourceBuilder.buildStone(0),ResourceBuilder.buildShield(0),ResourceBuilder.buildServant(0));
+        //assertEquals(1,game.currentPlayer().personalBoard.warehouse.getDepot().get(DepotSlot.STRONGBOX).viewResources().equals())
+        assertEquals(1,game.currentPlayer().personalBoard.faithTrack.getPlayerPosition());
     }
 
 }

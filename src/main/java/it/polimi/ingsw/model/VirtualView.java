@@ -29,6 +29,9 @@ public class VirtualView {
      */
     private final LiteModel model = new LiteModel();
 
+    /**
+     * This attribute is only used for test purpose.
+     */
     private HeaderTypes test = HeaderTypes.OK;
 
     /**
@@ -128,6 +131,10 @@ public class VirtualView {
     }
 
 
+    /**
+     * This method is a getter for the test attribute. It resets to OK.
+     * @return the HeaderTypes of test
+     */
     public HeaderTypes getTest(){
         HeaderTypes temp = this.test;
         this.test = HeaderTypes.OK;

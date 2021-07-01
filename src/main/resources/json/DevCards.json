@@ -21,7 +21,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 1
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -212,7 +213,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 1
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -271,7 +273,8 @@
             {
               "storable": false,
               "strategy": {
-                "type": "GivePoint"
+                "type": "GivePoint",
+                "amount": 1
               },
               "type": "FAITHPOINT",
               "amount": 1
@@ -463,7 +466,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 1
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -522,7 +526,8 @@
             {
               "storable": false,
               "strategy": {
-                "type": "GivePoint"
+                "type": "GivePoint",
+                "amount": 1
               },
               "type": "FAITHPOINT",
               "amount": 1
@@ -714,7 +719,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 1
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -773,7 +779,8 @@
             {
               "storable": false,
               "strategy": {
-                "type": "GivePoint"
+                "type": "GivePoint",
+                "amount": 1
               },
               "type": "FAITHPOINT",
               "amount": 1
@@ -965,7 +972,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 1
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -1024,7 +1032,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 2
             },
             "type": "FAITHPOINT",
             "amount": 2
@@ -1143,7 +1152,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 2
             },
             "type": "FAITHPOINT",
             "amount": 2
@@ -1197,7 +1207,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 1
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -1256,7 +1267,8 @@
             {
               "storable": false,
               "strategy": {
-                "type": "GivePoint"
+                "type": "GivePoint",
+                "amount": 2
               },
               "type": "FAITHPOINT",
               "amount": 2
@@ -1375,7 +1387,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 2
             },
             "type": "FAITHPOINT",
             "amount": 2
@@ -1429,7 +1442,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 1
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -1488,7 +1502,8 @@
             {
               "storable": false,
               "strategy": {
-                "type": "GivePoint"
+                "type": "GivePoint",
+                "amount": 2
               },
               "type": "FAITHPOINT",
               "amount": 2
@@ -1607,7 +1622,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 2
             },
             "type": "FAITHPOINT",
             "amount": 2
@@ -1661,7 +1677,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 2
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -1720,7 +1737,8 @@
             {
               "storable": false,
               "strategy": {
-                "type": "GivePoint"
+                "type": "GivePoint",
+                "amount": 2
               },
               "type": "FAITHPOINT",
               "amount": 2
@@ -1839,7 +1857,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 2
             },
             "type": "FAITHPOINT",
             "amount": 2
@@ -1893,7 +1912,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 1
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -1960,7 +1980,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 2
             },
             "type": "FAITHPOINT",
             "amount": 2
@@ -2030,7 +2051,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 1
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -2095,7 +2117,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 3
             },
             "type": "FAITHPOINT",
             "amount": 3
@@ -2149,7 +2172,7 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "DoNothing"
             },
             "type": "COIN",
             "amount": 3
@@ -2216,7 +2239,8 @@
             {
               "storable": false,
               "strategy": {
-                "type": "GivePoint"
+                "type": "GivePoint",
+                "amount": 2
               },
               "type": "FAITHPOINT",
               "amount": 2
@@ -2286,7 +2310,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 1
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -2351,7 +2376,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 3
             },
             "type": "FAITHPOINT",
             "amount": 3
@@ -2472,7 +2498,8 @@
             {
               "storable": false,
               "strategy": {
-                "type": "GivePoint"
+                "type": "GivePoint",
+                "amount": 2
               },
               "type": "FAITHPOINT",
               "amount": 2
@@ -2542,7 +2569,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 1
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -2607,7 +2635,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 3
             },
             "type": "FAITHPOINT",
             "amount": 3
@@ -2728,7 +2757,8 @@
             {
               "storable": false,
               "strategy": {
-                "type": "GivePoint"
+                "type": "GivePoint",
+                "amount": 2
               },
               "type": "FAITHPOINT",
               "amount": 2
@@ -2798,7 +2828,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 1
             },
             "type": "FAITHPOINT",
             "amount": 1
@@ -2863,7 +2894,8 @@
           {
             "storable": false,
             "strategy": {
-              "type": "GivePoint"
+              "type": "GivePoint",
+              "amount": 3
             },
             "type": "FAITHPOINT",
             "amount": 3
