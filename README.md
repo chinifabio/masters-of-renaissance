@@ -12,7 +12,7 @@ These are the diagrams of the classes, the first one is the UML created at the b
 - [Final UML](deliveries/UML/Model_final_UML.png)
 
 ### Coverage report
-Numerous tests have been performed using JUnit, you can consult the coverage report at the following link:: [Report](//Da aggiungere)
+Numerous tests have been performed using JUnit, you can consult the coverage report at the following link: [Report](https://github.com/chinifabio/ingswAM2021-Chini-Colabene-Curreri/tree/master/deliveries/Report/Test%20report)
 
 
 ### Plugins and Libraries
@@ -47,7 +47,7 @@ Numerous tests have been performed using JUnit, you can consult the coverage rep
 
 ## Jar
 
-The Jar of this project can be found here: [JAR] (//Da aggiungere)
+The Jar of this project can be found here: [JAR](deliveries/Jar/masters.java)
 
 ### Execution of Jar
 
