@@ -43,11 +43,11 @@ public class FaithTrackPrinter {
     /**
      * This method is the constructor of the class
      */
-    public FaithTrackPrinter(/*LiteModel model*/) throws IOException {
-        //this.model = model;
+    public FaithTrackPrinter() throws IOException {
         this.track = new ObjectMapper().readValue(
                 getClass().getResourceAsStream("/json/FaithTrack.json"),
-                new TypeReference<List<LiteCell>>(){});
+                new TypeReference<>() {
+                });
 
         this.popeTilesPoints = new HashMap<>();
         popeTilesPoints.put(VaticanSpace.FIRST, 2);

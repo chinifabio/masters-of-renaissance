@@ -11,20 +11,44 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.*;
 
+/**
+ * This class creates the connection and handles the packets
+ */
 public class SocketListener implements Runnable {
+
     /**
      * The real socket on which sort packets in channels
      */
     private final Socket socket;
 
+    /**
+     * This attribute indicates if the client is connected
+     */
     private boolean connected;
+
+    /**
+     * This attribute is the maximum time that the server waits before declaring the Client as disconnected
+     */
     private final int timeout = 10000;
 
+    /**
+     * This attribute is a queue of packet
+     */
     private final Queue<Packet> packetQueue = new LinkedList<>();
 
+    /**
+     * This attribute sends output streams
+     */
     private final PrintStream sender;
+
+    /**
+     * This attribute receive input streams
+     */
     private final Scanner receiver;
 
+    /**
+     * This attribute is a timer that manage the connections
+     */
     private final Timer timer = new Timer();
     //private final Disconnectable disconnectable;
 
@@ -65,6 +89,9 @@ public class SocketListener implements Runnable {
         }
     }
 
+    /**
+     * @return the received packet
+     */
     public Packet pollPacket() {
         if(!connected) return new Packet(HeaderTypes.INVALID, ChannelTypes.CONNECTION_STATUS, "connection closed");
 
@@ -120,9 +147,20 @@ public class SocketListener implements Runnable {
     }
 }
 
+/**
+ * This class manages the connection and controls that the Client isn't disconnected
+ */
 class PingerTask extends TimerTask {
+
+    /**
+     * This attribute manages the packet
+     */
     private final SocketListener socket;
 
+    /**
+     * This is the constructor of the class
+     * @param socket is the socket to control
+     */
     public PingerTask(SocketListener socket) {
         this.socket = socket;
     }
@@ -132,6 +170,6 @@ class PingerTask extends TimerTask {
      */
     @Override
     public void run() {
-        socket.send(new Packet(HeaderTypes.PING, ChannelTypes.CONNECTION_STATUS, "I'm in, bitch"));
+        socket.send(new Packet(HeaderTypes.PING, ChannelTypes.CONNECTION_STATUS, "I'm in bitch!"));
     }
 }

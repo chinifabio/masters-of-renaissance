@@ -59,7 +59,7 @@ public class CLI implements View {
         put(MarbleColor.BLUE, Colors.color(Colors.BLUE_BRIGHT, "●"));
         put(MarbleColor.PURPLE, Colors.color(Colors.PURPLE, "●"));
         put(MarbleColor.WHITE, Colors.color(Colors.WHITE_BRIGHT, "●"));
-        put(MarbleColor.GRAY, Colors.color(Colors.WHITE, "●"));
+        put(MarbleColor.GRAY, Colors.color(Colors.BLACK_BRIGHT,"●"));
         put(MarbleColor.RED, Colors.color(Colors.RED, "●"));
     }};
 
@@ -488,7 +488,7 @@ class CliLobbyWaitState extends CliState {
      */
     @Override
     public void handleInput(String userInput) {
-        context.notifyPlayerError("Please wait for other players!");
+        context.notifyPlayerError("please, wait for other player!");
     }
 }
 

@@ -14,6 +14,10 @@ public class PlayerError extends ClientExecutable {
      */
     private final String message;
 
+    /**
+     * This is the constructor of the class
+     * @param message is the error message
+     */
     @JsonCreator
     public PlayerError (@JsonProperty("message") String message) {
         this.message = message;

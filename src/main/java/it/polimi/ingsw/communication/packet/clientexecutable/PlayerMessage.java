@@ -14,6 +14,10 @@ public class PlayerMessage extends ClientExecutable {
      */
     private final String message;
 
+    /**
+     * This is the constructor of the class
+     * @param message is the notify message
+     */
     @JsonCreator
     public PlayerMessage (@JsonProperty("message") String message) {
         this.message = message;
