@@ -156,11 +156,11 @@ public class MultiplayerMatch extends Match{
 
     /**
      * This method starts the end game logic
+     * @param endGameMessage the end game message to send to all the player
      */
     @Override
-    public void startEndGameLogic() {
-        if (model != null) model.playerEndGame();
-        view.sendMessage("End game logic started!");
+    public void startEndGameLogic(String endGameMessage) {
+        view.sendMessage(endGameMessage);
         endGameLogic = true;
         turnDone();
     }

@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.communication.packet.ChannelTypes;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.exceptions.faithtrack.EndGameException;
 import it.polimi.ingsw.model.player.personalBoard.warehouse.depot.DepotSlot;
 import it.polimi.ingsw.model.resource.Resource;
@@ -100,8 +97,7 @@ public class MainActionDonePlayerState extends PlayerState {
         }
 
         catch (EndGameException e) {
-            this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
-            this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
+            this.context.match.startEndGameLogic(context.nickname + " reached the end of the faith track!");                                      // stop the game when the last player end his turn
             return;
         }
 

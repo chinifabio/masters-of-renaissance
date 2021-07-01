@@ -479,7 +479,7 @@ class CliLobbyWaitState extends CliState {
 
     @Override
     public void onEntry() {
-        context.notifyPlayer("waiting for other players...");
+        context.notifyPlayer("Waiting for other players...");
     }
 
     /**
@@ -488,7 +488,7 @@ class CliLobbyWaitState extends CliState {
      */
     @Override
     public void handleInput(String userInput) {
-        context.notifyPlayerError("please, wait for other player!");
+        context.notifyPlayerError("Please, wait for other player!");
     }
 }
 
@@ -702,7 +702,7 @@ class CliInGameState extends CliState {
                 } catch (IndexOutOfBoundsException out) {
                     PersonalBoardPrinter.printPersonalBoard(context.model, context.model.getMe());
                 } catch (NullPointerException n) {
-                    context.notifyPlayerError(data.get(i) + " player doesn't exist");
+                    context.notifyPlayerError("Player doesn't exist");
                 }
                 break;
 
@@ -720,7 +720,7 @@ class CliInGameState extends CliState {
                 } catch (IndexOutOfBoundsException out) {
                     WarehousePrinter.printWarehouse(context.model, context.model.getMe());
                 } catch (NullPointerException nul) {
-                    context.notifyPlayerError("player doesn't exist");
+                    context.notifyPlayerError("Player doesn't exist");
                 }
                 break;
 
@@ -741,7 +741,7 @@ class CliInGameState extends CliState {
                 } catch (IndexOutOfBoundsException out) {
                     ProductionPrinter.printProductions(context.model, context.model.getMe());
                 } catch (NullPointerException nul) {
-                    context.notifyPlayerError("player doesn't exist");
+                    context.notifyPlayerError("Player doesn't exist");
                 }
                 break;
 

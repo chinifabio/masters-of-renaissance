@@ -85,9 +85,8 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
         try {
             this.lorenzo.movePlayer(i, this);
         } catch (EndGameException e) {
-            System.out.println("end of the game: Lorenzo reach the end of faith track");
             lorenzoWinner = true;
-            startEndGameLogic();
+            startEndGameLogic("Lorenzo reached the end of faith track");
         }
         view.sendMessage("Lorenzo moved " + i + " tiles in the faith track");
     }
@@ -171,12 +170,11 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
                     // starts the end game logic because there is no card available
                     else {
-                        this.lorenzoWinner = true;
-                        System.out.println("end of the game: Lorenzo discarded dev cards of a color");
-                        this.startEndGameLogic();
+                        lorenzoWinner = true;
+                        startEndGameLogic("Lorenzo discarded all the dev cards of a color");
                     }
                 } catch (AlreadyInDeckException e) {
-                    view.sendMessage("Lorenzo broke the game discarding a develop card");
+                    startEndGameLogic("Lorenzo broke the game discarding a develop card");
                 }
             }
         }
@@ -184,9 +182,8 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
         // try to watch if there is cards in the top level deck
         if (this.devSetup.showDevDeck(levels.get(levels.size() - 1), color) == null) {
-            System.out.println("end of the game: Lorenzo discarded all the dev cards of a color");
             this.lorenzoWinner = true;
-            startEndGameLogic(); // start end game logic if there is no card to discard
+            startEndGameLogic("Lorenzo discarded all the dev cards of a color"); // start end game logic if there is no card to discard
         }
     }
 
@@ -202,8 +199,7 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
                 s.useEffect(this);
                 view.sendToken(s);
             } catch (EmptyDeckException e) {
-                view.sendError("Lorenzo broke the game while using a solo action token");
-                startEndGameLogic();
+                startEndGameLogic("Lorenzo broke the game while using a solo action token");
             }
 
             this.marketTray.unPaint();
@@ -224,12 +220,14 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
 
     /**
      * This method starts the end game logic
+     * @param endGameMessage the end game message to send to all the player
      */
     @Override
-    public void startEndGameLogic() {
+    public void startEndGameLogic(String endGameMessage) {
+        view.sendMessage(endGameMessage);
         gameOnAir = false;
-        if (model != null) model.matchEnded();
         player.setState(new CountingPointsPlayerState(player));
+        if (model != null) model.matchEnded();
     }
 
     /**
@@ -275,9 +273,8 @@ public class SingleplayerMatch extends Match implements SoloTokenReaction {
         try {
             lorenzo.movePlayer(amount, this);
         } catch (EndGameException e) {
-            System.out.println("end of the game: Lorenzo reach the end of faith track");
             lorenzoWinner = true;
-            startEndGameLogic();
+            startEndGameLogic("Lorenzo reached the end of faith track");
         }
     }
 

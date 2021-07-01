@@ -242,9 +242,10 @@ public abstract class Match implements PlayerToMatch {
 
     /**
      * This method starts the end game logic
+     * @param endGameMessage the end game message to send to all the player
      */
     @Override
-    public abstract void startEndGameLogic();
+    public abstract void startEndGameLogic(String endGameMessage);
 
     /**
      * Return the number of player in the game

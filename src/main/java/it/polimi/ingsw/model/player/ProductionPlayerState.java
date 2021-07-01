@@ -89,8 +89,7 @@ public class ProductionPlayerState extends PlayerState{
         }
 
         catch (EndGameException e) {
-            this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
-            this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
+            context.match.startEndGameLogic(context.nickname + " reached the end of the faith track!");                                      // stop the game when the last player end his turn
         }
 
         catch (Exception e) {

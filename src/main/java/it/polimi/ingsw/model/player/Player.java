@@ -246,7 +246,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         }
 
         catch (EndGameException end) {
-            match.startEndGameLogic();
+            match.startEndGameLogic(nickname + " reached the end of the faith track!");
             return true;
         }
 
@@ -265,7 +265,7 @@ public class Player implements PlayerAction, PlayableCardReaction, MatchToPlayer
         try {
             personalBoard.moveFaithMarker(amount, match);
         } catch (EndGameException e) {
-            match.startEndGameLogic();
+            match.startEndGameLogic(nickname + " reached the end of the faith track!");
         }
     }
 

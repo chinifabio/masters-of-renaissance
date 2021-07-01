@@ -62,8 +62,7 @@ public class NoActionDonePlayerState extends PlayerState {
         }
 
         catch (EndGameException e) {
-            this.context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
-            this.context.setState(new CountingPointsPlayerState(this.context));                     // set the player state to counting point so he can't do nothing more
+            this.context.match.startEndGameLogic(context.nickname + " reached the end of the faith track!");                                      // stop the game when the last player end his turn
             return;
         }
 
@@ -180,8 +179,7 @@ public class NoActionDonePlayerState extends PlayerState {
             context.personalBoard.moveFaithMarker(1, context.match);
             context.view.sendPlayerMessage(context.nickname, "You discarded " + leaderId);
         } catch (EndGameException e) {
-            context.match.startEndGameLogic();                                      // stop the game when the last player end his turn
-            context.setState(new CountingPointsPlayerState(context));                     // set the player state to counting point so he can't do nothing more
+            context.match.startEndGameLogic(context.nickname + " reached the end of the faith track!");                                      // stop the game when the last player end his turn
         }
 
     }

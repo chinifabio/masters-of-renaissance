@@ -84,8 +84,9 @@ public interface PlayerToMatch {
 
     /**
      * This method starts the end game logic
+     * @param endGameMessage
      */
-    void startEndGameLogic();
+    void startEndGameLogic(String endGameMessage);
 
     /**
      * Tells to the match that a player has done the init phase
