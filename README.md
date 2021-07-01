@@ -47,7 +47,7 @@ Numerous tests have been performed using JUnit, you can consult the coverage rep
 
 ## Jar
 
-The Jar of this project can be found here: [JAR](deliveries/Jar/masters.java)
+The Jar of this project can be found here: [JAR](deliveries/Jar/masters.jar)
 
 ### Execution of Jar
 
