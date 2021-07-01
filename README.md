@@ -45,28 +45,44 @@ Numerous tests have been performed using JUnit, you can consult the coverage rep
 **Intellij IDEA Ultimate** - main IDE 
 
 
-## Jars
+## Jar
 
-The Jars of this project can be found here: [JARS] (//Da aggiungere)
+The Jar of this project can be found here: [JAR] (//Da aggiungere)
 
 ### Execution of Jar
 
 ### Client
-The following instructions describe how to successfully start the application in GUI and CLI.
-Due to the limitations of the Windows command line, it is necessary to use WSL in order to play in CLI mode with this operating system, instead the CLI works perfectly with Linux and macOS operating systems.
+The following instructions describe how to successfully start the application in GUI and CLI.</br>
+Due to the limitations of the Windows command line, it is necessary to use WSL in order to play with CLI or to run the server with this operating system, instead the CLI works perfectly with Linux and macOS operating systems.
 
-#### CLI
-//Descrizione di come lanciare la CLI
+### Parameters
+The JAR can receives three paramters: what you want to exectue, server address and port you want to connect to.</br>
+If you don't specify any of this parameters, the application will ask you a value for them.</br>
+To set the value of a parameter you need to type the name of the parameter followed by ":" and then by the value of the parameter.</br>
+Admitted value for **core** are: **server**, **cli** or **gui**. </br>
 
-#### GUI
 
-//Descrizione di come lanciare la GUI
+Below you can see how to run **Server**, **CLI** and **GUI**, connecting to **localhost:4444**.
 
 #### Server
-//Descrizione di come lanciare il server
+To run the server of the game you can digit in the command line: 
+```
+java -jar masters.java core:server address:localhost port:4444
+```
 
-#### Parameters
-//descrizione parametri
+#### CLI
+To play properly with the CLI it is recommended to use the full screen window.</br>
+To run the cli of the game you can digit in the command line: 
+```
+java -jar masters.java core:cli address:localhost port:4444
+```
+
+#### GUI
+To play properly with the GUI it is advisable to use the windows zoom at 100%.</br>
+To run the gui of the game you can digit in the command line: 
+```
+java -jar masters.java core:gui address:localhost port:4444
+```
 
 ## Team members
 - [__Fabio Chini__](https://github.com/chinifabio)

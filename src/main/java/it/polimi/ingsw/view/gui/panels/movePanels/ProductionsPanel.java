@@ -161,12 +161,12 @@ class ProdPanel extends JPanel {
         JPanel req = new JPanel();
         req.setLayout(new GridLayout(0, 1));
         req.setOpaque(false);
-        for(LiteResource p : prod.getRequired()) req.add(new ResourceLabel(p.getType(), p.getAmount()));
+        for(LiteResource p : prod.getRequired()) req.add(new ResourceLabel(p.getType(), p.getAmount(), false));
 
         JPanel out = new JPanel();
         out.setLayout(new GridLayout(0, 1));
         out.setOpaque(false);
-        for(LiteResource p : prod.getOutput()) out.add(new ResourceLabel(p.getType(), p.getAmount()));
+        for(LiteResource p : prod.getOutput()) out.add(new ResourceLabel(p.getType(), p.getAmount(), false));
 
         book.add(req);
         book.add(out);
@@ -202,7 +202,7 @@ class ProdPanel extends JPanel {
         }
         else{
             if(!prod.getAdded().isEmpty()){
-                for(LiteResource p : prod.getAdded()) added.add(new ResourceLabel(p.getType(), p.getAmount()));
+                for(LiteResource p : prod.getAdded()) added.add(new ResourceLabel(p.getType(), p.getAmount(), false));
             }
             else {
                 temp.add(Box.createRigidArea(new Dimension(0, 29)));
@@ -267,7 +267,7 @@ class ResourceLabel extends JPanel {
      * @param am is the amount of the resource
      * @throws IOException if there is an I/O problem
      */
-    public ResourceLabel(ResourceType type, int am) throws IOException {
+    public ResourceLabel(ResourceType type, int am, boolean isNorm) throws IOException {
         setLayout(new OverlayLayout(this));
         this.setBackground(new Color(0,0,0,30));
 
@@ -280,7 +280,8 @@ class ResourceLabel extends JPanel {
         JLabel image = new JLabel();
         InputStream img = getClass().getResourceAsStream("/WarehouseRes/"+type.name().toLowerCase()+".png");
         assert img != null;
-        image.setIcon(new ImageIcon(GUI.getScaledImage(ImageIO.read(img), 25, 25)));
+        if (!isNorm) {image.setIcon(new ImageIcon(GUI.getScaledImage(ImageIO.read(img), 25, 25)));}
+        else image.setIcon(new ImageIcon(GUI.getScaledImage(ImageIO.read(img), 45, 45)));
 
         image.setAlignmentX(0.60f);
         image.setAlignmentY(0.70f);
@@ -375,9 +376,7 @@ class ProductionNormalizer extends GuiPanel {
         backPanel.add(back);
         backPanel.setOpaque(false);
 
-        JPanel backgroundPanel = new BookBackgroundPanel();
         JPanel mainPanel = new JPanel();
-        mainPanel.add(backgroundPanel);
 
         JPanel req = new JPanel();
         req.setLayout(new BoxLayout(req, BoxLayout.Y_AXIS));
@@ -428,7 +427,7 @@ class ProductionNormalizer extends GuiPanel {
                     req.add(resource);
                 }
             } else {
-                ResourceLabel resource = new ResourceLabel(p.getType(), p.getAmount());
+                ResourceLabel resource = new ResourceLabel(p.getType(), p.getAmount(), true);
                 req.add(resource);
             }
         }
@@ -462,7 +461,7 @@ class ProductionNormalizer extends GuiPanel {
                     out.add(resource);
                 }
             } else {
-                ResourceLabel resource = new ResourceLabel(p.getType(), p.getAmount());
+                ResourceLabel resource = new ResourceLabel(p.getType(), p.getAmount(), true);
                 out.add(resource);
             }
         }

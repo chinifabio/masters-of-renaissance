@@ -1,9 +1,5 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.communication.packet.ChannelTypes;
-import it.polimi.ingsw.communication.packet.HeaderTypes;
-import it.polimi.ingsw.communication.packet.Packet;
-
 /**
  * This class is the State where are counted the VictoryPoints of the Player
  */
