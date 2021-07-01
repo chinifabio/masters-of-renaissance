@@ -45,7 +45,7 @@ public class CasualPrinter {
         System.out.println("Your conversion powers:");
         int i=0;
         for(MarbleColor color : conv){
-            System.out.println(Colors.color(color.toColor(),i+": " + color.toString()));
+            System.out.println(Colors.color(color.toColor(),i+": " + color));
             i++;
         }
     }

@@ -43,7 +43,7 @@ public class Warehouse {
      * This attribute is a list of all the movements done to activate the Productions, it wil be used to restore the Depot
      * status if the Productions won't be activated
      */
-    private LinkedList<ProductionRecord> movesCache;
+    private final LinkedList<ProductionRecord> movesCache;
 
     /**
      * The owner of the warehouse

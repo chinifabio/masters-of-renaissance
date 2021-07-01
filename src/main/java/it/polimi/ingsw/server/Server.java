@@ -46,11 +46,6 @@ public class Server {
     private boolean creatorAssigned = false;
 
     /**
-     * Used to set the activation of the server
-     */
-    private boolean active = true;
-
-    /**
      * Create a server based on the port it will be listening to
      * @param port the port of the server
      * @throws IOException when java can't create the server socket
@@ -78,13 +73,11 @@ public class Server {
         }).start();
 
         print("Server ready. Type quit to stop the server.");
-        while (active) {
-            try {
-                Controller controller = new Controller(serverSocket.accept(), this);
-                this.executor.submit(controller);
-            } catch (IOException e) {
-                print("Error while accepting client: " + e.getMessage());
-            }
+        while (true) try {
+            Controller controller = new Controller(serverSocket.accept(), this);
+            this.executor.submit(controller);
+        } catch (IOException e) {
+            print("Error while accepting client: " + e.getMessage());
         }
     }
 

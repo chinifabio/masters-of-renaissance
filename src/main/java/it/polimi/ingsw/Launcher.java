@@ -8,36 +8,19 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-public class Launcher
-{
+public class Launcher {
     public static void main(String[] arg){
 
         List<String> arguments = new ArrayList<>(Arrays.asList(arg));
 
-        String executable;
+        if (!arguments.isEmpty() && arguments.get(0).equals("help")) {
+            System.out.println("Read the README file to known how parameters works.\n-> https://github.com/chinifabio/ingswAM2021-Chini-Colabene-Curreri/blob/master/README.md");
+            return;
+        }
+
+        String executable = "nul";
         String address = "nul";
         int port = -1;
-
-        try {
-            executable = arguments.get(0);
-            if (!Arrays.asList("cli", "gui", "server").contains(executable)) throw new NullPointerException();
-        } catch (NullPointerException | IndexOutOfBoundsException nul) {
-            System.out.println("I don't known what to launch. Choose as first argument one of those {\"server\", \"cli\", \"gui\"}");
-            return;
-        }
-
-        if (executable.equals("help")) {
-            System.out.println(
-                    "As first argument you can choose between:\n" +
-                            "   cli\n" +
-                            "   gui\n" +
-                            "   server\n\n" + "" +
-                            "Then to choose the address or the port you can type the argument, followed by : and than the value." +
-                            " -> \"address:localhost\" or \"port:4444\"" +
-                            "\n"
-            );
-            return;
-        }
 
         arguments.remove(executable);
         for (String string : arguments) {
@@ -45,20 +28,25 @@ public class Launcher
             try {
                 switch (data.get(0)) {
                     case "address" -> address = data.get(1);
-
                     case "port" -> port = Integer.parseInt(data.get(1));
+                    case "core" -> executable = data.get(1);
 
                     default -> {
                         System.out.println("Unknown parameter " + data.get(0) + ". Use help too see available arguments");
                         return;
                     }
                 }
-            } catch (NullPointerException e) {
+            } catch (NullPointerException | IndexOutOfBoundsException e) {
                 System.out.println("You missed some parameter " + data);
                 return;
             } catch (NumberFormatException n) {
-                System.out.println("You insert a not valid number: " + data.get(1));
+                System.out.println("You insert an invalid number: " + data.get(1));
             }
+        }
+
+        if (executable.equals("nul")) {
+            System.out.print("Type what you want to execute: ");
+            executable = new Scanner(System.in).nextLine().toLowerCase();
         }
 
         if (address.equals("nul") && !executable.equals("server")) {
@@ -98,6 +86,8 @@ public class Launcher
                     new Server(port).start();
                 }
                 case "gui" -> new GUI(address, port).start();
+
+                default -> System.out.println(executable + " is an invalid executable parameter. Valid parameters are {\"cli\", \"gui\", \"server\"");
             }
         } catch (IOException e) {
             System.out.println("fail launching " + executable);

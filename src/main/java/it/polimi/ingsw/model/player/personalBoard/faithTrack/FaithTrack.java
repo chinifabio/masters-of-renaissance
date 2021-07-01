@@ -21,7 +21,7 @@ public class FaithTrack implements MappableToLiteVersion {
     /**
      * This attribute is the representation of the FaithTrack, composed by several cells
      */
-    private List<Cell> track;
+    private final List<Cell> track;
 
     /**
      * This attribute is the position of the Player in the track

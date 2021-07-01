@@ -488,7 +488,7 @@ class CliLobbyWaitState extends CliState {
      */
     @Override
     public void handleInput(String userInput) {
-        context.notifyPlayerError("trimone ho detto che devi aspettare");
+        context.notifyPlayerError("Please wait for other players!");
     }
 }
 

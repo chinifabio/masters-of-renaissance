@@ -2,7 +2,6 @@ package it.polimi.ingsw.communication.packet.commands;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.communication.packet.Packet;
 import it.polimi.ingsw.model.player.PlayerAction;
 
 public class FaithPointCheatCommand extends Command{
@@ -10,7 +9,7 @@ public class FaithPointCheatCommand extends Command{
     /**
      * The number of position the player will move on the faith track
      */
-    private int fp;
+    private final int fp;
 
     /**
      * This is the constructor of the class
