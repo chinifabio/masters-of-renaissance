@@ -65,8 +65,11 @@ public class ProductionPlayerState extends PlayerState{
     @Override
     public void moveInProduction(DepotSlot from, ProductionID dest, Resource loot) {
         try {
-            context.personalBoard.moveInProduction(from, dest, loot);
-            context.view.sendPlayerMessage(context.nickname, "Resources moved in production");
+            if(context.personalBoard.moveInProduction(from, dest, loot)){
+                context.view.sendPlayerMessage(context.nickname, "Resources moved in production");
+            }else{
+                context.view.sendPlayerError(context.nickname, "You can't do that!");
+            }
         } catch (Exception e) {
             context.view.sendPlayerError(context.nickname, e.getMessage());
         }
